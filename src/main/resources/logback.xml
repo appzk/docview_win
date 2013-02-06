@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="60 seconds">
+	<!-- log base path -->
+	<property name="LOG_HOME" value="logs" />
+	<property name="SRVNAME" value="web_log" />
+	<!-- back log base path -->
+	
+	<property name="LOG_BACK_HOME" value="logs/backup" />
+	
+	<!--
+ 	<appender name="file"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/${SRVNAME}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_BACK_HOME}/${SRVNAME}.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-5level %logger{100} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	 -->
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyyMMddHHmmss} [%thread] [%c %2M %2L] %-3p - %m%n
+			</pattern>
+		</encoder>
+	</appender>
+
+
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
+	
+	<logger name="org.springframework.web.servlet" level="info"/>
+	<logger name="tt.proinsight" level="debug"/>
+
+
+</configuration>

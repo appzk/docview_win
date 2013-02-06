@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project name="docview" default="start_service" basedir="..">
+	<description>
+		ttservice
+    </description>
+
+	<target name="init" description="Initialize the target...">
+		<!-- initialize the parameter-->
+		<property environment="env" />
+		<property name="name" value="${ant.project.name}" />
+		<property name="version" value="V4.0.1" />
+		<property name="year" value="2012" />
+		<echo message="Building ${ant.project.name} ${version}...." />
+		<property name="build.compiler" value="modern" />
+		<property name="debug" value="true" />
+		<property name="optimize" value="on" />
+		<property name="deprecation" value="on" />
+		<property name="encoding" value="utf-8" />
+		<property name="dist.dir" location="${basedir}/dist" />
+		<property name="conf.dir" value="${basedir}/conf" />
+		<property name="src.dir" value="${basedir}/src/main/java" />
+		<property name="lib.server.dir" value="${basedir}/lib" />
+		<property name="lib.web.dir" value="${basedir}/webapp/WEB-INF/lib" />
+
+		<property name="build.dir" value="${basedir}/webapp/WEB-INF/classes" />
+		<property name="log.dir" value="${basedir}/logs" />
+
+		<filter token="year" value="${year}" />
+		<filter token="version" value="${version}" />
+		<filter token="date" value="${TODAY}" />
+		<filter token="log" value="true" />
+		<filter token="verbose" value="true" />
+
+
+		<!-- run classpath -->
+		<path id="run.classpath">
+			<fileset dir="${lib.web.dir}" includes="**/*.jar" />
+			<fileset dir="${lib.server.dir}" includes="**/*.jar" />
+			<pathelement location="${build.dir}" />
+		</path>
+	</target>
+
+	<target name="mkdirif">
+		<mkdir dir="${basedir}/logs" />
+	</target>
+
+	<target name="start_service" depends="init,mkdirif" description="Start schedule server.">
+		<java classname="tt.start.main.TTServerStart" fork="true">
+			<classpath refid="run.classpath" />
+			<jvmarg value="-Xms512M" />
+            <jvmarg value="-Xmx2048M" />
+            <jvmarg value="-XX:PermSize=128M" />
+            <jvmarg value="-XX:MaxPermSize=256M" />
+			<arg line="-w ./webapp" />
+		</java>
+	</target>
+
+	<target name="stop_service" depends="init" description="stop schedule server.">
+		<java classname="tt.start.main.TTServerStop" fork="true">
+			<classpath refid="run.classpath" />
+			<jvmarg value="-DSTOP.KEY=stopserverkey" />
+			<arg line="00001" />
+		</java>
+		<sleep seconds="3" />
+	</target>
+
+</project>
