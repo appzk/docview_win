@@ -1,4 +1,4 @@
-package doc.ip;
+package com.idocv.docview.ip;
 
 import com.idocv.docview.common.IpUtil;
 

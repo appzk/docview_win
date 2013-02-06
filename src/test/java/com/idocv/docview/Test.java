@@ -1,4 +1,4 @@
-package doc;
+package com.idocv.docview;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

@@ -1,4 +1,4 @@
-package doc.content;
+package com.idocv.docview.content;
 
 
 import java.io.File;
@@ -11,7 +11,7 @@ import org.apache.commons.io.FileUtils;
 import com.idocv.docview.vo.ExcelVo;
 
 
-public class PPTContent {
+public class ExcelContent {
 	public static void main(String[] args) {
 		try {
 			String lineDilimeter = "``";

@@ -6,9 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -16,13 +14,9 @@ import jxl.Sheet;
 import jxl.Workbook;
 
 import org.apache.commons.io.FileUtils;
-import org.artofsolving.jodconverter.OfficeDocumentConverter;
-import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
-import org.artofsolving.jodconverter.office.OfficeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.idocv.docview.common.DocServiceException;
@@ -33,7 +27,6 @@ import com.idocv.docview.vo.PPTVo;
 import com.idocv.docview.vo.PageVo;
 import com.idocv.docview.vo.TxtVo;
 import com.idocv.docview.vo.WordVo;
-import com.sun.star.beans.PropertyValue;
 
 @Service
 public class PreviewServiceImpl implements PreviewService, InitializingBean {
@@ -43,17 +36,11 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	@Resource
 	private RcUtil rcUtil;
 	
-	private static OfficeManager officeManager;
-
-	private @Value("${openoffice.convert.port}")
-	int officePort = 18222;
-
 	private static String lineDilimeter = "``";
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		officeManager = new DefaultOfficeManagerConfiguration().setPortNumber(officePort).buildOfficeManager();
-		officeManager.start();
+		// TODO
 	}
 
 	@Override
@@ -249,7 +236,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			File src = new File(rcUtil.getPath(rid));
 			File dest = new File(rcUtil.getParsePathOfHtml(rid));
 			if (!dest.isFile()) {
-				getConverter().convert(src, dest);
+				// getConverter().convert(src, dest);
 			}
 			return dest.isFile();
 		} catch (Exception e) {
@@ -258,38 +245,6 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		}
 	}
 
-	private OfficeDocumentConverter getConverter() throws DocServiceException {
-		if (null == officeManager) {
-			officeManager = new DefaultOfficeManagerConfiguration().buildOfficeManager();
-			officeManager.start();
-		}
-		Map<String, Object> loadProperties = new HashMap<String, Object>();
-
-		PropertyValue[] loadProps = new PropertyValue[6];
-		for (int i = 0; i < loadProps.length; i++) {
-			loadProps[i] = new PropertyValue();
-		}
-
-		loadProps[0].Name = "PublishMode";
-		loadProps[0].Value = 1;
-		loadProps[1].Name = "IsExportContentsPage";
-		loadProps[1].Value = new Boolean(true);
-		loadProps[2].Name = "Hidden";
-		loadProps[2].Value = new Boolean(true);
-		loadProps[3].Name = "Width";
-		loadProps[3].Value = 800;
-		loadProps[4].Name = "IsExportNotes";
-		loadProps[4].Value = new Boolean(true);
-		loadProps[5].Name = "IndexURL";
-		loadProps[5].Value = "index.html";
-
-		loadProperties.put("FilterData", loadProps);
-
-		OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager);
-		converter.setDefaultLoadProperties(loadProperties);
-		return converter;
-	}
-	
 	/**
 	 * modify picture path from RELATIVE to ABSOLUTE url.
 	 * @param content

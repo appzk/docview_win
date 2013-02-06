@@ -170,7 +170,7 @@
 	</dependencies>
 
 	<build>
-		<!-- 通过过滤功能解析资源文件中的maven属性 -->
+		<!-- Set properties in resource files -->
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -264,9 +264,15 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<pom.docview.data.url>http://192.168.51.231:8011/data/</pom.docview.data.url>
+				<!-- Data -->
+				<pom.docview.data.url>http://data.idocv.com/</pom.docview.data.url>
 				<pom.docview.data.dir>D:\idocv\data\</pom.docview.data.dir>
 
+				<!-- Database -->
+				<pom.docview.mongodb.ip>118.244.213.139</pom.docview.mongodb.ip>
+				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
+
+				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:\idocv\converter\bin\word2html.exe</pom.office.cmd.word2html>
 				<pom.office.cmd.excel2html>D:\idocv\converter\bin\excel2html.exe</pom.office.cmd.excel2html>
 				<pom.office.cmd.ppt2jpg>D:\idocv\converter\bin\ppt2jpg.exe</pom.office.cmd.ppt2jpg>
@@ -276,9 +282,15 @@
 		<profile>
 			<id>prod</id>
 			<properties>
+				<!-- Data -->
 				<pom.docview.data.url>http://data.idocv.com/</pom.docview.data.url>
 				<pom.docview.data.dir>D:\idocv\data\</pom.docview.data.dir>
+				
+				<!-- Database -->
+				<pom.docview.mongodb.ip>118.244.213.139</pom.docview.mongodb.ip>
+				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
 
+				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:\idocv\converter\bin\word2html.exe</pom.office.cmd.word2html>
 				<pom.office.cmd.excel2html>D:\idocv\converter\bin\excel2html.exe</pom.office.cmd.excel2html>
 				<pom.office.cmd.ppt2jpg>D:\idocv\converter\bin\ppt2jpg.exe</pom.office.cmd.ppt2jpg>

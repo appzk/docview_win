@@ -1,4 +1,4 @@
-package doc.content;
+package com.idocv.docview.content;
 
 import java.io.File;
 import java.io.IOException;
