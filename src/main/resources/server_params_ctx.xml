@@ -13,6 +13,5 @@
            ">
 
 	<context:property-placeholder location="classpath:server_params.properties"/>
-	
 
 </beans>

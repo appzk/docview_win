@@ -57,14 +57,10 @@ public class DocController {
 		try {
 
 			String ip = IpUtil.getIpAddr(req);
-
-			if (!previewService.validateIp(ip)) {
-				System.err.println("IP: " + ip);
-				// TODO
-			}
 			byte[] data = file.getBytes();
 			String name = file.getOriginalFilename();
-			DocPo po = docService.save(ip, name, data);
+			String appKey = "doctest";
+			DocPo po = docService.save(appKey, name, data);
 			logger.info("--> " + ip + " ADD " + po.getRid());
 			System.err.println("--> " + ip + " ADD " + po.getRid());
 			return resp.getSuccessResponse(po);

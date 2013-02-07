@@ -43,6 +43,16 @@ public class AppPo {
 	 */
 	private String address;
 
+	/**
+	 * Create time
+	 */
+	private long ctime;
+	
+	/*
+	 * Delete time
+	 */
+	private long dtime;
+
 	public String getId() {
 		return id;
 	}
@@ -89,6 +99,22 @@ public class AppPo {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public long getCtime() {
+		return ctime;
+	}
+
+	public void setCtime(long ctime) {
+		this.ctime = ctime;
+	}
+
+	public long getDtime() {
+		return dtime;
+	}
+
+	public void setDtime(long dtime) {
+		this.dtime = dtime;
 	}
 
 	@Override

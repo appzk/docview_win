@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.idocv.docview.common.DocServiceException;
 import com.idocv.docview.common.Paging;
 import com.idocv.docview.dao.DocDao;
+import com.idocv.docview.exception.DBException;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.util.RcUtil;
@@ -81,13 +82,13 @@ public class DocServiceImpl implements DocService {
 		if (StringUtils.isBlank(ip) || StringUtils.isBlank(name) || StringUtils.isBlank(url)) {
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
-		DocPo po = docDao.getUrl(url);
-		if (null != po) {
-			return po;
-		}
-		String host = getHost(url);
-		Response urlResponse = null;
 		try {
+			DocPo po = docDao.getUrl(url);
+			if (null != po) {
+				return po;
+			}
+			String host = getHost(url);
+			Response urlResponse = null;
 			urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
 			byte[] bytes = urlResponse.bodyAsBytes();
 			po = save(ip, name, bytes);
@@ -96,32 +97,60 @@ public class DocServiceImpl implements DocService {
 		} catch (IOException e) {
 			logger.error("save url doc error: ", e);
 			throw new DocServiceException("saveUrl error: ", e);
+		} catch (DBException e) {
+			logger.error("save url doc error: ", e);
+			throw new DocServiceException("saveUrl error: ", e);
 		}
 	}
 
 	@Override
 	public boolean delete(String rid) throws DocServiceException {
-		return docDao.delete(rid);
+		try {
+			return docDao.delete(rid);
+		} catch (DBException e) {
+			logger.error("delete doc error: ", e);
+			throw new DocServiceException("delete doc error: ", e);
+		}
 	}
 
 	@Override
 	public DocPo get(String rid) throws DocServiceException {
-		return docDao.get(rid);
+		try {
+			return docDao.get(rid);
+		} catch (DBException e) {
+			logger.error("get doc error: ", e);
+			throw new DocServiceException("get doc error: ", e);
+		}
 	}
 
 	@Override
 	public DocPo getUrl(String url) throws DocServiceException {
-		return docDao.getUrl(url);
+		try {
+			return docDao.getUrl(url);
+		} catch (DBException e) {
+			logger.error("getUrl doc error: ", e);
+			throw new DocServiceException("getUrl doc error: ", e);
+		}
 	}
 
 	@Override
 	public Paging<DocPo> list(int start, int length) throws DocServiceException {
-		return docDao.list(start, length);
+		try {
+			return docDao.list(start, length);
+		} catch (DBException e) {
+			logger.error("list doc error: ", e);
+			throw new DocServiceException("list doc error: ", e);
+		}
 	}
 
 	@Override
 	public int count() throws DocServiceException {
-		return docDao.count();
+		try {
+			return docDao.count();
+		} catch (DBException e) {
+			logger.error("count doc error: ", e);
+			throw new DocServiceException("count doc error: ", e);
+		}
 	}
 
 	public static String getHost(String url) throws DocServiceException {
