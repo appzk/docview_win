@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.idocv.docview.common.DocResponse;
-import com.idocv.docview.common.DocServiceException;
 import com.idocv.docview.common.IpUtil;
 import com.idocv.docview.common.Paging;
+import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.DocPo;
+import com.idocv.docview.service.AppService;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.PreviewService;
 import com.idocv.docview.util.RcUtil;
@@ -33,6 +34,9 @@ public class DocController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DocController.class);
 
+	@Resource
+	private AppService appService;
+	
 	@Resource
 	private DocService docService;
 
@@ -55,12 +59,11 @@ public class DocController {
 			@RequestParam(value = "file", required = true) MultipartFile file) {
 		DocResponse<DocPo> resp = new DocResponse<DocPo>();
 		try {
-
 			String ip = IpUtil.getIpAddr(req);
 			byte[] data = file.getBytes();
 			String name = file.getOriginalFilename();
 			String appKey = "doctest";
-			DocPo po = docService.save(appKey, name, data);
+			DocPo po = docService.add(appKey, name, data);
 			logger.info("--> " + ip + " ADD " + po.getRid());
 			System.err.println("--> " + ip + " ADD " + po.getRid());
 			return resp.getSuccessResponse(po);

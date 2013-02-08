@@ -16,19 +16,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.idocv.docview.common.DocServiceException;
 import com.idocv.docview.common.Paging;
+import com.idocv.docview.dao.AppDao;
 import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.exception.DBException;
+import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.po.AppPo;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.util.RcUtil;
 
 
-@Service("docService")
+@Service
 public class DocServiceImpl implements DocService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DocServiceImpl.class);
+
+	@Resource
+	private AppDao appDao;
 
 	@Resource
 	private DocDao docDao;
@@ -53,32 +58,39 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public DocPo save(String ip, String name, byte[] data) throws DocServiceException {
-		if (StringUtils.isBlank(ip) || StringUtils.isBlank(name) || null == data || data.length <= 0) {
+	public DocPo add(String appKey, String name, byte[] data) throws DocServiceException {
+		if (StringUtils.isBlank(appKey) || StringUtils.isBlank(name) || null == data || data.length <= 0) {
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
-		DocPo doc = new DocPo();
 		try {
+			AppPo appPo = appDao.getByKey(appKey);
+			if (null == appPo || StringUtils.isBlank(appPo.getId())) {
+				throw new DocServiceException(0, "Application NOT found!");
+			}
+			String appId = appPo.getId();
+			DocPo doc = new DocPo();
 			int size = data.length;
-			String rid = RcUtil.genRid(ip, name, size);
+			String rid = RcUtil.genRid(appId, name, size);
 			doc.setRid(rid);
+			String ext = RcUtil.getExt(rid);
 			doc.setName(name);
-			doc.setSize(String.valueOf(size));
+			doc.setSize(size);
 			doc.setCtime(System.currentTimeMillis());
 			
 			// save file meta and file
 			FileUtils.writeByteArrayToFile(new File(rcUtil.getPath(rid)), data);
 
 			// save info
-			docDao.add(doc);
+			docDao.add(rid, appId, name, size, ext);
+			return doc;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("save doc error: ", e);
+			throw new DocServiceException(e);
 		}
-		return doc;
 	}
 
 	@Override
-	public DocPo saveUrl(String ip, String url, String name) throws DocServiceException {
+	public DocPo addUrl(String ip, String url, String name) throws DocServiceException {
 		if (StringUtils.isBlank(ip) || StringUtils.isBlank(name) || StringUtils.isBlank(url)) {
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
@@ -91,7 +103,7 @@ public class DocServiceImpl implements DocService {
 			Response urlResponse = null;
 			urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
 			byte[] bytes = urlResponse.bodyAsBytes();
-			po = save(ip, name, bytes);
+			po = add(ip, name, bytes);
 			docDao.updateUrl(po.getRid(), url);
 			return po;
 		} catch (IOException e) {
@@ -136,7 +148,7 @@ public class DocServiceImpl implements DocService {
 	@Override
 	public Paging<DocPo> list(int start, int length) throws DocServiceException {
 		try {
-			return docDao.list(start, length);
+			return new Paging<DocPo>(docDao.list(start, length), (int) count(false));
 		} catch (DBException e) {
 			logger.error("list doc error: ", e);
 			throw new DocServiceException("list doc error: ", e);
@@ -144,9 +156,9 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public int count() throws DocServiceException {
+	public long count(boolean includeDeleted) throws DocServiceException {
 		try {
-			return docDao.count();
+			return docDao.count(includeDeleted);
 		} catch (DBException e) {
 			logger.error("count doc error: ", e);
 			throw new DocServiceException("count doc error: ", e);

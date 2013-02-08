@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.idocv.docview.common.DocServiceException;
 import com.idocv.docview.common.IpUtil;
+import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.PreviewService;
@@ -58,7 +58,7 @@ public class PreviewController {
 			}
 			byte[] data = file.getBytes();
 			String name = file.getOriginalFilename();
-			DocPo po = docService.save(ip, name, data);
+			DocPo po = docService.add(ip, name, data);
 			logger.info("--> " + ip + " ADD " + po.getRid());
 			String rid = po.getRid();
 
@@ -77,13 +77,10 @@ public class PreviewController {
 			@RequestParam(defaultValue = "1") int start,
 			@RequestParam(defaultValue = "5") int size) {
 		ModelAndView model = new ModelAndView();
-		if (!RcUtil.isValidRid(rid)) {
-			model.setViewName("error");
-			model.addObject("msg", "非法资源ID！");
-		}
-		String ext = RcUtil.getExt(rid);
 		PageVo<? extends Serializable> page = null;
 		try {
+			RcUtil.validateRid(rid);
+			String ext = RcUtil.getExt(rid);
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
 					|| "odt".equalsIgnoreCase(ext)) {
 				page = previewService.convertWord2Html(rid, start, size);
@@ -117,7 +114,7 @@ public class PreviewController {
 					model.addObject("msg", "该文档无法预览，请下载查看！");
 				}
 			}
-		} catch (DocServiceException e) {
+		} catch (Exception e) {
 			logger.error("freeView error: ", e);
 			model.setViewName("error");
 			model.addObject("msg", "该文档无法预览，请下载查看！");
@@ -203,7 +200,7 @@ public class PreviewController {
 				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
 			}
 			String ip = req.getRemoteAddr();
-			DocPo po = docService.saveUrl(ip, url, name);
+			DocPo po = docService.addUrl(ip, url, name);
 			if (null != po) {
 				String rid = po.getRid();
 				return "redirect:" + rid + ".html";

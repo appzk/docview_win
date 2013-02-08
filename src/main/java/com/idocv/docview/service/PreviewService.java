@@ -1,6 +1,6 @@
 package com.idocv.docview.service;
 
-import com.idocv.docview.common.DocServiceException;
+import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.vo.ExcelVo;
 import com.idocv.docview.vo.PPTVo;
 import com.idocv.docview.vo.PageVo;

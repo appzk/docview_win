@@ -2,7 +2,6 @@ package com.idocv.docview.util;
 
 
 import java.io.File;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -10,8 +9,6 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.idocv.docview.common.IpUtil;
 
 
 @Component("rcUtil")
@@ -24,23 +21,21 @@ public class RcUtil {
 	String dataDir;
 
 	private static final String SPLIT = "_";
-	private final static DateFormat yyyymmddformat = new SimpleDateFormat("yyyyMMdd");
 
 	/**
-	 * 生成rid，格式：<8位加密ip>_<yyyyMMddHHmmss>_<size>_<random>_ext
+	 * 生成rid，格式：(appId)_(yyyyMMdd)_(HHmmss)(size)(random)_ext
 	 * 
 	 * @param uid
 	 * @param fileName
 	 * @param size
 	 * @return
 	 */
-	public static String genRid(String ip, String fileName, int size) {
-		String encodedIp = IpUtil.encodeIp(ip);
+	public static String genRid(String appId, String fileName, int size) {
 		Date date = new Date();
 		String dateString = new SimpleDateFormat("yyyyMMdd").format(date);
 		String timeString = new SimpleDateFormat("HHmmss").format(date);
 		String randomString = RandomStringUtils.randomAlphanumeric(3);
-		return encodedIp + SPLIT + dateString + SPLIT + timeString + size + SPLIT + randomString + SPLIT + fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+		return appId + SPLIT + dateString + SPLIT + timeString + size + randomString + SPLIT + fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 	}
 
 	/**
@@ -51,25 +46,19 @@ public class RcUtil {
 	 * @throws IllegalArgumentException
 	 */
 	public String getPath(String rid) throws IllegalArgumentException {
-		if (!isValidRid(rid)) {
-			throw new IllegalArgumentException("Invalid rid.");
-		}
+		validateRid(rid);
 		return getDirectoryByRid(rid) + getFileNameByRid(rid);
 	}
 
 	public static String getFileNameByRid(String rid) throws IllegalArgumentException{
-		if (!isValidRid(rid)) {
-			throw new IllegalArgumentException("Invalid rid.");
-		}
+		validateRid(rid);
 		String[] splits = rid.split(SPLIT);
-		return splits[2] + SPLIT + splits[3] + "." + splits[4];
+		return splits[splits.length - 2] + "." + splits[splits.length - 1];
 	}
 	
-	public static boolean isValidRid(String rid) {
-		if (StringUtils.isNotBlank(rid) && rid.matches("\\w{8}_\\d{8}_\\d{1,}_\\w{3}_.*")) {
-			return true;
-		} else {
-			return false;
+	public static void validateRid(String rid) throws IllegalArgumentException {
+		if (StringUtils.isBlank(rid) || !rid.matches("\\w{1,}_\\d{8}_\\w{1,}_\\w{1,}")) {
+			throw new IllegalArgumentException("Invalid rid.");
 		}
 	}
 	
@@ -110,9 +99,7 @@ public class RcUtil {
 	}
 	
 	public String getDirectoryByRid(String rid) throws IllegalArgumentException {
-		if (!isValidRid(rid)) {
-			throw new IllegalArgumentException("Invalid rid.");
-		}
+		validateRid(rid);
 		File dir = new File(dataDir + getDirectoryWithoutRootByRid(rid));
 		if (!dir.isDirectory()) {
 			dir.mkdirs();
@@ -121,25 +108,19 @@ public class RcUtil {
 	}
 	
 	public static String getDirectoryWithoutRootByRid(String rid) throws IllegalArgumentException {
-		if (!isValidRid(rid)) {
-			throw new IllegalArgumentException("Invalid rid.");
-		}
+		validateRid(rid);
 		String[] splits = rid.split(SPLIT);
 		return splits[0] + File.separator + splits[1] + File.separator;
 	}
 
 	public static String getExt(String rid) throws IllegalArgumentException {
-		if (!isValidRid(rid)) {
-			throw new IllegalArgumentException("Invalid rid.");
-		}
+		validateRid(rid);
 		String[] splits = rid.split(SPLIT);
-		return splits[4];
+		return splits[splits.length - 1];
 	}
 
 	public static String getFileNameWithoutExt(String rid) throws IllegalArgumentException {
-		if (!isValidRid(rid)) {
-			throw new IllegalArgumentException("Invalid rid.");
-		}
+		validateRid(rid);
 		String[] splits = rid.split(SPLIT);
 		return splits[2] + SPLIT + splits[3];
 	}

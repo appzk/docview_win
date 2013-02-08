@@ -1,6 +1,7 @@
 package com.idocv.docview.dao;
 
-import com.idocv.docview.common.Paging;
+import java.util.List;
+
 import com.idocv.docview.exception.DBException;
 import com.idocv.docview.po.DocPo;
 
@@ -51,10 +52,14 @@ public interface DocDao {
 	 * @param rids
 	 * @return
 	 */
-	Paging<DocPo> list(int start, int length) throws DBException;
+	List<DocPo> list(int offset, int limit) throws DBException;
 
 	/**
-	 * get total count.
+	 * Get document count.
+	 * 
+	 * @param includeDeleted
+	 * @return
+	 * @throws DBException
 	 */
-	int count() throws DBException;
+	public long count(boolean includeDeleted) throws DBException;
 }

@@ -1,5 +1,9 @@
 package com.idocv.docview.dao.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Repository;
@@ -9,6 +13,7 @@ import com.idocv.docview.exception.DBException;
 import com.idocv.docview.po.AppPo;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.QueryBuilder;
@@ -71,5 +76,79 @@ public class AppDaoImpl extends BaseDaoImpl implements AppDao, InitializingBean 
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());
 		}
+	}
+
+	@Override
+	public AppPo getByKey(String key) throws DBException {
+		try {
+			QueryBuilder query = QueryBuilder.start(KEY).is(key);
+			DBCollection coll = db.getCollection(COLL_APP);
+			DBObject obj = coll.findOne(query.get());
+			return convertDBObject2Po(obj);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	@Override
+	public List<AppPo> list(int offset, int limit) throws DBException {
+		try {
+			DBObject orderBy = BasicDBObjectBuilder.start().add(CTIME, -1).get();
+			DBCollection coll = db.getCollection(COLL_APP);
+			DBCursor cur = coll.find().sort(orderBy).skip(offset).limit(limit);
+			return convertCur2Po(cur);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	private List<AppPo> convertCur2Po(DBCursor cur) {
+		List<AppPo> list = new ArrayList<AppPo>();
+		if (null == cur) {
+			return list;
+		}
+		DBObject obj;
+		AppPo po;
+		while (cur.hasNext()) {
+			obj = cur.next();
+			po = convertDBObject2Po(obj);
+			list.add(po);
+		}
+		return list;
+	}
+
+	private AppPo convertDBObject2Po(DBObject obj) {
+		if (null == obj) {
+			return null;
+		}
+		AppPo po = new AppPo();
+		if (obj.containsField(_ID)) {
+			po.setId(obj.get(_ID).toString());
+		}
+		if (obj.containsField(NAME)) {
+			po.setName(obj.get(NAME).toString());
+		}
+		if (obj.containsField(KEY)) {
+			po.setKey(obj.get(KEY).toString());
+		}
+		if (obj.containsField(IPS)) {
+			po.setIps((Collection<String>) obj.get(IPS));
+		}
+		if (obj.containsField(PHONE)) {
+			po.setPhone(obj.get(PHONE).toString());
+		}
+		if (obj.containsField(CTIME)) {
+			po.setCtime(Long.valueOf(obj.get(CTIME).toString()));
+		}
+		if (obj.containsField(UTIME)) {
+			po.setUtime(Long.valueOf(obj.get(UTIME).toString()));
+		}
+		if (obj.containsField(ADDRESS)) {
+			po.setAddress(obj.get(ADDRESS).toString());
+		}
+		if (obj.containsField(UTIME)) {
+			po.setUtime(Long.valueOf(obj.get(UTIME).toString()));
+		}
+		return po;
 	}
 }

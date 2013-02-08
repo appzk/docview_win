@@ -29,7 +29,7 @@ public class DocPo implements Serializable {
 	/**
 	 * 资源大小
 	 */
-	private String size;
+	private long size;
 
 	/**
 	 * 状态，0. 刚上传默认; -1. 已经删除;
@@ -42,9 +42,9 @@ public class DocPo implements Serializable {
 	private long ctime;
 
 	/**
-	 * 删除时间
+	 * 更新时间
 	 */
-	private long dtime;
+	private long utime;
 
 	/**
 	 * 资源扩展名
@@ -80,11 +80,11 @@ public class DocPo implements Serializable {
 		this.name = name;
 	}
 
-	public String getSize() {
+	public long getSize() {
 		return size;
 	}
 
-	public void setSize(String size) {
+	public void setSize(long size) {
 		this.size = size;
 	}
 
@@ -104,12 +104,12 @@ public class DocPo implements Serializable {
 		this.ctime = ctime;
 	}
 
-	public long getDtime() {
-		return dtime;
+	public long getUtime() {
+		return utime;
 	}
 
-	public void setDtime(long dtime) {
-		this.dtime = dtime;
+	public void setUtime(long utime) {
+		this.utime = utime;
 	}
 
 	public String getExt() {

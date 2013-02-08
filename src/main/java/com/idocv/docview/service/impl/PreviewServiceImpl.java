@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
-import com.idocv.docview.common.DocServiceException;
+import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.PreviewService;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.ExcelVo;

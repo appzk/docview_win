@@ -1,4 +1,4 @@
-package com.idocv.docview.common;
+package com.idocv.docview.exception;
 
 public class DocServiceException extends Exception {
 
@@ -7,6 +7,18 @@ public class DocServiceException extends Exception {
 	private int code;
 
 	private String desc;
+
+	public DocServiceException() {
+		super();
+	}
+
+	public DocServiceException(String message) {
+		super(message);
+	}
+
+	public DocServiceException(Throwable cause) {
+		super(cause);
+	}
 
 	public DocServiceException(int code, String desc) {
 		super(desc);

@@ -1,6 +1,6 @@
 package com.idocv.docview.po;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -31,7 +31,7 @@ public class AppPo {
 	/**
 	 * Authorized IP addresses, the first one is the main IP
 	 */
-	private List<String> ips;
+	private Collection<String> ips;
 
 	/**
 	 * Contact phone number
@@ -48,10 +48,10 @@ public class AppPo {
 	 */
 	private long ctime;
 	
-	/*
-	 * Delete time
+	/**
+	 * Update time
 	 */
-	private long dtime;
+	private long utime;
 
 	public String getId() {
 		return id;
@@ -77,11 +77,11 @@ public class AppPo {
 		this.key = key;
 	}
 
-	public List<String> getIps() {
+	public Collection<String> getIps() {
 		return ips;
 	}
 
-	public void setIps(List<String> ips) {
+	public void setIps(Collection<String> ips) {
 		this.ips = ips;
 	}
 
@@ -109,12 +109,12 @@ public class AppPo {
 		this.ctime = ctime;
 	}
 
-	public long getDtime() {
-		return dtime;
+	public long getUtime() {
+		return utime;
 	}
 
-	public void setDtime(long dtime) {
-		this.dtime = dtime;
+	public void setUtime(long utime) {
+		this.utime = utime;
 	}
 
 	@Override
