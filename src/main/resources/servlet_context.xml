@@ -12,10 +12,8 @@
     
     <context:property-placeholder location="classpath:server_params.properties" />
     
-        	<!-- 引入服务层的配置文件 -->
     <import resource="controllers.xml"/>
-	 
-	 
+    
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="webBindingInitializer">
 			<bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
@@ -42,7 +40,6 @@
 	<bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
 		<property name="order" value="0"/>
 	</bean>
-
 	
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" >
 		<property name="cookieMaxAge" value="100000"/>
