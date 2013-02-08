@@ -254,17 +254,17 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		try {
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
-					CmdUtil.runWindows(word2Html);
+					CmdUtil.runWindows(word2Html, src, dest);
 				}
 			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
-					CmdUtil.runWindows(excel2Html);
+					CmdUtil.runWindows(excel2Html, src, dest);
 				}
 			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
 				if (!destFile.isFile()) {
-					CmdUtil.runWindows(ppt2Jpg);
+					CmdUtil.runWindows(ppt2Jpg, src, dest);
 				}
 			} else {
 				throw new DocServiceException("Unsupported document type!");
