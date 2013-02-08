@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CmdUtil {
 	
-	public static String cmdLinux(String... cmd) {
+	public static String runLinux(String... cmd) {
 		String result = "";
 		StringBuffer sbOut = new StringBuffer();
 		StringBuffer sbErr = new StringBuffer();
@@ -43,7 +43,7 @@ public class CmdUtil {
 		return result;
 	}
 	
-	public static String cmdWindows(String... cmd) {
+	public static String runWindows(String... cmd) {
 		String result = "";
 		StringBuffer sbOut = new StringBuffer();
 		StringBuffer sbErr = new StringBuffer();
@@ -78,6 +78,6 @@ public class CmdUtil {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(cmdWindows("dir"));
+		System.out.println(runWindows("dir"));
 	}
 }

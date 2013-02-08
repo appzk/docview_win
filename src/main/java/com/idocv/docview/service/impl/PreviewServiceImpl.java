@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.PreviewService;
+import com.idocv.docview.util.CmdUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.ExcelVo;
 import com.idocv.docview.vo.PPTVo;
@@ -253,17 +254,17 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		try {
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
-
+					CmdUtil.runWindows(word2Html);
 				}
 			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
-
+					CmdUtil.runWindows(excel2Html);
 				}
 			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
 				if (!destFile.isFile()) {
-
+					CmdUtil.runWindows(ppt2Jpg);
 				}
 			} else {
 				throw new DocServiceException("Unsupported document type!");
