@@ -122,6 +122,6 @@ public class RcUtil {
 	public static String getFileNameWithoutExt(String rid) throws IllegalArgumentException {
 		validateRid(rid);
 		String[] splits = rid.split(SPLIT);
-		return splits[2] + SPLIT + splits[3];
+		return splits[2];
 	}
 }
