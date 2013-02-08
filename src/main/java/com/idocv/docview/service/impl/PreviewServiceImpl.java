@@ -17,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.idocv.docview.exception.DocServiceException;
@@ -36,6 +37,15 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	@Resource
 	private RcUtil rcUtil;
 	
+	private @Value("${office.cmd.word2html}")
+	String word2Html;
+
+	private @Value("${office.cmd.excel2html}")
+	String excel2Html;
+
+	private @Value("${office.cmd.ppt2jpg}")
+	String ppt2Jpg;
+
 	private static String lineDilimeter = "``";
 	
 	@Override
@@ -232,13 +242,33 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	}
 
 	private boolean convert(String rid) throws DocServiceException {
+		String src = rcUtil.getPath(rid);
+		File srcFile = new File(src);
+		String dest = rcUtil.getParsePathOfHtml(rid);
+		File destFile = new File(dest);
+		if (!srcFile.isFile()) {
+			throw new DocServiceException("File NOT found, rid=" + rid);
+		}
+		String ext = RcUtil.getExt(rid);
 		try {
-			File src = new File(rcUtil.getPath(rid));
-			File dest = new File(rcUtil.getParsePathOfHtml(rid));
-			if (!dest.isFile()) {
-				// getConverter().convert(src, dest);
+			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
+				if (!destFile.isFile()) {
+
+				}
+			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
+				if (!destFile.isFile()) {
+
+				}
+			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
+				dest = rcUtil.getParseDir(rid);
+				destFile = new File(dest);
+				if (!destFile.isFile()) {
+
+				}
+			} else {
+				throw new DocServiceException("Unsupported document type!");
 			}
-			return dest.isFile();
+			return true;
 		} catch (Exception e) {
 			logger.error("convert error: ", e.fillInStackTrace());
 			throw new DocServiceException(e.getMessage(), e);
