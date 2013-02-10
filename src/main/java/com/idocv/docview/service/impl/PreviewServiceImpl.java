@@ -103,7 +103,6 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	public PageVo<ExcelVo> convertExcel2Html(String rid, int start, int limit) throws DocServiceException {
 		try {
 			convert(rid);
-			File src = new File(rcUtil.getPath(rid));
 			File rawFilesDir = new File(rcUtil.getParseDir(rid) + "index.files");
 			if (!rawFilesDir.isDirectory()) {
 				throw new DocServiceException("Can't find parsed directory!");
@@ -112,11 +111,14 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			File[] excelFiles = rawFilesDir.listFiles();
 			List<File> sheetFiles = new ArrayList<File>();
 			File tabstripFile = null;
+			File sheetStyleFile = null;
 			for (File excelFile : excelFiles) {
 				if (excelFile.getName().matches("sheet\\d+\\.html")) {
 					sheetFiles.add(excelFile);
 				} else if (excelFile.getName().equalsIgnoreCase("tabstrip.html")) {
 					tabstripFile = excelFile;
+				} else if (excelFile.getName().endsWith(".css")) {
+					sheetStyleFile = excelFile;
 				}
 			}
 			if (CollectionUtils.isEmpty(sheetFiles) || null == tabstripFile) {
@@ -147,6 +149,12 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				VoList.add(vo);
 			}
 			PageVo<ExcelVo> page = new PageVo<ExcelVo>(VoList, sheetFiles.size());
+			if (null != sheetStyleFile) {
+				String styleString = FileUtils.readFileToString(sheetStyleFile, "GBK");
+				File destStylePath = new File(rcUtil.getParseDir(rid) + "style.css");
+				FileUtils.writeStringToFile(destStylePath, styleString, "UTF-8");
+				page.setStyleUrl(rcUtil.getParseUrlDir(rid) + "style.css");
+			}
 			return page;
 		} catch (Exception e) {
 			logger.error("convertExcel2Html error: ", e.fillInStackTrace());

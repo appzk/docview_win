@@ -19,6 +19,7 @@ public class PageVo<T> implements Serializable {
 	private int totalPage;
 	private int pageSize = 10;
 	private List<T> data;
+	private String styleUrl;
 
 	private PageVo() {
 		
@@ -129,6 +130,14 @@ public class PageVo<T> implements Serializable {
 		this.data = data;
 	}
 	
+	public String getStyleUrl() {
+		return styleUrl;
+	}
+
+	public void setStyleUrl(String styleUrl) {
+		this.styleUrl = styleUrl;
+	}
+
 	public static PageVo getErrorPageVo(String message) {
 		PageVo page = new PageVo();
 		page.setCode(0);
