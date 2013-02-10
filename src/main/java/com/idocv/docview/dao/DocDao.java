@@ -34,9 +34,10 @@ public interface DocDao {
 	 * get Doc by rid.
 	 * 
 	 * @param rid
+	 * @param whether include deleted doc
 	 * @return
 	 */
-	DocPo get(String rid) throws DBException;
+	DocPo get(String rid, boolean includeDeleted) throws DBException;
 	
 	/**
 	 * get Doc by URL.

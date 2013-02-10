@@ -83,8 +83,18 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public DocPo get(String rid) throws DBException {
-		return null;
+	public DocPo get(String rid, boolean includeDeleted) throws DBException {
+		try {
+			QueryBuilder query = QueryBuilder.start(_ID).is(rid);
+			if (!includeDeleted) {
+				query.and(STATUS).notEquals(-1);
+			}
+			DBCollection coll = db.getCollection(COLL_DOC);
+			DBObject obj = coll.findOne(query);
+			return convertDBObject2Po(obj);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
 	}
 
 	@Override

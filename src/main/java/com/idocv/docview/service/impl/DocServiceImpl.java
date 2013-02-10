@@ -128,7 +128,7 @@ public class DocServiceImpl implements DocService {
 	@Override
 	public DocPo get(String rid) throws DocServiceException {
 		try {
-			return docDao.get(rid);
+			return docDao.get(rid, false);
 		} catch (DBException e) {
 			logger.error("get doc error: ", e);
 			throw new DocServiceException("get doc error: ", e);
