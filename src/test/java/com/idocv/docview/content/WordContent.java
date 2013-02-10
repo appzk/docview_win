@@ -10,24 +10,27 @@ import org.apache.commons.io.FileUtils;
 public class WordContent {
 	public static void main(String[] args) {
 		try {
-			String lineDilimeter = "``";
-			String src = "/Users/Godwin/docview/data/10/04/16/100416b93d34d3482c47a7f06ca50f29/2012/1023/fFs/fFs.html";
+			String src = "/Users/Godwin/tmp/docview/windows/word/index.html";
+			File dest = new File("/Users/Godwin/tmp/docview/windows/word/bo.html");
 
-			String contentWhole = FileUtils.readFileToString(new File(src));
-			contentWhole = contentWhole.replaceAll("\n", lineDilimeter);
-			String title = contentWhole.replaceFirst("(?i).*?<TITLE>(.*?)</TITLE>.*(?i)", "$1").replaceAll(lineDilimeter, "\n");
-			String body = contentWhole.replaceFirst("(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2").replaceAll(lineDilimeter, "\n");
+			String contentWhole = FileUtils.readFileToString(new File(src), "GBK");
+			String body = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
+			FileUtils.writeStringToFile(dest, body, "utf-8");
 			
 			List<String> pages = new ArrayList<String>();
-			String pagingString = contentWhole.replaceFirst("(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
-			while (pagingString.matches(".+<[^>]+page-break-before[^>]+>.*")) {
-				String page = pagingString.replaceFirst("(.+?)(<[^>]+page-break-before[^>]+>.*)", "$1").replaceAll(lineDilimeter, "\n");
-				pagingString = pagingString.replaceFirst("(.+?)(<[^>]+page-break-before[^>]+>.*)", "$2");
+			String pagingString = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
+			while (pagingString.matches("(?s).+<[^>]+page-break-before[^>]+>.*")) {
+				String page = pagingString.replaceFirst("(?s)(.+?)(<[^>]+page-break-before[^>]+>.*)", "$1");
+				pagingString = pagingString.replaceFirst("(?s)(.+?)(<[^>]+page-break-before[^>]+>.*)", "$2");
 				pages.add(page);
 			}
-			pages.add(pagingString.replaceAll(lineDilimeter, "\n"));
+			pages.add(pagingString);
 
 			System.out.println("Page count: " + pages.size());
+			for (int i = 0; i < pages.size(); i++) {
+				System.err.println("===>>> page " + (i + 1));
+				System.out.println(pages.get(i));
+			}
 
 			// System.out.println(body);
 			

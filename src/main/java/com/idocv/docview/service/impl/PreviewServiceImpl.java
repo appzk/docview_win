@@ -65,27 +65,25 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			String bodyRaw;
 			if (!bodyPath.isFile()) {
 				String contentWhole = FileUtils.readFileToString(htmlFile);
-				contentWhole = contentWhole.replaceAll("\n|\r", lineDilimeter);
-				String title = contentWhole.replaceFirst("(?i).*?<TITLE>(.*?)</TITLE>.*(?i)", "$1").replaceAll(lineDilimeter, "\n");
-				bodyRaw = contentWhole.replaceFirst("(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2").replaceAll(lineDilimeter, "\n");
+				bodyRaw = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
 				FileUtils.writeStringToFile(bodyPath, bodyRaw, "UTF-8");
 			} else {
 				bodyRaw = FileUtils.readFileToString(bodyPath);
 			}
 
-			String bodyString = bodyRaw.replaceAll("\n|\r", lineDilimeter);
+			String bodyString = bodyRaw;
 
 			// modify picture path from RELATIVE to ABSOLUTE url.
 			bodyString = processPictureUrl(rid, bodyString);
 			
 			// paging
 			List<String> pages = new ArrayList<String>();
-			while (bodyString.matches("(?i)(.+?)(<[^>]+style=\"[^>]*page-break-before[^>]+>.*)(?-i)")) {
-				String page = bodyString.replaceFirst("(?i)(.+?)(<[^>]+style=\"[^>]*page-break-before[^>]+>.*)(?-i)", "$1").replaceAll(lineDilimeter, "\n");
-				bodyString = bodyString.replaceFirst("(?i)(.+?)(<[^>]+style=\"[^>]*page-break-before[^>]+>.*)(?-i)", "$2");
+			while (bodyString.matches("(?s)(?i)(.+?)(<[^>]+style=\"[^>]*page-break-before[^>]+>.*)(?-i)")) {
+				String page = bodyString.replaceFirst("(?s)(?i)(.+?)(<[^>]+style=\"[^>]*page-break-before[^>]+>.*)(?-i)", "$1");
+				bodyString = bodyString.replaceFirst("(?s)(?i)(.+?)(<[^>]+style=\"[^>]*page-break-before[^>]+>.*)(?-i)", "$2");
 				pages.add(page);
 			}
-			pages.add(bodyString.replaceAll(lineDilimeter, "\n"));
+			pages.add(bodyString);
 			
 			List<WordVo> data = new ArrayList<WordVo>();
 			// construct vo
@@ -282,7 +280,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	 * @return
 	 */
 	public String processPictureUrl(String rid, String content) throws DocServiceException {
-		return content.replaceAll("(<IMG.*?SRC=\")([^\"]+/)?([^>]*?>)", "$1" + rcUtil.getParseUrlDir(rid) + "$3");
+		return content.replaceAll("(?s)(?i)(<img.*?src=\")([^>]+?>)(?-i)", "$1" + rcUtil.getParseUrlDir(rid) + "$2");
 	}
 	
 	public static String getEncoding(File file) {
