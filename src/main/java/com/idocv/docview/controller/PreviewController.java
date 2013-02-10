@@ -200,7 +200,8 @@ public class PreviewController {
 				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
 			}
 			String ip = req.getRemoteAddr();
-			DocPo po = docService.addUrl(ip, url, name);
+			String appKey = "doctest";
+			DocPo po = docService.addUrl(appKey, url, name);
 			if (null != po) {
 				String rid = po.getRid();
 				return "redirect:" + rid + ".html";
