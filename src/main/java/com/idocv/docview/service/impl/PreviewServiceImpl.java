@@ -280,7 +280,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	 * @return
 	 */
 	public String processPictureUrl(String rid, String content) throws DocServiceException {
-		return content.replaceAll("(?s)(?i)(<img.*?src=\")([^>]+?\">)(?-i)", "$1" + rcUtil.getParseUrlDir(rid) + "$2");
+		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\")([^>]+?>)(?-i)", "$1" + rcUtil.getParseUrlDir(rid) + "$2");
 	}
 	
 	public static String getEncoding(File file) {

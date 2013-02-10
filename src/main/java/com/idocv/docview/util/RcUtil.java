@@ -80,6 +80,7 @@ public class RcUtil {
 	public String getParseUrlDir(String rid) {
 		String nameWithoutExt = RcUtil.getFileNameWithoutExt(rid);
 		String dir = dataUrl + RcUtil.getDirectoryWithoutRootByRid(rid) + nameWithoutExt + File.separator;
+		dir = dir.replaceAll("\\\\", "/");
 		return dir;
 	}
 	
@@ -110,7 +111,9 @@ public class RcUtil {
 	public static String getDirectoryWithoutRootByRid(String rid) throws IllegalArgumentException {
 		validateRid(rid);
 		String[] splits = rid.split(SPLIT);
-		return splits[0] + File.separator + splits[1] + File.separator;
+		String yyyy = splits[1].substring(0, 4);
+		String mmdd = splits[1].substring(4, 8);
+		return splits[0] + File.separator + yyyy + File.separator + mmdd + File.separator;
 	}
 
 	public static String getExt(String rid) throws IllegalArgumentException {
