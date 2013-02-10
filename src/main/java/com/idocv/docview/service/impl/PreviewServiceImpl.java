@@ -10,15 +10,14 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import jxl.Sheet;
-import jxl.Workbook;
-
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.PreviewService;
@@ -105,62 +104,49 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		try {
 			convert(rid);
 			File src = new File(rcUtil.getPath(rid));
-			
-			File dest = new File(rcUtil.getParsePathOfHtml(rid));
-			String contentWhole = FileUtils.readFileToString(dest);
-			contentWhole = contentWhole.replaceAll("\n|\r", lineDilimeter);
+			File rawFilesDir = new File(rcUtil.getParseDir(rid) + "index.files");
+			if (!rawFilesDir.isDirectory()) {
+				throw new DocServiceException("Can't find parsed directory!");
+			}
 
-			// get titles
-			String titlesString = "表单-1";
-			if (-1 != contentWhole.indexOf("<HR>")) {
-				titlesString = contentWhole.replaceFirst("(?i).*?<HR>(.*?)<HR>.*", "$1");
+			File[] excelFiles = rawFilesDir.listFiles();
+			List<File> sheetFiles = new ArrayList<File>();
+			File tabstripFile = null;
+			for (File excelFile : excelFiles) {
+				if (excelFile.getName().matches("sheet\\d+\\.html")) {
+					sheetFiles.add(excelFile);
+				} else if (excelFile.getName().equalsIgnoreCase("tabstrip.html")) {
+					tabstripFile = excelFile;
+				}
 			}
-			List<String> titles = new ArrayList<String>();
-			while (titlesString.contains("</A>")) {
-				String title = titlesString.replaceFirst(".*?<A HREF=\"#table[^\"]+\">([^<]+)</A>.*", "$1");
-				titles.add(title);
-				titlesString = titlesString.substring(titlesString.indexOf("</A>") + 4);
-			}
-			if (titles.isEmpty()) {
-				titles.add("表单-1");
-			}
-			System.out.println("titles:\n" + titles);
-			
-			Workbook w = null;
-			try {
-				w = Workbook.getWorkbook(src);
-			} catch (Exception e) {
-				logger.error("read excel " + src + " error:", e);
+			if (CollectionUtils.isEmpty(sheetFiles) || null == tabstripFile) {
+				throw new Exception("Excel parsed files NOT found!");
 			}
 			
-			String content = contentWhole;
-			content = processPictureUrl(rid, content);
-			List<ExcelVo> tables = new ArrayList<ExcelVo>();
-			for (int i = 0; i < titles.size(); i++) {
-				
-				// get sheet width in pixels
-				int widthSum = 0;
-				if (null != w) {
-					Sheet sheet = w.getSheet(i);
-					for (int j = 0; j < sheet.getColumns(); j++) {
-						widthSum += sheet.getColumnWidth(j);
-					}
-				}
-				widthSum = (int) (widthSum * 8.64); // convert to pixels
-				String c;
-				if (widthSum > 0) {
-					c = content.replaceFirst("(?i).*?(<TABLE[^>]+>)(.*?</TABLE>).*(?-i)", "<TABLE border=\"1\" width=\"" + widthSum + "\">$2").replaceAll(lineDilimeter, "\n");
-				} else {
-					c = content.replaceFirst("(?i).*?(<TABLE[^>]+>)(.*?</TABLE>).*(?-i)", "<TABLE border=\"1\">$2").replaceAll(lineDilimeter, "\n");
-				}
-				content = content.substring(content.indexOf("</TABLE>") + 8);
-
+			// get TITLE(s) and CONTENT(s)
+			List<ExcelVo> VoList = new ArrayList<ExcelVo>();
+			String titleFileContent = FileUtils.readFileToString(tabstripFile, "GBK");
+			System.err.println("Processing excel file - " + rid);
+			for (int i = 0; i < sheetFiles.size(); i++) {
 				ExcelVo vo = new ExcelVo();
-				vo.setTitle(titles.get(i));
-				vo.setContent(c);
-				tables.add(vo);
+
+				// get title
+				String title = titleFileContent.replaceFirst("(?s)(?i).+?" + sheetFiles.get(i).getName() + ".+?<font[^>]+>(.+?)</font>.*(?-i)", "$1");
+				title = StringUtils.isBlank(title) ? ("表单" + (i + 1)) : title;
+				// titleList.add(title);
+				System.err.println("    title" + (i + 1) + " = " + title);
+
+				// get content
+				String sheetFileContent = FileUtils.readFileToString(sheetFiles.get(i), "GBK");
+				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+>.*?</table>).*(?-i)", "$1");
+				// sheetContent = processPictureUrl(rid, sheetContent);
+				// contentList.add(sheetContent);
+
+				vo.setTitle(title);
+				vo.setContent(sheetContent);
+				VoList.add(vo);
 			}
-			PageVo<ExcelVo> page = new PageVo<ExcelVo>(tables, titles.size());
+			PageVo<ExcelVo> page = new PageVo<ExcelVo>(VoList, sheetFiles.size());
 			return page;
 		} catch (Exception e) {
 			logger.error("convertExcel2Html error: ", e.fillInStackTrace());
