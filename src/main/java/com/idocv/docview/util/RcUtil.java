@@ -80,6 +80,7 @@ public class RcUtil {
 	public String getParseUrlDir(String rid) {
 		String nameWithoutExt = RcUtil.getFileNameWithoutExt(rid);
 		String dir = dataUrl + RcUtil.getDirectoryWithoutRootByRid(rid) + nameWithoutExt + File.separator;
+		dir.replaceAll("\\\\", "/");
 		return dir;
 	}
 	
