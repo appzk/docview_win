@@ -20,6 +20,6 @@ public class WordPicture {
 	}
 	
 	public static String processPictureUrl(String rid, String content) {
-		return content.replaceAll("(?s)(?i)(<img.*?src=\")([^>]+?>)(?-i)", "$1" + "<URL DIR>" + "$2");
+		return content.replaceAll("(?s)(?i)(<img.*?src=\")([^>]+?\">)(?-i)", "$1" + "<URL DIR>" + "$2");
 	}
 }

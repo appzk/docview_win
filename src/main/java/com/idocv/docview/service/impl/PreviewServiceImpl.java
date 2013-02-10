@@ -64,11 +64,11 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			File bodyPath = new File(rcUtil.getParseDir(rid) + "body.html");
 			String bodyRaw;
 			if (!bodyPath.isFile()) {
-				String contentWhole = FileUtils.readFileToString(htmlFile);
+				String contentWhole = FileUtils.readFileToString(htmlFile, "GBK");
 				bodyRaw = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
 				FileUtils.writeStringToFile(bodyPath, bodyRaw, "UTF-8");
 			} else {
-				bodyRaw = FileUtils.readFileToString(bodyPath);
+				bodyRaw = FileUtils.readFileToString(bodyPath, "UTF-8");
 			}
 
 			String bodyString = bodyRaw;
@@ -280,7 +280,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	 * @return
 	 */
 	public String processPictureUrl(String rid, String content) throws DocServiceException {
-		return content.replaceAll("(?s)(?i)(<img.*?src=\")([^>]+?>)(?-i)", "$1" + rcUtil.getParseUrlDir(rid) + "$2");
+		return content.replaceAll("(?s)(?i)(<img.*?src=\")([^>]+?\">)(?-i)", "$1" + rcUtil.getParseUrlDir(rid) + "$2");
 	}
 	
 	public static String getEncoding(File file) {
