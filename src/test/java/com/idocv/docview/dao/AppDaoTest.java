@@ -27,6 +27,7 @@ public class AppDaoTest {
 			String key = "doctest";
 			String phone = "18611898831";
 			appDao.add(id, name, key, phone);
+			System.err.println("Done!");
 		} catch (DBException e) {
 			e.printStackTrace();
 		}

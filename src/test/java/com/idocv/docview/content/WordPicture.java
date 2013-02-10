@@ -1,25 +1,16 @@
 package com.idocv.docview.content;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-
-
 public class WordPicture {
 	public static void main(String[] args) {
-		try {
-			String src = "/Users/Godwin/tmp/docview/windows/word/index.html";
-			String contentWhole = FileUtils.readFileToString(new File(src), "GBK");
-			System.out.println(contentWhole);
-			System.err.println("========================================");
-			System.out.println(processPictureUrl("RID", contentWhole));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		// String src = "/Users/Godwin/tmp/docview/windows/word/index.html";
+		// String contentWhole = FileUtils.readFileToString(new File(src), "GBK");
+		String contentWhole = "<p class=MsoNormal align=center style='text-align:center'><img width=353 height=114 src=\"index.files/image002.png\" align=left></p>";
+		System.out.println(contentWhole);
+		System.err.println("========================================");
+		System.out.println(processPictureUrl("RID", contentWhole));
 	}
 	
 	public static String processPictureUrl(String rid, String content) {
-		return content.replaceAll("(?s)(?i)(<img.*?src=\")([^>]+?\">)(?-i)", "$1" + "<URL DIR>" + "$2");
+		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\")([^>]+?>)(?-i)", "$1" + "<URL DIR>" + "$2");
 	}
 }
