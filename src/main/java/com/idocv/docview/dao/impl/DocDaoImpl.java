@@ -90,7 +90,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 				query.and(STATUS).notEquals(-1);
 			}
 			DBCollection coll = db.getCollection(COLL_DOC);
-			DBObject obj = coll.findOne(query);
+			DBObject obj = coll.findOne(query.get());
 			return convertDBObject2Po(obj);
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());
