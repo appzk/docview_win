@@ -8,6 +8,7 @@
 
 <meta charset='utf-8'>
 <script src='/static/googleppt/slides.js'></script>
+<link rel="stylesheet" href="/static/smart/css/style.css" />
 </head>
 
 <style>
