@@ -24,7 +24,7 @@
 		
 		<c:forEach items="${page.data}" var="vo" varStatus="status">
 			<article>
-				<img src="${vo.url}" alt="" /><br />
+				<img src="${vo.url}" width="772" height="579" /><br />
 				page&nbsp;<c:out value="${status.count}"></c:out>&nbsp;of&nbsp;<c:out value="${pageSize}"></c:out> <br /><br />
 			</article>
 		</c:forEach>
