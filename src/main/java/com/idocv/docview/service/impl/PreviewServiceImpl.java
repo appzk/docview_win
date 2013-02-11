@@ -171,21 +171,18 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	@Override
 	public PageVo<PPTVo> convertPPT2Html(String rid, int start, int limit) throws DocServiceException {
 		try {
-			if (!new File(rcUtil.getParseDir(rid) + "img0.jpg").isFile()) {
+			// get page count
+			File[] slideFiles = new File(rcUtil.getParseDir(rid)).listFiles();
+			if (slideFiles.length <= 0) {
 				convert(rid);
+				slideFiles = new File(rcUtil.getParseDir(rid)).listFiles();
 			}
 
-			// get page count
-			int count = 0;
-			while (new File(rcUtil.getParseDir(rid) + "img" + count + ".jpg").isFile()) {
-				count++;
-			}
-			
 			List<PPTVo> data = new ArrayList<PPTVo>();
-			if (count > 0) {
-				for (int i = 0; i < count; i++) {
+			if (slideFiles.length > 0) {
+				for (int i = 0; i < slideFiles.length; i++) {
 					PPTVo ppt = new PPTVo();
-					String url = rcUtil.getParseUrlDir(rid) + "img" + i + ".jpg";
+					String url = rcUtil.getParseUrlDir(rid) + slideFiles[i].getName();
 					ppt.setUrl(url);
 					data.add(ppt);
 				}
@@ -207,7 +204,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			String[] paragraphs = content.split("\n");
 			for (String para : paragraphs) {
 				TxtVo vo = new TxtVo();
-				String c = "<P STYLE=\"margin-bottom: 0in\"><FONT FACE=\"微软雅黑, serif\">" + para + "</FONT></P>";
+				String c = "<P STYLE=\"margin-bottom: 0in\"><FONT FACE=\"微软雅黑, serif\">"
+						+ para + "</FONT></P>";
 				vo.setContent(c);
 				data.add(vo);
 			}
@@ -261,8 +259,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
-				if (!destFile.isFile()) {
-					CmdUtil.runWindows(ppt2Jpg, src, dest);
+				if (destFile.listFiles().length <= 0) {
+					CmdUtil.runWindows(ppt2Jpg, src, destFile.getAbsolutePath());
 				}
 			} else {
 				throw new DocServiceException("Unsupported document type!");
