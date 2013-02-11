@@ -254,7 +254,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
 				if (destFile.listFiles().length <= 0) {
-					CmdUtil.runWindows(ppt2Jpg, src, dest);
+					CmdUtil.runWindows(ppt2Jpg, src, destFile.getAbsolutePath(), "save");
 				}
 			} else {
 				throw new DocServiceException("Unsupported document type!");
