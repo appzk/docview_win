@@ -22,6 +22,9 @@
 		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,300,800,700,400italic|PT+Serif:400,400italic" />
 		
 		<link rel="stylesheet" href="/static/smart/css/fancybox.min.css" media="screen" />
+		
+		<link rel="stylesheet" href='<c:out value="${page.styleUrl}" escapeXml="false"></c:out>' />
+		
 	<!--<![endif]-->
 
 	<!--[if lte IE 6]>

@@ -31,7 +31,7 @@ public interface DocService {
 	 * @param name
 	 * @return
 	 */
-	DocPo addUrl(String ip, String url, String name) throws DocServiceException;
+	DocPo addUrl(String appKey, String url, String name) throws DocServiceException;
 
 	boolean delete(String rid) throws DocServiceException;
 

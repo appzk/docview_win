@@ -71,6 +71,8 @@ table, tbody, tfoot, thead, tr, th, td {
 	margin: 0px;
 	padding-top: 2px;
 	padding-bottom: 1px;
+	border-collapse:collapse;
+	border:1px solid black;
 }
 
 /* ---------------------------------------------------------------------- */

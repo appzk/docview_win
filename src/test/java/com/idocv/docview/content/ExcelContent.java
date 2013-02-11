@@ -2,11 +2,12 @@ package com.idocv.docview.content;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import com.idocv.docview.vo.ExcelVo;
 
@@ -14,34 +15,52 @@ import com.idocv.docview.vo.ExcelVo;
 public class ExcelContent {
 	public static void main(String[] args) {
 		try {
-			String lineDilimeter = "``";
-			String src = "/Users/Godwin/docview/data/10/04/16/100416b93d34d3482c47a7f06ca50f29/2012/1017/mn5/mn5.html";
-			String contentWhole = FileUtils.readFileToString(new File(src));
-			contentWhole = contentWhole.replaceAll("\n", lineDilimeter);
-			System.out.println("contentWhole:\n" + contentWhole);
-
-			String titlesString = contentWhole.replaceFirst("(?i).*?<HR>(.*?)<HR>.*", "$1");
-			List<String> titles = new ArrayList<String>();
-			while (titlesString.contains("</A>")) {
-				String title = titlesString.replaceFirst(".*?<A HREF=\"#table[^\"]+\">([^<]+)</A>.*", "$1");
-				titles.add(title);
-				titlesString = titlesString.substring(titlesString.indexOf("</A>") + 4);
+			File srcDir = new File("/Users/Godwin/tmp/docview/windows/example_excel2html/index.files");
+			if (!srcDir.isDirectory()) {
+				System.err.println("Directory " + srcDir.getAbsolutePath() + " NOT found!");
+				System.exit(0);
 			}
-			System.out.println("titles:\n" + titles);
-
-			String content = contentWhole;
-			List<ExcelVo> tables = new ArrayList<ExcelVo>();
-			for (String title : titles) {
+			File[] excelFiles = srcDir.listFiles();
+			List<File> sheetFiles = new ArrayList<File>();
+			File tabstripFile = null;
+			for (File excelFile : excelFiles) {
+				if (excelFile.getName().matches("sheet\\d+\\.html")) {
+					sheetFiles.add(excelFile);
+				} else if (excelFile.getName().equalsIgnoreCase("tabstrip.html")) {
+					tabstripFile = excelFile;
+				}
+			}
+			if (CollectionUtils.isEmpty(sheetFiles) || null == tabstripFile) {
+				throw new Exception("Excel parsed files NOT found!");
+			}
+			
+			// get TITLE(s) and CONTENT(s)
+			List<ExcelVo> VoList = new ArrayList<ExcelVo>();
+			// List<String> titleList = new ArrayList<String>();
+			// List<String> contentList = new ArrayList<String>();
+			String titleFileContent = FileUtils.readFileToString(tabstripFile, "GBK");
+			for (int i = 0; i < sheetFiles.size(); i++) {
 				ExcelVo vo = new ExcelVo();
-				String c = content.replaceFirst("(?i).*?(<TABLE[^>]+>.*?</TABLE>).*(?-i)", "$1").replaceAll(lineDilimeter, "\n");
-				// FileUtils.writeStringToFile(file, c);
-				String url = "";
-				content = content.substring(content.indexOf("</TABLE>") + 8);
+
+				// get title
+				String title = titleFileContent.replaceFirst("(?s)(?i).+?" + sheetFiles.get(i).getName() + ".+?<font[^>]+>(.+?)</font>.*(?-i)", "$1");
+				title = StringUtils.isBlank(title) ? ("表单" + (i + 1)) : title;
+				// titleList.add(title);
+				System.err.println("title" + (i + 1) + " = " + title);
+
+				// get content
+				String sheetFileContent = FileUtils.readFileToString(sheetFiles.get(i), "GBK");
+				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+>.*?</table>).*(?-i)", "$1");
+				// sheetContent = processPictureUrl(rid, sheetContent);
+				// contentList.add(sheetContent);
+
 				vo.setTitle(title);
-				vo.setUrl(url);
-				tables.add(vo);
+				vo.setContent(sheetContent);
+				VoList.add(vo);
 			}
-		} catch (IOException e) {
+
+			//PageVo<ExcelVo> page = new PageVo<ExcelVo>(tables, titles.size());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
