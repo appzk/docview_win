@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -46,8 +48,6 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	private @Value("${office.cmd.ppt2jpg}")
 	String ppt2Jpg;
 
-	private static String lineDilimeter = "``";
-	
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO
@@ -171,6 +171,24 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				convert(rid);
 				slideFiles = new File(rcUtil.getParseDir(rid)).listFiles();
 			}
+
+			// sort file
+			Arrays.sort(slideFiles, new Comparator<File>() {
+
+				@Override
+				public int compare(File o1, File o2) {
+					String name1 = o1.getName();
+					String name2 = o2.getName();
+					String nameRegex = "[^\\d]*?(\\d+).*";
+					try {
+						int nameDigit1 = Integer.valueOf(name1.replaceFirst(nameRegex, "$1"));
+						int nameDigit2 = Integer.valueOf(name2.replaceFirst(nameRegex, "$1"));
+						return nameDigit1 == nameDigit2 ? 0 : (nameDigit1 > nameDigit2 ? 1 : -1);
+					} catch (NumberFormatException e) {
+						return 1;
+					}
+				}
+			});
 
 			List<PPTVo> data = new ArrayList<PPTVo>();
 			if (slideFiles.length > 0) {
