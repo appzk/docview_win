@@ -74,6 +74,35 @@ public class DocController {
 	}
 	
 	/**
+	 * 上传并预览
+	 * 
+	 * @param sid
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping("addview")
+	public String addView(HttpServletRequest req,
+			@RequestParam(value = "file", required = true) MultipartFile file) {
+		DocResponse<DocPo> resp = new DocResponse<DocPo>();
+		try {
+			String ip = IpUtil.getIpAddr(req);
+			byte[] data = file.getBytes();
+			String name = file.getOriginalFilename();
+			String appKey = "doctest";
+			DocPo po = docService.add(appKey, name, data);
+			logger.info("--> " + ip + " ADD " + po.getRid());
+			System.err.println("--> " + ip + " ADD " + po.getRid());
+			String rid = po.getRid();
+
+			// view
+			return "redirect:" + rid + ".html";
+		} catch (Exception e) {
+			logger.error("upload error <controller>: ", e);
+			return "error";
+		}
+	}
+
+	/**
 	 * 删除
 	 * 
 	 * @param id
