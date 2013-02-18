@@ -56,14 +56,14 @@ public class DocController {
 	@ResponseBody
 	@RequestMapping("add")
 	public DocResponse<DocPo> add(HttpServletRequest req,
-			@RequestParam(value = "file", required = true) MultipartFile file) {
+			@RequestParam(value = "file", required = true) MultipartFile file,
+			@RequestParam(value = "token", defaultValue = "doctest") String token) {
 		DocResponse<DocPo> resp = new DocResponse<DocPo>();
 		try {
 			String ip = IpUtil.getIpAddr(req);
 			byte[] data = file.getBytes();
 			String name = file.getOriginalFilename();
-			String appKey = "doctest";
-			DocPo po = docService.add(appKey, name, data);
+			DocPo po = docService.add(token, name, data);
 			logger.info("--> " + ip + " ADD " + po.getRid());
 			System.err.println("--> " + ip + " ADD " + po.getRid());
 			return resp.getSuccessResponse(po);
