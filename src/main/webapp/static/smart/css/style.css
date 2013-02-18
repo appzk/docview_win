@@ -67,6 +67,7 @@
 	text-align: center;
 }
 
+/*
 table {
 	-moz-border-radius: 5px;
 	border-radius: 5px;
@@ -74,6 +75,7 @@ table {
 	-webkit-box-shadow: 0 0 5px 5px#888;
 	box-shadow: 0 0 5px 5px #888;
 }
+*/
 
 table, tbody, tfoot, thead, tr, th, td {
 	margin: 0px;
