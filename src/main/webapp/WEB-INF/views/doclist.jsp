@@ -193,7 +193,7 @@
 </head>
 <body>
 	<h1>Upload Document - doc, docx, xls, xlsx, ppt, pptx, odt, ods, odp, pdf and txt</h1>
-	<input id="fileupload" type="file" name="file" data-url="/doc/add" multiple>
+	<input id="fileupload" type="file" name="file" data-url="/doc/upload" multiple>
 	<div id="progress">
 	    <div class="bar" style="width: 0%;"></div>
 	</div>
