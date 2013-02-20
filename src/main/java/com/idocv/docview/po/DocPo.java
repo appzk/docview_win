@@ -17,6 +17,11 @@ public class DocPo implements Serializable {
 	private String rid;
 
 	/**
+	 * UUID
+	 */
+	private String uuid;
+
+	/**
 	 * 应用id
 	 */
 	private String appId;
@@ -62,6 +67,14 @@ public class DocPo implements Serializable {
 
 	public void setRid(String rid) {
 		this.rid = rid;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public String getAppId() {

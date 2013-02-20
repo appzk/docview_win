@@ -12,6 +12,7 @@ public class BaseDaoImpl implements BaseDao {
 	
 	public static final String _ID = "_id";
 	public static final String RID = "rid";
+	public static final String UUID = "uuid";
 	public static final String APPID = "appid";
 	public static final String NAME = "name";
 	public static final String SIZE = "size";

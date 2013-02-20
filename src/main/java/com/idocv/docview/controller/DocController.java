@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -55,7 +56,7 @@ public class DocController {
 	 */
 	@ResponseBody
 	@RequestMapping("upload")
-	public DocResponse<DocPo> add(HttpServletRequest req,
+	public String add(HttpServletRequest req,
 			@RequestParam(value = "file", required = true) MultipartFile file,
 			@RequestParam(value = "token", defaultValue = "doctest") String token) {
 		DocResponse<DocPo> resp = new DocResponse<DocPo>();
@@ -66,10 +67,10 @@ public class DocController {
 			DocPo po = docService.add(token, name, data);
 			logger.info("--> " + ip + " ADD " + po.getRid());
 			System.err.println("--> " + ip + " ADD " + po.getRid());
-			return resp.getSuccessResponse(po);
+			return "{\"uuid\":\"" + po.getUuid() + "\"}";
 		} catch (Exception e) {
 			logger.error("upload error <controller>: ", e);
-			return resp.getFailResponse(0, e.getMessage());
+			return "{\"error\":\"" + e.getMessage() + "\"}";
 		}
 	}
 	
@@ -92,6 +93,7 @@ public class DocController {
 
 	/**
 	 * 页面列表
+	 * 
 	 * @return
 	 */
 	@ResponseBody
@@ -116,6 +118,23 @@ public class DocController {
 			@RequestParam(value = "id") String id) {
 		try {
 			DocPo po = docService.get(id);
+			String rid = po.getRid();
+			String path = rcUtil.getPath(rid);
+			DocResponse.setResponseHeaders(req, resp, po.getName());
+			IOUtils.write(FileUtils.readFileToByteArray(new File(path)), resp.getOutputStream());
+		} catch (Exception e) {
+			logger.error("download error: ", e);
+		}
+	}
+
+	/**
+	 * 下载
+	 */
+	@RequestMapping("download/{uuid}")
+	public void downloadByUuid(HttpServletRequest req,
+			HttpServletResponse resp, @PathVariable(value = "uuid") String uuid) {
+		try {
+			DocPo po = docService.getByUuid(uuid);
 			String rid = po.getRid();
 			String path = rcUtil.getPath(rid);
 			DocResponse.setResponseHeaders(req, resp, po.getName());

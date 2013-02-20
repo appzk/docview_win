@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -71,7 +72,9 @@ public class DocServiceImpl implements DocService {
 			DocPo doc = new DocPo();
 			int size = data.length;
 			String rid = RcUtil.genRid(appId, name, size);
+			String uuid = RandomStringUtils.randomAlphanumeric(5);
 			doc.setRid(rid);
+			doc.setUuid(uuid);
 			String ext = RcUtil.getExt(rid);
 			doc.setName(name);
 			doc.setSize(size);
@@ -81,7 +84,7 @@ public class DocServiceImpl implements DocService {
 			FileUtils.writeByteArrayToFile(new File(rcUtil.getPath(rid)), data);
 
 			// save info
-			docDao.add(rid, appId, name, size, ext);
+			docDao.add(rid, uuid, appId, name, size, ext);
 			return doc;
 		} catch (Exception e) {
 			logger.error("save doc error: ", e);
@@ -129,6 +132,16 @@ public class DocServiceImpl implements DocService {
 	public DocPo get(String rid) throws DocServiceException {
 		try {
 			return docDao.get(rid, false);
+		} catch (DBException e) {
+			logger.error("get doc error: ", e);
+			throw new DocServiceException("get doc error: ", e);
+		}
+	}
+
+	@Override
+	public DocPo getByUuid(String uuid) throws DocServiceException {
+		try {
+			return docDao.getByUuid(uuid, false);
 		} catch (DBException e) {
 			logger.error("get doc error: ", e);
 			throw new DocServiceException("get doc error: ", e);

@@ -28,17 +28,18 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public void add(String id, String appId, String name, long size, String ext) throws DBException {
+	public void add(String id, String uuid, String appId, String name, long size, String ext) throws DBException {
 		long time = System.currentTimeMillis();
-		if (StringUtils.isBlank(id) || StringUtils.isBlank(appId)
+		if (StringUtils.isBlank(id) || StringUtils.isBlank(uuid)
+				|| StringUtils.isBlank(appId)
 				|| StringUtils.isBlank(name) || size <= 0
 				|| StringUtils.isBlank(ext)) {
 			throw new DBException("Insufficient parameters!");
 		}
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
-				.append(_ID, id).append(APPID, appId).append(NAME, name)
-				.append(SIZE, size).append(EXT, ext).append(CTIME, time)
-				.append(STATUS, 0);
+				.append(_ID, id).append(UUID, uuid).append(APPID, appId)
+				.append(NAME, name).append(SIZE, size).append(EXT, ext)
+				.append(CTIME, time).append(STATUS, 0);
 		try {
 			DBCollection coll = db.getCollection(COLL_DOC);
 			coll.save(builder.get());
@@ -86,6 +87,21 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	public DocPo get(String rid, boolean includeDeleted) throws DBException {
 		try {
 			QueryBuilder query = QueryBuilder.start(_ID).is(rid);
+			if (!includeDeleted) {
+				query.and(STATUS).notEquals(-1);
+			}
+			DBCollection coll = db.getCollection(COLL_DOC);
+			DBObject obj = coll.findOne(query.get());
+			return convertDBObject2Po(obj);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	@Override
+	public DocPo getByUuid(String uuid, boolean includeDeleted) throws DBException {
+		try {
+			QueryBuilder query = QueryBuilder.start(UUID).is(uuid);
 			if (!includeDeleted) {
 				query.and(STATUS).notEquals(-1);
 			}
@@ -151,6 +167,9 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		DocPo po = new DocPo();
 		if (obj.containsField(_ID)) {
 			po.setRid(obj.get(_ID).toString());
+		}
+		if (obj.containsField(UUID)) {
+			po.setUuid(obj.get(UUID).toString());
 		}
 		if (obj.containsField(APPID)) {
 			po.setAppId(obj.get(APPID).toString());

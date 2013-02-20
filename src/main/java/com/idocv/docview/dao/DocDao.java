@@ -7,7 +7,7 @@ import com.idocv.docview.po.DocPo;
 
 public interface DocDao {
 
-	void add(String id, String appId, String name, long size, String ext) throws DBException;
+	void add(String id, String uuid, String appId, String name, long size, String ext) throws DBException;
 
 	/**
 	 * Save a Document.
@@ -38,6 +38,15 @@ public interface DocDao {
 	 * @return
 	 */
 	DocPo get(String rid, boolean includeDeleted) throws DBException;
+	
+	/**
+	 * get Doc by UUID.
+	 * 
+	 * @param getByUuid
+	 * @param whether include deleted doc
+	 * @return
+	 */
+	DocPo getByUuid(String uuid, boolean includeDeleted) throws DBException;
 	
 	/**
 	 * get Doc by URL.

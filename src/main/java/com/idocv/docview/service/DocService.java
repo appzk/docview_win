@@ -42,6 +42,14 @@ public interface DocService {
 	 * @return
 	 */
 	DocPo get(String rid) throws DocServiceException;
+	
+	/**
+	 * Get DocPo by UUID from local database.
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	DocPo getByUuid(String uuid) throws DocServiceException;
 
 	/**
 	 * Get DocPo from local database by URL.
