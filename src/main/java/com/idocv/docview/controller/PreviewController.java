@@ -84,21 +84,21 @@ public class PreviewController {
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
 					|| "odt".equalsIgnoreCase(ext)) {
 				page = previewService.convertWord2Html(rid, start, size);
-				model.setViewName("free/viewDoc");
+				model.setViewName("word/default");
 			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)
 					|| "ods".equalsIgnoreCase(ext)) {
 				page = previewService.convertExcel2Html(rid, start, size);
-				model.setViewName("free/viewExcel");
+				model.setViewName("excel/default");
 			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)
 					|| "odp".equalsIgnoreCase(ext)) {
 				page = previewService.convertPPT2Html(rid, start, size);
-				model.setViewName("free/viewPPT");
+				model.setViewName("ppt/reveal");
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				page = previewService.getTxtContent(rid);
-				model.setViewName("free/viewTxt");
+				model.setViewName("txt/default");
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				String url = previewService.convertPdf2Swf(rid);
-				model.setViewName("free/viewPdf");
+				model.setViewName("pdf/default");
 				model.addObject("url", url);
 			} else {
 				page = new PageVo<OfficeBaseVo>(null, 0);
