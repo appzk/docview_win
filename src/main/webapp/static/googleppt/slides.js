@@ -10,7 +10,7 @@
   URL: http://code.google.com/p/html5slides/
 */
 
-var PERMANENT_URL_PREFIX = 'http://doc.idocv.com/static/googleppt/';
+var PERMANENT_URL_PREFIX = 'http://api.idocv.com/static/googleppt/';
 
 var SLIDE_CLASSES = ['far-past', 'past', 'current', 'next', 'far-next'];
 
