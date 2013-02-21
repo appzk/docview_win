@@ -19,6 +19,15 @@
 
 		<link rel="stylesheet" href="/static/reveal/css/reveal.min.css">
 		<link rel="stylesheet" href="/static/reveal/css/theme/default.css" id="theme">
+		<style type="text/css">
+			.ppt-slide-img {
+				-moz-border-radius: 5px;
+				border-radius: 15px;
+				-moz-box-shadow: 0 0 5px 5px #888;
+				-webkit-box-shadow: 0 0 5px 5px#888;
+				box-shadow: 0 0 5px 5px #888;
+			}
+		</style>
 
 		<!-- For syntax highlighting -->
 		<link rel="stylesheet" href="/static/reveal/lib/css/zenburn.css">
@@ -44,7 +53,7 @@
 		
 				<c:forEach items="${page.data}" var="vo" varStatus="status">
 					<section>
-						<img src="${vo.url}" width="772" height="579" class="ppt-slide-img" />
+						<img src="${vo.url}" class="ppt-slide-img" />
 					</section>
 				</c:forEach>
 

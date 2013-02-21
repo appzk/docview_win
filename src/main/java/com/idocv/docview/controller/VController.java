@@ -35,6 +35,11 @@ public class VController {
 	@Resource
 	private PreviewService previewService;
 
+	@RequestMapping("")
+	public String home() {
+		return "redirect:http://www.idocv.com";
+	}
+
 	@RequestMapping("{uuid}")
 	public ModelAndView freeView(
 			@RequestParam(defaultValue = "default") String template,
