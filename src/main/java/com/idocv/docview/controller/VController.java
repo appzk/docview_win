@@ -36,7 +36,7 @@ public class VController {
 	private PreviewService previewService;
 
 	@RequestMapping("{uuid}")
-	public ModelAndView freeView(
+	public ModelAndView viewUuid(
 			@RequestParam(defaultValue = "default") String template,
 			@PathVariable String uuid,
 			@RequestParam(defaultValue = "1") int start,
