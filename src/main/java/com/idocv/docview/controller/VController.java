@@ -91,7 +91,7 @@ public class VController {
 		return model;
 	}
 
-	@RequestMapping("json/{uuid}")
+	@RequestMapping("{uuid}.json")
 	@ResponseBody
 	public PageVo<? extends Serializable> jsonUuid(
 			@RequestParam(defaultValue = "default") String template,
