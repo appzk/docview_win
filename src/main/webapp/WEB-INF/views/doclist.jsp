@@ -21,7 +21,7 @@
 	        done: function (e, data) {
 	        	var result = data.result;
 	        	if (result.code == 1) {
-	        		alert("Success. rid=" + result.data.rid);
+	        		alert("Success. rid=" + result.data.rid + ", uuid=" + result.data.uuid);
 	        	} else {
 	        		alert(result.desc);
 	        	}
@@ -168,6 +168,7 @@
 	        "aoColumns": [
 	            { "mData": "name", "sClass": "center" },
 	            { "mData": "rid", "sClass": "center" },
+	            { "mData": "uuid", "sClass": "center" },
 	            { "mData": "size", "sClass": "center" },
 	            { "mData": "ctime", "sClass": "center" },
 	            {
@@ -177,9 +178,9 @@
 	            }
 	        ],
 			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-				$('td:eq(0)', nRow).html( '<a href="/view/'+aData.rid+'.html" target="_blank">'+aData.name+'</a>' );
-				$('td:eq(3)', nRow).html( '' + new Date(aData.ctime * 1000).getFullYear() + '-' + (new Date(aData.ctime * 1000).getMonth() + 1) + "-" + new Date(aData.ctime * 1000).getDate() + ' ' + new Date(aData.ctime * 1000).getHours() + ':' + new Date(aData.ctime * 1000).getMinutes() + ':' + new Date(aData.ctime * 1000).getSeconds() );
-				$('td:eq(4)', nRow).html( '<a href="/doc/download?id='+aData.rid+'">Download</a> | <a href="/doc/delete?id='+aData.rid+'" onclick="return confirm(\'Are you sure you want to delete?\');" >Delete</a> | <a href="/view/'+aData.rid+'.html" target="_blank">View</a> | <a href="/view/sync/'+aData.rid+'.html" target="_blank">SyncView</a>' );
+				$('td:eq(0)', nRow).html( '<a href="/v/'+aData.uuid+'" target="_blank">'+aData.name+'</a>' );
+				$('td:eq(4)', nRow).html( '' + new Date(aData.ctime * 1000).getFullYear() + '-' + (new Date(aData.ctime * 1000).getMonth() + 1) + "-" + new Date(aData.ctime * 1000).getDate() + ' ' + new Date(aData.ctime * 1000).getHours() + ':' + new Date(aData.ctime * 1000).getMinutes() + ':' + new Date(aData.ctime * 1000).getSeconds() );
+				$('td:eq(5)', nRow).html( '<a href="/doc/download?id='+aData.uuid+'">Download</a> | <a href="/doc/delete?id='+aData.uuid+'" onclick="return confirm(\'Are you sure you want to delete?\');" >Delete</a> | <a href="/v/'+aData.uuid+'" target="_blank">View</a> | <a href="/view/sync/'+aData.rid+'.html" target="_blank">SyncView</a>' );
             }
 	    } );
 	});
@@ -204,9 +205,10 @@
 			<tr>
 				<th width="25%">name</th>
 				<th width="25%">rid</th>
+				<th width="8%">uuid</th>
 				<th width="5%">size</th>
-				<th width="20%">ctime</th>
-				<th width="25%">option</th>
+				<th width="15%">ctime</th>
+				<th width="22%">option</th>
 			</tr>
 		</thead>
 		<tbody>
