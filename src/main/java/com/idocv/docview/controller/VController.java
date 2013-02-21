@@ -42,7 +42,30 @@ public class VController {
 	}
 
 	@RequestMapping("{uuid}")
-	public ModelAndView viewUuid(
+	public String page(@RequestParam(defaultValue = "default") String template,
+			@PathVariable String uuid,
+			@RequestParam(defaultValue = "1") int start,
+			@RequestParam(defaultValue = "5") int size) {
+		String lowerUuid = uuid.toLowerCase();
+		if (uuid.endsWith("w")) {
+			return "redirect:/template/word/index.html?uuid=" + uuid;
+		} else if (uuid.endsWith("x")) {
+			return "forward:" + uuid + ".html";
+			// return "redirect:/template/excel/index.html";
+		} else if (uuid.endsWith("p")) {
+			return "forward:" + uuid + ".html";
+			// return "redirect:/template/ppt/index.html";
+		} else if (uuid.endsWith("t")) {
+			return "forward:" + uuid + ".html";
+			// return "redirect:/template/txt/index.html";
+		} else {
+			return "forward:" + uuid + ".html";
+			// return "redirect:/error.html";
+		}
+	}
+
+	@RequestMapping("{uuid}.html")
+	public ModelAndView directView(
 			@RequestParam(defaultValue = "default") String template,
 			@PathVariable String uuid,
 			@RequestParam(defaultValue = "1") int start,
