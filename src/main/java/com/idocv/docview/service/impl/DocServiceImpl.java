@@ -74,8 +74,17 @@ public class DocServiceImpl implements DocService {
 			String rid = RcUtil.genRid(appId, name, size);
 			String uuid = RandomStringUtils.randomAlphanumeric(5);
 			doc.setRid(rid);
-			doc.setUuid(uuid);
 			String ext = RcUtil.getExt(rid);
+			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
+				uuid += "w";
+			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
+				uuid += "x";
+			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
+				uuid += "p";
+			} else if ("txt".equalsIgnoreCase(ext)) {
+				uuid += "t";
+			}
+			doc.setUuid(uuid);
 			doc.setName(name);
 			doc.setSize(size);
 			doc.setCtime(System.currentTimeMillis());
