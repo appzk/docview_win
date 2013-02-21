@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.idocv.docview.exception.DocServiceException;
@@ -83,6 +84,50 @@ public class VController {
 		}
 		model.addObject("page", page);
 		return model;
+	}
+
+	@RequestMapping("json/{uuid}")
+	@ResponseBody
+	public PageVo<? extends Serializable> jsonUuid(
+			@RequestParam(defaultValue = "default") String template,
+			@PathVariable String uuid,
+			@RequestParam(defaultValue = "1") int start,
+			@RequestParam(defaultValue = "5") int size) {
+		PageVo<? extends Serializable> page = null;
+		try {
+			DocPo po = docService.getByUuid(uuid);
+			if (null == po || StringUtils.isBlank(po.getRid())) {
+				throw new DocServiceException("Document NOT found!");
+			}
+			String rid = po.getRid();
+			String ext = RcUtil.getExt(rid);
+			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
+					|| "odt".equalsIgnoreCase(ext)) {
+				page = previewService.convertWord2Html(rid, start, size);
+			} else if ("xls".equalsIgnoreCase(ext)
+					|| "xlsx".equalsIgnoreCase(ext)
+					|| "ods".equalsIgnoreCase(ext)) {
+				page = previewService.convertExcel2Html(rid, start, size);
+			} else if ("ppt".equalsIgnoreCase(ext)
+					|| "pptx".equalsIgnoreCase(ext)
+					|| "odp".equalsIgnoreCase(ext)) {
+				page = previewService.convertPPT2Html(rid, start, size);
+			} else if ("txt".equalsIgnoreCase(ext)) {
+				page = previewService.getTxtContent(rid);
+			} else if ("pdf".equalsIgnoreCase(ext)) {
+				// TODO
+				String url = previewService.convertPdf2Swf(rid);
+			} else {
+				page = new PageVo<OfficeBaseVo>(null, 0);
+				page.setCode(0);
+				page.setDesc("Error: not a document type.");
+			}
+			page.setName(po.getName());
+			page.setRid(po.getRid());
+		} catch (Exception e) {
+			logger.error("freeView error: ", e);
+		}
+		return page;
 	}
 
 	@RequestMapping("url")
