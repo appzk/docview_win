@@ -65,7 +65,7 @@
 		<script src="/static/reveal/lib/js/head.min.js"></script>
 		<script src="/static/reveal/js/reveal.min.js"></script>
 
-		<a class="fork-reveal" href="http://www.idocv.com"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://data.idocv.com/logo-ppt-reveal.png" alt="I Doc View"></a>
+		<a class="fork-reveal" href="http://www.idocv.com"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://data.idocv.com/idocv-logo-ribbon.png" alt="I Doc View"></a>
 
 		<script>
 
