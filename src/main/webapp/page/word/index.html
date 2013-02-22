@@ -115,7 +115,6 @@
 			$.get('http://api.idocv.com/v/' + uuid + '.json', function(data, status) {
 				var rid = data.rid;
 				var pages = data.data;
-				console.log(data);
 				
 				// title
 				$('.doc-title').append('<a href="/doc/download?id=' + rid + '">Download</a><div><strong>' + data.name + '</strong></div>');

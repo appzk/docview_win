@@ -50,7 +50,7 @@ public class VController {
 		if (uuid.endsWith("w")) {
 			return "redirect:/page/word/index.html?uuid=" + uuid;
 		} else if (uuid.endsWith("x")) {
-			return "forward:" + uuid + ".html";
+			return "redirect:/page/excel/index.html?uuid=" + uuid;
 			// return "redirect:/page/excel/index.html";
 		} else if (uuid.endsWith("p")) {
 			return "forward:" + uuid + ".html";
@@ -152,6 +152,7 @@ public class VController {
 			}
 			page.setName(po.getName());
 			page.setRid(po.getRid());
+			page.setUuid(po.getUuid());
 		} catch (Exception e) {
 			logger.error("freeView error: ", e);
 		}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bootstrap, from Twitter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+
+      @media (max-width: 980px) {
+        /* Enable use of floated navbar text */
+        .navbar-text.pull-right {
+          float: none;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+    </style>
+    <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/static/idocv/css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!-- to be done -->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- FILE NAME HERE -->
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <!-- EXCEL TAB TITLE(s) HERE -->
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12" style="width: auto;">
+          <!-- Excel tab content start -->
+          <div class="tab-content">
+          	<!-- EXCEL CONENT HERE -->
+          </div><!-- Excel tab content end -->
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+			Home: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
+    <script src="/static/bootstrap/js/jquery.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/idocv/js/custom.js"></script>
+    <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
+    
+<!-- Start Get & Set Excel Content -->
+	<script type="text/javascript" src="/static/loading/js/simpleLoadingModal.min.js"></script>
+	<script type="text/javascript" src="/static/urlparser/js/purl.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('body').simpleLoadingModal();
+			var uuid = $.url().param('uuid');
+			$.get('http://api.idocv.com/v/' + uuid + '.json', function(data, status) {
+				var rid = data.rid;
+				var uuid = data.uuid;
+				var pages = data.data;
+				
+				// title
+				$('.container-fluid .btn').after('<a class="brand" href="/doc/download/' + uuid + '">' + data.name + '</a>');
+				
+				// pages
+				for (i = 0; i < pages.length; i++) {
+					var page = pages[i];
+					// tab navigation
+					if (0 == i) {
+						$('ul').append('<li class="active"><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
+						$('.tab-content').append('<div class="tab-pane fade in active" id="tab' + (i + 1) + '">' + page.content + '</div>');
+					} else {
+						$('ul').append('<li><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
+						$('.tab-content').append('<div class="tab-pane fade in" id="tab' + (i + 1) + '">' + page.content + '</div>');
+					}
+				}
+				
+				if (document.createStyleSheet){
+					document.createStyleSheet('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />');
+				} else {
+					$("head").append($('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />'));
+				}
+				// <link rel="stylesheet" href='<c:out value="${page.styleUrl}" escapeXml="false"></c:out>' />
+				
+				// hide loader
+				$("#loader").fadeOut();
+				$("#dvGlobalMask").fadeOut();
+			});
+		});
+	</script>
+<!-- Get & Set Excel Content end -->
+
+  </body>
+</html>

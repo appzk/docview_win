@@ -13,6 +13,7 @@ public class PageVo<T> implements Serializable {
 
 	private String name;
 	private String rid;
+	private String uuid;
 	private String url;
 	private int totalSize;
 	private int curPage = 1;
@@ -80,6 +81,14 @@ public class PageVo<T> implements Serializable {
 
 	public void setRid(String rid) {
 		this.rid = rid;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public String getUrl() {

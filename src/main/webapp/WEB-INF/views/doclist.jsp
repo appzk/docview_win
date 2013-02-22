@@ -20,10 +20,12 @@
 	        dataType: 'json',
 	        done: function (e, data) {
 	        	var result = data.result;
-	        	if (result.code == 1) {
-	        		alert("Success. rid=" + result.data.rid + ", uuid=" + result.data.uuid);
+	        	var uuid = result.uuid;
+	        	console.log(uuid);
+	        	if (uuid !== undefined) {
+	        		alert("Success. uuid=" + uuid);
 	        	} else {
-	        		alert(result.desc);
+	        		alert("Error! " + result.desc);
 	        	}
 	        	location.reload(true);
 	        }
