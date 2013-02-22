@@ -48,16 +48,16 @@ public class VController {
 			@RequestParam(defaultValue = "5") int size) {
 		String lowerUuid = uuid.toLowerCase();
 		if (uuid.endsWith("w")) {
-			return "redirect:/template/word/index.html?uuid=" + uuid;
+			return "redirect:/page/word/index.html?uuid=" + uuid;
 		} else if (uuid.endsWith("x")) {
 			return "forward:" + uuid + ".html";
-			// return "redirect:/template/excel/index.html";
+			// return "redirect:/page/excel/index.html";
 		} else if (uuid.endsWith("p")) {
 			return "forward:" + uuid + ".html";
-			// return "redirect:/template/ppt/index.html";
+			// return "redirect:/page/ppt/index.html";
 		} else if (uuid.endsWith("t")) {
 			return "forward:" + uuid + ".html";
-			// return "redirect:/template/txt/index.html";
+			// return "redirect:/page/txt/index.html";
 		} else {
 			return "forward:" + uuid + ".html";
 			// return "redirect:/error.html";
