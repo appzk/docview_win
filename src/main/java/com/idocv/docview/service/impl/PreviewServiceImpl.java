@@ -60,20 +60,23 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			File htmlFile = new File(rcUtil.getParsePathOfHtml(rid));
 			
 			// read body
-			File bodyPath = new File(rcUtil.getParseDir(rid) + "body.html");
+			File bodyFile = new File(rcUtil.getParseDir(rid) + "body.html");
+			File styleFile = new File(rcUtil.getParseDir(rid) + "style.css");
 			String bodyRaw;
-			if (!bodyPath.isFile()) {
+			if (!bodyFile.isFile()) {
 				String contentWhole = FileUtils.readFileToString(htmlFile, "GBK");
+				String styleString = contentWhole.replaceFirst("(?s)(?i).*?(<style>)(.*?)</style>.*", "$2");
 				bodyRaw = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
-				FileUtils.writeStringToFile(bodyPath, bodyRaw, "UTF-8");
+				FileUtils.writeStringToFile(styleFile, styleString, "UTF-8");
+				FileUtils.writeStringToFile(bodyFile, bodyRaw, "UTF-8");
 			} else {
-				bodyRaw = FileUtils.readFileToString(bodyPath, "UTF-8");
+				bodyRaw = FileUtils.readFileToString(bodyFile, "UTF-8");
 			}
 
 			String bodyString = bodyRaw;
 
 			// modify picture path from RELATIVE to ABSOLUTE url.
-			bodyString = processPictureUrl(rid, bodyString);
+			bodyString = processImageUrl(rcUtil.getParseUrlDir(rid), bodyString);
 			
 			// paging
 			List<String> pages = new ArrayList<String>();
@@ -92,6 +95,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				data.add(word);
 			}
 			PageVo<WordVo> page = new PageVo<WordVo>(data, 1);
+			page.setStyleUrl(rcUtil.getParseUrlDir(rid) + "style.css");
 			return page;
 		} catch (Exception e) {
 			logger.error("convertWord2Html error: ", e.fillInStackTrace());
@@ -134,14 +138,14 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 				// get title
 				String title = titleFileContent.replaceFirst("(?s)(?i).+?" + sheetFiles.get(i).getName() + ".+?<font[^>]+>(.+?)</font>.*(?-i)", "$1");
-				title = StringUtils.isBlank(title) ? ("表单" + (i + 1)) : title;
+				title = StringUtils.isBlank(title) ? ("Sheet" + (i + 1)) : title;
 				// titleList.add(title);
 				System.err.println("    title" + (i + 1) + " = " + title);
 
 				// get content
 				String sheetFileContent = FileUtils.readFileToString(sheetFiles.get(i), "GBK");
-				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+>.*?</table>).*(?-i)", "$1");
-				// sheetContent = processPictureUrl(rid, sheetContent);
+				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+>.*</table>).*(?-i)", "$1");
+				sheetContent = processImageUrl(rcUtil.getParseUrlDir(rid) + "index.files/", sheetContent);
 				// contentList.add(sheetContent);
 
 				vo.setTitle(title);
@@ -286,11 +290,17 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 	/**
 	 * modify picture path from RELATIVE to ABSOLUTE url.
+	 * @param prefix the prefix to be added to image SRC parameter.<br>
+	 * 			e.g.
+	 * 			<ul>
+	 * 				<li>Word file, use: rcUtil.getParseUrlDir(rid)</li>
+	 * 				<li>Excel sheet file, use: rcUtil.getParseUrlDir(rid) + "index.files/"</li>
+	 * 			</ul>
 	 * @param content
 	 * @return
 	 */
-	public String processPictureUrl(String rid, String content) throws DocServiceException {
-		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\")([^>]+?>)(?-i)", "$1" + rcUtil.getParseUrlDir(rid) + "$2");
+	public String processImageUrl(String prefix, String content) throws DocServiceException {
+		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\"?)([^>]+?>)(?-i)", "$1" + prefix + "$2");
 	}
 	
 	public static String getEncoding(File file) {

@@ -3,13 +3,60 @@
 /* ---------------------------------------------------------------------- */
 
 	/* -------------------------------------------------- */
+	/*	Word Style
+	/* -------------------------------------------------- */
+
+	.word-body {
+		background-color:#EBEBEB;
+		min-height: 100%;
+		-webkit-font-smoothing:antialiased;
+		font-smoothing:antialiased;
+		text-rendering:optimizeLegibility;
+	}
+
+	.word-page{
+		margin-right: auto;
+		margin-left: auto;
+		max-width: 960px;
+		background-color:#FFF;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		-moz-box-shadow: 0 0 5px 5px #888;
+		-webkit-box-shadow: 0 0 5px 5px#888;
+		box-shadow: 0 0 5px 5px #888;
+	}
+	
+	.word-page .word-content {
+		background-color:#FFF;
+		max-width: 75%;
+		word-wrap: break-word;
+		margin: 0px auto;
+		padding-top: 10%;
+		padding-bottom: 10%;
+	}
+	
+	.doc-page .doc-content p{
+		word-wrap:break-word;
+		word-break:normal;
+		margin: 0px;
+	}
+	
+	[ALIGN=CENTER] {
+		text-align: center;
+	}
+	
+	[style='page-break-before: always'] {
+		text-align: center;
+	}
+
+	/* -------------------------------------------------- */
 	/*	Table Style
 	/* -------------------------------------------------- */
 
 	table {
 		border-collapse:collapse;
 	}
-	table, tr, th, td {
+	table, tbody, tfoot, thead, tr, th, td {
 		border: 1px solid black;
 	}
 
