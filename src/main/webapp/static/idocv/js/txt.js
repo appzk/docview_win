@@ -15,12 +15,6 @@ $(document).ready(function() {
 			$('.word-page').append('<div class="word-content">' + page.content + '</div>');
 		}
 		
-		if (document.createStyleSheet){
-			document.createStyleSheet('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />');
-		} else {
-			$("head").append($('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />'));
-		}
-		
 		// hide loader
 		$("#loader").fadeOut();
 		$("#dvGlobalMask").fadeOut();

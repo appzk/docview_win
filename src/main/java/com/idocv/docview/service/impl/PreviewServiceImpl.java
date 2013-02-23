@@ -217,14 +217,10 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			File src = new File(rcUtil.getPath(rid));
 			List<TxtVo> data = new ArrayList<TxtVo>();
 			String content = FileUtils.readFileToString(src, getEncoding(src));
-			String[] paragraphs = content.split("\n");
-			for (String para : paragraphs) {
-				TxtVo vo = new TxtVo();
-				String c = "<P STYLE=\"margin-bottom: 0in\"><FONT FACE=\"微软雅黑, serif\">"
-						+ para + "</FONT></P>";
-				vo.setContent(c);
-				data.add(vo);
-			}
+			content = content.replaceAll("\n|\r\n|\r", "<br />");
+			TxtVo vo = new TxtVo();
+			vo.setContent(content);
+			data.add(vo);
 			PageVo<TxtVo> page = new PageVo<TxtVo>(data, 1);
 			return page;
 		} catch (IOException e) {
