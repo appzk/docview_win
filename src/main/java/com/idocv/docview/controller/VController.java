@@ -51,9 +51,9 @@ public class VController {
 			return "redirect:/page/word/index.html?uuid=" + uuid;
 		} else if (uuid.endsWith("x")) {
 			return "redirect:/page/excel/index.html?uuid=" + uuid;
-			// return "redirect:/page/excel/index.html";
 		} else if (uuid.endsWith("p")) {
-			return "forward:" + uuid + ".html";
+			return "redirect:/page/ppt/index.html?uuid=" + uuid;
+			// return "forward:" + uuid + ".html";
 			// return "redirect:/page/ppt/index.html";
 		} else if (uuid.endsWith("t")) {
 			return "forward:" + uuid + ".html";
