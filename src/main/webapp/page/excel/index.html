@@ -9,24 +9,6 @@
 
     <!-- Le styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
-
-      @media (max-width: 980px) {
-        /* Enable use of floated navbar text */
-        .navbar-text.pull-right {
-          float: none;
-          padding-left: 5px;
-          padding-right: 5px;
-        }
-      }
-    </style>
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css" rel="stylesheet">
 
@@ -85,48 +67,9 @@
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
     <script src="/static/idocv/js/custom.js"></script>
     <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
-    
-<!-- Start Get & Set document content -->
 	<script type="text/javascript" src="/static/loading/js/simpleLoadingModal.min.js"></script>
 	<script type="text/javascript" src="/static/urlparser/js/purl.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('body').simpleLoadingModal();
-			var uuid = $.url().param('uuid');
-			$.get('http://api.idocv.com/v/' + uuid + '.json', function(data, status) {
-				var rid = data.rid;
-				var uuid = data.uuid;
-				var pages = data.data;
-				
-				// title
-				$('.container-fluid .btn').after('<a class="brand" href="/doc/download/' + uuid + '">' + data.name + '</a>');
-				
-				// pages
-				for (i = 0; i < pages.length; i++) {
-					var page = pages[i];
-					// tab navigation & tab content
-					if (0 == i) {
-						$('ul').append('<li class="active"><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
-						$('.tab-content').append('<div class="tab-pane fade in active" id="tab' + (i + 1) + '">' + page.content + '</div>');
-					} else {
-						$('ul').append('<li><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
-						$('.tab-content').append('<div class="tab-pane fade in" id="tab' + (i + 1) + '">' + page.content + '</div>');
-					}
-				}
-				
-				if (document.createStyleSheet){
-					document.createStyleSheet('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />');
-				} else {
-					$("head").append($('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />'));
-				}
-				
-				// hide loader
-				$("#loader").fadeOut();
-				$("#dvGlobalMask").fadeOut();
-			});
-		});
-	</script>
-<!-- Get & Set document content end -->
+	<script type="text/javascript" src="/static/idocv/js/excel.js"></script>
 
   </body>
 </html>
