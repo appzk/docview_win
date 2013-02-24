@@ -8,13 +8,13 @@ $(document).ready(function() {
 		
 		// title
 		$('.container-fluid .btn').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
-		
+
 		// pages
 		for (i = 0; i < pages.length; i++) {
 			var page = pages[i];
-			$('.word-page').append('<div class="word-content">' + page.content + '</div>');
+			$('.span12').append('<div class="word-page"><div class="word-content">' + page.content + '</div></div>');
 		}
-		
+
 		// hide loader
 		$("#loader").fadeOut();
 		$("#dvGlobalMask").fadeOut();
