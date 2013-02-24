@@ -21,9 +21,8 @@
 	        done: function (e, data) {
 	        	var result = data.result;
 	        	var uuid = result.uuid;
-	        	console.log(uuid);
 	        	if (uuid !== undefined) {
-	        		alert("Success. uuid=" + uuid);
+	        		// alert("Success. uuid=" + uuid);
 	        	} else {
 	        		alert("Error! " + result.desc);
 	        	}
