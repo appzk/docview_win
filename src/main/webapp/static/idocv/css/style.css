@@ -38,6 +38,7 @@
 	.word-page{
 		margin-right: auto;
 		margin-left: auto;
+		margin-bottom: 15px;
 		max-width: 960px;
 		background-color:#FFF;
 		-moz-border-radius: 5px;

@@ -80,9 +80,10 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			
 			// paging
 			List<String> pages = new ArrayList<String>();
-			while (bodyString.matches("(?s)(?i)(.+?)(<[^>]+style=\"[^>]*page-break-before[^>]+>.*)(?-i)")) {
-				String page = bodyString.replaceFirst("(?s)(?i)(.+?)(<[^>]+style=\"[^>]*page-break-before[^>]+>.*)(?-i)", "$1");
-				bodyString = bodyString.replaceFirst("(?s)(?i)(.+?)(<[^>]+style=\"[^>]*page-break-before[^>]+>.*)(?-i)", "$2");
+			String pageRegex = "(?s)(?i)(.+?)(<span[^>]+?>[\\s]*<br[^>]*?style=[\"|\'][^>]*page-break-before[^>]+>[\\s]*</span>)(.*)(?-i)";
+			while (bodyString.matches(pageRegex)) {
+				String page = bodyString.replaceFirst(pageRegex, "$1");
+				bodyString = bodyString.replaceFirst(pageRegex, "$3");
 				pages.add(page);
 			}
 			pages.add(bodyString);
