@@ -63,14 +63,6 @@
 		word-break:normal;
 		margin: 0px;
 	}
-	
-	[ALIGN=CENTER] {
-		text-align: center;
-	}
-	
-	[style='page-break-before: always'] {
-		text-align: center;
-	}
 
 	/* -------------------------------------------------- */
 	/*	PPT Style
