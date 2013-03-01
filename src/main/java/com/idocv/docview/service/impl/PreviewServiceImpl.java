@@ -36,6 +36,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 	private static Logger logger = LoggerFactory.getLogger(PreviewServiceImpl.class);
 	
+	private static List<String> convertingRids = new ArrayList<String>();
+
 	@Resource
 	private RcUtil rcUtil;
 	
@@ -251,7 +253,26 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		}
 	}
 
-	private boolean convert(String rid) throws DocServiceException {
+	private boolean convert(String rid) throws Exception {
+		return convert(rid, 0);
+	}
+
+	private boolean convert(String rid, int tryCount) throws DocServiceException {
+		if (convertingRids.contains(rid)) {
+			if (tryCount < 10) {
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				convert(rid, ++tryCount);
+			} else {
+				throw new DocServiceException("Server is busy, please try again later!");
+			}
+		} else {
+			convertingRids.add(rid);
+		}
+
 		String src = rcUtil.getPath(rid);
 		File srcFile = new File(src);
 		String dest = rcUtil.getParsePathOfHtml(rid);
@@ -282,6 +303,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		} catch (Exception e) {
 			logger.error("convert error: ", e.fillInStackTrace());
 			throw new DocServiceException(e.getMessage(), e);
+		} finally {
+			convertingRids.remove(rid);
 		}
 	}
 
