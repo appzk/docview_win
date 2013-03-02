@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$('body').simpleLoadingModal();
 	var uuid = $.url().param('uuid');
-	$.get('http://api.idocv.com/v/' + uuid + '.json', function(data, status) {
+	$.get('/v/' + uuid + '.json', function(data, status) {
 		var rid = data.rid;
 		var uuid = data.uuid;
 		var pages = data.data;
