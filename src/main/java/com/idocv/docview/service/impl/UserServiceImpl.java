@@ -1,11 +1,14 @@
 package com.idocv.docview.service.impl;
 
+import java.util.Collection;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.idocv.docview.dao.AppDao;
 import com.idocv.docview.dao.UserDao;
@@ -34,10 +37,12 @@ public class UserServiceImpl implements UserService {
 			if (null == appPo || StringUtils.isBlank(appPo.getId())) {
 				throw new DocServiceException("App NOT found!");
 			}
-			if (isExistUsername(username)) {
+			UserVo vo = getByUsername(username);
+			if (null != vo && StringUtils.isNotBlank(vo.getId())) {
 				throw new DocServiceException("The username has been registered.");
 			}
-			if (isExistEmail(email)) {
+			vo = getByEmail(email);
+			if (null != vo && StringUtils.isNotBlank(vo.getId())) {
 				throw new DocServiceException("The email has been registered.");
 			}
 			UserPo po = userDao.signUp(appPo.getId(), username, password, email);
@@ -49,33 +54,76 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean isExistUsername(String username) throws DocServiceException {
+	public UserVo login(String user, String password) throws DocServiceException {
 		try {
-			return userDao.isExistUsername(username);
+			if (StringUtils.isBlank(user) || StringUtils.isBlank(password)) {
+				throw new DocServiceException("Insufficient parameters!");
+			}
+			UserVo vo = getByEmail(user);
+			if (null == vo) {
+				vo = getByUsername(user);
+			}
+			if (null == vo) {
+				throw new DocServiceException("User NOT found!");
+			}
+			if (!password.equals(vo.getPassword())) {
+				throw new DocServiceException("Password ERROR!");
+			}
+			String sid = userDao.addSid(vo.getId());
+			vo.setSid(sid);
+			return vo;
 		} catch (DBException e) {
-			logger.error("isExistUsername error: ", e);
-			throw new DocServiceException("isExistUsername error: ", e);
+			logger.error("Sign up error: ", e);
+			throw new DocServiceException("Sign up error: ", e);
 		}
 	}
 
 	@Override
-	public boolean isExistEmail(String email) throws DocServiceException {
+	public UserVo getByUsername(String username) throws DocServiceException {
 		try {
-			return userDao.isExistEmail(email);
+			return po2vo(userDao.getByUsername(username));
 		} catch (DBException e) {
-			logger.error("isExistEmail error: ", e);
-			throw new DocServiceException("isExistEmail error: ", e);
+			logger.error("getByUsername error: ", e);
+			throw new DocServiceException("getByUsername error: ", e);
+		}
+	}
+
+	@Override
+	public UserVo getByEmail(String email) throws DocServiceException {
+		try {
+			return po2vo(userDao.getByEmail(email));
+		} catch (DBException e) {
+			logger.error("getByEmail error: ", e);
+			throw new DocServiceException("getByEmail error: ", e);
+		}
+	}
+
+	@Override
+	public UserVo getBySid(String sid) throws DocServiceException {
+		try {
+			return po2vo(userDao.getBySid(sid));
+		} catch (DBException e) {
+			logger.error("getBySid error: ", e);
+			throw new DocServiceException("getBySid error: ", e);
 		}
 	}
 
 	private UserVo po2vo(UserPo po) {
+		if (null == po) {
+			return null;
+		}
 		UserVo vo = new UserVo();
 		vo.setId(po.getId());
-		vo.setApp(po.getApp());
+		vo.setApp(po.getAppId());
 		vo.setUsername(po.getUsername());
 		vo.setPassword(po.getPassword());
 		vo.setEmail(po.getEmail());
-		vo.setCtiem(po.getCtiem());
+		vo.setCtime(po.getCtime());
+		Collection<String> sids = po.getSids();
+		if (!CollectionUtils.isEmpty(sids)) {
+			String[] sidsArray = sids.toArray(new String[0]);
+			vo.setSid(sidsArray[sidsArray.length - 1]);
+		}
 		return vo;
 	}
 }

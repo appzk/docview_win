@@ -19,6 +19,7 @@ public class BaseDaoImpl implements BaseDao {
 	public static final String EXT = "ext";
 	public static final String URL = "url";
 	public static final String UID = "uid";
+	public static final String SIDS = "sids";
 	public static final String CTIME = "ctime";
 	public static final String UTIME = "utime";
 	public static final String DTIME = "dtime";

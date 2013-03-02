@@ -9,7 +9,8 @@ public class UserVo {
 	private String username;
 	private String password;
 	private String email;
-	private long ctiem;
+	private long ctime;
+	private String sid;
 
 	public String getId() {
 		return id;
@@ -51,12 +52,20 @@ public class UserVo {
 		this.email = email;
 	}
 
-	public long getCtiem() {
-		return ctiem;
+	public long getCtime() {
+		return ctime;
 	}
 
-	public void setCtiem(long ctiem) {
-		this.ctiem = ctiem;
+	public void setCtime(long ctime) {
+		this.ctime = ctime;
+	}
+
+	public String getSid() {
+		return sid;
+	}
+
+	public void setSid(String sid) {
+		this.sid = sid;
 	}
 
 	@Override

@@ -17,7 +17,19 @@ public interface UserService {
 	 */
 	UserVo signUp(String appKey, String username, String password, String email) throws DocServiceException;
 
-	boolean isExistUsername(String username) throws DocServiceException;
+	/**
+	 * login
+	 * 
+	 * @param user
+	 * @param password
+	 * @return
+	 * @throws DocServiceException
+	 */
+	UserVo login(String user, String password) throws DocServiceException;
 
-	boolean isExistEmail(String email) throws DocServiceException;
+	UserVo getByUsername(String username) throws DocServiceException;
+
+	UserVo getByEmail(String email) throws DocServiceException;
+
+	UserVo getBySid(String sid) throws DocServiceException;
 }

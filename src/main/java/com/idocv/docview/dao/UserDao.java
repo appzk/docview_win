@@ -7,7 +7,11 @@ public interface UserDao {
 
 	UserPo signUp(String appId, String username, String password, String email) throws DBException;
 
-	boolean isExistUsername(String username) throws DBException;
+	String addSid(String uid) throws DBException;
 
-	boolean isExistEmail(String email) throws DBException;
+	UserPo getByUsername(String username) throws DBException;
+
+	UserPo getByEmail(String email) throws DBException;
+
+	UserPo getBySid(String sid) throws DBException;
 }

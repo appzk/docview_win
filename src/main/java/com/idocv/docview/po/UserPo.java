@@ -1,15 +1,18 @@
 package com.idocv.docview.po;
 
+import java.util.Collection;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class UserPo {
 
 	private String id;
-	private String app;
+	private String appId;
 	private String username;
 	private String password;
 	private String email;
-	private long ctiem;
+	private long ctime;
+	private Collection<String> sids;
 
 	public String getId() {
 		return id;
@@ -19,12 +22,12 @@ public class UserPo {
 		this.id = id;
 	}
 
-	public String getApp() {
-		return app;
+	public String getAppId() {
+		return appId;
 	}
 
-	public void setApp(String app) {
-		this.app = app;
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 
 	public String getUsername() {
@@ -51,12 +54,20 @@ public class UserPo {
 		this.email = email;
 	}
 
-	public long getCtiem() {
-		return ctiem;
+	public long getCtime() {
+		return ctime;
 	}
 
-	public void setCtiem(long ctiem) {
-		this.ctiem = ctiem;
+	public void setCtime(long ctime) {
+		this.ctime = ctime;
+	}
+
+	public Collection<String> getSids() {
+		return sids;
+	}
+
+	public void setSids(Collection<String> sids) {
+		this.sids = sids;
 	}
 
 	@Override
