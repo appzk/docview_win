@@ -28,6 +28,11 @@ public class BaseDaoImpl implements BaseDao {
 	public static final String IPS = "ips";
 	public static final String PHONE = "phone";
 
+	// User info
+	public static final String USERNAME = "username";
+	public static final String PASSWORD = "password";
+	public static final String EMAIL = "email";
+
 	@Resource
 	protected DB db;
 
