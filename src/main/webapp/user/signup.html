@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Word - I Doc View</title>
+    <title>HOME - I Doc View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Online Document Preview, synchronous preview and annotating. types including Microsoft Office types(.doc, .docx, .xls, .xlsx, ppt, pptx), txt, pdf, odt, ods, odp and more.">
     <meta name="keywords" content="Online Document Preview doc view viewer office word excel 在线 文档 同步 协作 预览" />
@@ -22,7 +22,7 @@
     <!-- to be done -->
   </head>
 
-  <body class="word-body">
+  <body>
 
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
@@ -32,18 +32,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <!-- FILE NAME HERE -->
+          <a class="brand" href="http://www.idocv.com">I Doc View</a>
           <!-- SIGN UP & SIGN IN -->
           <ul class="nav pull-right">
-            <li><a href="/users/sign_up">Sign Up</a></li>
-            <li class="divider-vertical"></li>
             <li class="dropdown">
               <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
               <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
                 <!-- Login form here -->
                 <form action="[YOUR ACTION]" method="post" accept-charset="UTF-8">
-				  <input id="user_username" style="margin-bottom: 15px;" type="text" name="user[username]" size="30" />
-				  <input id="user_password" style="margin-bottom: 15px;" type="password" name="user[password]" size="30" />
+				  <input id="user_username" placeholder="Username" style="margin-bottom: 15px;" type="text" name="user[username]" size="30" />
+				  <input id="user_password" placeholder="Password" style="margin-bottom: 15px;" type="password" name="user[password]" size="30" />
 				  <input id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" name="user[remember_me]" value="1" />
 				  <label class="string optional" for="user_remember_me"> Remember me</label>
 				
@@ -52,8 +50,7 @@
               </div>
             </li>
           </ul>
-          <!-- USER INFO HERE (following) -->
-          <!-- 
+          <!-- USER INFO HERE (following) 
           <div class="nav-collapse collapse">
             <div class="pull-right">
               <ul class="nav pull-right">
@@ -67,8 +64,8 @@
                 </li>
               </ul>
             </div>
-          </div><!--/.nav-collapse -->
-           -->
+          </div>-- user info end --
+          -->
         </div>
       </div>
     </div>
@@ -76,8 +73,56 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span12">
-       		<!-- WORD PAGES HERE -->
-        	<!-- <div class="word-page"><div class="word-content">WORD CENTENT HERE</div></div> -->
+       		<!-- PAGE CONTENT HERE -->
+       		<form id="form-signup" class="form-horizontal" action='' method="POST" style="max-width: 600px; margin: 0 auto;">
+			  <fieldset>
+			    <div id="legend">
+			      <legend class="">Register</legend>
+			    </div>
+			    <div class="control-group">
+			      <!-- Username -->
+			      <label class="control-label"  for="username">Username</label>
+			      <div class="controls">
+			        <input type="text" id="username" name="username" placeholder="Username should be at least 3 characters" class="input-xlarge" data-validation="validate_min_length length3" >
+			        <p class="help-block"></p>
+			      </div>
+			    </div>
+			    
+			    <div class="control-group">
+			      <!-- E-mail -->
+			      <label class="control-label" for="email">E-mail</label>
+			      <div class="controls">
+			        <input type="text" id="email" name="email" placeholder="example@idocv.com" class="input-xlarge" data-validation="validate_email" />
+			        <p class="help-block"></p>
+			      </div>
+			    </div>
+			
+			    <div class="control-group">
+			      <!-- Password-->
+			      <label class="control-label" for="password">Password</label>
+			      <div class="controls">
+			        <input type="password" id="password" name="password" placeholder="Password should be at least 4 characters" class="input-xlarge" data-validation="validate_confirmation validate_min_length length4" />
+			        <p class="help-block"></p>
+			      </div>
+			    </div>
+			
+			    <div class="control-group">
+			      <!-- Password -->
+			      <label class="control-label"  for="password_confirm">Password (Confirm)</label>
+			      <div class="controls">
+			        <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Please confirm password" class="input-xlarge">
+			        <p class="help-block"></p>
+			      </div>
+			    </div>
+			
+			    <div class="control-group">
+			      <!-- Button -->
+			      <div class="controls">
+			        <button class="btn btn-success">Register</button>
+			      </div>
+			    </div>
+			  </fieldset>
+			</form>
         </div><!--/span-->
       </div><!--/row-->
 
@@ -94,12 +139,8 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-	<script src="/static/loading/js/simpleLoadingModal.min.js"></script>
-	<script src="/static/urlparser/js/purl.js"></script>
-	<script src="/static/idocv/js/word.js"></script>
-    <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
-    <script src="/static/idocv/js/custom.js"></script>
-	<script src="/static/idocv/js/stat.js"></script>
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+    <script src="/static/idocv/js/signup.js"></script>
 
   </body>
 </html>

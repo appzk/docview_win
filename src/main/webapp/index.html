@@ -1,21 +1,98 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>HOME - I Doc View</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Online Document Preview, synchronous preview and annotating. types including Microsoft Office types(.doc, .docx, .xls, .xlsx, ppt, pptx), txt, pdf, odt, ods, odp and more.">
+    <meta name="keywords" content="Online Document Preview doc view viewer office word excel 在线 文档 同步 协作 预览" />
+    <meta name="author" content="Godwin">
 
-	<h1>Upload Document - doc, docx, xls, xlsx, ppt, pptx, odt, ods, odp, pdf and txt</h1>
-	<form name="upload" action="/view/upview" method="post" enctype="multipart/form-data">
-		Upload resource:<br />
-		<input type="file" name="file" /><br />
-		<input type="submit" value="Submit" /><input type="reset" value="Reset" />
-	</form>
-	
-	<br />
-	
-	<input size="50px;">
-	
-</body>
+    <!-- Le styles -->
+    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/idocv/css/style.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <!-- to be done -->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="http://www.idocv.com">I Doc View</a>
+          <!-- SIGN UP & SIGN IN -->
+          <ul class="nav pull-right">
+            <li><a href="/user/signup.html">Sign Up</a></li>
+            <li class="divider-vertical"></li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
+              <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+                <!-- Login form here -->
+                <form action="[YOUR ACTION]" method="post" accept-charset="UTF-8">
+				  <input id="user_username" placeholder="Username" style="margin-bottom: 15px;" type="text" name="user[username]" size="30" />
+				  <input id="user_password" placeholder="Password" style="margin-bottom: 15px;" type="password" name="user[password]" size="30" />
+				  <input id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" name="user[remember_me]" value="1" />
+				  <label class="string optional" for="user_remember_me"> Remember me</label>
+				
+				  <input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />
+				</form>
+              </div>
+            </li>
+          </ul>
+          <!-- USER INFO HERE (following) 
+          <div class="nav-collapse collapse">
+            <div class="pull-right">
+              <ul class="nav pull-right">
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, User <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/user/preferences" style="text-decoration: none;"><i class="icon-cog"></i> Preferences</a></li>
+                    <li><a href="http://www.idocv.com/en/contact.html" style="text-decoration: none;"><i class="icon-envelope"></i> Contact Support</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/auth/logout" style="text-decoration: none;"><i class="icon-off"></i> Logout</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>-- user info end --
+          -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+       		<!-- PAGE CONTENT HERE -->
+       		abcd
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+			Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
+  </body>
 </html>
