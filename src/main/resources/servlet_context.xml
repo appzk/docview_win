@@ -27,6 +27,7 @@
 				<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
 				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
 					<property name="writeAcceptCharset" value="false"/>
+					<constructor-arg name="defaultCharset" value="UTF-8" />
 				</bean>
 				<bean class="org.springframework.http.converter.ResourceHttpMessageConverter" />
 				<bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />

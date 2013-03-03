@@ -72,7 +72,7 @@ public class UserController {
 			return "{\"error\":\"" + e.getMessage() + "\"}";
 		}
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("checkLogin")
 	public String checkLogin(HttpServletRequest req) {
