@@ -9,6 +9,8 @@ public interface UserDao {
 
 	String addSid(String uid) throws DBException;
 
+	void logout(String sid) throws DBException;
+
 	UserPo getByUsername(String username) throws DBException;
 
 	UserPo getByEmail(String email) throws DBException;

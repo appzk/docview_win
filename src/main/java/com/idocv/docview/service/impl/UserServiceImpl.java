@@ -79,6 +79,19 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void logout(String sid) throws DocServiceException {
+		try {
+			if (StringUtils.isBlank(sid)) {
+				throw new DocServiceException("Insufficient parameters!");
+			}
+			userDao.logout(sid);
+		} catch (DBException e) {
+			logger.error("Logout error: ", e);
+			throw new DocServiceException("Logout error: ", e);
+		}
+	}
+
+	@Override
 	public UserVo getByUsername(String username) throws DocServiceException {
 		try {
 			return po2vo(userDao.getByUsername(username));

@@ -15,13 +15,14 @@ $(document).ready(function() {
 	                    '<li><a href="/user/preferences" style="text-decoration: none;"><i class="icon-cog"></i> Preferences</a></li>' +
 	                    '<li><a href="http://www.idocv.com/en/contact.html" style="text-decoration: none;"><i class="icon-envelope"></i> Contact Support</a></li>' +
 	                    '<li class="divider"></li>' +
-	                    '<li><a href="/auth/logout" style="text-decoration: none;"><i class="icon-off"></i> Logout</a></li>' +
+	                    '<li><a id="button-logout" href="#" style="text-decoration: none;"><i class="icon-off"></i> Logout</a></li>' +
 	                  '</ul>' +
 	                '</li>' +
 	              '</ul>' +
 	            '</div>' +
 	         '</div><!-- user info end -->';
 			$('.navbar-inner .container-fluid').append(userHtml);
+			initializeUser();
 		} else {
 			// FAIL - NOT login
 			var loginHtml = 
@@ -35,8 +36,8 @@ $(document).ready(function() {
 		                '<!-- Login form here -->' +
 		                '<form id="form-signin" class="form-horizontal" action="" method="post" accept-charset="UTF-8">' +
 		                  '<div id="sign-in-result"></div>' +
-						  '<input id="login_username" placeholder="Username" style="margin-bottom: 15px;" type="text" name="login_username" size="30" />' +
-						  '<input id="login_password" placeholder="Password" style="margin-bottom: 15px;" type="password" name="login_password" size="30" />' +
+						  '<input id="login_username" placeholder="Username" style="margin-bottom: 15px;" type="text" name="login_username" size="30" data-validation="validate_min_length length3" />' +
+						  '<input id="login_password" placeholder="Password" style="margin-bottom: 15px;" type="password" name="login_password" size="30" data-validation="validate_min_length length4" />' +
 						  '<input id="login_rememberme" style="float: left; margin-right: 10px;" type="checkbox" name="login_rememberme" value="1" />' +
 						  '<label class="string optional" for="user_remember_me"> Remember me</label>' +
 						  '<input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />' +
@@ -50,7 +51,18 @@ $(document).ready(function() {
 	}, "json");
 	
 	/* ---------------------------------------------------------------------- */
-	/*	Login form
+	/*	User Info - already login
+	/* ---------------------------------------------------------------------- */
+	function initializeUser() {
+		$("#button-logout").click(function() {
+			$.get("/user/logout", function(data) {
+				window.location.reload();
+			}, "json");
+		});
+	}
+	
+	/* ---------------------------------------------------------------------- */
+	/*	Login form - NOT login
 	/* ---------------------------------------------------------------------- */
 	
 	function initializeLoginForm() {

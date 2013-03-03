@@ -75,6 +75,22 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 	}
 
 	@Override
+	public void logout(String sid) throws DBException {
+		if (StringUtils.isBlank(sid)) {
+			throw new DBException("Insufficient parameters!");
+		}
+		String uid = UidUtil.getUid(sid);
+		QueryBuilder query = QueryBuilder.start(_ID).is(uid);
+		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start().push("$pull").add(SIDS, sid);
+		try {
+			DBCollection coll = db.getCollection(COLL_USER);
+			coll.update(query.get(), builder.get(), false, false);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	@Override
 	public UserPo getByUsername(String username) throws DBException {
 		if (StringUtils.isBlank(username)) {
 			throw new DBException("Insufficient parameters!");

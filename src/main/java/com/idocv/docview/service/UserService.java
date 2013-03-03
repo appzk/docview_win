@@ -27,6 +27,8 @@ public interface UserService {
 	 */
 	UserVo login(String user, String password) throws DocServiceException;
 
+	void logout(String sid) throws DocServiceException;
+
 	UserVo getByUsername(String username) throws DocServiceException;
 
 	UserVo getByEmail(String email) throws DocServiceException;

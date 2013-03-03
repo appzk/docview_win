@@ -73,6 +73,35 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * logout
+	 * 
+	 * @param user
+	 * @param password
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("logout")
+	public String logout(HttpServletRequest req) {
+		try {
+			Cookie[] cookies = req.getCookies();
+			String sid = null;
+			for (Cookie cookie : cookies) {
+				if ("IDOCVSID".equalsIgnoreCase(cookie.getName())) {
+					sid = cookie.getValue();
+				}
+			}
+			if (StringUtils.isBlank(sid)) {
+				throw new DocServiceException("NOT logged in!");
+			}
+			userService.logout(sid);
+			return "{\"success\":\"Logged out!\"}";
+		} catch (DocServiceException e) {
+			logger.error("login error <controller>: ", e);
+			return "{\"error\":\"" + e.getMessage() + "\"}";
+		}
+	}
+
 	@ResponseBody
 	@RequestMapping("checkLogin")
 	public String checkLogin(HttpServletRequest req) {
