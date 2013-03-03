@@ -91,7 +91,7 @@ $(document).ready(function() {
 							var sid = data.sid;
 							if (sid !== undefined) {
 								// SUCCESS
-								$.cookie('IDOCVSID', sid);
+								$.cookie('IDOCVSID', sid, { path: '/' });
 								window.location.reload();
 							} else {
 								// FAIL
