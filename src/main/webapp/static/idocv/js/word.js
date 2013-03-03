@@ -7,7 +7,7 @@ $(document).ready(function() {
 		var pages = data.data;
 		
 		// title
-		$('.container-fluid .btn').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
+		$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
 		
 		// pages
 		for (i = 0; i < pages.length; i++) {

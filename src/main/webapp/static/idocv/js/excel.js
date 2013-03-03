@@ -7,17 +7,17 @@ $(document).ready(function() {
 		var pages = data.data;
 		
 		// title
-		$('.container-fluid .btn').after('<a class="brand" href="/doc/download/' + uuid + '">' + data.name + '</a>');
+		$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" href="/doc/download/' + uuid + '">' + data.name + '</a>');
 		
 		// pages
 		for (i = 0; i < pages.length; i++) {
 			var page = pages[i];
 			// tab navigation & tab content
 			if (0 == i) {
-				$('ul').append('<li class="active"><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
+				$('.navbar-inner .container-fluid .nav-collapse:first .nav').append('<li class="active"><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
 				$('.tab-content').append('<div class="tab-pane fade in active" id="tab' + (i + 1) + '">' + page.content + '</div>');
 			} else {
-				$('ul').append('<li><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
+				$('.navbar-inner .container-fluid .nav-collapse:first .nav').append('<li><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
 				$('.tab-content').append('<div class="tab-pane fade in" id="tab' + (i + 1) + '">' + page.content + '</div>');
 			}
 		}
