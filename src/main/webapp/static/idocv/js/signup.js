@@ -29,7 +29,7 @@ $(document).ready(function() {
 		    		window.location = "/"
 		    	} else {
 		    		// FAIL
-		    		$('#sign-up-result').append('<div class="alert alert-error">ERROR: ' + data.error + '</div>');
+		    		$('#sign-up-result').empty().append('<div class="alert alert-error">ERROR: ' + data.error + '</div>');
 		    	}
 		    }, "json");
 		}
