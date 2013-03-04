@@ -94,7 +94,7 @@ public class PreviewController {
 				page = previewService.convertPPT2Html(rid, start, size);
 				model.setViewName("ppt/reveal");
 			} else if ("txt".equalsIgnoreCase(ext)) {
-				page = previewService.getTxtContent(rid);
+				page = previewService.convertTxt2Html(rid);
 				model.setViewName("txt/default");
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				String url = previewService.convertPdf2Swf(rid);
@@ -161,7 +161,7 @@ public class PreviewController {
 				page = previewService.convertPPT2Html(rid, start, size);
 				model.setViewName("previewSPPT");
 			} else if ("txt".equalsIgnoreCase(ext)) {
-				page = previewService.getTxtContent(rid);
+				page = previewService.convertTxt2Html(rid);
 				model.setViewName("previewTxt");
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				String url = previewService.convertPdf2Swf(rid);

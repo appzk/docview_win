@@ -12,7 +12,7 @@ $(document).ready(function() {
 		// pages
 		for (i = 0; i < pages.length; i++) {
 			var page = pages[i];
-			$('.span12').append('<div class="word-page"><div class="word-content">' + page.content + '</div></div>');
+			$('.word-content pre').text(page.content);
 		}
 
 		// hide loader

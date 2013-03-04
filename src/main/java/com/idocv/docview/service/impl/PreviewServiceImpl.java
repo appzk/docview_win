@@ -215,12 +215,12 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	}
 
 	@Override
-	public PageVo<TxtVo> getTxtContent(String rid) throws DocServiceException {
+	public PageVo<TxtVo> convertTxt2Html(String rid) throws DocServiceException {
 		try {
 			File src = new File(rcUtil.getPath(rid));
 			List<TxtVo> data = new ArrayList<TxtVo>();
 			String content = FileUtils.readFileToString(src, getEncoding(src));
-			content = content.replaceAll("\n|\r\n|\r", "<br />");
+			// content = content.replaceAll("\n|\r\n|\r", "<br />");
 			TxtVo vo = new TxtVo();
 			vo.setContent(content);
 			data.add(vo);

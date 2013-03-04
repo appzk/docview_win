@@ -89,7 +89,7 @@ public class VController {
 				page = previewService.convertPPT2Html(rid, start, size);
 				model.setViewName("ppt/reveal");
 			} else if ("txt".equalsIgnoreCase(ext)) {
-				page = previewService.getTxtContent(rid);
+				page = previewService.convertTxt2Html(rid);
 				model.setViewName("txt/default");
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				String url = previewService.convertPdf2Swf(rid);
@@ -138,7 +138,7 @@ public class VController {
 					|| "odp".equalsIgnoreCase(ext)) {
 				page = previewService.convertPPT2Html(rid, start, size);
 			} else if ("txt".equalsIgnoreCase(ext)) {
-				page = previewService.getTxtContent(rid);
+				page = previewService.convertTxt2Html(rid);
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				// TODO
 				String url = previewService.convertPdf2Swf(rid);
