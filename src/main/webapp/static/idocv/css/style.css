@@ -80,7 +80,8 @@
 	/* -------------------------------------------------- */
 
 	table {
-		border-collapse:collapse;
+		border-collapse: collapse;
+		word-wrap: break-word;
 	}
 	table, tbody, tfoot, thead, tr, th, td {
 		border: 1px solid black;
