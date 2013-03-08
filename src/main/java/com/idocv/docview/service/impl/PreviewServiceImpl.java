@@ -50,6 +50,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	private @Value("${office.cmd.ppt2jpg}")
 	String ppt2Jpg;
 
+	private static final String positionStyleRegex = "position:[^;]{5,12};";
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO
@@ -320,7 +322,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	 * @return
 	 */
 	public String processImageUrl(String prefix, String content) throws DocServiceException {
-		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\"?)([^>]+?>)(?-i)", "$1" + prefix + "$2");
+		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\"?)([^>]+?>)(?-i)", "$1" + prefix + "$2").replaceAll(positionStyleRegex, "").replaceAll("margin-left:[^;]{1,10};", "").replaceAll("margin-right:[^;]{1,10};", "");
 	}
 	
 	public static String getEncoding(File file) {
