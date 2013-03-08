@@ -113,3 +113,10 @@
 	}
 
 		#back-to-top:hover, .touch-device #back-to-top:active { background-color: #f15a23; }
+		
+	/* -------------------------------------------------- */
+	/*	Footer
+	/* -------------------------------------------------- */
+	footer {
+		text-align: center;
+	}
