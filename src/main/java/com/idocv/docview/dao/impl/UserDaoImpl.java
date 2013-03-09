@@ -2,6 +2,7 @@ package com.idocv.docview.dao.impl;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
@@ -96,7 +97,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 			throw new DBException("Insufficient parameters!");
 		}
 		try {
-			QueryBuilder query = QueryBuilder.start(USERNAME).is(username);
+			QueryBuilder query = QueryBuilder.start(USERNAME).regex(Pattern.compile(username, Pattern.CASE_INSENSITIVE));
 			DBCollection coll = db.getCollection(COLL_USER);
 			return convertDBObject2Po(coll.findOne(query.get()));
 		} catch (MongoException e) {
@@ -110,7 +111,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 			throw new DBException("Insufficient parameters!");
 		}
 		try {
-			QueryBuilder query = QueryBuilder.start(EMAIL).is(email);
+			QueryBuilder query = QueryBuilder.start(EMAIL).regex(Pattern.compile(email, Pattern.CASE_INSENSITIVE));
 			DBCollection coll = db.getCollection(COLL_USER);
 			return convertDBObject2Po(coll.findOne(query.get()));
 		} catch (MongoException e) {
