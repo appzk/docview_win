@@ -2,7 +2,7 @@ package com.idocv.docview.service;
 
 import com.idocv.docview.common.Paging;
 import com.idocv.docview.exception.DocServiceException;
-import com.idocv.docview.po.DocPo;
+import com.idocv.docview.vo.DocVo;
 
 /**
  * Document Service
@@ -22,7 +22,7 @@ public interface DocService {
 	 * @param data
 	 * @return
 	 */
-	DocPo add(String appId, String name, byte[] data) throws DocServiceException;
+	DocVo add(String appId, String name, byte[] data) throws DocServiceException;
 
 	/**
 	 * Save URL resource to local directory.
@@ -31,9 +31,13 @@ public interface DocService {
 	 * @param name
 	 * @return
 	 */
-	DocPo addUrl(String appKey, String url, String name) throws DocServiceException;
+	DocVo addUrl(String appKey, String url, String name) throws DocServiceException;
 
-	boolean delete(String rid) throws DocServiceException;
+	boolean delete(String uuid) throws DocServiceException;
+
+	public void logView(String uuid) throws DocServiceException;
+
+	public void logDownload(String uuid) throws DocServiceException;
 
 	/**
 	 * Get DocPo from local database, if NULL, get it from remote RC server.
@@ -41,7 +45,7 @@ public interface DocService {
 	 * @param rid
 	 * @return
 	 */
-	DocPo get(String rid) throws DocServiceException;
+	DocVo get(String rid) throws DocServiceException;
 	
 	/**
 	 * Get DocPo by UUID from local database.
@@ -49,7 +53,7 @@ public interface DocService {
 	 * @param uuid
 	 * @return
 	 */
-	DocPo getByUuid(String uuid) throws DocServiceException;
+	DocVo getByUuid(String uuid) throws DocServiceException;
 
 	/**
 	 * Get DocPo from local database by URL.
@@ -57,9 +61,9 @@ public interface DocService {
 	 * @param url
 	 * @return
 	 */
-	DocPo getUrl(String url) throws DocServiceException;
+	DocVo getUrl(String url) throws DocServiceException;
 
-	Paging<DocPo> list(int start, int length) throws DocServiceException;
+	Paging<DocVo> list(int start, int length) throws DocServiceException;
 
 	long count(boolean includeDeleted) throws DocServiceException;
 }

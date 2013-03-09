@@ -19,10 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.idocv.docview.common.IpUtil;
 import com.idocv.docview.exception.DocServiceException;
-import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.PreviewService;
 import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.OfficeBaseVo;
 import com.idocv.docview.vo.PageVo;
 
@@ -58,7 +58,7 @@ public class PreviewController {
 			}
 			byte[] data = file.getBytes();
 			String name = file.getOriginalFilename();
-			DocPo po = docService.add(ip, name, data);
+			DocVo po = docService.add(ip, name, data);
 			logger.info("--> " + ip + " ADD " + po.getRid());
 			String rid = po.getRid();
 
@@ -105,7 +105,7 @@ public class PreviewController {
 				page.setCode(0);
 				page.setDesc("Error: not a document type.");
 			}
-			DocPo po = docService.get(rid);
+			DocVo po = docService.get(rid);
 			if (null != po && null != page) {
 				page.setName(po.getName());
 				page.setRid(po.getRid());
@@ -172,7 +172,7 @@ public class PreviewController {
 				page.setCode(0);
 				page.setDesc("Error: not a document type.");
 			}
-			DocPo po = docService.get(rid);
+			DocVo po = docService.get(rid);
 			if (null != po && null != page) {
 				page.setName(po.getName());
 				page.setRid(po.getRid());
@@ -201,7 +201,7 @@ public class PreviewController {
 			}
 			String ip = req.getRemoteAddr();
 			String appKey = "doctest";
-			DocPo po = docService.addUrl(appKey, url, name);
+			DocVo po = docService.addUrl(appKey, url, name);
 			if (null != po) {
 				String rid = po.getRid();
 				return "redirect:" + rid + ".html";

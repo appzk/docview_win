@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.idocv.docview.exception.DocServiceException;
-import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.PreviewService;
 import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.OfficeBaseVo;
 import com.idocv.docview.vo.PageVo;
 
@@ -70,7 +70,7 @@ public class VController {
 		ModelAndView model = new ModelAndView();
 		PageVo<? extends Serializable> page = null;
 		try {
-			DocPo po = docService.getByUuid(uuid);
+			DocVo po = docService.getByUuid(uuid);
 			if (null == po || StringUtils.isBlank(po.getRid())) {
 				throw new DocServiceException("Document NOT found!");
 			}
@@ -120,7 +120,7 @@ public class VController {
 			@RequestParam(defaultValue = "5") int size) {
 		PageVo<? extends Serializable> page = null;
 		try {
-			DocPo po = docService.getByUuid(uuid);
+			DocVo po = docService.getByUuid(uuid);
 			if (null == po || StringUtils.isBlank(po.getRid())) {
 				throw new DocServiceException("Document NOT found!");
 			}
@@ -150,6 +150,7 @@ public class VController {
 			page.setName(po.getName());
 			page.setRid(po.getRid());
 			page.setUuid(po.getUuid());
+			docService.logView(uuid);
 		} catch (Exception e) {
 			logger.error("freeView error: ", e);
 		}
@@ -167,7 +168,7 @@ public class VController {
 			}
 			String ip = req.getRemoteAddr();
 			String appKey = "doctest";
-			DocPo po = docService.addUrl(appKey, url, name);
+			DocVo po = docService.addUrl(appKey, url, name);
 			if (null != po) {
 				String rid = po.getRid();
 				return "redirect:" + rid + ".html";

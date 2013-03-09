@@ -7,6 +7,8 @@ public class OfficeBaseVo implements Serializable {
 	protected String title;
 	protected String content;
 	protected String url;
+	protected int viewCount;
+	protected int downloadCount;
 
 	public String getTitle() {
 		return title;
@@ -32,4 +34,19 @@ public class OfficeBaseVo implements Serializable {
 		this.url = url;
 	}
 
+	public int getViewCount() {
+		return viewCount;
+	}
+
+	public void setViewCount(int viewCount) {
+		this.viewCount = viewCount;
+	}
+
+	public int getDownloadCount() {
+		return downloadCount;
+	}
+
+	public void setDownloadCount(int downloadCount) {
+		this.downloadCount = downloadCount;
+	}
 }

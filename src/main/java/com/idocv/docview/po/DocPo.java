@@ -1,6 +1,7 @@
 package com.idocv.docview.po;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -60,6 +61,20 @@ public class DocPo implements Serializable {
 	 * 通过url上传资源时的URL
 	 */
 	private String url;
+
+	/**
+	 * preview log
+	 * 
+	 * @return
+	 */
+	private List<Long> viewLog;
+
+	/**
+	 * download log
+	 * 
+	 * @return
+	 */
+	private List<Long> downloadLog;
 
 	public String getRid() {
 		return rid;
@@ -139,6 +154,22 @@ public class DocPo implements Serializable {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public List<Long> getViewLog() {
+		return viewLog;
+	}
+
+	public void setViewLog(List<Long> viewLog) {
+		this.viewLog = viewLog;
+	}
+
+	public List<Long> getDownloadLog() {
+		return downloadLog;
+	}
+
+	public void setDownloadLog(List<Long> downloadLog) {
+		this.downloadLog = downloadLog;
 	}
 
 	@Override

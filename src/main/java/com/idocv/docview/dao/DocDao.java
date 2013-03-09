@@ -19,16 +19,32 @@ public interface DocDao {
 	/**
 	 * Delete a document.
 	 */
-	boolean delete(String rid) throws DBException;
+	boolean delete(String uuid) throws DBException;
 
 	/**
 	 * Update Url.
 	 * 
-	 * @param rid
+	 * @param uuid
 	 * @param url
 	 * @return
 	 */
-	boolean updateUrl(String rid, String url) throws DBException;
+	boolean updateUrl(String uuid, String url) throws DBException;
+
+	/**
+	 * log preview with time stamp
+	 * 
+	 * @param uuid
+	 * @throws DBException
+	 */
+	public void logView(String uuid) throws DBException;
+
+	/**
+	 * log download with time stamp
+	 * 
+	 * @param uuid
+	 * @throws DBException
+	 */
+	public void logDownload(String uuid) throws DBException;
 
 	/**
 	 * get Doc by rid.

@@ -22,11 +22,11 @@ import com.idocv.docview.common.DocResponse;
 import com.idocv.docview.common.IpUtil;
 import com.idocv.docview.common.Paging;
 import com.idocv.docview.exception.DocServiceException;
-import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.AppService;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.PreviewService;
 import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.vo.DocVo;
 
 
 @Controller
@@ -59,15 +59,14 @@ public class DocController {
 	public String add(HttpServletRequest req,
 			@RequestParam(value = "file", required = true) MultipartFile file,
 			@RequestParam(value = "token", defaultValue = "doctest") String token) {
-		DocResponse<DocPo> resp = new DocResponse<DocPo>();
 		try {
 			String ip = IpUtil.getIpAddr(req);
 			byte[] data = file.getBytes();
 			String name = file.getOriginalFilename();
-			DocPo po = docService.add(token, name, data);
-			logger.info("--> " + ip + " ADD " + po.getRid());
-			System.err.println("--> " + ip + " ADD " + po.getRid());
-			return "{\"uuid\":\"" + po.getUuid() + "\"}";
+			DocVo vo = docService.add(token, name, data);
+			logger.info("--> " + ip + " ADD " + vo.getRid());
+			System.err.println("--> " + ip + " ADD " + vo.getRid());
+			return "{\"uuid\":\"" + vo.getUuid() + "\"}";
 		} catch (Exception e) {
 			logger.error("upload error <controller>: ", e);
 			return "{\"error\":\"" + e.getMessage() + "\"}";
@@ -98,11 +97,11 @@ public class DocController {
 	 */
 	@ResponseBody
 	@RequestMapping("list")
-	public Paging<DocPo> list(
+	public Paging<DocVo> list(
 			@RequestParam(value = "iDisplayStart", defaultValue = "0") Integer start,
 			@RequestParam(value = "iDisplayLength", defaultValue = "10") Integer length) {
 		try {
-			Paging<DocPo> list = docService.list(start, length);
+			Paging<DocVo> list = docService.list(start, length);
 			return list;
 		} catch (DocServiceException e) {
 			e.printStackTrace();
@@ -113,14 +112,15 @@ public class DocController {
 	/**
 	 * 下载
 	 */
+	@Deprecated
 	@RequestMapping("download")
 	public void download(HttpServletRequest req, HttpServletResponse resp,
 			@RequestParam(value = "id") String id) {
 		try {
-			DocPo po = docService.get(id);
-			String rid = po.getRid();
+			DocVo vo = docService.get(id);
+			String rid = vo.getRid();
 			String path = rcUtil.getPath(rid);
-			DocResponse.setResponseHeaders(req, resp, po.getName());
+			DocResponse.setResponseHeaders(req, resp, vo.getName());
 			IOUtils.write(FileUtils.readFileToByteArray(new File(path)), resp.getOutputStream());
 		} catch (Exception e) {
 			logger.error("download error: ", e);
@@ -134,11 +134,12 @@ public class DocController {
 	public void downloadByUuid(HttpServletRequest req,
 			HttpServletResponse resp, @PathVariable(value = "uuid") String uuid) {
 		try {
-			DocPo po = docService.getByUuid(uuid);
-			String rid = po.getRid();
+			DocVo vo = docService.getByUuid(uuid);
+			String rid = vo.getRid();
 			String path = rcUtil.getPath(rid);
-			DocResponse.setResponseHeaders(req, resp, po.getName());
+			DocResponse.setResponseHeaders(req, resp, vo.getName());
 			IOUtils.write(FileUtils.readFileToByteArray(new File(path)), resp.getOutputStream());
+			docService.logDownload(uuid);
 		} catch (Exception e) {
 			logger.error("download error: ", e);
 		}
