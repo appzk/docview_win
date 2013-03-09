@@ -50,8 +50,6 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	private @Value("${office.cmd.ppt2jpg}")
 	String ppt2Jpg;
 
-	private static final String positionStyleRegex = "position:[^;]{5,12};";
-
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO
@@ -81,6 +79,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 			// modify picture path from RELATIVE to ABSOLUTE url.
 			bodyString = processImageUrl(rcUtil.getParseUrlDir(rid), bodyString);
+			bodyString = processStyle(bodyString);
 			
 			// paging
 			List<String> pages = new ArrayList<String>();
@@ -151,6 +150,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				String sheetFileContent = FileUtils.readFileToString(sheetFiles.get(i), "GBK");
 				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+>.*</table>).*(?-i)", "$1");
 				sheetContent = processImageUrl(rcUtil.getParseUrlDir(rid) + "index.files/", sheetContent);
+				sheetContent = processStyle(sheetContent);
 				// contentList.add(sheetContent);
 
 				vo.setTitle(title);
@@ -311,6 +311,20 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	}
 
 	/**
+	 * remove unnecessary content styles
+	 * 
+	 * @param content
+	 * @return
+	 */
+	private static String processStyle(String content) {
+		return content.replaceAll("position:[^;]{5,12};", "")			// remove position style
+					  .replaceAll("margin-left:[^;]{1,10};", "")		// remove margin left
+					  .replaceAll("margin-right:[^;]{1,10};", "")		// remove position right
+					  .replaceAll("</?div[^>]*>", "")					// remove div
+					  .replaceAll("text-indent:[^;^']+;?", "");			// remove text-indent
+	}
+
+	/**
 	 * modify picture path from RELATIVE to ABSOLUTE url.
 	 * @param prefix the prefix to be added to image SRC parameter.<br>
 	 * 			e.g.
@@ -322,7 +336,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	 * @return
 	 */
 	public String processImageUrl(String prefix, String content) throws DocServiceException {
-		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\"?)([^>]+?>)(?-i)", "$1" + prefix + "$2").replaceAll(positionStyleRegex, "").replaceAll("margin-left:[^;]{1,10};", "").replaceAll("margin-right:[^;]{1,10};", "");
+		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\"?)([^>]+?>)(?-i)", "$1" + prefix + "$2");
 	}
 	
 	public static String getEncoding(File file) {
