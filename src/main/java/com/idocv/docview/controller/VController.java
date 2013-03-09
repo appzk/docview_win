@@ -152,7 +152,11 @@ public class VController {
 			page.setUuid(po.getUuid());
 			docService.logView(uuid);
 		} catch (Exception e) {
-			logger.error("freeView error: ", e);
+			logger.error("jsonUuid error: ", e);
+			page = new PageVo<OfficeBaseVo>(null, 0);
+			page.setCode(0);
+			page.setDesc(e.getMessage());
+			page.setUuid(uuid);
 		}
 		return page;
 	}

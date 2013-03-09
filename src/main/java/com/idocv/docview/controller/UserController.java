@@ -125,7 +125,6 @@ public class UserController {
 				return "{\"error\":\"NOT logged in!\"}";
 			}
 		} catch (DocServiceException e) {
-			logger.error("login error <controller>: ", e);
 			return "{\"error\":\"" + e.getMessage() + "\"}";
 		}
 	}

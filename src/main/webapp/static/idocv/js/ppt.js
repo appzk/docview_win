@@ -2,17 +2,22 @@ $(document).ready(function() {
 	$('body').simpleLoadingModal();
 	var uuid = $.url().param('uuid');
 	$.get('/v/' + uuid + '.json', function(data, status) {
-		var rid = data.rid;
-		var uuid = data.uuid;
-		var pages = data.data;
-		
-		// title
-		$('.container-fluid .btn').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
-		
-		// pages
-		for (i = 0; i < pages.length; i++) {
-			var page = pages[i];
-			$('.slides').append('<section><img src="' + page.url + '" class="ppt-slide-img" /></section>');
+		var code = data.code;
+		if (1 == code) {
+			var rid = data.rid;
+			var uuid = data.uuid;
+			var pages = data.data;
+			
+			// title
+			$('.container-fluid .btn').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
+			
+			// pages
+			for (i = 0; i < pages.length; i++) {
+				var page = pages[i];
+				$('.slides').append('<section><img src="' + page.url + '" class="ppt-slide-img" /></section>');
+			}
+		} else {
+			$('.slides').append('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}
 		
 		// Full list of configuration options available here:

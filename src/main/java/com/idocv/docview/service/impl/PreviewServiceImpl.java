@@ -260,6 +260,15 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	}
 
 	private boolean convert(String rid, int tryCount) throws DocServiceException {
+		RcUtil.validateRid(rid);
+		String src = rcUtil.getPath(rid);
+		File srcFile = new File(src);
+		String dest = rcUtil.getParsePathOfHtml(rid);
+		File destFile = new File(dest);
+		if (!srcFile.isFile()) {
+			throw new DocServiceException(404, "File NOT found, rid=" + rid);
+		}
+		String ext = RcUtil.getExt(rid);
 		if (convertingRids.contains(rid)) {
 			if (tryCount < 10) {
 				try {
@@ -274,15 +283,6 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		} else {
 			convertingRids.add(rid);
 		}
-
-		String src = rcUtil.getPath(rid);
-		File srcFile = new File(src);
-		String dest = rcUtil.getParsePathOfHtml(rid);
-		File destFile = new File(dest);
-		if (!srcFile.isFile()) {
-			throw new DocServiceException("File NOT found, rid=" + rid);
-		}
-		String ext = RcUtil.getExt(rid);
 		try {
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
