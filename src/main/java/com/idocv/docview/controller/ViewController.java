@@ -77,8 +77,8 @@ public class ViewController {
 				throw new DocServiceException("NOT a valid UUID!");
 			}
 		} catch (DocServiceException e) {
-			e.printStackTrace();
-			return null;
+			logger.error("view error: ", e);
+			return "redirect:/404.html";
 		}
 	}
 
