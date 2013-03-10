@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,10 +25,7 @@ import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.OfficeBaseVo;
 import com.idocv.docview.vo.PageVo;
 
-
-
-@Controller
-@RequestMapping("view")
+@Deprecated
 public class PreviewController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(PreviewController.class);

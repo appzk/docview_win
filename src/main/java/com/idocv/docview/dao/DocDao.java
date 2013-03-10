@@ -47,6 +47,15 @@ public interface DocDao {
 	public void logDownload(String uuid) throws DBException;
 
 	/**
+	 * Change access mode
+	 * 
+	 * @param uuid
+	 * @param mode
+	 * @throws DBException
+	 */
+	public void updateMode(String uuid, int mode) throws DBException;
+
+	/**
 	 * get Doc by rid.
 	 * 
 	 * @param rid

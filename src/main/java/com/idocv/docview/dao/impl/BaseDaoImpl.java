@@ -24,6 +24,7 @@ public class BaseDaoImpl implements BaseDao {
 	public static final String UTIME = "utime";
 	public static final String DTIME = "dtime";
 	public static final String STATUS = "status";
+	public static final String MODE = "mode";			// access mode, 0-default,public, 1-private,2-semi-public,3-public
 
 	public static final String VIEW = "view";
 	public static final String DOWNLOAD = "download";

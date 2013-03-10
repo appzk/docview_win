@@ -56,8 +56,8 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public boolean delete(String rid) throws DBException {
-		updateStatus(rid, -1);
+	public boolean delete(String uuid) throws DBException {
+		updateStatus(uuid, -1);
 		return true;
 	}
 
@@ -91,6 +91,22 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	@Override
 	public void logDownload(String uuid) throws DBException {
 		log(uuid, DOWNLOAD);
+	}
+
+	@Override
+	public void updateMode(String uuid, int mode) throws DBException {
+		if (StringUtils.isEmpty(uuid)) {
+			throw new DBException("Insufficient parameters!");
+		}
+		long time = System.currentTimeMillis();
+		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
+		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set").append(MODE, mode).append(UTIME, time);
+		try {
+			DBCollection coll = db.getCollection(COLL_DOC);
+			coll.update(query, ob.get(), false, true);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
 	}
 
 	private void log(String uuid, String field) throws DBException {
@@ -226,6 +242,9 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		}
 		if (obj.containsField(DOWNLOAD)) {
 			po.setDownloadLog((List<Long>) obj.get(DOWNLOAD));
+		}
+		if (obj.containsField(MODE)) {
+			po.setMode(Integer.valueOf(obj.get(MODE).toString()));
 		}
 		return po;
 	}

@@ -79,15 +79,41 @@ public class DocController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping("delete")
-	public String delete(@RequestParam(value = "id", required = true) String id) {
+	@ResponseBody
+	@RequestMapping("delete/{uuid}")
+	public String delete(@PathVariable(value = "uuid") String uuid) {
 		try {
-			boolean result = docService.delete(id);
+			boolean result = docService.delete(uuid);
 			System.out.println("Result: " + result);
+			return "true";
 		} catch (Exception e) {
-			logger.error("upload error <controller>: ", e);
+			logger.error("delete error <controller>: ", e);
+			return "{\"error\":" + e.getMessage() + "}";
 		}
-		return "redirect:/";
+	}
+
+	/**
+	 * Set document access mode
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("mode/{uuid}/{mode}")
+	public String mode(@PathVariable(value = "uuid") String uuid,
+			@PathVariable(value = "mode") int mode,
+			@RequestParam(value = "token") String token) {
+		try {
+			DocVo docVo = docService.getByUuid(uuid);
+			if (null == docVo) {
+				throw new DocServiceException("Document NOT found!");
+			}
+			docService.updateMode(token, uuid, mode);
+			return "true";
+		} catch (Exception e) {
+			logger.error("delete error <controller>: ", e);
+			return "{\"error\":" + e.getMessage() + "}";
+		}
 	}
 
 	/**

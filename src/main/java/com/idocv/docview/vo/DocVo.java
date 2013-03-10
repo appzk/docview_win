@@ -75,6 +75,11 @@ public class DocVo implements Serializable {
 	 */
 	private int downloadCount;
 
+	/**
+	 * access mode, 0-default, can be viewed, 1-private, 2-semi-public, 3-public
+	 */
+	private int mode;
+
 	public String getRid() {
 		return rid;
 	}
@@ -169,6 +174,14 @@ public class DocVo implements Serializable {
 
 	public void setDownloadCount(int downloadCount) {
 		this.downloadCount = downloadCount;
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
 	}
 
 	@Override

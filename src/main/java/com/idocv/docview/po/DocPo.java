@@ -76,6 +76,11 @@ public class DocPo implements Serializable {
 	 */
 	private List<Long> downloadLog;
 
+	/**
+	 * access mode, 0-default, can be viewed, 1-private, 2-semi-public, 3-public
+	 */
+	private int mode;
+
 	public String getRid() {
 		return rid;
 	}
@@ -170,6 +175,14 @@ public class DocPo implements Serializable {
 
 	public void setDownloadLog(List<Long> downloadLog) {
 		this.downloadLog = downloadLog;
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
 	}
 
 	@Override

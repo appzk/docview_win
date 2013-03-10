@@ -1,7 +1,8 @@
 $(document).ready(function() {
 	$('body').simpleLoadingModal();
 	var uuid = $.url().param('uuid');
-	$.get('/v/' + uuid + '.json', function(data, status) {
+	var sessionId = $.url().param('session');
+	$.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;

@@ -39,6 +39,8 @@ public interface DocService {
 
 	public void logDownload(String uuid) throws DocServiceException;
 
+	public void updateMode(String token, String uuid, int mode) throws DocServiceException;
+
 	/**
 	 * Get DocPo from local database, if NULL, get it from remote RC server.
 	 * 

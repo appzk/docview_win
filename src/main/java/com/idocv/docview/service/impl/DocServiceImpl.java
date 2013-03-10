@@ -162,6 +162,29 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
+	public void updateMode(String token, String uuid, int mode) throws DocServiceException {
+		try {
+			AppPo appPo = appDao.getByKey(token);
+			if (null == appPo) {
+				throw new DocServiceException("App NOT found!");
+			}
+			DocVo docVo = getByUuid(uuid);
+			if (null == docVo) {
+				throw new DocServiceException("Document NOT found!");
+			}
+			String appAppId = appPo.getId();
+			String docAppId = docVo.getAppId();
+			if (!appAppId.equals(docAppId)) {
+				throw new DocServiceException("Can NOT modify other app's document.");
+			}
+			docDao.updateMode(uuid, mode);
+		} catch (DBException e) {
+			logger.error("updateMode error: ", e);
+			throw new DocServiceException("updateMode error: ", e);
+		}
+	}
+
+	@Override
 	public DocVo get(String rid) throws DocServiceException {
 		try {
 			return convertPo2Vo(docDao.get(rid, false));
@@ -247,6 +270,7 @@ public class DocServiceImpl implements DocService {
 		if (!CollectionUtils.isEmpty(po.getDownloadLog())) {
 			vo.setDownloadCount(po.getDownloadLog().size());
 		}
+		vo.setMode(po.getMode());
 		return vo;
 	}
 }

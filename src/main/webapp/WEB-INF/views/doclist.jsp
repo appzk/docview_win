@@ -180,10 +180,10 @@
 	            }
 	        ],
 			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-				$('td:eq(0)', nRow).html( '<a href="/v/'+aData.uuid+'" target="_blank">'+aData.name+'</a>' );
+				$('td:eq(0)', nRow).html( '<a href="/view/'+aData.uuid+'" target="_blank">'+aData.name+'</a>' );
 				$('td:eq(4)', nRow).html( '' + new Date(aData.ctime).getFullYear() + '-' + (new Date(aData.ctime).getMonth() + 1) + "-" + new Date(aData.ctime).getDate() + ' ' + new Date(aData.ctime).getHours() + ':' + new Date(aData.ctime).getMinutes() + ':' + new Date(aData.ctime).getSeconds() );
 				$('td:eq(5)', nRow).html( '' + aData.downloadCount + '/' + aData.viewCount + '' );
-				$('td:eq(6)', nRow).html( '<a href="/doc/download/'+aData.uuid+'">Download</a> | <a href="/doc/delete?id='+aData.uuid+'" onclick="return confirm(\'Are you sure you want to delete?\');" >Delete</a> | <a href="/v/'+aData.uuid+'" target="_blank">View</a>' );
+				$('td:eq(6)', nRow).html( '<a href="/doc/download/'+aData.uuid+'">Download</a> | <a href="/doc/delete/'+aData.uuid+'" onclick="return confirm(\'Are you sure you want to delete?\');" >Delete</a> | <a href="/view/'+aData.uuid+'" target="_blank">View</a>' );
             }
 	    } );
 	});
