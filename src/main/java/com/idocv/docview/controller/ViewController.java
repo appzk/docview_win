@@ -181,12 +181,11 @@ public class ViewController {
 			String ip = req.getRemoteAddr();
 			String appKey = "doctest";
 			DocVo po = docService.addUrl(appKey, url, name);
-			if (null != po) {
-				String rid = po.getRid();
-				return "redirect:" + rid + ".html";
-			} else {
-				return "error";
+			if (null == po) {
+				throw new DocServiceException("Upload URL document error!");
 			}
+			String uuid = po.getUuid();
+			return "redirect:" + uuid;
 		} catch (Exception e) {
 			return e.getMessage();
 		}
