@@ -28,7 +28,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public void add(String id, String uuid, String appId, String name, long size, String ext) throws DBException {
+	public void add(String id, String uuid, String appId, String name, long size, String ext, int mode) throws DBException {
 		long time = System.currentTimeMillis();
 		if (StringUtils.isBlank(id) || StringUtils.isBlank(uuid)
 				|| StringUtils.isBlank(appId)
@@ -39,7 +39,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
 				.append(_ID, id).append(UUID, uuid).append(APPID, appId)
 				.append(NAME, name).append(SIZE, size).append(EXT, ext)
-				.append(CTIME, time).append(STATUS, 0);
+				.append(CTIME, time).append(STATUS, 0).append(MODE, mode);
 		try {
 			DBCollection coll = db.getCollection(COLL_DOC);
 			coll.save(builder.get());

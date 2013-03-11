@@ -20,18 +20,20 @@ public interface DocService {
 	 * @paramr appId
 	 * @param name
 	 * @param data
+	 * @param mode 0-private, 1-public
 	 * @return
 	 */
-	DocVo add(String appId, String name, byte[] data) throws DocServiceException;
+	DocVo add(String appId, String name, byte[] data, int mode) throws DocServiceException;
 
 	/**
 	 * Save URL resource to local directory.
 	 * 
 	 * @param url
 	 * @param name
+	 * @param mode 0-private, 1-public
 	 * @return
 	 */
-	DocVo addUrl(String appKey, String url, String name) throws DocServiceException;
+	DocVo addUrl(String appKey, String url, String name, int mode) throws DocServiceException;
 
 	boolean delete(String uuid) throws DocServiceException;
 

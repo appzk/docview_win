@@ -7,7 +7,7 @@ import com.idocv.docview.po.DocPo;
 
 public interface DocDao {
 
-	void add(String id, String uuid, String appId, String name, long size, String ext) throws DBException;
+	void add(String id, String uuid, String appId, String name, long size, String ext, int mode) throws DBException;
 
 	/**
 	 * Save a Document.

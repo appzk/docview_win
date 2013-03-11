@@ -63,7 +63,7 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public DocVo add(String appKey, String name, byte[] data) throws DocServiceException {
+	public DocVo add(String appKey, String name, byte[] data, int mode) throws DocServiceException {
 		if (StringUtils.isBlank(appKey) || StringUtils.isBlank(name) || null == data || data.length <= 0) {
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
@@ -92,12 +92,13 @@ public class DocServiceImpl implements DocService {
 			doc.setName(name);
 			doc.setSize(size);
 			doc.setCtime(System.currentTimeMillis());
+			doc.setMode(mode);
 			
 			// save file meta and file
 			FileUtils.writeByteArrayToFile(new File(rcUtil.getPath(rid)), data);
 
 			// save info
-			docDao.add(rid, uuid, appId, name, size, ext);
+			docDao.add(rid, uuid, appId, name, size, ext, mode);
 			return convertPo2Vo(doc);
 		} catch (Exception e) {
 			logger.error("save doc error: ", e);
@@ -106,7 +107,7 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public DocVo addUrl(String appKey, String url, String name) throws DocServiceException {
+	public DocVo addUrl(String appKey, String url, String name, int mode) throws DocServiceException {
 		if (StringUtils.isBlank(appKey) || StringUtils.isBlank(name) || StringUtils.isBlank(url)) {
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
@@ -119,7 +120,7 @@ public class DocServiceImpl implements DocService {
 			Response urlResponse = null;
 			urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
 			byte[] bytes = urlResponse.bodyAsBytes();
-			vo = add(appKey, name, bytes);
+			vo = add(appKey, name, bytes, mode);
 			docDao.updateUrl(vo.getRid(), url);
 			return vo;
 		} catch (IOException e) {

@@ -114,7 +114,7 @@ public class ViewController {
 
 			// 2. check access mode of docVo
 			int accessMode = docVo.getMode();
-			if (1 == accessMode || 2 == accessMode) {
+			if (0 == accessMode) {
 				if (StringUtils.isBlank(session)) {
 					throw new DocServiceException("This is NOT a public document, please provide a session id.");
 				}
@@ -172,15 +172,20 @@ public class ViewController {
 	@RequestMapping("url")
 	public String previewUrl(HttpServletRequest req,
 			@RequestParam(required = true) String url,
-			@RequestParam(required = false) String name) {
+			@RequestParam(required = false) String name,
+			@RequestParam(value = "mode", defaultValue = "public") String modeString) {
 		try {
+			int mode = 0;
+			if ("public".equalsIgnoreCase(modeString)) {
+				mode = 1;
+			}
 			url = URLDecoder.decode(url, "UTF-8");
 			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/[^/]+\\.[^/]+")) {
 				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
 			}
 			String ip = req.getRemoteAddr();
 			String appKey = "doctest";
-			DocVo po = docService.addUrl(appKey, url, name);
+			DocVo po = docService.addUrl(appKey, url, name, mode);
 			if (null == po) {
 				throw new DocServiceException("Upload URL document error!");
 			}

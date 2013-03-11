@@ -58,12 +58,17 @@ public class DocController {
 	@RequestMapping("upload")
 	public String add(HttpServletRequest req,
 			@RequestParam(value = "file", required = true) MultipartFile file,
-			@RequestParam(value = "token", defaultValue = "doctest") String token) {
+			@RequestParam(value = "token", defaultValue = "doctest") String token,
+			@RequestParam(value = "mode", defaultValue = "public") String modeString) {
 		try {
+			int mode = 0;
+			if ("public".equalsIgnoreCase(modeString)) {
+				mode = 1;
+			}
 			String ip = IpUtil.getIpAddr(req);
 			byte[] data = file.getBytes();
 			String name = file.getOriginalFilename();
-			DocVo vo = docService.add(token, name, data);
+			DocVo vo = docService.add(token, name, data, mode);
 			logger.info("--> " + ip + " ADD " + vo.getRid());
 			System.err.println("--> " + ip + " ADD " + vo.getRid());
 			return "{\"uuid\":\"" + vo.getUuid() + "\"}";
@@ -101,9 +106,17 @@ public class DocController {
 	@ResponseBody
 	@RequestMapping("mode/{uuid}/{mode}")
 	public String mode(@PathVariable(value = "uuid") String uuid,
-			@PathVariable(value = "mode") int mode,
+			@PathVariable(value = "mode") String modeString,
 			@RequestParam(value = "token") String token) {
 		try {
+			int mode = 0;
+			if ("public".equalsIgnoreCase(modeString)) {
+				mode = 1;
+			} else if ("private".equalsIgnoreCase(modeString)) {
+				mode = 0;
+			} else {
+				throw new DocServiceException("NOT a valid mode!");
+			}
 			DocVo docVo = docService.getByUuid(uuid);
 			if (null == docVo) {
 				throw new DocServiceException("Document NOT found!");
