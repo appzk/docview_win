@@ -24,6 +24,29 @@
 	}
 
 	/* -------------------------------------------------- */
+	/*	File upload
+	/* -------------------------------------------------- */
+	.fileinput-button {
+		position: relative;
+		overflow: hidden;
+		float: left;
+		margin-right: 4px;
+	}
+	.fileinput-button input {
+		position: absolute;
+		top: 0;
+		right: 0;
+		margin: 0;
+		opacity: 0;
+		filter: alpha(opacity=0);
+		transform: translate(-300px, 0) scale(4);
+		font-size: 23px;
+		direction: ltr;
+		cursor: pointer;
+	}
+
+
+	/* -------------------------------------------------- */
 	/*	Word Style
 	/* -------------------------------------------------- */
 
@@ -84,9 +107,11 @@
 		word-wrap: break-word;
 		margin: 0px auto;
 	}
+	/*
 	table, tbody, tfoot, thead, tr, th, td {
 		border: 1px solid black;
 	}
+	*/
 
 	/* -------------------------------------------------- */
 	/*	Back to Top

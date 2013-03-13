@@ -9,7 +9,7 @@ public class MainController {
 
 	@RequestMapping("")
 	public String HOME() {
-		return "redirect:/index.html";
+		return "redirect:/user/doclist.html";
 	}
 
 }

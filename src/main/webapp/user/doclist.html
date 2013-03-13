@@ -10,24 +10,7 @@
     <!-- Le styles -->
     <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="/static/datatable/css/DT_bootstrap.css" rel="stylesheet">
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
-
-      @media (max-width: 980px) {
-        /* Enable use of floated navbar text */
-        .navbar-text.pull-right {
-          float: none;
-          padding-left: 5px;
-          padding-right: 5px;
-        }
-      }
-    </style>
+    <link href="/static/idocv/css/style.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -48,13 +31,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Project name</a>
+          <a class="brand" href="http://www.idocv.com">I Doc View</a>
           <div class="nav-collapse collapse">
-            <p class="navbar-text pull-right">
-              Logged in as <a href="#" class="navbar-link">Username</a>
-            </p>
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
+              <li class="active"><a href="#"><i class="icon-home icon-white"></i> Home</a></li>
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
@@ -64,20 +44,25 @@
     </div>
 
     <div class="container-fluid">
-      <div class="row-fluid">
+      <div class="row">
+      	<div class="span12">
+          <span class="button large fileinput-button">
+			<span><button class="btn btn-large btn-success" type="button">Upload a Document</button></span>
+			<input id="fileupload" type="file" name="file" data-url="/doc/upload" multiple>
+		  </span>
+      	</div>
         <div class="span12">
           <!-- CONTENT HERE -->
-          <div class="container" style="margin-top: 10px">
-			
+          <div class="container" style="margin-top: 15px">
 			<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="doctable">
 				<thead>
 					<tr>
-						<th width="30%" style="text-align: center;">name</th>
-						<th width="10%" style="text-align: center;">uuid</th>
-						<th width="10%" style="text-align: center;">size</th>
-						<th width="20%" style="text-align: center;">ctime</th>
-						<th width="10%" style="text-align: center;">count(v/d)</th>
-						<th width="20%" style="text-align: center;">option</th>
+						<th width="30%" style="text-align: center;">Name</th>
+						<th width="15%" style="text-align: center;">Time</th>
+						<th width="10%" style="text-align: center;">Size</th>
+						<th width="15%" style="text-align: center;">Share URL</th>
+						<th width="10%" style="text-align: center;">Count(v/d)</th>
+						<th width="20%" style="text-align: center;">Option</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -86,7 +71,6 @@
 					</tr>
 				</tbody>
 			</table>
-				
 		  </div>
         </div><!--/span-->
       </div><!--/row-->
@@ -94,7 +78,7 @@
       <hr>
 
       <footer>
-        <p>&copy; Company 2013</p>
+			Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
       </footer>
 
     </div><!--/.fluid-container-->
@@ -105,8 +89,12 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
 	<script src="/static/bootstrap/js/bootstrap.js"></script>
+	<script src="/static/idocv/js/user.js"></script>
 	<script src="/static/datatable/js/jquery.dataTables.js"></script>
 	<script src="/static/datatable/js/DT_bootstrap.js"></script>
+	<script src="/static/js/upload/jquery.ui.widget.js"></script>
+	<script src="/static/js/upload/jquery.iframe-transport.js"></script>
+	<script src="/static/js/upload/jquery.fileupload.js"></script>
 	<script src="/static/user/doclist.js"></script>
 
   </body>

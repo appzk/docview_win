@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +26,12 @@ public class UserController {
 	@Resource
 	private UserService userService;
 	
+	@RequestMapping("main/{username}")
+	public String main(@PathVariable(value = "username") String username) {
+		System.out.println("User: " + username);
+		return "user/main";
+	}
+
 	/**
 	 * Sign up
 	 * 
