@@ -50,6 +50,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	private @Value("${office.cmd.ppt2jpg}")
 	String ppt2Jpg;
 
+	private static final String encodingString = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=([^\"^>]+?)\"?>.*";
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO
@@ -67,6 +69,9 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			String bodyRaw;
 			if (!bodyFile.isFile()) {
 				String contentWhole = FileUtils.readFileToString(htmlFile, "GBK");
+				if (!contentWhole.matches(encodingString)) {
+					contentWhole = FileUtils.readFileToString(htmlFile, "unicode");
+				}
 				String styleString = contentWhole.replaceFirst("(?s)(?i).*?(<style>)(.*?)</style>.*", "$2");
 				bodyRaw = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
 				FileUtils.writeStringToFile(styleFile, styleString, "UTF-8");
