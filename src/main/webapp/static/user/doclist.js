@@ -17,10 +17,11 @@ $(document).ready(function() {
 	        	var result = data.result;
 	        	var uuid = result.uuid;
 	        	if (uuid !== undefined) {
-	        		window.location.reload();
-	        		$(".span12:first").prepend('<div class="alert alert-success">Upload success!</div>');
+	        		// window.location.reload();
+	        		$("#upload-result").html('<div class="alert alert-success">Upload success!</div>');
+	        		oTable.fnDraw();
 	        	} else {
-	        		$(".span12:first").prepend('<div class="alert alert-error">Upload error, error=' + result.error + '!</div>');
+	        		$("#upload-result").html('<div class="alert alert-error">Upload error, error=' + result.error + '!</div>');
 	        	}
 	        }
 	    });
@@ -29,7 +30,7 @@ $(document).ready(function() {
 	/* ---------------------------------------------------------------------- */
 	/*	Documenet Table
 	/* ---------------------------------------------------------------------- */
-	$('#doctable').dataTable( {
+	var oTable = $('#doctable').dataTable( {
         "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
 		"sPaginationType": "bootstrap",
 		"oLanguage": {
