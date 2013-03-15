@@ -74,7 +74,7 @@ public class ViewController {
 			} else if (uuid.endsWith("t")) {
 				return "redirect:/page/txt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else {
-				throw new DocServiceException("NOT a valid UUID!");
+				throw new DocServiceException(id + "is NOT a valid UUID!");
 			}
 		} catch (DocServiceException e) {
 			logger.error("view error: ", e);
