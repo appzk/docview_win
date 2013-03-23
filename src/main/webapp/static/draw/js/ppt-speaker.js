@@ -137,15 +137,15 @@ function initDraw() {
 
 	$('canvas').bind('mousedown touchstart', function(e) {
 		var type = e.type;
-		var oleft = img.offset().left - 35;
+		var oleft = img.offset().left;
 		var otop = img.offset().top;
 		if ("mousedown" == type) {
-			curr.x = Math.round(e.pageX / scale - oleft);
-			curr.y = Math.round(e.pageY / scale - otop);
+			curr.x = Math.round(e.pageX - oleft);
+			curr.y = Math.round(e.pageY - otop);
 		} else if ("touchstart" == type) {
 			var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-			curr.x = Math.round(touch.pageX / scale - oleft);
-			curr.y = Math.round(touch.pageY / scale - otop);
+			curr.x = Math.round(touch.pageX - oleft);
+			curr.y = Math.round(touch.pageY - otop);
 
 			// Move touchstart start position
 			perc.x = (curr.x / canvas.width).toFixed(4);
@@ -167,6 +167,7 @@ function initDraw() {
 		drawing = false;
 	});
 
+	/*
 	$(document).mousemove(function(e) {
 		var left = $('#slide-img-0').offset().left;
 		var top = $('#slide-img-0').offset().top;
@@ -174,20 +175,21 @@ function initDraw() {
 		var top2 = $('#slide-canvas-0').offset().top;
 		console.log("moving.... cur(" + e.pageX + ", " + e.pageY + ") img(" + left + ", " + top + ") canvas(" + left2 + ", " + top2 + ")");
 	});
+	*/
 	
 	$('canvas').bind('mousemove touchmove', function(e) {
-		console.log('prev (' + prev.x + ', ' + prev.y + ') | curr(' + curr.x + ', ' + curr.y + ')');
+		$('#info').html('prev (' + prev.x + ', ' + prev.y + ') | curr(' + curr.x + ', ' + curr.y + ')');
 		e.preventDefault();
-		var oleft = img.offset().left - 35;
+		var oleft = img.offset().left;
 		var otop = img.offset().top;
 		var type = e.type;
 		if ("mousemove" == type) {
-			curr.x = Math.round(e.pageX / scale - oleft);
-			curr.y = Math.round(e.pageY / scale - otop);
+			curr.x = Math.round(e.pageX - oleft);
+			curr.y = Math.round(e.pageY - otop);
 		} else if ("touchmove" == type) {
 			var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-			curr.x = Math.round(touch.pageX / scale - oleft);
-			curr.y = Math.round(touch.pageY / scale - otop);
+			curr.x = Math.round(touch.pageX - oleft);
+			curr.y = Math.round(touch.pageY - otop);
 		}
 		
 		perc.x = (curr.x / canvas.width).toFixed(4);
