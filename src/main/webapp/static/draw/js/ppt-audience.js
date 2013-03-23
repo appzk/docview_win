@@ -201,8 +201,8 @@ function initDraw() {
 }
 
 function drawLine(fromx, fromy, tox, toy){
-	ctx.moveTo(fromx - 30, fromy);
-	ctx.lineTo(tox - 30, toy);
+	ctx.moveTo(fromx, fromy);
+	ctx.lineTo(tox, toy);
 	/*
 	ctx.strokeStyle = 'red';
     ctx.lineWidth = "10";

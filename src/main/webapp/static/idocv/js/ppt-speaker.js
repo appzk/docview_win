@@ -19,8 +19,10 @@ $(document).ready(function() {
 			}
 			
 			$('#slides').html(
-				'<img id="slide-img-0" src="' + slideurls[0] + '" class="ppt-slide-img" />' +
-				'<canvas id="slide-canvas-0" width="960" height="720" style="border: 1px solid orange; position: absolute;">Your browser does NOT support canvas!</canvas>'
+				'<slide>' +
+					'<img id="slide-img-0" src="' + slideurls[0] + '" class="ppt-slide-img" />' +
+					'<canvas id="slide-canvas-0" width="960" height="720" style="border: 1px solid orange; position: absolute;">Your browser does NOT support canvas!</canvas>' +
+				'</slide>'
 			);
 			
 			for (i = 0; i < slideurls.length; i++) {

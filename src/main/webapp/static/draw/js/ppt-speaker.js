@@ -13,6 +13,26 @@ var curPage = 0;
 var slideurls = [];
 var lines = [];
 
+// Generate an unique ID
+var id = Math.round($.now()*Math.random());
+
+// A flag for drawing activity
+var drawing = false;
+
+var clients = {};
+var cursors = {};
+
+// previous position
+var prev = {};
+// current position
+var curr = {};
+// percent position
+var perc = {};
+// points (from -> to)
+var p;
+
+var socket = io.connect(url);
+
 function initDraw() {
 
 	// This demo depends on the canvas element
@@ -20,26 +40,6 @@ function initDraw() {
 		alert('Sorry, it looks like your browser does not support canvas!');
 		return false;
 	}
-	
-	// Generate an unique ID
-	var id = Math.round($.now()*Math.random());
-	
-	// A flag for drawing activity
-	var drawing = false;
-
-	var clients = {};
-	var cursors = {};
-
-	// previous position
-	var prev = {};
-	// current position
-	var curr = {};
-	// percent position
-	var perc = {};
-	// points (from -> to)
-	var p;
-
-	var socket = io.connect(url);
 	
 	socket.on('moving', function (data) {
 
@@ -90,39 +90,39 @@ function initDraw() {
 	$('.btn-cmd').on('click touchstart', function(e) {
 		e.preventDefault();
 		if ($(this).attr('cmd-string')) {
-			// console.log('sending button command: '+$(this).attr('data-key'));
 			var cmdString = $(this).attr('cmd-string');
 			var pageNum = 0;
 			if ('left' == cmdString) {
 				if (curPage > 0) {
 					curPage = curPage - 1;
-					// 1. update current page.
-					updatePage(curPage);
-					
-					// 2. send page number.
-					socket.emit('flip', {
-						'uuid': uuid,
-						'page': curPage,
-					});
 				}
+				// 1. update current page.
+				updatePage(curPage);
+				
+				// 2. send page number.
+				socket.emit('flip', {
+					'uuid': uuid,
+					'page': curPage,
+				});
 			} else if ('right' == cmdString) {
 				var pageCount = slideurls.length;
 				if (curPage < pageCount - 1) {
 					curPage = curPage + 1;
-					// 1. update current page.
-					updatePage(curPage);
-					
-					// 2. send page number.
-					socket.emit('flip', {
-						'uuid': uuid,
-						'page': curPage,
-					});
 				}
+				// 1. update current page.
+				updatePage(curPage);
+				
+				// 2. send page number.
+				socket.emit('flip', {
+					'uuid': uuid,
+					'page': curPage,
+				});
 			} else if ('clear' == cmdString) {
 				socket.emit('clear', {
 					
 				});
-				location.reload();
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				// location.reload();
 			}
 			// iosocket.send($(this).attr('data-key'));
 		}
@@ -130,11 +130,48 @@ function initDraw() {
 
 	socket.on('clear', function (data) {
 		// lines = [];
-		// ctx.clearRect(0, 0, canvas.width, canvas.height);
-		location.reload();
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		// location.reload();
 		// draw();
 	});
 
+	/*
+	$(document).mousemove(function(e) {
+		var left = $('#slide-img-0').offset().left;
+		var top = $('#slide-img-0').offset().top;
+		var left2 = $('#slide-canvas-0').offset().left;
+		var top2 = $('#slide-canvas-0').offset().top;
+	});
+	*/
+	
+	// Remove inactive clients after 10 seconds of inactivity
+	setInterval(function() {
+		
+		for(ident in clients) {
+			if($.now() - clients[ident].updated > 10000) {
+				
+				// Last update was more than 10 seconds ago. 
+				// This user has probably closed the page
+				
+				cursors[ident].remove();
+				delete clients[ident];
+				delete cursors[ident];
+			}
+		}
+		
+	},10000);
+
+	bindStart();
+	bindMove();
+	bindEnd();
+	
+	$('img').load(function() {
+		draw();
+	});
+
+}
+
+function bindStart() {
 	$('canvas').bind('mousedown touchstart', function(e) {
 		var type = e.type;
 		var oleft = img.offset().left;
@@ -161,24 +198,10 @@ function initDraw() {
 		prev.x = curr.x;
 		prev.y = curr.y;
 	});
-	
-	doc.bind('mouseup mouseleave touchend touchcancel', function(e) {
-		e.preventDefault();
-		drawing = false;
-	});
+}
 
-	/*
-	$(document).mousemove(function(e) {
-		var left = $('#slide-img-0').offset().left;
-		var top = $('#slide-img-0').offset().top;
-		var left2 = $('#slide-canvas-0').offset().left;
-		var top2 = $('#slide-canvas-0').offset().top;
-		console.log("moving.... cur(" + e.pageX + ", " + e.pageY + ") img(" + left + ", " + top + ") canvas(" + left2 + ", " + top2 + ")");
-	});
-	*/
-	
+function bindMove() {
 	$('canvas').bind('mousemove touchmove', function(e) {
-		$('#info').html('prev (' + prev.x + ', ' + prev.y + ') | curr(' + curr.x + ', ' + curr.y + ')');
 		e.preventDefault();
 		var oleft = img.offset().left;
 		var otop = img.offset().top;
@@ -228,36 +251,28 @@ function initDraw() {
 			prev.y = curr.y;
 		}
 	});
+}
 
-	// Remove inactive clients after 10 seconds of inactivity
-	setInterval(function() {
-		
-		for(ident in clients) {
-			if($.now() - clients[ident].updated > 10000) {
-				
-				// Last update was more than 10 seconds ago. 
-				// This user has probably closed the page
-				
-				cursors[ident].remove();
-				delete clients[ident];
-				delete cursors[ident];
-			}
-		}
-		
-	},10000);
 
-	$('img').load(function() {
-		draw();
+function bindEnd() {
+	doc.bind('mouseup mouseleave touchend touchcancel', function(e) {
+		e.preventDefault();
+		drawing = false;
 	});
-
 }
 
 function updatePage(pageNum) {
 	$('#slides').html(
-		'<img id="slide-img-' + pageNum + '" src="' + slideurls[pageNum] + '" class="ppt-slide-img" />' +
-		'<canvas id="slide-canvas-' + pageNum + '" width="960" height="720" style="border: 1px solid orange; position: absolute;">Your browser does NOT support canvas!</canvas>'
+		'<slide>' +
+			'<img id="slide-img-' + pageNum + '" src="' + slideurls[pageNum] + '" class="ppt-slide-img" />' +
+			'<canvas id="slide-canvas-' + pageNum + '" width="960" height="720" style="border: 1px solid orange; position: absolute;">Your browser does NOT support canvas!</canvas>' +
+		'</slide>'
 	);
 	draw();
+	
+	bindStart();
+	bindMove();
+	bindEnd();
 }
 
 function drawLine(fromx, fromy, tox, toy){
@@ -273,7 +288,16 @@ function drawLine(fromx, fromy, tox, toy){
 
 // Scale Canvas
 function draw() {
+	// resize
 	resize_canvas('slide-canvas-' + curPage, 'slide-img-' + curPage, 1.33);
+	
+	canvas = document.getElementById('slide-canvas-' + curPage);
+	ctx = canvas.getContext("2d");
+	ctx.strokeStyle = 'red';
+    ctx.lineWidth = "3";
+    ctx.lineCap = "round";
+	img = $('#slide-img-' + curPage);
+	
 	// location.reload();
 	// ctx.clearRect (0, 0, 800, 600);
 }
@@ -302,8 +326,6 @@ function resize_canvas(canvas_id, match_id, aspect) {
 	cv_element.width = canvas_width;
 	cv_element.height = canvas_height;
 
-	console.log(match_id + "left: " + $('#' + match_id).offset().left + ", top: " + $('#' + match_id).offset().top);
-	
 	$('#' + canvas_id).css({
 		'left' : $('#' + match_id).offset().left,
 		'top' : $('#' + match_id).offset().top,
