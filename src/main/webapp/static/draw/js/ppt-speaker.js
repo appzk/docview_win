@@ -96,18 +96,22 @@ function initDraw() {
 			if ('left' == cmdString) {
 				if (curPage > 0) {
 					curPage = curPage - 1;
+					// 1. update current page.
+					updatePage(curPage);
+					
+					// 2. send page number.
 					socket.emit('flip', {
 						'uuid': uuid,
 						'page': curPage,
 					});
-					// 1. update page.
-					// 2. send page number.
 				}
 			} else if ('right' == cmdString) {
 				var pageCount = slideurls.length;
-				if (curPage < pageCount) {
+				if (curPage < pageCount - 1) {
 					curPage = curPage + 1;
-					// 1. update page.
+					// 1. update current page.
+					updatePage(curPage);
+					
 					// 2. send page number.
 					socket.emit('flip', {
 						'uuid': uuid,
@@ -244,6 +248,14 @@ function initDraw() {
 		draw();
 	});
 
+}
+
+function updatePage(pageNum) {
+	$('#slides').html(
+		'<img id="slide-img-' + pageNum + '" src="' + slideurls[pageNum] + '" class="ppt-slide-img" />' +
+		'<canvas id="slide-canvas-' + pageNum + '" width="960" height="720" style="border: 1px solid orange; position: absolute;">Your browser does NOT support canvas!</canvas>'
+	);
+	draw();
 }
 
 function drawLine(fromx, fromy, tox, toy){
