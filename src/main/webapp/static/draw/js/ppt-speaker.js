@@ -1,14 +1,16 @@
 // The URL of your web server (the port is set in app.js)
 var url = 'http://draw.idocv.com:8080';
 
+var uuid = 'abcd';
 var doc = $(document);
 var win = $(window);
 var canvas;
 var ctx;
 var img;
-var scale;
+var curPage = 0;
 
 // all screen lines
+var slideurls = [];
 var lines = [];
 
 function initDraw() {
@@ -75,7 +77,7 @@ function initDraw() {
 		clients[data.id].updated = $.now();
 	});
 
-	// Clear Canvas
+	// Send clear canvas command
 	$("#btn-clear").on('click touchend', function(e) {
 		socket.emit('clear', {
 			
@@ -84,15 +86,49 @@ function initDraw() {
 		// draw();
 	});
 	
-	socket.on('clear', function (data) {
-		// TODO
-		// clear canvas
-		location.reload();
+	// Send page turning command
+	$('.btn-cmd').on('click touchstart', function(e) {
+		e.preventDefault();
+		if ($(this).attr('cmd-string')) {
+			// console.log('sending button command: '+$(this).attr('data-key'));
+			var cmdString = $(this).attr('cmd-string');
+			var pageNum = 0;
+			if ('left' == cmdString) {
+				if (curPage > 0) {
+					curPage = curPage - 1;
+					socket.emit('flip', {
+						'uuid': uuid,
+						'page': curPage,
+					});
+					// 1. update page.
+					// 2. send page number.
+				}
+			} else if ('right' == cmdString) {
+				var pageCount = slideurls.length;
+				if (curPage < pageCount) {
+					curPage = curPage + 1;
+					// 1. update page.
+					// 2. send page number.
+					socket.emit('flip', {
+						'uuid': uuid,
+						'page': curPage,
+					});
+				}
+			} else if ('clear' == cmdString) {
+				socket.emit('clear', {
+					
+				});
+				location.reload();
+			}
+			// iosocket.send($(this).attr('data-key'));
+		}
 	});
 
-	socket.on('flip', function (data) {
-		console.log("audience received flipping data: " + data);
-		Reveal.slide( data.page, 0 );
+	socket.on('clear', function (data) {
+		// lines = [];
+		// ctx.clearRect(0, 0, canvas.width, canvas.height);
+		location.reload();
+		// draw();
 	});
 
 	$('canvas').bind('mousedown touchstart', function(e) {
@@ -127,6 +163,14 @@ function initDraw() {
 		drawing = false;
 	});
 
+	$(document).mousemove(function(e) {
+		var left = $('#slide-img-0').offset().left;
+		var top = $('#slide-img-0').offset().top;
+		var left2 = $('#slide-canvas-0').offset().left;
+		var top2 = $('#slide-canvas-0').offset().top;
+		console.log("moving.... cur(" + e.pageX + ", " + e.pageY + ") img(" + left + ", " + top + ") canvas(" + left2 + ", " + top2 + ")");
+	});
+	
 	$('canvas').bind('mousemove touchmove', function(e) {
 		console.log('prev (' + prev.x + ', ' + prev.y + ') | curr(' + curr.x + ', ' + curr.y + ')');
 		e.preventDefault();
@@ -153,7 +197,7 @@ function initDraw() {
 			send(JSON.stringify(p));
 			prev = curr;
 			*/
-			socket.emit('mousemove',{
+			socket.emit('mousemove', {
 				'x': perc.x,
 				'y': perc.y,
 				'drawing': drawing,
@@ -196,13 +240,15 @@ function initDraw() {
 		
 	},10000);
 
-	// draw();
+	$('img').load(function() {
+		draw();
+	});
 
 }
 
 function drawLine(fromx, fromy, tox, toy){
-	ctx.moveTo(fromx - 30, fromy);
-	ctx.lineTo(tox - 30, toy);
+	ctx.moveTo(fromx, fromy);
+	ctx.lineTo(tox, toy);
 	/*
 	ctx.strokeStyle = 'red';
     ctx.lineWidth = "10";
@@ -211,10 +257,9 @@ function drawLine(fromx, fromy, tox, toy){
 	ctx.stroke();
 }
 
-/*
 // Scale Canvas
 function draw() {
-	// resize_canvas('slide-canvas-0', 'slide-img-0', 1.33);
+	resize_canvas('slide-canvas-' + curPage, 'slide-img-' + curPage, 1.33);
 	// location.reload();
 	// ctx.clearRect (0, 0, 800, 600);
 }
@@ -224,7 +269,6 @@ function draw() {
 // match_id, and height = width/aspect.
 // -----------------------------------------------------
 function resize_canvas(canvas_id, match_id, aspect) {
-	/*
 	var match_element = document.getElementById(match_id);
 	if (match_element==undefined)
 	{	alert("Undefined element: " + match_id);
@@ -244,6 +288,14 @@ function resize_canvas(canvas_id, match_id, aspect) {
 	cv_element.width = canvas_width;
 	cv_element.height = canvas_height;
 
+	console.log(match_id + "left: " + $('#' + match_id).offset().left + ", top: " + $('#' + match_id).offset().top);
+	
+	$('#' + canvas_id).css({
+		'left' : $('#' + match_id).offset().left,
+		'top' : $('#' + match_id).offset().top,
+	});
+	
+	/*
 	$.map(lines, function (p) {
 		var img = $('#' + match_id);
 		var preAbsX = p.x1 * img.width();
@@ -252,6 +304,6 @@ function resize_canvas(canvas_id, match_id, aspect) {
 		var absY = p.y2 * img.height();
 		drawLine(preAbsX, preAbsY, absX, absY);
 	});
+	*/
 	return true;   
 }
- */
