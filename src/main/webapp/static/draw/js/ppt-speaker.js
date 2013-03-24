@@ -98,6 +98,7 @@ function initDraw() {
 				}
 				// 1. update current page.
 				updatePage(curPage);
+				$('#page-selector').val(curPage + 1);
 				
 				// 2. send page number.
 				socket.emit('flip', {
@@ -111,12 +112,14 @@ function initDraw() {
 				}
 				// 1. update current page.
 				updatePage(curPage);
+				$('#page-selector').val(curPage + 1);
 				
 				// 2. send page number.
 				socket.emit('flip', {
 					'uuid': uuid,
 					'page': curPage,
 				});
+				
 			} else if ('clear' == cmdString) {
 				socket.emit('clear', {
 					
