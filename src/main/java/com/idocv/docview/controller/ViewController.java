@@ -107,7 +107,7 @@ public class ViewController {
 			// 1. get docVo by uuid
 			DocVo docVo = docService.getByUuid(uuid);
 			if (null == docVo || StringUtils.isBlank(docVo.getRid())) {
-				throw new DocServiceException("Document NOT found!");
+				throw new DocServiceException("Document(" + uuid + ") NOT found!");
 			}
 			String rid = docVo.getRid();
 			String ext = RcUtil.getExt(rid);
