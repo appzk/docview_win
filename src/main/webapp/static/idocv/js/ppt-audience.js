@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	$('body').simpleLoadingModal();
-	var uuid = $.url().param('uuid');
+	uuid = $.url().param('uuid');
 	var sessionId = $.url().param('session');
 	$.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
 		var code = data.code;

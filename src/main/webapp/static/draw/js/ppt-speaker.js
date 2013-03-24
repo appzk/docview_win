@@ -1,7 +1,7 @@
 // The URL of your web server (the port is set in app.js)
 var url = 'http://draw.idocv.com:8080';
 
-var uuid = 'abcd';
+var uuid;
 var doc = $(document);
 var win = $(window);
 var canvas;

@@ -1,6 +1,7 @@
 // The URL of your web server (the port is set in app.js)
 var url = 'http://draw.idocv.com:8080';
 
+var uuid;
 var doc = $(document);
 var win = $(window);
 var canvas;
@@ -91,8 +92,10 @@ function initDraw() {
 	});
 
 	socket.on('flip', function (data) {
-		console.log("audience received flipping data: " + data);
-		Reveal.slide( data.page, 0 );
+		var remoteUuid = data.uuid;
+		if (uuid == remoteUuid) {
+			Reveal.slide( data.page, 0 );
+		}
 	});
 
 	$('canvas').bind('mousedown touchstart', function(e) {
@@ -128,7 +131,6 @@ function initDraw() {
 	});
 
 	$('canvas').bind('mousemove touchmove', function(e) {
-		console.log('prev (' + prev.x + ', ' + prev.y + ') | curr(' + curr.x + ', ' + curr.y + ')');
 		e.preventDefault();
 		var oleft = img.offset().left - 35;
 		var otop = img.offset().top;
