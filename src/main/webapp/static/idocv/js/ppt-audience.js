@@ -86,9 +86,6 @@ $(document).ready(function() {
 			
 			img = $('#slide-img-' + event.indexh);
 			scale = Reveal.getScale();
-			// canvas = $('#slide-canvas-' + event.indexh);
-			// ctx = canvas[0].getContext('2d');
-			console.log("img " + img.attr('id') + " width = " + img.width());
 		} );
 		
 	});
