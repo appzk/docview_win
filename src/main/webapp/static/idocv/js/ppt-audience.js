@@ -17,9 +17,9 @@ $(document).ready(function() {
 				var page = pages[i];
 				$('.slides').append(
 					'<section>' +
-						'<div style="position: relative; top: 0px; left: 0px; border: 1px solid red;">' +
-							'<img id="slide-img-' + i + '" src="' + page.url + '" class="ppt-slide-img" style="border: 1px solid blue;" />' +
-							'<canvas id="slide-canvas-' + i + '" width="890" height="667" style="border: 1px solid orange; position: absolute; left: 30px; top: 0px;"></canvas>' +
+						'<div style="position: relative; top: 0px; left: 0px;">' +
+							'<img id="slide-img-' + i + '" src="' + page.url + '" class="ppt-slide-img" />' +
+							'<canvas id="slide-canvas-' + i + '" width="896" height="672" style="border: 1px solid orange; position: absolute; left: 30px; top: 0px;"></canvas>' +
 						'</div>' +
 					'</section>'
 				);
