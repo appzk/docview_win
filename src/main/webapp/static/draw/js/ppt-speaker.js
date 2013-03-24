@@ -204,7 +204,8 @@ function bindStart() {
 			// Move touchstart start position
 			perc.x = (curr.x / canvas.width).toFixed(4);
 			perc.y = (curr.y / canvas.height).toFixed(4);
-			socket.emit('mousemove',{
+			socket.emit('mousemove', {
+				'uuid': uuid,
 				'x': perc.x,
 				'y': perc.y,
 				'drawing': false,
@@ -244,6 +245,7 @@ function bindMove() {
 			prev = curr;
 			*/
 			socket.emit('mousemove', {
+				'uuid': uuid,
 				'x': perc.x,
 				'y': perc.y,
 				'drawing': drawing,
@@ -306,7 +308,7 @@ function drawLine(fromx, fromy, tox, toy){
 // Scale Canvas
 function draw() {
 	// resize
-	$('img').load(function(){
+	$('img').load(function() {
 		resize_canvas('slide-canvas-' + curPage, 'slide-img-' + curPage, 1.33);
 		canvas = document.getElementById('slide-canvas-' + curPage);
 		ctx = canvas.getContext("2d");
@@ -315,6 +317,13 @@ function draw() {
 		ctx.lineCap = "round";
 		img = $('#slide-img-' + curPage);
 	});
+	resize_canvas('slide-canvas-' + curPage, 'slide-img-' + curPage, 1.33);
+	canvas = document.getElementById('slide-canvas-' + curPage);
+	ctx = canvas.getContext("2d");
+	ctx.strokeStyle = 'red';
+	ctx.lineWidth = "3";
+	ctx.lineCap = "round";
+	img = $('#slide-img-' + curPage);
 	
 	// location.reload();
 	// ctx.clearRect (0, 0, 800, 600);
@@ -326,13 +335,13 @@ function draw() {
 // -----------------------------------------------------
 function resize_canvas(canvas_id, match_id, aspect) {
 	var match_element = document.getElementById(match_id);
-	if (match_element==undefined)
-	{	alert("Undefined element: " + match_id);
+	if (match_element==undefined) {
+		alert("Undefined element: " + match_id);
 		return false; 
 	}
 	var cv_element = document.getElementById(canvas_id);	
-	if (cv_element.tagName.toUpperCase() != 'CANVAS')
-	{	alert("Resize_canvas called for " + cv_element.tagName + " element instead of canvas");
+	if (cv_element.tagName.toUpperCase() != 'CANVAS') {
+		alert("Resize_canvas called for " + cv_element.tagName + " element instead of canvas");
 		return false;
 	}
 

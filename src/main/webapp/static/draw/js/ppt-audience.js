@@ -42,6 +42,11 @@ function initDraw() {
 	
 	socket.on('moving', function (data) {
 
+		var remoteUuid = data.uuid;
+		if (uuid != remoteUuid) {
+			return;
+		}
+		
 		if(! (data.id in clients)){
 			// a new user has come online. create a cursor for them
 			cursors[data.id] = $('<div class="cursor">').appendTo('#cursors');
@@ -88,7 +93,10 @@ function initDraw() {
 	socket.on('clear', function (data) {
 		// TODO
 		// clear canvas
-		location.reload();
+		var remoteUuid = data.uuid;
+		if (uuid == remoteUuid) {
+			location.reload();
+		}
 	});
 
 	socket.on('flip', function (data) {
