@@ -127,6 +127,20 @@ function initDraw() {
 			// iosocket.send($(this).attr('data-key'));
 		}
 	});
+	
+	$('#page-selector').change(function() {
+		var selectNum = $("#page-selector option:selected").text();
+		curPage = selectNum - 1;
+		
+		// send page event
+		socket.emit('flip', {
+			'uuid': uuid,
+			'page': curPage,
+		});
+		
+		// update current page
+		updatePage(curPage);
+	});
 
 	socket.on('clear', function (data) {
 		// lines = [];
