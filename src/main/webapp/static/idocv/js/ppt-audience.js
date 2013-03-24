@@ -64,7 +64,7 @@ $(document).ready(function() {
 			canvas = document.getElementById('slide-canvas-' + event.indexh);
 			ctx = canvas.getContext("2d");
 			ctx.strokeStyle = 'red';
-		    ctx.lineWidth = "10";
+		    ctx.lineWidth = "8";
 		    ctx.lineCap = "round";
 			
 			img = $('#slide-img-' + event.indexh);
@@ -81,7 +81,7 @@ $(document).ready(function() {
 			canvas = document.getElementById('slide-canvas-' + event.indexh);
 			ctx = canvas.getContext("2d");
 			ctx.strokeStyle = 'red';
-		    ctx.lineWidth = "10";
+		    ctx.lineWidth = "8";
 		    ctx.lineCap = "round";
 			
 			img = $('#slide-img-' + event.indexh);

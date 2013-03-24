@@ -304,7 +304,7 @@ function draw() {
 		canvas = document.getElementById('slide-canvas-' + curPage);
 		ctx = canvas.getContext("2d");
 		ctx.strokeStyle = 'red';
-		ctx.lineWidth = "3";
+		ctx.lineWidth = "5";
 		ctx.lineCap = "round";
 		img = $('#slide-img-' + curPage);
 	});
@@ -312,7 +312,7 @@ function draw() {
 	canvas = document.getElementById('slide-canvas-' + curPage);
 	ctx = canvas.getContext("2d");
 	ctx.strokeStyle = 'red';
-	ctx.lineWidth = "3";
+	ctx.lineWidth = "5";
 	ctx.lineCap = "round";
 	img = $('#slide-img-' + curPage);
 	
