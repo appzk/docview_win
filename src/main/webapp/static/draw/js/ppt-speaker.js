@@ -77,15 +77,6 @@ function initDraw() {
 		clients[data.id].updated = $.now();
 	});
 
-	// Send clear canvas command
-	$("#btn-clear").on('click touchend', function(e) {
-		socket.emit('clear', {
-			
-		});
-		lines = [];
-		// draw();
-	});
-	
 	// Send page turning command
 	$('.btn-cmd').on('click touchstart', function(e) {
 		e.preventDefault();
@@ -122,7 +113,7 @@ function initDraw() {
 				
 			} else if ('clear' == cmdString) {
 				socket.emit('clear', {
-					
+					'uuid': uuid,
 				});
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				// location.reload();
