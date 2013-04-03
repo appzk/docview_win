@@ -24,6 +24,29 @@
 	}
 
 	/* -------------------------------------------------- */
+	/*	File upload
+	/* -------------------------------------------------- */
+	.fileinput-button {
+		position: relative;
+		overflow: hidden;
+		float: left;
+		margin-right: 4px;
+	}
+	.fileinput-button input {
+		position: absolute;
+		top: 0;
+		right: 0;
+		margin: 0;
+		opacity: 0;
+		filter: alpha(opacity=0);
+		transform: translate(-300px, 0) scale(4);
+		font-size: 23px;
+		direction: ltr;
+		cursor: pointer;
+	}
+
+
+	/* -------------------------------------------------- */
 	/*	Word Style
 	/* -------------------------------------------------- */
 
@@ -55,7 +78,6 @@
 		margin: 0px auto;
 		padding-top: 10%;
 		padding-bottom: 10%;
-		overflow: auto;
 	}
 	
 	.doc-page .doc-content p{
@@ -81,11 +103,15 @@
 	/* -------------------------------------------------- */
 
 	table {
-		border-collapse:collapse;
+		border-collapse: collapse;
+		word-wrap: break-word;
+		margin: 0px auto;
 	}
+	/*
 	table, tbody, tfoot, thead, tr, th, td {
 		border: 1px solid black;
 	}
+	*/
 
 	/* -------------------------------------------------- */
 	/*	Back to Top
@@ -113,3 +139,10 @@
 	}
 
 		#back-to-top:hover, .touch-device #back-to-top:active { background-color: #f15a23; }
+		
+	/* -------------------------------------------------- */
+	/*	Footer
+	/* -------------------------------------------------- */
+	footer {
+		text-align: center;
+	}

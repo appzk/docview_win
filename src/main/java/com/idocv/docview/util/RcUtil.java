@@ -23,7 +23,7 @@ public class RcUtil {
 	private static final String SPLIT = "_";
 
 	/**
-	 * 生成rid，格式：(appId)_(yyyyMMdd)_(HHmmss)(size)(random)_ext
+	 * 生成rid，格式：(appId)_(yyyyMMdd)_(HHmmss)_(size)(random)_ext
 	 * 
 	 * @param uid
 	 * @param fileName
@@ -34,12 +34,12 @@ public class RcUtil {
 		Date date = new Date();
 		String dateString = new SimpleDateFormat("yyyyMMdd").format(date);
 		String timeString = new SimpleDateFormat("HHmmss").format(date);
-		String randomString = RandomStringUtils.randomAlphanumeric(3);
-		return appId + SPLIT + dateString + SPLIT + timeString + size + randomString + SPLIT + fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+		String randomString = RandomStringUtils.randomAlphabetic(3);
+		return appId + SPLIT + dateString + SPLIT + timeString + SPLIT + size + randomString + SPLIT + fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 	}
 
 	/**
-	 * 根据rid获取绝对路径，e.g. /dataDir/coff180e/20130118/2314324_abc.doc
+	 * 根据rid获取绝对路径，e.g. /appName/yyyy/MMdd/HHmmss_(size)(random).doc
 	 * 
 	 * @param rid
 	 * @return
@@ -53,11 +53,11 @@ public class RcUtil {
 	public static String getFileNameByRid(String rid) throws IllegalArgumentException{
 		validateRid(rid);
 		String[] splits = rid.split(SPLIT);
-		return splits[splits.length - 2] + "." + splits[splits.length - 1];
+		return splits[splits.length - 3] + SPLIT + splits[splits.length - 2] + "." + splits[splits.length - 1];
 	}
 	
 	public static void validateRid(String rid) throws IllegalArgumentException {
-		if (StringUtils.isBlank(rid) || !rid.matches("\\w{1,}_\\d{8}_\\w{1,}_\\w{1,}")) {
+		if (StringUtils.isBlank(rid) || !rid.matches("\\w{1,}_\\d{8}_\\d{6}.*")) {
 			throw new IllegalArgumentException("Invalid rid.");
 		}
 	}
@@ -123,8 +123,10 @@ public class RcUtil {
 	}
 
 	public static String getFileNameWithoutExt(String rid) throws IllegalArgumentException {
-		validateRid(rid);
-		String[] splits = rid.split(SPLIT);
-		return splits[2];
+		String name = getFileNameByRid(rid);
+		if (StringUtils.isNotBlank(name) && name.contains(".")) {
+			name = name.substring(0, name.lastIndexOf("."));
+		}
+		return name;
 	}
 }

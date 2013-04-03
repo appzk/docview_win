@@ -22,12 +22,21 @@ public class AppDaoTest {
 	@Test
 	public void testAdd() {
 		try {
+			// add doc test
 			String id = "doc";
 			String name = "I Doc View";
 			String key = "doctest";
 			String phone = "18611898831";
 			appDao.add(id, name, key, phone);
-			System.err.println("Done!");
+			System.err.println("Add doc test done!");
+
+			// add doc test
+			id = "wev";
+			name = "wev.cc";
+			key = "wevkey";
+			phone = "18611898831";
+			appDao.add(id, name, key, phone);
+			System.err.println("Add wev.cc done!");
 		} catch (DBException e) {
 			e.printStackTrace();
 		}

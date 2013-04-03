@@ -36,6 +36,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 	private static Logger logger = LoggerFactory.getLogger(PreviewServiceImpl.class);
 	
+	private static List<String> convertingRids = new ArrayList<String>();
+
 	@Resource
 	private RcUtil rcUtil;
 	
@@ -47,6 +49,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 	private @Value("${office.cmd.ppt2jpg}")
 	String ppt2Jpg;
+
+	private static final String encodingString = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=([^\"^>]+?)\"?>.*";
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -65,6 +69,9 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			String bodyRaw;
 			if (!bodyFile.isFile()) {
 				String contentWhole = FileUtils.readFileToString(htmlFile, "GBK");
+				if (!contentWhole.matches(encodingString)) {
+					contentWhole = FileUtils.readFileToString(htmlFile, "unicode");
+				}
 				String styleString = contentWhole.replaceFirst("(?s)(?i).*?(<style>)(.*?)</style>.*", "$2");
 				bodyRaw = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
 				FileUtils.writeStringToFile(styleFile, styleString, "UTF-8");
@@ -77,6 +84,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 			// modify picture path from RELATIVE to ABSOLUTE url.
 			bodyString = processImageUrl(rcUtil.getParseUrlDir(rid), bodyString);
+			bodyString = processStyle(bodyString);
 			
 			// paging
 			List<String> pages = new ArrayList<String>();
@@ -145,8 +153,9 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 				// get content
 				String sheetFileContent = FileUtils.readFileToString(sheetFiles.get(i), "GBK");
-				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+>.*</table>).*(?-i)", "$1");
+				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+)(>.*</table>).*(?-i)", "$1" + " class=\"table table-condensed table-bordered table-striped\"" + "$2");
 				sheetContent = processImageUrl(rcUtil.getParseUrlDir(rid) + "index.files/", sheetContent);
+				sheetContent = processStyle(sheetContent);
 				// contentList.add(sheetContent);
 
 				vo.setTitle(title);
@@ -213,12 +222,12 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	}
 
 	@Override
-	public PageVo<TxtVo> getTxtContent(String rid) throws DocServiceException {
+	public PageVo<TxtVo> convertTxt2Html(String rid) throws DocServiceException {
 		try {
 			File src = new File(rcUtil.getPath(rid));
 			List<TxtVo> data = new ArrayList<TxtVo>();
 			String content = FileUtils.readFileToString(src, getEncoding(src));
-			content = content.replaceAll("\n|\r\n|\r", "<br />");
+			// content = content.replaceAll("\n|\r\n|\r", "<br />");
 			TxtVo vo = new TxtVo();
 			vo.setContent(content);
 			data.add(vo);
@@ -251,15 +260,34 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		}
 	}
 
-	private boolean convert(String rid) throws DocServiceException {
+	private boolean convert(String rid) throws Exception {
+		return convert(rid, 0);
+	}
+
+	private boolean convert(String rid, int tryCount) throws DocServiceException {
+		RcUtil.validateRid(rid);
 		String src = rcUtil.getPath(rid);
 		File srcFile = new File(src);
 		String dest = rcUtil.getParsePathOfHtml(rid);
 		File destFile = new File(dest);
 		if (!srcFile.isFile()) {
-			throw new DocServiceException("File NOT found, rid=" + rid);
+			throw new DocServiceException(404, "File NOT found, rid=" + rid);
 		}
 		String ext = RcUtil.getExt(rid);
+		if (convertingRids.contains(rid)) {
+			if (tryCount < 10) {
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				convert(rid, ++tryCount);
+			} else {
+				throw new DocServiceException("Server is busy, please try again later!");
+			}
+		} else {
+			convertingRids.add(rid);
+		}
 		try {
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
@@ -282,7 +310,23 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		} catch (Exception e) {
 			logger.error("convert error: ", e.fillInStackTrace());
 			throw new DocServiceException(e.getMessage(), e);
+		} finally {
+			convertingRids.remove(rid);
 		}
+	}
+
+	/**
+	 * remove unnecessary content styles
+	 * 
+	 * @param content
+	 * @return
+	 */
+	private static String processStyle(String content) {
+		return content.replaceAll("position:[^;]{5,12};", "")			// remove position style
+					  .replaceAll("margin-left:[^;]{1,10};", "")		// remove margin left
+					  .replaceAll("margin-right:[^;]{1,10};", "")		// remove position right
+					  .replaceAll("</?div[^>]*>", "")					// remove div
+					  .replaceAll("text-indent:[^;^']+;?", "");			// remove text-indent
 	}
 
 	/**

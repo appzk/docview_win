@@ -28,7 +28,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public void add(String id, String uuid, String appId, String name, long size, String ext) throws DBException {
+	public void add(String id, String uuid, String appId, String name, long size, String ext, int mode) throws DBException {
 		long time = System.currentTimeMillis();
 		if (StringUtils.isBlank(id) || StringUtils.isBlank(uuid)
 				|| StringUtils.isBlank(appId)
@@ -39,7 +39,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
 				.append(_ID, id).append(UUID, uuid).append(APPID, appId)
 				.append(NAME, name).append(SIZE, size).append(EXT, ext)
-				.append(CTIME, time).append(STATUS, 0);
+				.append(CTIME, time).append(STATUS, 0).append(MODE, mode);
 		try {
 			DBCollection coll = db.getCollection(COLL_DOC);
 			coll.save(builder.get());
@@ -56,17 +56,17 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public boolean delete(String rid) throws DBException {
-		updateStatus(rid, -1);
+	public boolean delete(String uuid) throws DBException {
+		updateStatus(uuid, -1);
 		return true;
 	}
 
-	private void updateStatus(String id, int status) throws DBException {
-		if (StringUtils.isEmpty(id)) {
+	private void updateStatus(String uuid, int status) throws DBException {
+		if (StringUtils.isEmpty(uuid)) {
 			throw new DBException("Insufficient parameters!");
 		}
 
-		DBObject query = QueryBuilder.start(_ID).is(id).get();
+		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
 		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set")
 				.append(UTIME, System.currentTimeMillis())
 				.append(STATUS, status);
@@ -79,8 +79,50 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public boolean updateUrl(String rid, String url) throws DBException {
+	public boolean updateUrl(String uuid, String url) throws DBException {
 		return false;
+	}
+
+	@Override
+	public void logView(String uuid) throws DBException {
+		log(uuid, VIEW);
+	}
+
+	@Override
+	public void logDownload(String uuid) throws DBException {
+		log(uuid, DOWNLOAD);
+	}
+
+	@Override
+	public void updateMode(String uuid, int mode) throws DBException {
+		if (StringUtils.isEmpty(uuid)) {
+			throw new DBException("Insufficient parameters!");
+		}
+		long time = System.currentTimeMillis();
+		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
+		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set").append(MODE, mode).append(UTIME, time);
+		try {
+			DBCollection coll = db.getCollection(COLL_DOC);
+			coll.update(query, ob.get(), false, true);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	private void log(String uuid, String field) throws DBException {
+		if (StringUtils.isEmpty(uuid)) {
+			throw new DBException("Insufficient parameters!");
+		}
+		long time = System.currentTimeMillis();
+		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
+		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$push")
+				.append(field, time).pop().push("$set").append(UTIME, time);
+		try {
+			DBCollection coll = db.getCollection(COLL_DOC);
+			coll.update(query, ob.get(), false, true);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
 	}
 
 	@Override
@@ -194,6 +236,15 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		}
 		if (obj.containsField(URL)) {
 			po.setUrl(obj.get(URL).toString());
+		}
+		if (obj.containsField(VIEW)) {
+			po.setViewLog((List<Long>) obj.get(VIEW));
+		}
+		if (obj.containsField(DOWNLOAD)) {
+			po.setDownloadLog((List<Long>) obj.get(DOWNLOAD));
+		}
+		if (obj.containsField(MODE)) {
+			po.setMode(Integer.valueOf(obj.get(MODE).toString()));
 		}
 		return po;
 	}

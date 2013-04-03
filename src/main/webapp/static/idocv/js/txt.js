@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$('body').simpleLoadingModal();
 	var uuid = $.url().param('uuid');
-	$.get('http://api.idocv.com/v/' + uuid + '.json', function(data, status) {
+	$.get('/view/' + uuid + '.json', function(data, status) {
 		var rid = data.rid;
 		var uuid = data.uuid;
 		var pages = data.data;
@@ -12,7 +12,7 @@ $(document).ready(function() {
 		// pages
 		for (i = 0; i < pages.length; i++) {
 			var page = pages[i];
-			$('.span12').append('<div class="word-page"><div class="word-content">' + page.content + '</div></div>');
+			$('.word-content pre').text(page.content);
 		}
 
 		// hide loader

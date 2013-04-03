@@ -7,7 +7,7 @@ import com.idocv.docview.po.DocPo;
 
 public interface DocDao {
 
-	void add(String id, String uuid, String appId, String name, long size, String ext) throws DBException;
+	void add(String id, String uuid, String appId, String name, long size, String ext, int mode) throws DBException;
 
 	/**
 	 * Save a Document.
@@ -19,16 +19,41 @@ public interface DocDao {
 	/**
 	 * Delete a document.
 	 */
-	boolean delete(String rid) throws DBException;
+	boolean delete(String uuid) throws DBException;
 
 	/**
 	 * Update Url.
 	 * 
-	 * @param rid
+	 * @param uuid
 	 * @param url
 	 * @return
 	 */
-	boolean updateUrl(String rid, String url) throws DBException;
+	boolean updateUrl(String uuid, String url) throws DBException;
+
+	/**
+	 * log preview with time stamp
+	 * 
+	 * @param uuid
+	 * @throws DBException
+	 */
+	public void logView(String uuid) throws DBException;
+
+	/**
+	 * log download with time stamp
+	 * 
+	 * @param uuid
+	 * @throws DBException
+	 */
+	public void logDownload(String uuid) throws DBException;
+
+	/**
+	 * Change access mode
+	 * 
+	 * @param uuid
+	 * @param mode
+	 * @throws DBException
+	 */
+	public void updateMode(String uuid, int mode) throws DBException;
 
 	/**
 	 * get Doc by rid.

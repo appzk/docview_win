@@ -3,7 +3,9 @@ package com.idocv.docview.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -16,6 +18,7 @@ import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.idocv.docview.common.Paging;
 import com.idocv.docview.dao.AppDao;
@@ -26,6 +29,7 @@ import com.idocv.docview.po.AppPo;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.vo.DocVo;
 
 
 @Service
@@ -59,7 +63,7 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public DocPo add(String appKey, String name, byte[] data) throws DocServiceException {
+	public DocVo add(String appKey, String name, byte[] data, int mode) throws DocServiceException {
 		if (StringUtils.isBlank(appKey) || StringUtils.isBlank(name) || null == data || data.length <= 0) {
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
@@ -88,13 +92,14 @@ public class DocServiceImpl implements DocService {
 			doc.setName(name);
 			doc.setSize(size);
 			doc.setCtime(System.currentTimeMillis());
+			doc.setMode(mode);
 			
 			// save file meta and file
 			FileUtils.writeByteArrayToFile(new File(rcUtil.getPath(rid)), data);
 
 			// save info
-			docDao.add(rid, uuid, appId, name, size, ext);
-			return doc;
+			docDao.add(rid, uuid, appId, name, size, ext, mode);
+			return convertPo2Vo(doc);
 		} catch (Exception e) {
 			logger.error("save doc error: ", e);
 			throw new DocServiceException(e);
@@ -102,22 +107,22 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public DocPo addUrl(String appKey, String url, String name) throws DocServiceException {
+	public DocVo addUrl(String appKey, String url, String name, int mode) throws DocServiceException {
 		if (StringUtils.isBlank(appKey) || StringUtils.isBlank(name) || StringUtils.isBlank(url)) {
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
 		try {
-			DocPo po = docDao.getUrl(url);
-			if (null != po) {
-				return po;
+			DocVo vo = convertPo2Vo(docDao.getUrl(url));
+			if (null != vo) {
+				return vo;
 			}
 			String host = getHost(url);
 			Response urlResponse = null;
 			urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
 			byte[] bytes = urlResponse.bodyAsBytes();
-			po = add(appKey, name, bytes);
-			docDao.updateUrl(po.getRid(), url);
-			return po;
+			vo = add(appKey, name, bytes, mode);
+			docDao.updateUrl(vo.getRid(), url);
+			return vo;
 		} catch (IOException e) {
 			logger.error("save url doc error: ", e);
 			throw new DocServiceException("saveUrl error: ", e);
@@ -128,9 +133,9 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public boolean delete(String rid) throws DocServiceException {
+	public boolean delete(String uuid) throws DocServiceException {
 		try {
-			return docDao.delete(rid);
+			return docDao.delete(uuid);
 		} catch (DBException e) {
 			logger.error("delete doc error: ", e);
 			throw new DocServiceException("delete doc error: ", e);
@@ -138,9 +143,52 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public DocPo get(String rid) throws DocServiceException {
+	public void logView(String uuid) throws DocServiceException {
 		try {
-			return docDao.get(rid, false);
+			docDao.logView(uuid);
+		} catch (DBException e) {
+			logger.error("logView error: ", e);
+			throw new DocServiceException("logView error: ", e);
+		}
+	}
+
+	@Override
+	public void logDownload(String uuid) throws DocServiceException {
+		try {
+			docDao.logDownload(uuid);
+		} catch (DBException e) {
+			logger.error("logDownload error: ", e);
+			throw new DocServiceException("logDownload error: ", e);
+		}
+	}
+
+	@Override
+	public void updateMode(String token, String uuid, int mode) throws DocServiceException {
+		try {
+			AppPo appPo = appDao.getByKey(token);
+			if (null == appPo) {
+				throw new DocServiceException("App NOT found!");
+			}
+			DocVo docVo = getByUuid(uuid);
+			if (null == docVo) {
+				throw new DocServiceException("Document NOT found!");
+			}
+			String appAppId = appPo.getId();
+			String docAppId = docVo.getAppId();
+			if (!appAppId.equals(docAppId)) {
+				throw new DocServiceException("Can NOT modify other app's document.");
+			}
+			docDao.updateMode(uuid, mode);
+		} catch (DBException e) {
+			logger.error("updateMode error: ", e);
+			throw new DocServiceException("updateMode error: ", e);
+		}
+	}
+
+	@Override
+	public DocVo get(String rid) throws DocServiceException {
+		try {
+			return convertPo2Vo(docDao.get(rid, false));
 		} catch (DBException e) {
 			logger.error("get doc error: ", e);
 			throw new DocServiceException("get doc error: ", e);
@@ -148,9 +196,9 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public DocPo getByUuid(String uuid) throws DocServiceException {
+	public DocVo getByUuid(String uuid) throws DocServiceException {
 		try {
-			return docDao.getByUuid(uuid, false);
+			return convertPo2Vo(docDao.getByUuid(uuid, false));
 		} catch (DBException e) {
 			logger.error("get doc error: ", e);
 			throw new DocServiceException("get doc error: ", e);
@@ -158,9 +206,9 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public DocPo getUrl(String url) throws DocServiceException {
+	public DocVo getUrl(String url) throws DocServiceException {
 		try {
-			return docDao.getUrl(url);
+			return convertPo2Vo(docDao.getUrl(url));
 		} catch (DBException e) {
 			logger.error("getUrl doc error: ", e);
 			throw new DocServiceException("getUrl doc error: ", e);
@@ -168,9 +216,9 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public Paging<DocPo> list(int start, int length) throws DocServiceException {
+	public Paging<DocVo> list(int start, int length) throws DocServiceException {
 		try {
-			return new Paging<DocPo>(docDao.list(start, length), (int) count(false));
+			return new Paging<DocVo>(convertPo2Vo(docDao.list(start, length)), (int) count(false));
 		} catch (DBException e) {
 			logger.error("list doc error: ", e);
 			throw new DocServiceException("list doc error: ", e);
@@ -189,5 +237,41 @@ public class DocServiceImpl implements DocService {
 
 	public static String getHost(String url) throws DocServiceException {
 		return url.replaceFirst("((http[s]?)?(://))?([^/]*)(/?.*)", "$4");
+	}
+
+	private List<DocVo> convertPo2Vo(List<DocPo> poList) {
+		if (CollectionUtils.isEmpty(poList)) {
+			return null;
+		}
+		List<DocVo> list = new ArrayList<DocVo>();
+		for (DocPo po : poList) {
+			list.add(convertPo2Vo(po));
+		}
+		return list;
+	}
+	
+	private DocVo convertPo2Vo(DocPo po) {
+		if (null == po) {
+			return null;
+		}
+		DocVo vo = new DocVo();
+		vo.setRid(po.getRid());
+		vo.setUuid(po.getUuid());
+		vo.setAppId(po.getAppId());
+		vo.setName(po.getName());
+		vo.setSize(po.getSize());
+		vo.setStatus(po.getStatus());
+		vo.setCtime(po.getCtime());
+		vo.setUtime(po.getUtime());
+		vo.setExt(po.getExt());
+		vo.setUrl(po.getUrl());
+		if (!CollectionUtils.isEmpty(po.getViewLog())) {
+			vo.setViewCount(po.getViewLog().size());
+		}
+		if (!CollectionUtils.isEmpty(po.getDownloadLog())) {
+			vo.setDownloadCount(po.getDownloadLog().size());
+		}
+		vo.setMode(po.getMode());
+		return vo;
 	}
 }

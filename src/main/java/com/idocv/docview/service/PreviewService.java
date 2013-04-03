@@ -52,7 +52,7 @@ public interface PreviewService {
 	 * 
 	 * @param rid
 	 */
-	PageVo<TxtVo> getTxtContent(String rid) throws DocServiceException;
+	PageVo<TxtVo> convertTxt2Html(String rid) throws DocServiceException;
 
 	/**
 	 * Convert PDF to SWF file.
