@@ -2,9 +2,12 @@ package com.idocv.docview.controller;
 
 import java.io.Serializable;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -41,8 +44,13 @@ public class ViewController {
 	private SessionService sessionService;
 
 	@RequestMapping("")
-	public String home() {
-		return "redirect:http://www.idocv.com";
+	public void home(HttpServletRequest req, HttpServletResponse resp) {
+		String timeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		System.out.println("VIEW HOME from " + req.getRemoteAddr() + " on " + timeString);
+		resp.setStatus(301);
+		resp.setHeader("Location", "http://www.idocv.com");
+		resp.setHeader("Connection", "close");
+		// return "redirect:http://www.idocv.com";
 	}
 
 	@RequestMapping("{id}")
