@@ -2,10 +2,53 @@ package com.idocv.docview.dao;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.idocv.docview.exception.DBException;
 import com.idocv.docview.po.DocPo;
 
 public interface DocDao {
+
+	public enum QueryOrder {
+		
+		ASC("asc"), DESC("desc");
+
+		private String field;
+		private String direction;
+		
+		private QueryOrder(String direction) {
+			this.direction = direction;
+		}
+
+		public static QueryOrder getQueryOrder(String field, String direction) {
+			if (StringUtils.isBlank(field)) {
+				return null;
+			}
+			if ("desc".equalsIgnoreCase(direction)) {
+				return QueryOrder.DESC.setField(field);
+			} else {
+				return QueryOrder.ASC.setField(field);
+			}
+		}
+
+		public String getField() {
+			return field;
+		}
+
+		public QueryOrder setField(String field) {
+			this.field = field;
+			return this;
+		}
+
+		public String getDirection() {
+			return direction;
+		}
+
+		public void setDirection(String direction) {
+			this.direction = direction;
+		}
+
+	}
 
 	void add(String id, String uuid, String appId, String name, long size, String ext, int mode) throws DBException;
 
@@ -82,12 +125,12 @@ public interface DocDao {
 	DocPo getUrl(String url) throws DBException;
 
 	/**
-	 * get Doc list by rid array.
+	 * get Doc list.
 	 * 
 	 * @param rids
 	 * @return
 	 */
-	List<DocPo> list(int offset, int limit) throws DBException;
+	List<DocPo> list(int offset, int limit, String searchString, QueryOrder queryOrder) throws DBException;
 
 	/**
 	 * Get document count.

@@ -44,12 +44,12 @@ public class DocVo implements Serializable {
 	/**
 	 * 创建时间
 	 */
-	private long ctime;
+	private String ctime;
 
 	/**
 	 * 更新时间
 	 */
-	private long utime;
+	private String utime;
 
 	/**
 	 * 资源扩展名
@@ -128,19 +128,19 @@ public class DocVo implements Serializable {
 		this.status = status;
 	}
 
-	public long getCtime() {
+	public String getCtime() {
 		return ctime;
 	}
 
-	public void setCtime(long ctime) {
+	public void setCtime(String ctime) {
 		this.ctime = ctime;
 	}
 
-	public long getUtime() {
+	public String getUtime() {
 		return utime;
 	}
 
-	public void setUtime(long utime) {
+	public void setUtime(String utime) {
 		this.utime = utime;
 	}
 

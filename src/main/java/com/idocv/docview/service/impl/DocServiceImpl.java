@@ -3,7 +3,9 @@ package com.idocv.docview.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 import com.idocv.docview.common.Paging;
 import com.idocv.docview.dao.AppDao;
 import com.idocv.docview.dao.DocDao;
+import com.idocv.docview.dao.DocDao.QueryOrder;
 import com.idocv.docview.exception.DBException;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.AppPo;
@@ -91,7 +94,7 @@ public class DocServiceImpl implements DocService {
 			doc.setUuid(uuid);
 			doc.setName(name);
 			doc.setSize(size);
-			doc.setCtime(System.currentTimeMillis());
+			doc.setCtime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			doc.setMode(mode);
 			
 			// save file meta and file
@@ -216,9 +219,9 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public Paging<DocVo> list(int start, int length) throws DocServiceException {
+	public Paging<DocVo> list(int start, int length, String search, QueryOrder queryOrder) throws DocServiceException {
 		try {
-			return new Paging<DocVo>(convertPo2Vo(docDao.list(start, length)), (int) count(false));
+			return new Paging<DocVo>(convertPo2Vo(docDao.list(start, length, search, queryOrder)), (int) count(false));
 		} catch (DBException e) {
 			logger.error("list doc error: ", e);
 			throw new DocServiceException("list doc error: ", e);

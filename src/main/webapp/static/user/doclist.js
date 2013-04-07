@@ -52,7 +52,6 @@ $(document).ready(function() {
         ],
 		"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 			$('td:eq(0)', nRow).html( '<a href="/view/'+aData.uuid+'" target="_blank">'+aData.name+'</a>' );
-			$('td:eq(1)', nRow).html( '' + new Date(aData.ctime).getFullYear() + '-' + (new Date(aData.ctime).getMonth() + 1) + "-" + new Date(aData.ctime).getDate() + ' ' + new Date(aData.ctime).getHours() + ':' + new Date(aData.ctime).getMinutes() + ':' + new Date(aData.ctime).getSeconds() );
 			$('td:eq(3)', nRow).html( '<a href="http://wev.cc/'+aData.uuid+'" target="_blank">wev.cc/' + aData.uuid + '</a>' );
 			$('td:eq(4)', nRow).html( '' + aData.viewCount + '/' + aData.downloadCount + '' );
 			$('td:eq(5)', nRow).html( '<a href="/doc/download/'+aData.uuid+'">Download</a> | <a href="/doc/delete/'+aData.uuid+'" onclick="return confirm(\'Are you sure you want to delete?\');" >Delete</a>' );

@@ -2,6 +2,10 @@
 /* TODO
 /*****************************************************/
 Email validation
+User preferences
+App domain
+App user
+PHP Project
 
 /*****************************************************/
 /* MILESTONE

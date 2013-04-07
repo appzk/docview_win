@@ -1,6 +1,7 @@
 package com.idocv.docview.service;
 
 import com.idocv.docview.common.Paging;
+import com.idocv.docview.dao.DocDao.QueryOrder;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.vo.DocVo;
 
@@ -67,7 +68,7 @@ public interface DocService {
 	 */
 	DocVo getUrl(String url) throws DocServiceException;
 
-	Paging<DocVo> list(int start, int length) throws DocServiceException;
+	Paging<DocVo> list(int start, int length, String search, QueryOrder queryOrder) throws DocServiceException;
 
 	long count(boolean includeDeleted) throws DocServiceException;
 }

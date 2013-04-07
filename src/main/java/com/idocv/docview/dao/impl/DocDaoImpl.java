@@ -1,8 +1,11 @@
 package com.idocv.docview.dao.impl;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -29,7 +32,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 
 	@Override
 	public void add(String id, String uuid, String appId, String name, long size, String ext, int mode) throws DBException {
-		long time = System.currentTimeMillis();
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		if (StringUtils.isBlank(id) || StringUtils.isBlank(uuid)
 				|| StringUtils.isBlank(appId)
 				|| StringUtils.isBlank(name) || size <= 0
@@ -161,10 +164,28 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public List<DocPo> list(int offset, int limit) throws DBException {
+	public List<DocPo> list(int offset, int limit, String searchString, QueryOrder queryOrder) throws DBException {
 		try {
 			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1);
+
+			if (StringUtils.isNotBlank(searchString)) {
+				List<DBObject> searchQuery = new ArrayList<DBObject>();
+				searchQuery.add(BasicDBObjectBuilder.start(DocPo.FIELD_NAME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(DocPo.FIELD_CTIME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(DocPo.FIELD_SIZE, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(DocPo.FIELD_UUID, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				query.or(searchQuery.toArray(new DBObject[0]));
+			}
+
 			DBObject orderBy = BasicDBObjectBuilder.start().add(CTIME, -1).get();
+			if (null != queryOrder) {
+				if ("desc".equalsIgnoreCase(queryOrder.getDirection())) {
+					orderBy = BasicDBObjectBuilder.start().add(queryOrder.getField(), -1).get();
+				} else {
+					orderBy = BasicDBObjectBuilder.start().add(queryOrder.getField(), 1).get();
+				}
+			}
+
 			DBCollection coll = db.getCollection(COLL_DOC);
 			DBCursor cur = coll.find(query.get()).sort(orderBy).skip(offset).limit(limit);
 			return convertCur2Po(cur);
@@ -226,10 +247,10 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 			po.setStatus(Integer.valueOf(obj.get(STATUS).toString()));
 		}
 		if (obj.containsField(CTIME)) {
-			po.setCtime(Long.valueOf(obj.get(CTIME).toString()));
+			po.setCtime(obj.get(CTIME).toString());
 		}
 		if (obj.containsField(UTIME)) {
-			po.setUtime(Long.valueOf(obj.get(UTIME).toString()));
+			po.setUtime(obj.get(UTIME).toString());
 		}
 		if (obj.containsField(EXT)) {
 			po.setExt(obj.get(EXT).toString());

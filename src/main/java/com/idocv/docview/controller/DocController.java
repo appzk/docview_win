@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.idocv.docview.common.DocResponse;
 import com.idocv.docview.common.IpUtil;
 import com.idocv.docview.common.Paging;
+import com.idocv.docview.dao.DocDao.QueryOrder;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.AppService;
 import com.idocv.docview.service.DocService;
@@ -137,10 +138,16 @@ public class DocController {
 	@ResponseBody
 	@RequestMapping("list")
 	public Paging<DocVo> list(
+			HttpServletRequest req,
 			@RequestParam(value = "iDisplayStart", defaultValue = "0") Integer start,
-			@RequestParam(value = "iDisplayLength", defaultValue = "10") Integer length) {
+			@RequestParam(value = "iDisplayLength", defaultValue = "10") Integer length,
+			@RequestParam(value = "sSearch", required = false) String sSearch,
+			@RequestParam(value = "iSortCol_0", defaultValue = "0") String sortIndex,
+			@RequestParam(value = "sSortDir_0", defaultValue = "desc") String sortDirection) {
 		try {
-			Paging<DocVo> list = docService.list(start, length);
+			String sortName = req.getParameter("mDataProp_" + sortIndex);
+			QueryOrder queryOrder = QueryOrder.getQueryOrder(sortName, sortDirection);
+			Paging<DocVo> list = docService.list(start, length, sSearch, queryOrder);
 			return list;
 		} catch (DocServiceException e) {
 			e.printStackTrace();

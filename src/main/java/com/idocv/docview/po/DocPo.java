@@ -12,6 +12,11 @@ public class DocPo implements Serializable {
 	 */
 	private static final long serialVersionUID = -5796209533499028715L;
 
+	public transient static String FIELD_NAME = "name";
+	public transient static String FIELD_CTIME = "ctime";
+	public transient static String FIELD_SIZE = "size";
+	public transient static String FIELD_UUID = "uuid";
+
 	/**
 	 * 资源id
 	 */
@@ -45,12 +50,12 @@ public class DocPo implements Serializable {
 	/**
 	 * 创建时间
 	 */
-	private long ctime;
+	private String ctime;
 
 	/**
 	 * 更新时间
 	 */
-	private long utime;
+	private String utime;
 
 	/**
 	 * 资源扩展名
@@ -129,19 +134,19 @@ public class DocPo implements Serializable {
 		this.status = status;
 	}
 
-	public long getCtime() {
+	public String getCtime() {
 		return ctime;
 	}
 
-	public void setCtime(long ctime) {
+	public void setCtime(String ctime) {
 		this.ctime = ctime;
 	}
 
-	public long getUtime() {
+	public String getUtime() {
 		return utime;
 	}
 
-	public void setUtime(long utime) {
+	public void setUtime(String utime) {
 		this.utime = utime;
 	}
 

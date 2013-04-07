@@ -48,7 +48,7 @@ public class DocDaoTest {
 	@Test
 	public void testList() {
 		try {
-			List<DocPo> list = docDao.list(0, 0);
+			List<DocPo> list = docDao.list(0, 0, null, null);
 			if (!CollectionUtils.isEmpty(list)) {
 				for (DocPo po : list) {
 					System.err.println(po);
