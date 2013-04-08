@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.exception.DBException;
 import com.idocv.docview.po.DocPo;
+import com.idocv.docview.util.PinyinUtil;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -43,6 +44,8 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 				.append(_ID, id).append(UUID, uuid).append(APPID, appId)
 				.append(NAME, name).append(SIZE, size).append(EXT, ext)
 				.append(CTIME, time).append(STATUS, 0).append(MODE, mode);
+		String pinyin = PinyinUtil.getSortPinYin(name);
+		builder.append(PINYIN, pinyin);
 		try {
 			DBCollection coll = db.getCollection(COLL_DOC);
 			coll.save(builder.get());

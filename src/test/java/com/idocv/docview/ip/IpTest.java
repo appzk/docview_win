@@ -1,6 +1,7 @@
 package com.idocv.docview.ip;
 
-import com.idocv.docview.common.IpUtil;
+import com.idocv.docview.util.IpUtil;
+
 
 public class IpTest {
 	public static void main(String[] args) {

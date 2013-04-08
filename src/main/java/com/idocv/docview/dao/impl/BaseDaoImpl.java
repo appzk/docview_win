@@ -15,6 +15,7 @@ public class BaseDaoImpl implements BaseDao {
 	public static final String UUID = "uuid";
 	public static final String APPID = "appid";
 	public static final String NAME = "name";
+	public static final String PINYIN = "pinyin";
 	public static final String SIZE = "size";
 	public static final String EXT = "ext";
 	public static final String URL = "url";

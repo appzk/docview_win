@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.idocv.docview.common.DocResponse;
-import com.idocv.docview.common.IpUtil;
 import com.idocv.docview.common.Paging;
 import com.idocv.docview.dao.DocDao.QueryOrder;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.AppService;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.PreviewService;
+import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
 

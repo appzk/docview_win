@@ -1,4 +1,4 @@
-package com.idocv.docview.common;
+package com.idocv.docview.util;
 
 import javax.servlet.http.HttpServletRequest;
 
