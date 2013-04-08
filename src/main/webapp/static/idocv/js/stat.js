@@ -1,4 +1,15 @@
 /* ---------------------------------------------------------------------- */
+/*	Baidu Tongji
+/* ---------------------------------------------------------------------- */
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?6f088d5d35411dbb4a5cdba8a148dabb";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+
+/* ---------------------------------------------------------------------- */
 /*	Google Analytics
 /* ---------------------------------------------------------------------- */
   var _gaq = _gaq || [];

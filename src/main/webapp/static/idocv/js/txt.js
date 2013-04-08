@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	$('body').simpleLoadingModal();
-	var uuid = $.url().param('uuid');
+	var uuid = $.url().segment(2);
 	$.get('/view/' + uuid + '.json', function(data, status) {
 		var rid = data.rid;
 		var uuid = data.uuid;

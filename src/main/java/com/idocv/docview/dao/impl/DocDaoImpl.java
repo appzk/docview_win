@@ -175,7 +175,6 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 				List<DBObject> searchQuery = new ArrayList<DBObject>();
 				searchQuery.add(BasicDBObjectBuilder.start(DocPo.FIELD_NAME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
 				searchQuery.add(BasicDBObjectBuilder.start(DocPo.FIELD_CTIME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
-				searchQuery.add(BasicDBObjectBuilder.start(DocPo.FIELD_SIZE, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
 				searchQuery.add(BasicDBObjectBuilder.start(DocPo.FIELD_UUID, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
 				query.or(searchQuery.toArray(new DBObject[0]));
 			}

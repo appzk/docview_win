@@ -22,6 +22,7 @@ import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.PreviewService;
 import com.idocv.docview.service.SessionService;
+import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.OfficeBaseVo;
@@ -46,7 +47,7 @@ public class ViewController {
 	@RequestMapping("")
 	public void home(HttpServletRequest req, HttpServletResponse resp) {
 		String timeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-		System.out.println("VIEW HOME from " + req.getRemoteAddr() + " on " + timeString);
+		System.out.println("VIEW HOME from " + IpUtil.getIpAddr(req) + " on " + timeString);
 		resp.setStatus(301);
 		resp.setHeader("Location", "http://www.idocv.com");
 		resp.setHeader("Connection", "close");
@@ -74,13 +75,17 @@ public class ViewController {
 				uuid = id;
 			}
 			if (uuid.endsWith("w")) {
-				return "redirect:/page/word/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
+				return "word/index";
+//				return "redirect:/page/word/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("x")) {
-				return "redirect:/page/excel/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
+				return "excel/index";
+//				return "redirect:/page/excel/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("p")) {
-				return "redirect:/page/ppt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
+				return "ppt/index";
+//				return "redirect:/page/ppt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("t")) {
-				return "redirect:/page/txt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
+				return "txt/index";
+//				return "redirect:/page/txt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else {
 				throw new DocServiceException(id + "is NOT a valid UUID!");
 			}
