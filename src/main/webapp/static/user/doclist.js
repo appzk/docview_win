@@ -44,12 +44,14 @@ $(document).ready(function() {
             { "mData": "ctime", "sClass": "center" },
             { "mData": "size", "sClass": "center" },
             { "mData": "uuid", "sClass": "center" },
-            { "mData": "viewCount", "sClass": "center" },
+            { "mData": "viewCount", "sClass": "center", "bSortable": false },
             {
                 "mData": null,
                 "sClass": "center",
+                "bSortable": false,
             }
         ],
+        "aaSorting": [[1,'desc']],
 		"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 			$('td:eq(0)', nRow).html( '<a href="/view/'+aData.uuid+'" target="_blank">'+aData.name+'</a>' );
 			$('td:eq(3)', nRow).html( '<a href="http://wev.cc/'+aData.uuid+'" target="_blank">wev.cc/' + aData.uuid + '</a>' );
