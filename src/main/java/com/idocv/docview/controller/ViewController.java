@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.DocService;
@@ -182,6 +183,92 @@ public class ViewController {
 		return page;
 	}
 
+	@RequestMapping("{uuid}.html")
+	public ModelAndView html(
+			ModelAndView model,
+			@PathVariable String uuid,
+			@RequestParam(required = false) String session,
+			@RequestParam(defaultValue = "1") int start,
+			@RequestParam(defaultValue = "5") int size) {
+		PageVo<? extends Serializable> page = null;
+		try {
+			// 1. get docVo by uuid
+			DocVo docVo = docService.getByUuid(uuid);
+			if (null == docVo || StringUtils.isBlank(docVo.getRid())) {
+				throw new DocServiceException("Document(" + uuid + ") NOT found!");
+			}
+			String rid = docVo.getRid();
+			String ext = RcUtil.getExt(rid);
+
+			// 2. check access mode of docVo
+			int accessMode = docVo.getMode();
+			if (0 == accessMode) {
+				if (StringUtils.isBlank(session)) {
+					throw new DocServiceException("This is NOT a public document, please provide a session id.");
+				}
+				// 5. get sessionVo by sessionId
+				SessionVo sessionVo = sessionService.get(session);
+				if (null == sessionVo) {
+					throw new DocServiceException("Session NOT found!");
+				}
+				// 6. current time - ctime > expire time ? session expired :
+				// view.
+				long sessionCtime = sessionVo.getCtime();
+				long currentTime = System.currentTimeMillis();
+				if (currentTime - sessionCtime > 3600000) {
+					throw new DocServiceException("Session expired, please get a new one!");
+				}
+				if (!uuid.equals(sessionVo.getUuid())) {
+					throw new DocServiceException("Session is NOT consistent with UUID.");
+				}
+			}
+			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
+					|| "odt".equalsIgnoreCase(ext)) {
+				page = previewService.convertWord2Html(rid, start, size);
+			} else if ("xls".equalsIgnoreCase(ext)
+					|| "xlsx".equalsIgnoreCase(ext)
+					|| "ods".equalsIgnoreCase(ext)) {
+				page = previewService.convertExcel2Html(rid, start, size);
+			} else if ("ppt".equalsIgnoreCase(ext)
+					|| "pptx".equalsIgnoreCase(ext)
+					|| "odp".equalsIgnoreCase(ext)) {
+				page = previewService.convertPPT2Html(rid, start, size);
+			} else if ("txt".equalsIgnoreCase(ext)) {
+				page = previewService.convertTxt2Html(rid);
+			} else if ("pdf".equalsIgnoreCase(ext)) {
+				// TODO
+				String url = previewService.convertPdf2Swf(rid);
+			} else {
+				page = new PageVo<OfficeBaseVo>(null, 0);
+				page.setCode(0);
+				page.setDesc("Error: not a document type.");
+			}
+			page.setName(docVo.getName());
+			page.setRid(docVo.getRid());
+			page.setUuid(docVo.getUuid());
+			docService.logView(uuid);
+		} catch (Exception e) {
+			logger.error("jsonUuid error: ", e);
+			page = new PageVo<OfficeBaseVo>(null, 0);
+			page.setCode(0);
+			page.setDesc(e.getMessage());
+			page.setUuid(uuid);
+		}
+		model.addObject("page", page);
+		if (uuid.endsWith("w")) {
+			model.setViewName("word/static");
+		} else if (uuid.endsWith("x")) {
+			model.setViewName("excel/static");
+		} else if (uuid.endsWith("p")) {
+			model.setViewName("ppt/static");
+		} else if (uuid.endsWith("t")) {
+			model.setViewName("txt/static");
+		} else {
+			model.setViewName("404");
+		}
+		return model;
+	}
+	
 	@RequestMapping("url")
 	public String previewUrl(HttpServletRequest req,
 			@RequestParam(required = true) String url,
