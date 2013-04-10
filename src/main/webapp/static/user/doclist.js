@@ -18,10 +18,10 @@ $(document).ready(function() {
 	        	var uuid = result.uuid;
 	        	if (uuid !== undefined) {
 	        		// window.location.reload();
-	        		$("#upload-result").html('<div class="alert alert-success">Upload success!</div>');
+	        		$("#upload-result").html('<div class="alert alert-success" style="margin-bottom: 0px;">上传成功！</div>');
 	        		oTable.fnDraw();
 	        	} else {
-	        		$("#upload-result").html('<div class="alert alert-error">Upload error, error=' + result.error + '!</div>');
+	        		$("#upload-result").html('<div class="alert alert-error" style="margin-bottom: 0px;">上传失败：' + result.error + '</div>');
 	        	}
 	        }
 	    });

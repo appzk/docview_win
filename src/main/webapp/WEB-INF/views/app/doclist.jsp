@@ -24,8 +24,6 @@
 
   <body>
 
-	<div id="upload-result" style="position: relative;">错误信息…… </div>
-
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -77,6 +75,7 @@
 				<span><button class="btn btn-large btn-success" type="button">&nbsp;&nbsp;&nbsp;上传一个文档&nbsp;&nbsp;&nbsp;</button></span>
 				<input id="fileupload" type="file" name="file" data-url="/doc/upload" multiple>
 			  </span>
+			  <div id="upload-result" style="display: inline-block; margin: 5px 10px;"></div>
             </div><!--/span-->
           </div><!--/row-->
           <div class="row-fluid">
