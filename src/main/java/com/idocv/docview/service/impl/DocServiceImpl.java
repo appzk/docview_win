@@ -67,8 +67,17 @@ public class DocServiceImpl implements DocService {
 
 	@Override
 	public DocVo add(String appKey, String name, byte[] data, int mode) throws DocServiceException {
-		if (StringUtils.isBlank(appKey) || StringUtils.isBlank(name) || null == data || data.length <= 0) {
-			throw new DocServiceException(0, "Insufficient parameter!");
+		if (StringUtils.isBlank(appKey)) {
+			throw new DocServiceException(0, "App-key为空！");
+		}
+		if (StringUtils.isBlank(name)) {
+			throw new DocServiceException(0, "文件名为空！");
+		}
+		if (null == data) {
+			throw new DocServiceException(0, "请选择一个文档！");
+		}
+		if (data.length <= 0) {
+			throw new DocServiceException(0, "不能上传空文档！");
 		}
 		try {
 			AppPo appPo = appDao.getByKey(appKey);
