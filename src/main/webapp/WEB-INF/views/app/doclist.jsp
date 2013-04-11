@@ -75,7 +75,15 @@
 				<span><button class="btn btn-large btn-success" type="button">&nbsp;&nbsp;&nbsp;上传一个文档&nbsp;&nbsp;&nbsp;</button></span>
 				<input id="fileupload" type="file" name="file" data-url="/doc/upload" multiple>
 			  </span>
-			  <div id="upload-result" style="display: inline-block; margin: 5px 10px;"></div>
+			  <div id="upload-result" style="display: inline-block; margin: 5px 10px;">
+			  </div>
+            </div><!--/span-->
+          </div><!--/row-->
+          <div class="row-fluid upload-progress" style="display: none;">
+            <div class="span12">
+			  <div class="progress progress-striped active" style="margin: 10px 0px 0px;">
+				<div class="bar" style="width: 0%;"></div>
+			  </div>
             </div><!--/span-->
           </div><!--/row-->
           <div class="row-fluid">

@@ -16,6 +16,7 @@ $(document).ready(function() {
 	        	$response.hide().html( $loader ).show();
 	        	var result = data.result;
 	        	var uuid = result.uuid;
+	        	$('#upload-result').fadeIn();
 	        	if (uuid !== undefined) {
 	        		// window.location.reload();
 	        		$("#upload-result").html('<div class="alert alert-success" style="margin-bottom: 0px;">上传成功！</div>');
@@ -23,6 +24,27 @@ $(document).ready(function() {
 	        	} else {
 	        		$("#upload-result").html('<div class="alert alert-error" style="margin-bottom: 0px;">上传失败：' + result.error + '</div>');
 	        	}
+	        	setTimeout(function() {
+	      			$('#upload-result').fadeOut();
+	      		}, 10000);
+	        }
+	    });
+	    
+	    $('#fileupload').fileupload({
+	        /* ... */
+	        progressall: function (e, data) {
+	        	$('.upload-progress').css(
+	        		'display',
+	        		''
+	        	);
+	            var progress = parseInt(data.loaded / data.total * 100, 10);
+	            $('.progress .bar').css(
+	                'width',
+	                progress + '%'
+	            );
+	            if (100 == progress) {
+	            	$('.upload-progress').fadeOut();
+	            };
 	        }
 	    });
 	});
