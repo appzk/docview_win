@@ -129,7 +129,7 @@
 	<script src="/static/bootstrap/js/bootstrap.js"></script>
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
 	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-	<script src="/static/idocv/js/user.js"></script>
+	<script src="/static/idocv/js/user-ch.js"></script>
 	<script src="/static/datatable/js/jquery.dataTables.js"></script>
 	<script src="/static/datatable/js/DT_bootstrap.js"></script>
 	<script src="/static/js/upload/jquery.ui.widget.js"></script>
