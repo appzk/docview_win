@@ -103,7 +103,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				word.setContent(page);
 				data.add(word);
 			}
-			PageVo<WordVo> page = new PageVo<WordVo>(data, 1);
+			PageVo<WordVo> page = new PageVo<WordVo>(data, data.size());
 			page.setStyleUrl(rcUtil.getParseUrlDir(rid) + "style.css");
 			return page;
 		} catch (Exception e) {
