@@ -3,6 +3,7 @@ package com.idocv.docview.controller;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.etherpad_lite_client.EPLiteClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ public class EditController {
 				// Create pad and set text
 				client.createPad(uuid);
 				htmlBody = "<div>" + htmlBody + "</div>";
-				htmlBody = htmlBody.replaceAll("&nbsp;", " ").replaceAll("&quot;", "\"");
+				htmlBody = StringEscapeUtils.unescapeHtml(htmlBody);
 				client.setHTML(uuid, htmlBody);
 			} catch (Exception e) {
 				logger.info("Etherpad(" + uuid + ") already exist.");
