@@ -96,7 +96,7 @@
 					  <th width="30%" style="text-align: center;">名称</th>
 					  <th width="15%" style="text-align: center;">时间</th>
 					  <th width="10%" style="text-align: center;">大小</th>
-					  <th width="15%" style="text-align: center;">URL</th>
+					  <th width="15%" style="text-align: center;">分享URL</th>
 					  <th width="10%" style="text-align: center;">浏览/下载</th>
 					  <th width="20%" style="text-align: center;">操作</th>
 					</tr>
