@@ -49,15 +49,18 @@
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
+              <!-- SIDEBAR LIST HERE -->
+              <!-- 
               <li class="nav-header"><i class="icon-user"></i> 我的文档</li>
-              <li class="active"><a href="#">全部</a></li>
-              <li><a href="/personal">个人</a></li>
-              <li><a href="/work">工作</a></li>
+              <li class="active"><a href="/doc/list/all">全部</a></li>
+              <li><a href="/doc/list/personal">个人</a></li>
+              <li><a href="/doc/list/work">工作</a></li>
               <li><a href="#">+</a></li>
               <li class="divider"></li>
               <li class="nav-header"><i class="icon-share-alt"></i> 其他文档</li>
               <li><a href="#">好友分享</a></li>
               <li><a href="#">推荐文档</a></li>
+               -->
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
@@ -120,6 +123,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
 	<script src="/static/bootstrap/js/bootstrap.js"></script>
+	<script src="/static/urlparser/js/purl.js"></script>
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
 	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
 	<script src="/static/idocv/js/user-ch.js"></script>
@@ -128,7 +132,6 @@
 	<script src="/static/js/upload/jquery.ui.widget.js"></script>
 	<script src="/static/js/upload/jquery.iframe-transport.js"></script>
 	<script src="/static/js/upload/jquery.fileupload.js"></script>
-	<script src="/static/user/doclist.js"></script>
-
+	<script src="/static/idocv/js/doc-list.js"></script>
   </body>
 </html>

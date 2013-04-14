@@ -35,7 +35,7 @@ public class EditController {
 	 * @return
 	 */
 	@RequestMapping("{uuid}")
-	public String delete(@PathVariable(value = "uuid") String uuid) {
+	public String loadEditor(@PathVariable(value = "uuid") String uuid) {
 		try {
 			// Check doc type
 			if (!uuid.endsWith("w")) {

@@ -1,9 +1,15 @@
+var uid;
+var username;
+var sid;
+
 $(document).ready(function() {
 	/* ---------------------------------------------------------------------- */
 	/*	Check Login
 	/* ---------------------------------------------------------------------- */
 	$.get("/user/checkLogin", function(data) {
-		var username = data.username;
+		username = data.username;
+		uid = data.uid;
+		
 		if (username !== undefined) {
 			// SUCCESS - is login
 			var userHtml = 
@@ -82,22 +88,24 @@ $(document).ready(function() {
 				password = $form.find('input[name="login_password"]').val();
 				
 				/* Send the data using post */
-				$.post("http://api.idocv.com/user/login",
-						{
-					user: username,
-					password: password
-						},
-						function(data, status){
-							var sid = data.sid;
-							if (sid !== undefined) {
-								// SUCCESS
-								$.cookie('IDOCVSID', sid, { path: '/' });
-								window.location.reload();
-							} else {
-								// FAIL
-								$('#sign-in-result').empty().append('<div class="alert alert-error">ERROR: ' + data.error + '</div>');
-							}
-						}, "json");
+				$.post("/user/login",
+					{
+						user: username,
+						password: password
+					},
+					function(data, status){
+						var sid = data.sid;
+						if (sid !== undefined) {
+							// SUCCESS
+							$.cookie('IDOCVSID', sid, { path: '/' });
+							window.location.reload();
+						} else {
+							// FAIL
+							$('#sign-in-result').empty().append('<div class="alert alert-error">ERROR: ' + data.error + '</div>');
+						}
+					},
+					"json"
+				);
 			}
 			return false;
 		})

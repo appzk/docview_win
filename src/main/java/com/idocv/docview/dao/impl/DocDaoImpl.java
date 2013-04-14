@@ -167,15 +167,22 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public List<DocPo> list(int offset, int limit, String searchString, QueryOrder queryOrder) throws DBException {
+	public List<DocPo> listMyDocs(String uid, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder) throws DBException {
 		try {
 			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1);
 
+			if (StringUtils.isNotBlank(uid)) {
+				query.and(UID).is(uid);
+			}
+			if (StringUtils.isNotBlank(labelId) && !"all".equalsIgnoreCase(labelId)) {
+				query.and(LABELS).is(labelId);
+			}
+
 			if (StringUtils.isNotBlank(searchString)) {
 				List<DBObject> searchQuery = new ArrayList<DBObject>();
-				searchQuery.add(BasicDBObjectBuilder.start(DocPo.FIELD_NAME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
-				searchQuery.add(BasicDBObjectBuilder.start(DocPo.FIELD_CTIME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
-				searchQuery.add(BasicDBObjectBuilder.start(DocPo.FIELD_UUID, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(NAME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(CTIME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(UUID, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
 				query.or(searchQuery.toArray(new DBObject[0]));
 			}
 

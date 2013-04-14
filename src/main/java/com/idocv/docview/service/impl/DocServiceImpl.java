@@ -26,10 +26,12 @@ import com.idocv.docview.common.Paging;
 import com.idocv.docview.dao.AppDao;
 import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.dao.DocDao.QueryOrder;
+import com.idocv.docview.dao.LabelDao;
 import com.idocv.docview.exception.DBException;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.AppPo;
 import com.idocv.docview.po.DocPo;
+import com.idocv.docview.po.LabelPo;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
@@ -45,6 +47,9 @@ public class DocServiceImpl implements DocService {
 
 	@Resource
 	private DocDao docDao;
+
+	@Resource
+	private LabelDao labelDao;
 
 	@Resource
 	private RcUtil rcUtil;
@@ -228,9 +233,23 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public Paging<DocVo> list(int start, int length, String search, QueryOrder queryOrder) throws DocServiceException {
+	public Paging<DocVo> list(String uid, int start, int length, String label, String search, QueryOrder queryOrder) throws DocServiceException {
 		try {
-			return new Paging<DocVo>(convertPo2Vo(docDao.list(start, length, search, queryOrder)), (int) count(false));
+			// Label
+			// 1. all
+			// 2. work
+			// 3. personal
+			// 4. other
+			String labelId = "all";
+			if (StringUtils.isNotBlank(label) && !"all".equalsIgnoreCase(label)) {
+				LabelPo labelPo = labelDao.get(uid, label);
+				if (null != labelPo) {
+					labelId = labelPo.getId();
+				}
+			}
+			// TODO remove this line afterwards
+			uid = null;
+			return new Paging<DocVo>(convertPo2Vo(docDao.listMyDocs(uid, start, length, labelId, search, queryOrder)), (int) count(false));
 		} catch (DBException e) {
 			logger.error("list doc error: ", e);
 			throw new DocServiceException("list doc error: ", e);

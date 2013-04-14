@@ -68,7 +68,7 @@ public interface DocService {
 	 */
 	DocVo getUrl(String url) throws DocServiceException;
 
-	Paging<DocVo> list(int start, int length, String search, QueryOrder queryOrder) throws DocServiceException;
+	Paging<DocVo> list(String uid, int start, int length, String search, String label, QueryOrder queryOrder) throws DocServiceException;
 
 	long count(boolean includeDeleted) throws DocServiceException;
 }

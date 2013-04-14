@@ -1,4 +1,3 @@
-/* Table initialisation */
 $(document).ready(function() {
 	/* ---------------------------------------------------------------------- */
 	/*	File Upload
@@ -60,7 +59,7 @@ $(document).ready(function() {
 		},
         "iDisplayLength": 10,
         "bServerSide": true,
-        "sAjaxSource": "/doc/list",
+        "sAjaxSource": "/doc/list.json",
         "aoColumns": [
             { "mData": "name", "sClass": "center " },
             { "mData": "ctime", "sClass": "center" },
@@ -84,19 +83,12 @@ $(document).ready(function() {
 			} else {
 				$('td:eq(5)', nRow).html( '<a href="/doc/download/'+aData.uuid+'">下载</a> | <a href="/doc/delete/'+aData.uuid+'" onclick="return confirm(\'确定要删除吗？\');" >删除</a>' );
 			}
+        },
+        "fnServerParams": function ( aoData ) {
+            aoData.push(
+            	{"name": "name", "value": "godwin"},
+            	{"name": "age", "value": "30"}
+            );
         }
     } );
 } );
-
-/* Table initialisation */
-/*
-$(document).ready(function() {
-	$('#doctable').dataTable( {
-		"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-		"sPaginationType": "bootstrap",
-		"oLanguage": {
-			"sLengthMenu": "_MENU_ records per page"
-		}
-	} );
-} );
-*/

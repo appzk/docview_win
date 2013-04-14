@@ -12,11 +12,6 @@ public class DocPo implements Serializable {
 	 */
 	private static final long serialVersionUID = -5796209533499028715L;
 
-	public transient static String FIELD_NAME = "name";
-	public transient static String FIELD_CTIME = "ctime";
-	public transient static String FIELD_SIZE = "size";
-	public transient static String FIELD_UUID = "uuid";
-
 	/**
 	 * 资源id
 	 */
@@ -41,6 +36,11 @@ public class DocPo implements Serializable {
 	 * 资源大小
 	 */
 	private long size;
+
+	/**
+	 * 所属标签列表
+	 */
+	private List<String> labels;
 
 	/**
 	 * 状态，0. 刚上传默认; -1. 已经删除;
@@ -124,6 +124,14 @@ public class DocPo implements Serializable {
 
 	public void setSize(long size) {
 		this.size = size;
+	}
+
+	public List<String> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(List<String> labels) {
+		this.labels = labels;
 	}
 
 	public int getStatus() {

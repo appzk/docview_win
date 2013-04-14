@@ -15,6 +15,7 @@ public class BaseDaoImpl implements BaseDao {
 	public static final String UUID = "uuid";
 	public static final String APPID = "appid";
 	public static final String NAME = "name";
+	public static final String VALUE = "value";
 	public static final String PINYIN = "pinyin";
 	public static final String SIZE = "size";
 	public static final String EXT = "ext";
@@ -26,6 +27,8 @@ public class BaseDaoImpl implements BaseDao {
 	public static final String DTIME = "dtime";
 	public static final String STATUS = "status";
 	public static final String MODE = "mode";			// access mode, 0-default,public, 1-private,2-semi-public,3-public
+
+	public static final String LABELS = "labels";
 
 	public static final String VIEW = "view";
 	public static final String DOWNLOAD = "download";

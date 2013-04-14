@@ -136,23 +136,37 @@ public class DocController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("list")
+	@RequestMapping("list.json")
 	public Paging<DocVo> list(
 			HttpServletRequest req,
+			@RequestParam(value = "uid", required = false) String uid,
 			@RequestParam(value = "iDisplayStart", defaultValue = "0") Integer start,
 			@RequestParam(value = "iDisplayLength", defaultValue = "10") Integer length,
 			@RequestParam(value = "sSearch", required = false) String sSearch,
 			@RequestParam(value = "iSortCol_0", defaultValue = "0") String sortIndex,
-			@RequestParam(value = "sSortDir_0", defaultValue = "desc") String sortDirection) {
+			@RequestParam(value = "sSortDir_0", defaultValue = "desc") String sortDirection,
+			@RequestParam(value = "label", required = false) String label) {
 		try {
 			String sortName = req.getParameter("mDataProp_" + sortIndex);
 			QueryOrder queryOrder = QueryOrder.getQueryOrder(sortName, sortDirection);
-			Paging<DocVo> list = docService.list(start, length, sSearch, queryOrder);
+			Paging<DocVo> list = docService.list(uid, start, length, label, sSearch, queryOrder);
 			return list;
 		} catch (DocServiceException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	/**
+	 * Load the page of label document list page.
+	 * 
+	 * @return
+	 */
+	@RequestMapping("list/{label}")
+	public String listLabel(
+			HttpServletRequest req,
+			@PathVariable(value = "label") String label) {
+		return "doc/list";
 	}
 
 	/**

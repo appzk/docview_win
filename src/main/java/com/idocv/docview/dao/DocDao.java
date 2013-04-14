@@ -125,12 +125,18 @@ public interface DocDao {
 	DocPo getUrl(String url) throws DBException;
 
 	/**
-	 * get Doc list.
+	 * List my documents
 	 * 
-	 * @param rids
+	 * @param uid
+	 * @param offset
+	 * @param limit
+	 * @param labelId
+	 * @param searchString
+	 * @param queryOrder
 	 * @return
+	 * @throws DBException
 	 */
-	List<DocPo> list(int offset, int limit, String searchString, QueryOrder queryOrder) throws DBException;
+	List<DocPo> listMyDocs(String uid, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder) throws DBException;
 
 	/**
 	 * Get document count.
