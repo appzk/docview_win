@@ -71,12 +71,8 @@ $(document).ready(function() {
 	function initLabels() {
 		// get append labels
 		$.get('/label/' + uid + '.json', function(data, status) {
-			var hasLabel = false;
-			for (var i = 0; i < data.length; i++) {
-				if (label == data[i].name) {
-					hasLabel = true;
-					break;
-				}
+			if (label === undefined) {
+				window.location = '/doc/list/all';
 			}
 			var list = $('.sidebar-nav .nav-list');
 			list.append('<li class="nav-header"><i class="icon-user"></i> 我的文档</li>');
