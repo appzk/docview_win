@@ -1,20 +1,4 @@
-
 $(document).ready(function() {
-	
-	var uid;
-	var username;
-	var sid;
-	var oTable;
-	
-	/* ---------------------------------------------------------------------- */
-	/*	Check Login
-	/* ---------------------------------------------------------------------- */
-	$.get("/user/checkLogin", function(data) {
-		username = data.username;
-		uid = data.uid;
-		initLabels();
-		initTable();
-	}, "json");
 	
 	/* ---------------------------------------------------------------------- */
 	/*	File Upload
@@ -69,7 +53,7 @@ $(document).ready(function() {
 	/*	Sidebar list
 	/* ---------------------------------------------------------------------- */
 	var label = $.url().segment(3);
-	function initLabels() {
+	$(function () {
 		// get append labels
 		$.get('/label/' + uid + '.json', function(data, status) {
 			if (label === undefined) {
@@ -88,13 +72,13 @@ $(document).ready(function() {
 				.append('<li ' + (('recommend' == label) ? ' class="active"' : '') + '><a href="/doc/list/recommend">推荐文档</a></li>')
 			;
 		});
-	}
+	});
 	
 	/* ---------------------------------------------------------------------- */
 	/*	Documenet Table
 	/* ---------------------------------------------------------------------- */
-	function initTable() {
-		oTable = $('#doctable').dataTable( {
+	$(function () {
+		var oTable = $('#doctable').dataTable( {
 			// "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
 			"sPaginationType": "bootstrap",
 			"oLanguage": {
@@ -104,35 +88,35 @@ $(document).ready(function() {
 			"bServerSide": true,
 			"sAjaxSource": "/doc/list.json",
 			"aoColumns": [
-			              { "mData": "name", "sClass": "center " },
-			              { "mData": "ctime", "sClass": "center" },
-			              { "mData": "size", "sClass": "center" },
-			              { "mData": "uuid", "sClass": "center" },
-			              { "mData": "viewCount", "sClass": "center", "bSortable": false },
-			              {
-			            	  "mData": null,
-			            	  "sClass": "center",
-			            	  "bSortable": false,
-			              }
-			              ],
-			              "aaSorting": [[1,'desc']],
-			              "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-			            	  var uuid = aData.uuid;
-			            	  $('td:eq(0)', nRow).html( '<a href="/view/'+aData.uuid+'" target="_blank">'+aData.name+'</a>' );
-			            	  $('td:eq(3)', nRow).html( '<a href="http://wev.cc/'+aData.uuid+'" target="_blank">wev.cc/' + aData.uuid + '</a>' );
-			            	  $('td:eq(4)', nRow).html( '' + aData.viewCount + '/' + aData.downloadCount + '' );
-			            	  if (uuid.charAt(uuid.length-1) == "w") {
-			            		  $('td:eq(5)', nRow).html( '<a href="/doc/download/'+aData.uuid+'">下载</a> | <a href="/edit/'+aData.uuid+'" target="_blank" >协作编辑</a> | <a href="/doc/delete/'+aData.uuid+'" onclick="return confirm(\'确定要删除吗？\');" >删除</a>' );
-			            	  } else {
-			            		  $('td:eq(5)', nRow).html( '<a href="/doc/download/'+aData.uuid+'">下载</a> | <a href="/doc/delete/'+aData.uuid+'" onclick="return confirm(\'确定要删除吗？\');" >删除</a>' );
-			            	  }
-			              },
-			              "fnServerParams": function ( aoData ) {
-			            	  aoData.push(
-			            			  {"name": "label", "value": label},
-			            			  {"name": "uid", "value": uid}
-			            	  );
-			              }
-		} );
-	}
+				{ "mData": "name", "sClass": "center " },
+				{ "mData": "ctime", "sClass": "center" },
+				{ "mData": "size", "sClass": "center" },
+				{ "mData": "uuid", "sClass": "center" },
+				{ "mData": "viewCount", "sClass": "center", "bSortable": false },
+				{
+				"mData": null,
+				"sClass": "center",
+				"bSortable": false,
+				}
+			],
+			"aaSorting": [[1,'desc']],
+			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+				var uuid = aData.uuid;
+				$('td:eq(0)', nRow).html( '<a href="/view/'+aData.uuid+'" target="_blank">'+aData.name+'</a>' );
+				$('td:eq(3)', nRow).html( '<a href="http://wev.cc/'+aData.uuid+'" target="_blank">wev.cc/' + aData.uuid + '</a>' );
+				$('td:eq(4)', nRow).html( '' + aData.viewCount + '/' + aData.downloadCount + '' );
+				if (uuid.charAt(uuid.length-1) == "w") {
+					$('td:eq(5)', nRow).html( '<a href="/doc/download/'+aData.uuid+'">下载</a> | <a href="/edit/'+aData.uuid+'" target="_blank" >协作编辑</a> | <a href="/doc/delete/'+aData.uuid+'" onclick="return confirm(\'确定要删除吗？\');" >删除</a>' );
+				} else {
+					$('td:eq(5)', nRow).html( '<a href="/doc/download/'+aData.uuid+'">下载</a> | <a href="/doc/delete/'+aData.uuid+'" onclick="return confirm(\'确定要删除吗？\');" >删除</a>' );
+				}
+			},
+			"fnServerParams": function ( aoData ) {
+				aoData.push(
+					{"name": "label", "value": label},
+					{"name": "uid", "value": uid}
+				);
+			}
+		});
+	});
 } );
