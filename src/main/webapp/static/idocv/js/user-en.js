@@ -36,19 +36,19 @@ $.ajax({
 		var loginHtml = 
 			'<!-- SIGN UP & SIGN IN -->' +
 	          '<ul class="nav pull-right">' +
-	          	'<li><a href="/signup.html">注册</a></li>' +
+	          	'<li><a href="/signup.html">Sign Up</a></li>' +
 	          	'<li class="divider-vertical"></li>' +
 	            '<li class="dropdown">' +
-	              '<a class="dropdown-toggle" href="#" data-toggle="dropdown">登录<strong class="caret"></strong></a>' +
+	              '<a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>' +
 	              '<div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">' +
 	                '<!-- Login form here -->' +
 	                '<form id="form-signin" class="form-horizontal" action="" method="post" accept-charset="UTF-8">' +
 	                  '<div id="sign-in-result"></div>' +
-					  '<input id="login_username" placeholder="用户名" style="margin-bottom: 15px;" type="text" name="login_username" size="30" data-validation="validate_min_length length3" />' +
-					  '<input id="login_password" placeholder="密码" style="margin-bottom: 15px;" type="password" name="login_password" size="30" data-validation="validate_min_length length4" />' +
+					  '<input id="login_username" placeholder="Username" style="margin-bottom: 15px;" type="text" name="login_username" size="30" data-validation="validate_min_length length3" />' +
+					  '<input id="login_password" placeholder="Password" style="margin-bottom: 15px;" type="password" name="login_password" size="30" data-validation="validate_min_length length4" />' +
 					  '<input id="login_rememberme" style="float: left; margin-right: 10px;" type="checkbox" name="login_rememberme" value="1" />' +
-					  '<label class="string optional" for="user_remember_me">记住我</label>' +
-					  '<input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="登录" />' +
+					  '<label class="string optional" for="user_remember_me"> Remember me</label>' +
+					  '<input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />' +
 					'</form>' +
 	              '</div>' +
 	            '</li>' +
@@ -78,8 +78,10 @@ $(document).ready(function() {
 		
 		/* FORM VALIDATOR */
 		var validationSettings = {
-			errorMessagePosition : 'element',
+				errorMessagePosition : 'element',
 		};
+		
+		console.log($('#form-signin').find('input[name="login_username"]').val());
 		
 		$('#form-signin').submit(function() {
 			if ($(this).validate(false, validationSettings)) {
@@ -89,23 +91,21 @@ $(document).ready(function() {
 				
 				/* Send the data using post */
 				$.post("/user/login",
-					{
-						user: username,
-						password: password
-					},
-					function(data, status){
-						var sid = data.sid;
-						if (sid !== undefined) {
-							// SUCCESS
-							$.cookie('IDOCVSID', sid, { path: '/' });
-							window.location.reload();
-						} else {
-							// FAIL
-							$('#sign-in-result').empty().append('<div class="alert alert-error">ERROR: ' + data.error + '</div>');
-						}
-					},
-					"json"
-				);
+						{
+					user: username,
+					password: password
+						},
+						function(data, status){
+							var sid = data.sid;
+							if (sid !== undefined) {
+								// SUCCESS
+								$.cookie('IDOCVSID', sid, { path: '/' });
+								window.location.reload();
+							} else {
+								// FAIL
+								$('#sign-in-result').empty().append('<div class="alert alert-error">ERROR: ' + data.error + '</div>');
+							}
+						}, "json");
 			}
 			return false;
 		})
