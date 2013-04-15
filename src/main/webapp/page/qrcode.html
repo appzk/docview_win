@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>QR code test</title>
+
+</head>
+<body>
+
+	<div id="qrcode"></div>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
+	<script src="/static/qrcode/js/jquery.qrcode.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			// $('#qrcode').qrcode("http://www.idocv.com");
+			$('#qrcode').qrcode({width: 300, height: 300, text: "http://www.idocv.com"});
+		});
+	</script>
+
+</body>
+</html>
