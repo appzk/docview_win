@@ -132,6 +132,6 @@
 	<script src="/static/js/upload/jquery.ui.widget.js"></script>
 	<script src="/static/js/upload/jquery.iframe-transport.js"></script>
 	<script src="/static/js/upload/jquery.fileupload.js"></script>
-	<script src="/static/idocv/js/doc-list.js"></script>
+	<script src="/static/idocv/js/doc-list-user.js"></script>
   </body>
 </html>

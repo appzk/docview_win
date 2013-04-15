@@ -53,12 +53,12 @@ $(document).ready(function() {
 	/*	Sidebar list
 	/* ---------------------------------------------------------------------- */
 	var label = $.url().segment(3);
+	if (uid !== undefined && label === undefined) {
+		window.location = '/doc/list/all';
+	}
 	$(function () {
 		// get append labels
 		$.get('/label/' + uid + '.json', function(data, status) {
-			if (label === undefined) {
-				window.location = '/doc/list/all';
-			}
 			var list = $('.sidebar-nav .nav-list');
 			list.append('<li class="nav-header"><i class="icon-user"></i> 我的文档</li>');
 			list.append('<li ' + (('all' == label) ? ' class="active"' : '') + '><a href="/doc/list/all">全部</a></li>')

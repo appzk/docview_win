@@ -166,7 +166,7 @@ public class DocController {
 	public String listLabel(
 			HttpServletRequest req,
 			@PathVariable(value = "label") String label) {
-		return "doc/list";
+		return "doc/list-user";
 	}
 
 	/**

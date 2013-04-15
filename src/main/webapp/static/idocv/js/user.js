@@ -13,6 +13,12 @@ $.ajax({
 }).done(function( data ) {
 	username = data.username;
 	uid = data.uid;
+	
+	// Already logged in user, redirect to his(her) own document list.
+	var label = $.url().segment(3);
+	if (uid !== undefined && label === undefined) {
+		window.location = '/doc/list/all';
+	}
 	if (username !== undefined) {
 		// SUCCESS - is login
 		var userHtml = 
