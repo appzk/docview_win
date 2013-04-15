@@ -45,67 +45,15 @@
     </div>
 
     <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header"><i class="icon-user"></i> 我的文档</li>
-              <li class="active"><a href="#">全部</a></li>
-              <li><a href="/personal">个人</a></li>
-              <li><a href="/work">工作</a></li>
-              <li><a href="#">+</a></li>
-              <li class="divider"></li>
-              <li class="nav-header"><i class="icon-share-alt"></i> 其他文档</li>
-              <li><a href="#">好友分享</a></li>
-              <li><a href="#">推荐文档</a></li>
-            </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
-        <div class="span10">
-          <div class="row-fluid">
-            <div class="span12">
-              <span class="button large fileinput-button">
-				<span><button class="btn btn-large btn-success" type="button">&nbsp;&nbsp;&nbsp;上传一个文档&nbsp;&nbsp;&nbsp;</button></span>
-				<input id="fileupload" type="file" name="file" data-url="/doc/upload" multiple>
-			  </span>
-			  <div id="upload-result" style="display: inline-block; margin: 5px 10px;">
-			  </div>
-            </div><!--/span-->
-          </div><!--/row-->
-          <div class="row-fluid upload-progress" style="display: none;">
-            <div class="span12">
-			  <div class="progress progress-striped active" style="margin: 10px 0px 0px;">
-				<div class="bar" style="width: 0%;"></div>
-			  </div>
-            </div><!--/span-->
-          </div><!--/row-->
-          <div class="row-fluid">
-            <div class="span12">
-              <!-- CONTENT HERE -->
-	          <div class="container span12" style="margin-top: 15px; overflow: auto;">
-				<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered responsive" id="doctable">
-				  <thead>
-					<tr>
-					  <th width="30%" style="text-align: center;">名称</th>
-					  <th width="15%" style="text-align: center;">时间</th>
-					  <th width="10%" style="text-align: center;">大小</th>
-					  <th width="15%" style="text-align: center;">分享URL</th>
-					  <th width="10%" style="text-align: center;">浏览/下载</th>
-					  <th width="20%" style="text-align: center;">操作</th>
-					</tr>
-					</thead>
-					<tbody>
-					  <tr>
-						<td colspan="5" class="dataTables_empty">Loading data from server...</td>
-					  </tr>
-					</tbody>
-				</table>
-			  </div>
-            </div><!--/span-->
-          </div><!--/row-->
-        </div><!--/span-->
-      </div><!--/row-->
-
+    
+      <div class="hero-unit">
+        <h1>应用列表 - I Doc View</h1>
+        
+        <br />
+        
+        <p><a href="http://eco.idocv.com/app/all" class="btn btn-primary btn-large">经济学人 &raquo;</a></p>
+      </div>
+      
       <hr>
 
       <footer>
@@ -122,13 +70,12 @@
 	<script src="/static/bootstrap/js/bootstrap.js"></script>
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
 	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-	<script src="/static/idocv/js/user-ch.js"></script>
 	<script src="/static/datatable/js/jquery.dataTables.js"></script>
 	<script src="/static/datatable/js/DT_bootstrap.js"></script>
 	<script src="/static/js/upload/jquery.ui.widget.js"></script>
 	<script src="/static/js/upload/jquery.iframe-transport.js"></script>
 	<script src="/static/js/upload/jquery.fileupload.js"></script>
-	<script src="/static/user/doclist.js"></script>
+	<script src="/static/idocv/js/app-list.js"></script>
 
   </body>
 </html>

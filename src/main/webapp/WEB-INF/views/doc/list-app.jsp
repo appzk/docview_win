@@ -67,25 +67,8 @@
         <div class="span10">
           <div class="row-fluid">
             <div class="span12">
-              <span class="button large fileinput-button">
-				<span><button class="btn btn-large btn-success" type="button">&nbsp;&nbsp;&nbsp;上传一个文档&nbsp;&nbsp;&nbsp;</button></span>
-				<input id="fileupload" type="file" name="file" data-url="/doc/upload" multiple>
-			  </span>
-			  <div id="upload-result" style="display: inline-block; margin: 5px 10px;">
-			  </div>
-            </div><!--/span-->
-          </div><!--/row-->
-          <div class="row-fluid upload-progress" style="display: none;">
-            <div class="span12">
-			  <div class="progress progress-striped active" style="margin: 10px 0px 0px;">
-				<div class="bar" style="width: 0%;"></div>
-			  </div>
-            </div><!--/span-->
-          </div><!--/row-->
-          <div class="row-fluid">
-            <div class="span12">
               <!-- CONTENT HERE -->
-	          <div class="container span12" style="margin-top: 15px; overflow: auto;">
+	          <div class="container span12">
 				<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered responsive" id="doctable">
 				  <thead>
 					<tr>
