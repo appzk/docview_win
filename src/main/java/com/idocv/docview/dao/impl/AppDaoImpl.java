@@ -79,6 +79,18 @@ public class AppDaoImpl extends BaseDaoImpl implements AppDao, InitializingBean 
 	}
 
 	@Override
+	public AppPo get(String id) throws DBException {
+		try {
+			QueryBuilder query = QueryBuilder.start(_ID).is(id);
+			DBCollection coll = db.getCollection(COLL_APP);
+			DBObject obj = coll.findOne(query.get());
+			return convertDBObject2Po(obj);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	@Override
 	public AppPo getByKey(String key) throws DBException {
 		try {
 			QueryBuilder query = QueryBuilder.start(KEY).is(key);

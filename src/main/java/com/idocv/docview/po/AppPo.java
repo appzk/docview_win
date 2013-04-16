@@ -24,6 +24,11 @@ public class AppPo {
 	private String name;
 
 	/**
+	 * Application logo URL
+	 */
+	private String logo;
+
+	/**
 	 * Secret key, must starts with {id}
 	 */
 	private String key;
@@ -67,6 +72,14 @@ public class AppPo {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
 	}
 
 	public String getKey() {

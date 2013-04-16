@@ -37,6 +37,14 @@ public class AppDaoTest {
 			phone = "18611898831";
 			appDao.add(id, name, key, phone);
 			System.err.println("Add wev.cc done!");
+
+			// add eco test
+			id = "eco";
+			name = "Economist Chinese Edition";
+			key = "ecokey";
+			phone = "18611898831";
+			appDao.add(id, name, key, phone);
+			System.err.println("Add eco test done!");
 		} catch (DBException e) {
 			e.printStackTrace();
 		}

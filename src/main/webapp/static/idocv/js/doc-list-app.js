@@ -11,8 +11,8 @@ $(document).ready(function() {
 		// get append labels
 		$.get('/label/' + uid + '.json', function(data, status) {
 			var list = $('.sidebar-nav .nav-list');
-			list.append('<li ' + (('all' == label || label === undefined) ? ' class="active"' : '') + '><a href="/app/all">全部</a></li>');
-			list.append('<li ' + (('bilingual-weekly' == label || label === undefined) ? ' class="active"' : '') + '><a href="/app/bilingual-weekly">双语周刊</a></li>');
+			list.append('<li ' + (('all' == label || label === undefined) ? ' class="active"' : '') + '><a href="/open/all">全部</a></li>');
+			list.append('<li ' + (('bilingual-weekly' == label || label === undefined) ? ' class="active"' : '') + '><a href="/open/bilingual-weekly">双语周刊</a></li>');
 			/*
 			for (var i = 0; i < data.length; i++) {
 				list.append('<li ' + ((data[i].name == label) ? ' class="active"' : '') + '><a href="/app/' + data[i].name + '">' + data[i].value + '</a></li>');

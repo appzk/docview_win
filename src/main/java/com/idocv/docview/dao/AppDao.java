@@ -13,6 +13,8 @@ public interface AppDao extends BaseDao {
 
 	void delete(String appId) throws DBException;
 
+	AppPo get(String id) throws DBException;
+
 	AppPo getByKey(String key) throws DBException;
 
 	List<AppPo> list(int offset, int limit) throws DBException;

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <title>Document List - I Doc View</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="在线文档预览、协作编辑，幻灯片远程控制、同步演示、画笔同步展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt等。">
 	<meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
 
@@ -68,16 +68,16 @@
           <div class="row-fluid">
             <div class="span12">
               <!-- CONTENT HERE -->
-	          <div class="container span12">
+	          <div class="container span12" style="overflow: auto;">
 				<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered responsive" id="doctable">
 				  <thead>
 					<tr>
-					  <th width="30%" style="text-align: center;">名称</th>
-					  <th width="15%" style="text-align: center;">时间</th>
+					  <th width="35%" style="text-align: center;">名称</th>
+					  <th width="20%" style="text-align: center;">时间</th>
 					  <th width="10%" style="text-align: center;">大小</th>
 					  <th width="15%" style="text-align: center;">分享URL</th>
 					  <th width="10%" style="text-align: center;">浏览/下载</th>
-					  <th width="20%" style="text-align: center;">操作</th>
+					  <th width="10%" style="text-align: center;">操作</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -95,7 +95,7 @@
       <hr>
 
       <footer>
-			&copy; <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a> 2013
+			<a href="http://www.ecocn.org" target="_blank"><img alt="http://www.ecocn.org" src="http://www.ecocn.org/static/image/common/logo.png"></a> &nbsp;|&nbsp; &copy; <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a> 2013
       </footer>
 
     </div><!--/.fluid-container-->

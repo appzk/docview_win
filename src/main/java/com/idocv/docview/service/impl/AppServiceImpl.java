@@ -31,6 +31,16 @@ public class AppServiceImpl implements AppService {
 	}
 
 	@Override
+	public AppPo get(String id) throws DocServiceException {
+		try {
+			return appDao.get(id);
+		} catch (DBException e) {
+			logger.error("get error: ", e);
+			throw new DocServiceException(e);
+		}
+	}
+
+	@Override
 	public AppPo getByKey(String key) throws DocServiceException {
 		try {
 			return appDao.getByKey(key);

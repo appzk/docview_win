@@ -7,6 +7,8 @@ public interface AppService {
 
 	boolean add(String id, String name, String key, String phone) throws DocServiceException;
 	
+	AppPo get(String id) throws DocServiceException;
+
 	AppPo getByKey(String key) throws DocServiceException;
 
 }

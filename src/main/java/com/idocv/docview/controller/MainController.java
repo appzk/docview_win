@@ -1,27 +1,42 @@
 package com.idocv.docview.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.po.AppPo;
+import com.idocv.docview.service.AppService;
+
 @Controller
 @RequestMapping("")
 public class MainController {
 
+	@Resource
+	private AppService appService;
+	
 	@RequestMapping("")
 	public String HOME(HttpServletRequest req) {
-		StringBuffer sb = req.getRequestURL();
-		String app = sb.toString().replaceFirst("(http://)?(\\w+)\\.idocv.com/?.*", "$2");
-		System.out.println(sb);
-		boolean existApp = false;
-		// TODO query app
-		if (existApp) {
-			return "doc/list-app";
-		} else {
+		try {
+			StringBuffer sb = req.getRequestURL();
+			String app = sb.toString().replaceFirst("(http://)?(\\w+)\\.idocv.com/?.*", "$2");
+			System.out.println(sb);
+			boolean existApp = false;
+			AppPo appPo = appService.get(app);
+			if (null != appPo) {
+				existApp = true;
+			}
+			if (existApp) {
+				return "redirect:/open/all";
+			} else {
+				return "app/list";
+			}
+		} catch (DocServiceException e) {
+			e.printStackTrace();
 			return "app/list";
 		}
-		// else -> return "doc/list-app";
 	}
 
 }
