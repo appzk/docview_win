@@ -26,10 +26,27 @@ public class UserController {
 	@Resource
 	private UserService userService;
 	
-	@RequestMapping("main/{username}")
-	public String main(@PathVariable(value = "username") String username) {
+	@RequestMapping("{username}")
+	public String home(@PathVariable(value = "username") String username) {
 		System.out.println("User: " + username);
-		return "user/main";
+		return "doc/list-user";
+	}
+
+	@RequestMapping("{username}/{label}")
+	public String label(@PathVariable(value = "username") String username,
+			@PathVariable(value = "label") String label) {
+		System.out.println("User: " + username + ", label: " + label);
+		return "doc/list-user";
+	}
+
+	/**
+	 * Sign up page
+	 * 
+	 * @return
+	 */
+	@RequestMapping("signup")
+	public String signUpPage() {
+		return "user/signup";
 	}
 
 	/**
@@ -42,7 +59,7 @@ public class UserController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("signup")
+	@RequestMapping("signup.json")
 	public String signUp(HttpServletRequest req,
 			@RequestParam(value = "appkey", defaultValue = "wevkey") String appkey,
 			@RequestParam(value = "username") String username,

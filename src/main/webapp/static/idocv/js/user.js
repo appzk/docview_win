@@ -15,9 +15,9 @@ $.ajax({
 	uid = data.uid;
 	
 	// Already logged in user, redirect to his(her) own document list.
-	var label = $.url().segment(3);
+	var label = $.url().segment(2);
 	if (uid !== undefined && label === undefined) {
-		window.location = '/doc/list/all';
+		window.location = '/' + username + '/all';
 	}
 	if (username !== undefined) {
 		// SUCCESS - is login
@@ -42,7 +42,7 @@ $.ajax({
 		var loginHtml = 
 			'<!-- SIGN UP & SIGN IN -->' +
 	          '<ul class="nav pull-right">' +
-	          	'<li><a href="/signup.html">注册</a></li>' +
+	          	'<li><a href="/signup">注册</a></li>' +
 	          	'<li class="divider-vertical"></li>' +
 	            '<li class="dropdown">' +
 	              '<a class="dropdown-toggle" href="#" data-toggle="dropdown">登录<strong class="caret"></strong></a>' +

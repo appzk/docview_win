@@ -15,7 +15,7 @@ $(document).ready(function() {
 				password = $form.find('input[name="password"]').val();
 			
 			/* Send the data using post */
-			$.post("http://api.idocv.com/user/signup",
+			$.post("/user/signup.json",
 			{
 				username: username,
 				email: email,

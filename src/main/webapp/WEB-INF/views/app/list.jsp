@@ -35,7 +35,7 @@
           <a class="brand" href="http://www.idocv.com">I Doc View</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#"><i class="icon-home icon-white"></i> Home</a></li>
+              <li class="active"><a href="/"><i class="icon-home icon-white"></i> Home</a></li>
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
@@ -55,7 +55,7 @@
         
         <hr />
         
-        <p><a href="http://eco.idocv.com/app/all" class="btn btn-primary btn-large">经济学人 &raquo;</a></p>
+        <p><a href="http://eco.idocv.com" class="btn btn-primary btn-large">经济学人 &raquo;</a></p>
         
       </div>
       

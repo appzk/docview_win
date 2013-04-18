@@ -52,24 +52,24 @@ $(document).ready(function() {
 	/* ---------------------------------------------------------------------- */
 	/*	Sidebar list
 	/* ---------------------------------------------------------------------- */
-	var label = $.url().segment(3);
+	var label = $.url().segment(2);
 	if (uid === undefined) {
-		window.location = '/';
+		window.location = '/signup';
 	}
 	$(function () {
 		// get append labels
 		$.get('/label/' + uid + '.json', function(data, status) {
 			var list = $('.sidebar-nav .nav-list');
 			list.append('<li class="nav-header"><i class="icon-user"></i> 我的文档</li>');
-			list.append('<li ' + (('all' == label) ? ' class="active"' : '') + '><a href="/doc/list/all">全部</a></li>')
+			list.append('<li ' + (('all' == label) ? ' class="active"' : '') + '><a href="/' + username + '/all">全部</a></li>')
 			for (var i = 0; i < data.length; i++) {
-				list.append('<li ' + ((data[i].name == label) ? ' class="active"' : '') + '><a href="/doc/list/' + data[i].name + '">' + data[i].value + '</a></li>');
+				list.append('<li ' + ((data[i].name == label) ? ' class="active"' : '') + '><a href="/' + username + '/' + data[i].name + '">' + data[i].value + '</a></li>');
 			}
 			list.append('<li><a href="#">+</a></li>')
 				.append('<li class="divider"></li>')
 				.append('<li class="nav-header"><i class="icon-share-alt"></i> 其他文档</li>')
-				.append('<li ' + (('shared' == label) ? ' class="active"' : '') + '><a href="/doc/list/shared">好友分享</a></li>')
-				.append('<li ' + (('recommend' == label) ? ' class="active"' : '') + '><a href="/doc/list/recommend">推荐文档</a></li>')
+				.append('<li ' + (('shared' == label) ? ' class="active"' : '') + '><a href="/' + username + '/shared">好友分享</a></li>')
+				.append('<li ' + (('recommend' == label) ? ' class="active"' : '') + '><a href="/' + username + '/recommend">推荐文档</a></li>')
 			;
 		});
 	});
