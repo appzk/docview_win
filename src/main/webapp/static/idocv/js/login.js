@@ -36,7 +36,7 @@ $.ajax({
               '</ul>' +
             '</div>' +
          '</div><!-- user info end -->';
-		$('.navbar-inner .container-fluid').append(userHtml);
+		// $('.navbar-inner .container-fluid').append(userHtml);
 	} else {
 		// FAIL - NOT login
 		var loginHtml = 
@@ -59,22 +59,11 @@ $.ajax({
 	              '</div>' +
 	            '</li>' +
 	          '</ul>';
-		$('.navbar-inner .container-fluid').append(loginHtml);
+		// $('.navbar-inner .container-fluid').append(loginHtml);
 	};
 });
 
 $(document).ready(function() {
-	
-	/* ---------------------------------------------------------------------- */
-	/*	User Info - already login
-	/* ---------------------------------------------------------------------- */
-	$(function () {
-		$("#button-logout").click(function() {
-			$.get("/user/logout.json", function(data) {
-				window.location.reload();
-			}, "json");
-		});
-	});
 	
 	/* ---------------------------------------------------------------------- */
 	/*	Login form - NOT login

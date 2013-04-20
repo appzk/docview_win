@@ -75,6 +75,16 @@ public class UserController {
 	}
 
 	/**
+	 * Login
+	 * 
+	 * @return
+	 */
+	@RequestMapping("login")
+	public String loginPage() {
+		return "user/login";
+	}
+
+	/**
 	 * login
 	 * 
 	 * @param user
@@ -82,7 +92,7 @@ public class UserController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("login")
+	@RequestMapping("login.json")
 	public String login(String user, String password) {
 		try {
 			UserVo vo = userService.login(user, password);
@@ -105,7 +115,7 @@ public class UserController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("logout")
+	@RequestMapping("logout.json")
 	public String logout(HttpServletRequest req) {
 		try {
 			Cookie[] cookies = req.getCookies();

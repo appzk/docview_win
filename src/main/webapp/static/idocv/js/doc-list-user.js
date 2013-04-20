@@ -54,7 +54,7 @@ $(document).ready(function() {
 	/* ---------------------------------------------------------------------- */
 	var label = $.url().segment(2);
 	if (uid === undefined) {
-		window.location = '/signup';
+		window.location = '/login';
 	}
 	$(function () {
 		// get append labels

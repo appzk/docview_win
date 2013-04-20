@@ -54,9 +54,9 @@
 			    
 			    <div class="control-group">
 			      <!-- Username -->
-			      <label class="control-label"  for="username">Username</label>
+			      <label class="control-label"  for="username">用户名</label>
 			      <div class="controls">
-			        <input type="text" id="username" name="username" placeholder="Username should be at least 3 characters" class="input-xlarge" data-validation="validate_min_length length3" >
+			        <input type="text" id="username" name="username" placeholder="至少3个字符" class="input-xlarge" data-validation="validate_min_length length3" >
 			        <p class="help-block"></p>
 			      </div>
 			    </div>
@@ -72,18 +72,18 @@
 			
 			    <div class="control-group">
 			      <!-- Password-->
-			      <label class="control-label" for="password">Password</label>
+			      <label class="control-label" for="password">密码</label>
 			      <div class="controls">
-			        <input type="password" id="password" name="password" placeholder="Password should be at least 4 characters" class="input-xlarge" data-validation="validate_confirmation validate_min_length length4" />
+			        <input type="password" id="password" name="password" placeholder="至少4个字符" class="input-xlarge" data-validation="validate_confirmation validate_min_length length4" />
 			        <p class="help-block"></p>
 			      </div>
 			    </div>
 			
 			    <div class="control-group">
 			      <!-- Password -->
-			      <label class="control-label"  for="password_confirm">Password (Confirm)</label>
+			      <label class="control-label"  for="password_confirm">确认密码</label>
 			      <div class="controls">
-			        <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Please confirm password" class="input-xlarge">
+			        <input type="password" id="password_confirmation" name="password_confirmation" placeholder="输入相同的密码" class="input-xlarge">
 			        <p class="help-block"></p>
 			      </div>
 			    </div>
@@ -91,7 +91,7 @@
 			    <div class="control-group">
 			      <!-- Button -->
 			      <div class="controls">
-			        <button class="btn btn-success">Register</button>
+			        <button class="btn btn-success">注册</button>
 			      </div>
 			    </div>
 			  </fieldset>
