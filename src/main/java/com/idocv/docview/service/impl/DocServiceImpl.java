@@ -32,6 +32,7 @@ import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.AppPo;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.po.LabelPo;
+import com.idocv.docview.service.ConvertService;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
@@ -53,6 +54,9 @@ public class DocServiceImpl implements DocService {
 
 	@Resource
 	private RcUtil rcUtil;
+
+	@Resource
+	private ConvertService convertService;
 
 	private static Set<String> docTypes = new HashSet<String>();
 
@@ -116,6 +120,10 @@ public class DocServiceImpl implements DocService {
 
 			// save info
 			docDao.add(rid, uuid, appId, name, size, ext, mode);
+
+			// Asynchronously convert document
+			convertService.convert(rid);
+
 			return convertPo2Vo(doc);
 		} catch (Exception e) {
 			logger.error("save doc error: ", e);

@@ -18,6 +18,15 @@ import com.idocv.docview.vo.WordVo;
 public interface PreviewService {
 
 	/**
+	 * Convert document(rid) to HTML.
+	 * 
+	 * @param rid
+	 * @return
+	 * @throws DocServiceException
+	 */
+	public boolean convert(String rid) throws DocServiceException;
+
+	/**
 	 * Word page.
 	 * 
 	 * @param rid

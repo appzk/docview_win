@@ -261,7 +261,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		}
 	}
 
-	private boolean convert(String rid) throws Exception {
+	public boolean convert(String rid) throws DocServiceException {
 		return convert(rid, 0);
 	}
 
