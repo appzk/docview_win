@@ -45,30 +45,52 @@
     </div>
 
     <div class="container-fluid">
-      <section class="loginBox row-fluid">
-        <section class="span7 left">
-          <h2>用户登录</h2>
-          <form id="form-signin" class="form-horizontal" action="" method="post" accept-charset="UTF-8">
-			<div id="sign-in-result" style="margin-bottom: 5px;"></div>
-			<input id="login_username" placeholder="用户名" style="margin-bottom: 15px;" type="text" name="login_username" size="30" data-validation="validate_min_length length3" />
-			<input id="login_password" placeholder="密码" style="margin-bottom: 15px;" type="password" name="login_password" size="30" data-validation="validate_min_length length4" />
-			<input id="login_rememberme" style="float: left; margin-right: 10px;" type="checkbox" name="login_rememberme" value="1" />
-			<label class="string optional" for="user_remember_me">记住我</label>
-			<input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="登录" />
-          </form>
-        </section>
-        <section class="span5 right">
-          <h2>没有帐户？</h2>
-          <section>
-            <p>
-				在线文档预览、分享、协作编辑，幻灯片远程控制、同步展示等。<br /><br />
-				第三方应用注册请联系<a href="mailto:support@idocv.com">support@idocv.com</a><br />
-				普通用户请点击
-            </p>
-            <p><a href="/signup"><input type="button" value=" 注册 " class="btn" ></a></p>
-          </section>
-        </section>
-      </section><!-- /loginBox -->
+      <div class="row-fluid">
+        <div class="span2">
+
+        </div><!--/span-->
+        <div class="span8">
+          <div class="row-fluid">
+            <div class="span8">
+              <div class="hero-unit">
+                <h1>在线文档预览</h1>
+                <p>在线文档预览、协作编辑，幻灯片远程控制、同步演示、画笔同步展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx, pdf和txt等。</p>
+                <p><a href="http://www.idocv.com" class="btn btn-primary btn-large">了解详情 &raquo;</a></p>
+              </div>
+            </div><!--/span-->
+            <div class="span4">
+              <div class="well">
+                <ul class="nav nav-tabs">
+                  <li class="active"><a href="#login" data-toggle="tab">登录</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                  <div class="tab-pane active in" id="login">
+                    <form id="form-signin" class="form-horizontal" action="" method="post" accept-charset="UTF-8">
+                      <div id="sign-in-result"></div>
+                      <p><input id="login_username" placeholder="用户名" type="text" class="span12" name="login_username" size="30" data-validation="validate_min_length length3" /></p>
+                      <p><input id="login_password" placeholder="密码" type="password" class="span12" name="login_password" size="30" data-validation="validate_min_length length4" /></p>
+                      <p><input id="login_rememberme" style="float: left; margin-right: 10px;" type="checkbox" name="login_rememberme" value="1" /></p>
+                      <p><label class="string optional" for="user_remember_me">记住我</label></p>
+                      <p><input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="登录" /></p>
+                      <p>没有账号？点击<a href="/signup">注册</a></p>
+                    </form>
+                  </div>
+                </div>
+              </div><!--/well-->
+            </div><!--/span-->
+          </div><!--/row-->
+        </div><!--/span-->
+        <div class="span2">
+
+        </div><!--/span-->
+
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+			Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+      </footer>
 
     </div><!--/.fluid-container-->
 
