@@ -1,5 +1,7 @@
 $(document).ready(function() {
 	
+	var oTable;
+	
 	/* ---------------------------------------------------------------------- */
 	/*	File Upload
 	/* ---------------------------------------------------------------------- */
@@ -78,7 +80,7 @@ $(document).ready(function() {
 	/*	Documenet Table
 	/* ---------------------------------------------------------------------- */
 	$(function () {
-		var oTable = $('#doctable').dataTable( {
+		oTable = $('#doctable').dataTable( {
 			// "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
 			"sPaginationType": "bootstrap",
 			"oLanguage": {
