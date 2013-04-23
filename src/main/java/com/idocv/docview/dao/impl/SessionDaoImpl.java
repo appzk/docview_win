@@ -38,7 +38,7 @@ public class SessionDaoImpl extends BaseDaoImpl implements SessionDao, Initializ
 		}
 		String objId = IdUtil.getObjectId();
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
-				.append(_ID, objId).append(APPID, appId).append(UUID, uuid)
+				.append(_ID, objId).append(APP, appId).append(UUID, uuid)
 				.append(CTIME, time);
 		try {
 			DBCollection coll = db.getCollection(COLL_SESSION);
@@ -84,8 +84,8 @@ public class SessionDaoImpl extends BaseDaoImpl implements SessionDao, Initializ
 		if (obj.containsField(_ID)) {
 			po.setId(obj.get(_ID).toString());
 		}
-		if (obj.containsField(APPID)) {
-			po.setAppId(obj.get(APPID).toString());
+		if (obj.containsField(APP)) {
+			po.setAppId(obj.get(APP).toString());
 		}
 		if (obj.containsField(UUID)) {
 			po.setUuid(obj.get(UUID).toString());

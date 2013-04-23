@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserVo signUp(String appKey, String username, String password, String email) throws DocServiceException {
 		try {
-			AppPo appPo = appDao.getByKey(appKey);
+			AppPo appPo = appDao.getByToken(appKey);
 			if (null == appPo || StringUtils.isBlank(appPo.getId())) {
 				throw new DocServiceException("App NOT found!");
 			}

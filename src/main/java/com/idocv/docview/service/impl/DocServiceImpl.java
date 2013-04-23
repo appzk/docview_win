@@ -27,11 +27,13 @@ import com.idocv.docview.dao.AppDao;
 import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.dao.DocDao.QueryOrder;
 import com.idocv.docview.dao.LabelDao;
+import com.idocv.docview.dao.UserDao;
 import com.idocv.docview.exception.DBException;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.AppPo;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.po.LabelPo;
+import com.idocv.docview.po.UserPo;
 import com.idocv.docview.service.ConvertService;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.util.RcUtil;
@@ -45,6 +47,9 @@ public class DocServiceImpl implements DocService {
 
 	@Resource
 	private AppDao appDao;
+
+	@Resource
+	private UserDao userDao;
 
 	@Resource
 	private DocDao docDao;
@@ -75,9 +80,56 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public DocVo add(String appKey, String name, byte[] data, int mode) throws DocServiceException {
-		if (StringUtils.isBlank(appKey)) {
-			throw new DocServiceException(0, "App-key为空！");
+	public DocVo addByApp(String token, String name, byte[] data, int mode) throws DocServiceException {
+		if (StringUtils.isBlank(token)) {
+			throw new DocServiceException(0, "token为空！");
+		}
+		try {
+			AppPo appPo = appDao.getByToken(token);
+			if (null == appPo || StringUtils.isBlank(appPo.getId())) {
+				logger.error("不存在该应用，token=" + token);
+				throw new DocServiceException(0, "不存在该应用！");
+			}
+			String app = appPo.getId();
+			return addDoc(app, null, name, data, mode, null);
+		} catch (Exception e) {
+			logger.error("save doc error: ", e);
+			throw new DocServiceException(e);
+		}
+	}
+
+	@Override
+	public DocVo addByUser(String sid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
+		try {
+			// get app & user info
+			if (StringUtils.isBlank(sid)) {
+				throw new DocServiceException("用户sid为空！");
+			}
+			UserPo userPo = userDao.getBySid(sid);
+			if (null == userPo) {
+				throw new DocServiceException("用户未找到！");
+			}
+			String app = userPo.getAppId();
+			String uid = userPo.getId();
+			
+			// get label id
+			String labelId = null;
+			if (StringUtils.isNotBlank(labelName) && "all".equalsIgnoreCase(labelName)) {
+				LabelPo labelPo = labelDao.get(uid, labelName);
+				if (null != labelPo) {
+					labelId = labelPo.getId();
+				}
+			}
+			return addDoc(app, uid, name, data, mode, labelId);
+		} catch (DBException e) {
+			logger.error("save doc by user error: ", e);
+			throw new DocServiceException(e);
+		}
+	}
+
+	private DocVo addDoc(String app, String uid, String name, byte[] data, int mode, String labelId) throws DocServiceException {
+		if (StringUtils.isBlank(app)) {
+			throw new DocServiceException(0, "应用为空！");
 		}
 		if (StringUtils.isBlank(name)) {
 			throw new DocServiceException(0, "文件名为空！");
@@ -89,14 +141,9 @@ public class DocServiceImpl implements DocService {
 			throw new DocServiceException(0, "不能上传空文档！");
 		}
 		try {
-			AppPo appPo = appDao.getByKey(appKey);
-			if (null == appPo || StringUtils.isBlank(appPo.getId())) {
-				throw new DocServiceException(0, "Application NOT found!");
-			}
-			String appId = appPo.getId();
 			DocPo doc = new DocPo();
 			int size = data.length;
-			String rid = RcUtil.genRid(appId, name, size);
+			String rid = RcUtil.genRid(app, name, size);
 			String uuid = RandomStringUtils.randomAlphanumeric(5);
 			doc.setRid(rid);
 			String ext = RcUtil.getExt(rid);
@@ -119,7 +166,7 @@ public class DocServiceImpl implements DocService {
 			FileUtils.writeByteArrayToFile(new File(rcUtil.getPath(rid)), data);
 
 			// save info
-			docDao.add(rid, uuid, appId, name, size, ext, mode);
+			docDao.add(app, uid, rid, uuid, name, size, ext, mode, labelId);
 
 			// Asynchronously convert document
 			convertService.convert(rid);
@@ -130,7 +177,7 @@ public class DocServiceImpl implements DocService {
 			throw new DocServiceException(e);
 		}
 	}
-
+	
 	@Override
 	public DocVo addUrl(String appKey, String url, String name, int mode) throws DocServiceException {
 		if (StringUtils.isBlank(appKey) || StringUtils.isBlank(name) || StringUtils.isBlank(url)) {
@@ -145,7 +192,7 @@ public class DocServiceImpl implements DocService {
 			Response urlResponse = null;
 			urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
 			byte[] bytes = urlResponse.bodyAsBytes();
-			vo = add(appKey, name, bytes, mode);
+			vo = addByApp(appKey, name, bytes, mode);
 			docDao.updateUrl(vo.getRid(), url);
 			return vo;
 		} catch (IOException e) {
@@ -190,7 +237,7 @@ public class DocServiceImpl implements DocService {
 	@Override
 	public void updateMode(String token, String uuid, int mode) throws DocServiceException {
 		try {
-			AppPo appPo = appDao.getByKey(token);
+			AppPo appPo = appDao.getByToken(token);
 			if (null == appPo) {
 				throw new DocServiceException("App NOT found!");
 			}
@@ -199,7 +246,7 @@ public class DocServiceImpl implements DocService {
 				throw new DocServiceException("Document NOT found!");
 			}
 			String appAppId = appPo.getId();
-			String docAppId = docVo.getAppId();
+			String docAppId = docVo.getApp();
 			if (!appAppId.equals(docAppId)) {
 				throw new DocServiceException("Can NOT modify other app's document.");
 			}
@@ -296,7 +343,7 @@ public class DocServiceImpl implements DocService {
 		DocVo vo = new DocVo();
 		vo.setRid(po.getRid());
 		vo.setUuid(po.getUuid());
-		vo.setAppId(po.getAppId());
+		vo.setApp(po.getApp());
 		vo.setName(po.getName());
 		vo.setSize(po.getSize());
 		vo.setStatus(po.getStatus());

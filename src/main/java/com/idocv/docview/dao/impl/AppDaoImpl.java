@@ -33,13 +33,13 @@ public class AppDaoImpl extends BaseDaoImpl implements AppDao, InitializingBean 
 	}
 
 	@Override
-	public boolean add(String id, String name, String key, String phone) throws DBException {
+	public boolean add(String id, String name, String token, String phone) throws DBException {
 		long time = System.currentTimeMillis();
-		if (StringUtils.isBlank(id) || StringUtils.isBlank(name) || StringUtils.isBlank(key) || StringUtils.isBlank(phone)) {
+		if (StringUtils.isBlank(id) || StringUtils.isBlank(name) || StringUtils.isBlank(token) || StringUtils.isBlank(phone)) {
 			throw new DBException("Insufficient parameters!");
 		}
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
-				.append(_ID, id).append(NAME, name).append(KEY, key)
+				.append(_ID, id).append(NAME, name).append(TOKEN, token)
 				.append(PHONE, phone).append(STATUS, 0).append(CTIME, time);
 		try {
 			DBCollection coll = db.getCollection(COLL_APP);
@@ -91,9 +91,9 @@ public class AppDaoImpl extends BaseDaoImpl implements AppDao, InitializingBean 
 	}
 
 	@Override
-	public AppPo getByKey(String key) throws DBException {
+	public AppPo getByToken(String token) throws DBException {
 		try {
-			QueryBuilder query = QueryBuilder.start(KEY).is(key);
+			QueryBuilder query = QueryBuilder.start(TOKEN).is(token);
 			DBCollection coll = db.getCollection(COLL_APP);
 			DBObject obj = coll.findOne(query.get());
 			return convertDBObject2Po(obj);
@@ -140,8 +140,8 @@ public class AppDaoImpl extends BaseDaoImpl implements AppDao, InitializingBean 
 		if (obj.containsField(NAME)) {
 			po.setName(obj.get(NAME).toString());
 		}
-		if (obj.containsField(KEY)) {
-			po.setKey(obj.get(KEY).toString());
+		if (obj.containsField(TOKEN)) {
+			po.setKey(obj.get(TOKEN).toString());
 		}
 		if (obj.containsField(IPS)) {
 			po.setIps((Collection<String>) obj.get(IPS));

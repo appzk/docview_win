@@ -15,7 +15,7 @@ public interface AppDao extends BaseDao {
 
 	AppPo get(String id) throws DBException;
 
-	AppPo getByKey(String key) throws DBException;
+	AppPo getByToken(String key) throws DBException;
 
 	List<AppPo> list(int offset, int limit) throws DBException;
 }

@@ -1,6 +1,7 @@
 $(document).ready(function() {
 	
 	var oTable;
+	var label = $.url().segment(2);
 	
 	/* ---------------------------------------------------------------------- */
 	/*	File Upload
@@ -13,6 +14,7 @@ $(document).ready(function() {
 		var $response = $('#response');
 	    $('#fileupload').fileupload({
 	        dataType: 'json',
+	        formData: {'label': label},
 	        done: function (e, data) {
 	        	// Hide any previous response text and show loader
 	        	$response.hide().html( $loader ).show();
@@ -54,7 +56,6 @@ $(document).ready(function() {
 	/* ---------------------------------------------------------------------- */
 	/*	Sidebar list
 	/* ---------------------------------------------------------------------- */
-	var label = $.url().segment(2);
 	if (uid === undefined) {
 		window.location = '/login';
 	}

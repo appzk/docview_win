@@ -38,7 +38,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 		String objId = new ObjectId().toString();
 		String sid = UidUtil.getSid(objId, "appId");
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
-				.append(_ID, objId).append(APPID, appId)
+				.append(_ID, objId).append(APP, appId)
 				.append(USERNAME, username).append(PASSWORD, password)
 				.append(EMAIL, email).append(CTIME, time)
 				.append(SIDS, Arrays.asList(new String[] { sid }));
@@ -141,8 +141,8 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 		if (obj.containsField(_ID)) {
 			po.setId(obj.get(_ID).toString());
 		}
-		if (obj.containsField(APPID)) {
-			po.setAppId(obj.get(APPID).toString());
+		if (obj.containsField(APP)) {
+			po.setAppId(obj.get(APP).toString());
 		}
 		if (obj.containsField(USERNAME)) {
 			po.setUsername(obj.get(USERNAME).toString());

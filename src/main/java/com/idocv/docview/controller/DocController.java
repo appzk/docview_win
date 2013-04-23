@@ -4,11 +4,13 @@ package com.idocv.docview.controller;
 import java.io.File;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -25,9 +27,11 @@ import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.AppService;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.PreviewService;
+import com.idocv.docview.service.UserService;
 import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
+import com.idocv.docview.vo.UserVo;
 
 
 @Controller
@@ -39,6 +43,9 @@ public class DocController {
 	@Resource
 	private AppService appService;
 	
+	@Resource
+	private UserService userService;
+
 	@Resource
 	private DocService docService;
 
@@ -59,17 +66,44 @@ public class DocController {
 	@RequestMapping("upload")
 	public String add(HttpServletRequest req,
 			@RequestParam(value = "file", required = true) MultipartFile file,
-			@RequestParam(value = "token", defaultValue = "doctest") String token,
-			@RequestParam(value = "mode", defaultValue = "public") String modeString) {
+			@RequestParam(value = "token", required = false) String token,
+			@RequestParam(value = "mode", defaultValue = "public") String modeString,
+			@RequestParam(value = "label", defaultValue = "") String label) {
 		try {
+			// Two ways to upload: App token upload & user Sid upload
+			String ip = IpUtil.getIpAddr(req);
+			byte[] data = file.getBytes();
+			String name = file.getOriginalFilename();
 			int mode = 0;
 			if ("public".equalsIgnoreCase(modeString)) {
 				mode = 1;
 			}
-			String ip = IpUtil.getIpAddr(req);
-			byte[] data = file.getBytes();
-			String name = file.getOriginalFilename();
-			DocVo vo = docService.add(token, name, data, mode);
+			DocVo vo = null;
+			if (StringUtils.isNotBlank(token)) {
+				// Upload by App token
+				vo = docService.addByApp(token, name, data, mode);
+			} else {
+				// Upload by user
+				Cookie[] cookies = req.getCookies();
+				String sid = null;
+				for (Cookie cookie : cookies) {
+					if ("IDOCVSID".equalsIgnoreCase(cookie.getName())) {
+						sid = cookie.getValue();
+						break;
+					}
+				}
+				if (StringUtils.isBlank(sid)) {
+					throw new DocServiceException("请先登录！");
+				}
+				UserVo userVo = userService.getBySid(sid);
+				if (null == userVo) {
+					throw new DocServiceException("用户不存在！");
+				}
+				vo = docService.addByUser(sid, name, data, mode, label);
+			}
+			if (null == vo) {
+				throw new Exception("上传失败！");
+			}
 			logger.info("--> " + ip + " ADD " + vo.getRid());
 			System.err.println("--> " + ip + " ADD " + vo.getRid());
 			return "{\"uuid\":\"" + vo.getUuid() + "\"}";

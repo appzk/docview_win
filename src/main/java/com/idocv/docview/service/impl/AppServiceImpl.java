@@ -43,7 +43,7 @@ public class AppServiceImpl implements AppService {
 	@Override
 	public AppPo getByKey(String key) throws DocServiceException {
 		try {
-			return appDao.getByKey(key);
+			return appDao.getByToken(key);
 		} catch (DBException e) {
 			logger.error("getByKey error: ", e);
 			throw new DocServiceException(e);

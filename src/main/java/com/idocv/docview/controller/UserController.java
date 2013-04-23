@@ -145,6 +145,7 @@ public class UserController {
 			for (Cookie cookie : cookies) {
 				if ("IDOCVSID".equalsIgnoreCase(cookie.getName())) {
 					sid = cookie.getValue();
+					break;
 				}
 			}
 			if (StringUtils.isBlank(sid)) {

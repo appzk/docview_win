@@ -24,7 +24,9 @@ public interface DocService {
 	 * @param mode 0-private, 1-public
 	 * @return
 	 */
-	DocVo add(String appId, String name, byte[] data, int mode) throws DocServiceException;
+	DocVo addByApp(String appId, String name, byte[] data, int mode) throws DocServiceException;
+	
+	DocVo addByUser(String sid, String name, byte[] data, int mode, String labelName) throws DocServiceException;
 
 	/**
 	 * Save URL resource to local directory.

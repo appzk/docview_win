@@ -36,11 +36,11 @@ public interface LabelDao {
 	 * get user label
 	 * 
 	 * @param uid
-	 * @param name
+	 * @param labelName
 	 * @return
 	 * @throws DBException
 	 */
-	LabelPo get(String uid, String name) throws DBException;
+	LabelPo get(String uid, String labelName) throws DBException;
 
 	/**
 	 * Get label list of a user

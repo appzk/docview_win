@@ -38,7 +38,7 @@ public class SessionServiceImpl implements SessionService {
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
 		try {
-			AppPo appPo = appDao.getByKey(appKey);
+			AppPo appPo = appDao.getByToken(appKey);
 			if (null == appPo || StringUtils.isBlank(appPo.getId())) {
 				throw new DocServiceException(0, "Application NOT found!");
 			}

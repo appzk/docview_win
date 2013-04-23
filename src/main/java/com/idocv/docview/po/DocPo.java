@@ -25,7 +25,12 @@ public class DocPo implements Serializable {
 	/**
 	 * 应用id
 	 */
-	private String appId;
+	private String app;
+
+	/**
+	 * 用户id
+	 */
+	private String uid;
 
 	/**
 	 * 资源名称
@@ -102,12 +107,20 @@ public class DocPo implements Serializable {
 		this.uuid = uuid;
 	}
 
-	public String getAppId() {
-		return appId;
+	public String getApp() {
+		return app;
 	}
 
-	public void setAppId(String appId) {
-		this.appId = appId;
+	public void setApp(String app) {
+		this.app = app;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 	public String getName() {

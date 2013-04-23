@@ -13,7 +13,7 @@ public class BaseDaoImpl implements BaseDao {
 	public static final String _ID = "_id";
 	public static final String RID = "rid";
 	public static final String UUID = "uuid";
-	public static final String APPID = "appid";
+	public static final String APP = "app";
 	public static final String NAME = "name";
 	public static final String VALUE = "value";
 	public static final String PINYIN = "pinyin";
@@ -34,7 +34,7 @@ public class BaseDaoImpl implements BaseDao {
 	public static final String DOWNLOAD = "download";
 
 	public static final String ADDRESS = "address";
-	public static final String KEY = "key";
+	public static final String TOKEN = "token";
 	public static final String IPS = "ips";
 	public static final String PHONE = "phone";
 

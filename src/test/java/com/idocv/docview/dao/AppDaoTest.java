@@ -23,27 +23,27 @@ public class AppDaoTest {
 	public void testAdd() {
 		try {
 			// add doc test
-			String id = "doc";
+			String id = "test";
 			String name = "I Doc View";
-			String key = "doctest";
+			String token = "testtoken";
 			String phone = "18611898831";
-			appDao.add(id, name, key, phone);
+			appDao.add(id, name, token, phone);
 			System.err.println("Add doc test done!");
 
 			// add doc test
 			id = "wev";
 			name = "wev.cc";
-			key = "wevkey";
+			token = "wevtoken";
 			phone = "18611898831";
-			appDao.add(id, name, key, phone);
+			appDao.add(id, name, token, phone);
 			System.err.println("Add wev.cc done!");
 
 			// add eco test
 			id = "eco";
 			name = "Economist Chinese Edition";
-			key = "ecokey";
+			token = "ecotoken";
 			phone = "18611898831";
-			appDao.add(id, name, key, phone);
+			appDao.add(id, name, token, phone);
 			System.err.println("Add eco test done!");
 		} catch (DBException e) {
 			e.printStackTrace();

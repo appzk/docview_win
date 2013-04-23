@@ -32,32 +32,43 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public void add(String id, String uuid, String appId, String name, long size, String ext, int mode) throws DBException {
+	public void add(String app, String uid, String rid, String uuid,
+			String name, long size, String ext, int mode, String labelId)
+			throws DBException {
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-		if (StringUtils.isBlank(id) || StringUtils.isBlank(uuid)
-				|| StringUtils.isBlank(appId)
-				|| StringUtils.isBlank(name) || size <= 0
-				|| StringUtils.isBlank(ext)) {
-			throw new DBException("Insufficient parameters!");
+		if (StringUtils.isBlank(app)) {
+			throw new DBException("应用为空！");
+		}
+		if (StringUtils.isBlank(rid)) {
+			throw new DBException("文档id为空！");
+		}
+		if (StringUtils.isBlank(uuid)) {
+			throw new DBException("文档uuid为空！");
+		}
+		if (StringUtils.isBlank(name)) {
+			throw new DBException("文档名称为空！");
+		}
+		if (size <= 0) {
+			throw new DBException("文档大小为0！");
+		}
+		if (StringUtils.isBlank(ext)) {
+			throw new DBException("文档没有扩展名！");
 		}
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
-				.append(_ID, id).append(UUID, uuid).append(APPID, appId)
+				.append(_ID, rid).append(UUID, uuid).append(APP, app)
 				.append(NAME, name).append(SIZE, size).append(EXT, ext)
 				.append(CTIME, time).append(STATUS, 0).append(MODE, mode);
 		String pinyin = PinyinUtil.getSortPinYin(name);
 		builder.append(PINYIN, pinyin);
+		if (StringUtils.isNotBlank(uid)) {
+			builder.append(UID, uid);
+		}
 		try {
 			DBCollection coll = db.getCollection(COLL_DOC);
 			coll.save(builder.get());
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());
 		}
-
-	}
-
-	@Override
-	public void add(DocPo doc) throws DBException {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -237,14 +248,17 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 			return null;
 		}
 		DocPo po = new DocPo();
+		if (obj.containsField(APP)) {
+			po.setApp(obj.get(APP).toString());
+		}
+		if (obj.containsField(UID)) {
+			po.setUid(obj.get(UID).toString());
+		}
 		if (obj.containsField(_ID)) {
 			po.setRid(obj.get(_ID).toString());
 		}
 		if (obj.containsField(UUID)) {
 			po.setUuid(obj.get(UUID).toString());
-		}
-		if (obj.containsField(APPID)) {
-			po.setAppId(obj.get(APPID).toString());
 		}
 		if (obj.containsField(NAME)) {
 			po.setName(obj.get(NAME).toString());
