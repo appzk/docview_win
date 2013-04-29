@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			if (StringUtils.isBlank(user) || StringUtils.isBlank(password)) {
 				logger.error("登录失败：请填写用户名和密码, user=" + user + ", password=" + password);
-				throw new DocServiceException("登录失败：请填写用户名和密码！");
+				throw new DocServiceException("请填写用户名和密码！");
 			}
 			UserVo vo = getByEmail(user);
 			if (null == vo) {
@@ -107,17 +107,20 @@ public class UserServiceImpl implements UserService {
 			}
 			if (null == vo) {
 				logger.error("登录失败：用户（" + user + "）不存在！");
-				throw new DocServiceException("登录失败：用户（" + user + "）不存在！");
+				throw new DocServiceException("用户（" + user + "）不存在！");
 			}
 			if (!password.equals(vo.getPassword())) {
-				throw new DocServiceException("登录失败：密码错误！");
+				throw new DocServiceException("密码错误！");
+			}
+			if (vo.getStatus() < 1) {
+				throw new DocServiceException("未验证邮箱，请先到您的邮箱激活您的账号！");
 			}
 			String sid = userDao.addSid(vo.getId());
 			vo.setSid(sid);
 			return vo;
 		} catch (DBException e) {
 			logger.error("Sign up error: ", e);
-			throw new DocServiceException("登录失败：", e);
+			throw new DocServiceException("登录失败：" + e.getMessage(), e);
 		}
 	}
 
