@@ -272,7 +272,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		String dest = rcUtil.getParsePathOfHtml(rid);
 		File destFile = new File(dest);
 		if (!srcFile.isFile()) {
-			throw new DocServiceException(404, "File NOT found, rid=" + rid);
+			logger.error("文件未找到, rid=" + rid);
+			throw new DocServiceException(404, "文件未找到");
 		}
 		String ext = RcUtil.getExt(rid);
 		if (convertingRids.contains(rid)) {
@@ -284,7 +285,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				}
 				convert(rid, ++tryCount);
 			} else {
-				throw new DocServiceException("Server is busy, please try again later!");
+				throw new DocServiceException("服务器忙，请稍后再试！");
 			}
 		} else {
 			convertingRids.add(rid);

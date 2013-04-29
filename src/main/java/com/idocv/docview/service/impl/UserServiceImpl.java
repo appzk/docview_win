@@ -1,9 +1,11 @@
 package com.idocv.docview.service.impl;
 
+import java.net.URLEncoder;
 import java.util.Collection;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.AppPo;
 import com.idocv.docview.po.UserPo;
 import com.idocv.docview.service.UserService;
+import com.idocv.docview.util.EmailUtil;
 import com.idocv.docview.vo.UserVo;
 
 @Service
@@ -35,21 +38,59 @@ public class UserServiceImpl implements UserService {
 		try {
 			AppPo appPo = appDao.getByToken(appKey);
 			if (null == appPo || StringUtils.isBlank(appPo.getId())) {
-				throw new DocServiceException("App NOT found!");
+				throw new DocServiceException("不存在该应用！");
 			}
 			UserVo vo = getByUsername(username);
 			if (null != vo && StringUtils.isNotBlank(vo.getId())) {
-				throw new DocServiceException("The username has been registered.");
+				throw new DocServiceException("该用户已被注册，请选择其他用户名或直接登录！");
 			}
 			vo = getByEmail(email);
 			if (null != vo && StringUtils.isNotBlank(vo.getId())) {
-				throw new DocServiceException("The email has been registered.");
+				throw new DocServiceException("该邮箱已被注册，请选择其他邮箱或直接登录！");
 			}
 			UserPo po = userDao.signUp(appPo.getId(), username, password, email);
+
+			// Send email
+			String encodeEmail = URLEncoder.encode(email, "UTF-8");
+			String title = "邮箱验证";
+			String key = getActivationKey(po.getId());
+			String link = "<a href=\"http://user.idocv.com/activate?email=" + encodeEmail + "&key=" + key + "\">验证邮箱</a>";
+			String content = "请点击链接以验证您的账号：" + link;
+			content += "<br />或复制以下链接到地址栏以验证您的账号：<br />";
+			content += "http://user.idocv.com/activate?email=" + encodeEmail + "&key=" + key;
+			EmailUtil.sendMail(username, email, title, content);
+
 			return po2vo(po);
-		} catch (DBException e) {
+		} catch (Exception e) {
 			logger.error("Sign up error: ", e);
-			throw new DocServiceException("Sign up error: ", e);
+			throw new DocServiceException("注册失败：", e);
+		}
+	}
+
+	@Override
+	public UserVo activate(String email, String key) throws DocServiceException {
+		try {
+			if (StringUtils.isBlank(email) || StringUtils.isBlank(key)) {
+				logger.error("请提供必要参数：email=" + email + ", key=" + key);
+				throw new DBException("请提供必要参数");
+			}
+			UserPo userPo = userDao.getByEmail(email);
+			if (null == userPo) {
+				throw new DocServiceException("用户（" + email + "）不存在！");
+			}
+			if (!key.equals(getActivationKey(userPo.getId()))) {
+				logger.error("激活码错误：email=" + email + ", key=" + key);
+				throw new DBException("激活码错误！");
+			}
+			if (userPo.getStatus() > 0) {
+				throw new DBException("该用户已被激活！");
+			}
+			userDao.updateStatusByEmail(email, 1);
+			UserVo vo = getByEmail(email);
+			return vo;
+		} catch (DBException e) {
+			logger.error("activate error: ", e);
+			throw new DocServiceException("验证邮箱失败：" + e.getMessage(), e);
 		}
 	}
 
@@ -57,24 +98,26 @@ public class UserServiceImpl implements UserService {
 	public UserVo login(String user, String password) throws DocServiceException {
 		try {
 			if (StringUtils.isBlank(user) || StringUtils.isBlank(password)) {
-				throw new DocServiceException("Insufficient parameters!");
+				logger.error("登录失败：请填写用户名和密码, user=" + user + ", password=" + password);
+				throw new DocServiceException("登录失败：请填写用户名和密码！");
 			}
 			UserVo vo = getByEmail(user);
 			if (null == vo) {
 				vo = getByUsername(user);
 			}
 			if (null == vo) {
-				throw new DocServiceException("User NOT found!");
+				logger.error("登录失败：用户（" + user + "）不存在！");
+				throw new DocServiceException("登录失败：用户（" + user + "）不存在！");
 			}
 			if (!password.equals(vo.getPassword())) {
-				throw new DocServiceException("Password ERROR!");
+				throw new DocServiceException("登录失败：密码错误！");
 			}
 			String sid = userDao.addSid(vo.getId());
 			vo.setSid(sid);
 			return vo;
 		} catch (DBException e) {
 			logger.error("Sign up error: ", e);
-			throw new DocServiceException("Sign up error: ", e);
+			throw new DocServiceException("登录失败：", e);
 		}
 	}
 
@@ -132,11 +175,16 @@ public class UserServiceImpl implements UserService {
 		vo.setPassword(po.getPassword());
 		vo.setEmail(po.getEmail());
 		vo.setCtime(po.getCtime());
+		vo.setStatus(po.getStatus());
 		Collection<String> sids = po.getSids();
 		if (!CollectionUtils.isEmpty(sids)) {
 			String[] sidsArray = sids.toArray(new String[0]);
 			vo.setSid(sidsArray[sidsArray.length - 1]);
 		}
 		return vo;
+	}
+
+	private static String getActivationKey(String uid) {
+		return DigestUtils.shaHex(uid);
 	}
 }

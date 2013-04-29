@@ -23,11 +23,10 @@ public class ConvertServiceImpl implements ConvertService {
 	private String rid;
 
 	public ConvertServiceImpl() {
-		System.out.println("ConvertServiceImpl constructor...");
+
 	}
 
 	public ConvertServiceImpl(PreviewService previewService, String rid) {
-		System.out.println("ConvertServiceImpl(String rid) constructor...");
 		this.previewService = previewService;
 		this.rid = rid;
 	}

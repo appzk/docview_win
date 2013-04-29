@@ -36,7 +36,7 @@ public interface DocService {
 	 * @param mode 0-private, 1-public
 	 * @return
 	 */
-	DocVo addUrl(String appKey, String url, String name, int mode) throws DocServiceException;
+	DocVo addUrl(String token, String url, String name, int mode) throws DocServiceException;
 
 	boolean delete(String uuid) throws DocServiceException;
 

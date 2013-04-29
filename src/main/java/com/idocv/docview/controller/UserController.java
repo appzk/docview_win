@@ -61,7 +61,7 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping("signup.json")
 	public String signUp(HttpServletRequest req,
-			@RequestParam(value = "appkey", defaultValue = "wevkey") String appkey,
+			@RequestParam(value = "appkey", defaultValue = "wevtoken") String appkey,
 			@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "email") String email) {
@@ -70,6 +70,44 @@ public class UserController {
 			return "{\"uid\":\"" + vo.getId() + "\", \"sid\":\"" + vo.getSid() + "\"}";
 		} catch (Exception e) {
 			logger.error("sign up error <controller>: ", e);
+			return "{\"error\":\"" + e.getMessage() + "\"}";
+		}
+	}
+
+	/**
+	 * Load Email address validation page
+	 * 
+	 * @param req
+	 * @param email
+	 * @param key
+	 * @return
+	 */
+	@RequestMapping("activate")
+	public String activatePage() {
+		return "user/activate";
+	}
+
+	/**
+	 * Validate Email address
+	 * 
+	 * @param req
+	 * @param email
+	 * @param key
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("activate.json")
+	public String activateJson(
+			@RequestParam(value = "email") String email,
+			@RequestParam(value = "key") String key) {
+		try {
+			UserVo vo = userService.activate(email, key);
+			if (null == vo) {
+				return "{\"error\":\"用户不存在！\"}";
+			}
+			return "{\"uid\":\"" + vo.getId() + "\", \"status\":\"" + vo.getStatus() + "\"}";
+		} catch (Exception e) {
+			logger.error("activate error <controller>: ", e);
 			return "{\"error\":\"" + e.getMessage() + "\"}";
 		}
 	}

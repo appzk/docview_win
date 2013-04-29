@@ -25,11 +25,12 @@ $(document).ready(function() {
 		    	var sid = data.sid;
 		    	if (sid !== undefined) {
 		    		// SUCCESS
-		    		$.cookie('IDOCVSID', sid);
-		    		window.location = "/"
+		    		// $.cookie('IDOCVSID', sid);
+		    		// window.location = "/"
+		    		$('#sign-up-result').empty().append('<div class="alert alert-success">感谢您的注册！已给您发了一封确认邮件，点击邮箱中的链接来激活您的账号，账号激活后就可以上传和预览文档了！</div>');
 		    	} else {
 		    		// FAIL
-		    		$('#sign-up-result').empty().append('<div class="alert alert-error">ERROR: ' + data.error + '</div>');
+		    		$('#sign-up-result').empty().append('<div class="alert alert-error">注册失败： ' + data.error + '</div>');
 		    	}
 		    }, "json");
 		}

@@ -10,6 +10,11 @@ public class UserVo {
 	private String password;
 	private String email;
 	private long ctime;
+
+	/**
+	 * 用户状态，0-刚注册，1-已验证邮箱，-1-已删除
+	 */
+	private int status;
 	private String sid;
 
 	public String getId() {
@@ -58,6 +63,14 @@ public class UserVo {
 
 	public void setCtime(long ctime) {
 		this.ctime = ctime;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public String getSid() {

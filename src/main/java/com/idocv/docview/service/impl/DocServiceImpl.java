@@ -179,8 +179,8 @@ public class DocServiceImpl implements DocService {
 	}
 	
 	@Override
-	public DocVo addUrl(String appKey, String url, String name, int mode) throws DocServiceException {
-		if (StringUtils.isBlank(appKey) || StringUtils.isBlank(name) || StringUtils.isBlank(url)) {
+	public DocVo addUrl(String token, String url, String name, int mode) throws DocServiceException {
+		if (StringUtils.isBlank(token) || StringUtils.isBlank(name) || StringUtils.isBlank(url)) {
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
 		try {
@@ -192,7 +192,7 @@ public class DocServiceImpl implements DocService {
 			Response urlResponse = null;
 			urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
 			byte[] bytes = urlResponse.bodyAsBytes();
-			vo = addByApp(appKey, name, bytes, mode);
+			vo = addByApp(token, name, bytes, mode);
 			docDao.updateUrl(vo.getRid(), url);
 			return vo;
 		} catch (IOException e) {

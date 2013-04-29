@@ -94,6 +94,12 @@
 			        <button class="btn btn-success">注册</button>
 			      </div>
 			    </div>
+			    <div class="control-group">
+			      <!-- Button -->
+			      <div class="controls">
+					已有账号？ 请直接<a href="/login">登录</a>
+			      </div>
+			    </div>
 			  </fieldset>
 			</form>
         </div><!--/span-->

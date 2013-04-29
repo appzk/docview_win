@@ -35,9 +35,8 @@
           <a class="brand" href="http://www.idocv.com">I Doc View</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#"><i class="icon-home icon-white"></i> Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li class="active"><a href="#"><i class="icon-home icon-white"></i> 主页</a></li>
+              <li><a href="http://bbs.idocv.com">社区</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>

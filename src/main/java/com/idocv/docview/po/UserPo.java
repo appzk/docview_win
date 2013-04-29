@@ -12,6 +12,11 @@ public class UserPo {
 	private String password;
 	private String email;
 	private long ctime;
+
+	/**
+	 * 用户状态，0-刚注册，1-已验证邮箱，-1-已删除
+	 */
+	private int status;
 	private Collection<String> sids;
 
 	public String getId() {
@@ -60,6 +65,14 @@ public class UserPo {
 
 	public void setCtime(long ctime) {
 		this.ctime = ctime;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public Collection<String> getSids() {

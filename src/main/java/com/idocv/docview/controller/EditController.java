@@ -47,7 +47,7 @@ public class EditController {
 
 			// Load editor
 			String htmlBody = editService.getHtmlBody(uuid);
-			EPLiteClient client = new EPLiteClient("http://edit.wev.cc", "BVuGNrqJxvBZOS4F3VQ2WQXNT2ntRiTy");
+			EPLiteClient client = new EPLiteClient("http://edit.idocv.com", "BVuGNrqJxvBZOS4F3VQ2WQXNT2ntRiTy");
 			try {
 				// Create pad and set text
 				client.createPad(uuid);
@@ -57,7 +57,7 @@ public class EditController {
 			} catch (Exception e) {
 				logger.info("Etherpad(" + uuid + ") already exist.");
 			}
-			return "redirect:http://edit.wev.cc/p/" + uuid;
+			return "redirect:http://edit.idocv.com/p/" + uuid;
 		} catch (Exception e) {
 			logger.error("Load editor error: ", e);
 			return "{\"error\":" + e.getMessage() + "}";

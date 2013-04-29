@@ -60,13 +60,12 @@ public class ViewController {
 			@PathVariable String id,
 			@RequestParam(defaultValue = "1") int start,
 			@RequestParam(defaultValue = "5") int size) {
-		String lowerId = id.toLowerCase();
 		String uuid = null;
 		String sessionId = null;
 		try {
-			if (lowerId.matches("\\w{24}")) {
+			if (id.matches("\\w{24}")) {
 				// session id
-				SessionVo sessionVo = sessionService.get(lowerId);
+				SessionVo sessionVo = sessionService.get(id);
 				if (null == sessionVo) {
 					throw new DocServiceException("NOT a valid session!");
 				}
@@ -88,7 +87,7 @@ public class ViewController {
 				return "txt/index";
 //				return "redirect:/page/txt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else {
-				throw new DocServiceException(id + "is NOT a valid UUID!");
+				throw new DocServiceException("(" + id + ")不是有效的文档uuid！");
 			}
 		} catch (DocServiceException e) {
 			logger.error("view error: ", e);
@@ -108,20 +107,33 @@ public class ViewController {
 	 *			PageVo<? extends Serializable> page = null;
 	 * 
 	 */
-	@RequestMapping("{uuid}.json")
+	@RequestMapping("{id}.json")
 	@ResponseBody
 	public PageVo<? extends Serializable> jsonUuid(
 			@RequestParam(defaultValue = "default") String template,
-			@PathVariable String uuid,
-			@RequestParam(required = false) String session,
+			@PathVariable String id,
 			@RequestParam(defaultValue = "1") int start,
 			@RequestParam(defaultValue = "5") int size) {
 		PageVo<? extends Serializable> page = null;
+		String uuid = null;
+		String session = null;
 		try {
+			if (id.matches("\\w{24}")) {
+				// session id
+				SessionVo sessionVo = sessionService.get(id);
+				if (null == sessionVo) {
+					throw new DocServiceException("会话不存在！");
+				}
+				uuid = sessionVo.getUuid();
+				session = sessionVo.getId();
+			} else {
+				uuid = id;
+			}
+
 			// 1. get docVo by uuid
 			DocVo docVo = docService.getByUuid(uuid);
 			if (null == docVo || StringUtils.isBlank(docVo.getRid())) {
-				throw new DocServiceException("Document(" + uuid + ") NOT found!");
+				throw new DocServiceException("文档(" + uuid + ") 未找到！");
 			}
 			String rid = docVo.getRid();
 			String ext = RcUtil.getExt(rid);
@@ -130,22 +142,22 @@ public class ViewController {
 			int accessMode = docVo.getMode();
 			if (0 == accessMode) {
 				if (StringUtils.isBlank(session)) {
-					throw new DocServiceException("This is NOT a public document, please provide a session id.");
+					throw new DocServiceException("私有文档不能公开访问，请使用会话id来访问！");
 				}
 				// 5. get sessionVo by sessionId
 				SessionVo sessionVo = sessionService.get(session);
 				if (null == sessionVo) {
-					throw new DocServiceException("Session NOT found!");
+					throw new DocServiceException("会话不存在！");
 				}
 				// 6. current time - ctime > expire time ? session expired :
 				// view.
 				long sessionCtime = sessionVo.getCtime();
 				long currentTime = System.currentTimeMillis();
 				if (currentTime - sessionCtime > 3600000) {
-					throw new DocServiceException("Session expired, please get a new one!");
+					throw new DocServiceException("会话已过期，请重新获取一个会话！");
 				}
 				if (!uuid.equals(sessionVo.getUuid())) {
-					throw new DocServiceException("Session is NOT consistent with UUID.");
+					throw new DocServiceException("该会话和文档不一致，无法预览！");
 				}
 			}
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
@@ -167,7 +179,7 @@ public class ViewController {
 			} else {
 				page = new PageVo<OfficeBaseVo>(null, 0);
 				page.setCode(0);
-				page.setDesc("Error: not a document type.");
+				page.setDesc("不是一个文档！");
 			}
 			page.setName(docVo.getName());
 			page.setRid(docVo.getRid());
@@ -272,6 +284,7 @@ public class ViewController {
 	@RequestMapping("url")
 	public String previewUrl(HttpServletRequest req,
 			@RequestParam(required = true) String url,
+			@RequestParam(value = "token", defaultValue = "testtoken") String token,
 			@RequestParam(required = false) String name,
 			@RequestParam(value = "mode", defaultValue = "public") String modeString) {
 		try {
@@ -284,8 +297,7 @@ public class ViewController {
 				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
 			}
 			String ip = req.getRemoteAddr();
-			String appKey = "doctest";
-			DocVo po = docService.addUrl(appKey, url, name, mode);
+			DocVo po = docService.addUrl(token, url, name, mode);
 			if (null == po) {
 				throw new DocServiceException("Upload URL document error!");
 			}

@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>HOME - I Doc View</title>
+    <title>用户邮箱验证 - I Doc View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Online Document Preview, synchronous preview and annotating. types including Microsoft Office types(.doc, .docx, .xls, .xlsx, ppt, pptx), txt, pdf, odt, ods, odp and more.">
     <meta name="keywords" content="Online Document Preview doc view viewer office word excel 在线 文档 同步 协作 预览" />
@@ -46,32 +46,9 @@
         </div><!--/span-->
         <div class="span8">
           <div class="row-fluid">
-            <div class="span8">
-              <div class="hero-unit">
-                <h1>在线文档预览</h1>
-                <p>在线文档预览、协作编辑，幻灯片远程控制、同步演示、画笔同步展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx, pdf和txt等。</p>
-                <p><a href="http://www.idocv.com" class="btn btn-primary btn-large">了解详情 &raquo;</a></p>
+            <div class="span12">
+              <div class="activate-result">
               </div>
-            </div><!--/span-->
-            <div class="span4">
-              <div class="well">
-                <ul class="nav nav-tabs">
-                  <li class="active"><a href="#login" data-toggle="tab">登录</a></li>
-                </ul>
-                <div id="myTabContent" class="tab-content">
-                  <div class="tab-pane active in" id="login">
-                    <form id="form-signin" class="form-horizontal" action="" method="post" accept-charset="UTF-8">
-                      <div id="sign-in-result"></div>
-                      <p><input id="login_username" placeholder="用户名/邮箱" type="text" class="span12" name="login_username" size="30" data-validation="validate_min_length length3" /></p>
-                      <p><input id="login_password" placeholder="密码" type="password" class="span12" name="login_password" size="30" data-validation="validate_min_length length4" /></p>
-                      <p><input id="login_rememberme" style="float: left; margin-right: 10px;" type="checkbox" name="login_rememberme" value="1" /></p>
-                      <p><label class="string optional" for="user_remember_me">记住我</label></p>
-                      <p><input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="登录" /></p>
-                      <p>没有账号？点击<a href="/signup">注册</a></p>
-                    </form>
-                  </div>
-                </div>
-              </div><!--/well-->
             </div><!--/span-->
           </div><!--/row-->
         </div><!--/span-->
@@ -91,13 +68,12 @@
 
     <!-- Le javascript
     ================================================== -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
 	<script src="/static/bootstrap/js/bootstrap.js"></script>
 	<script src="/static/urlparser/js/purl.js"></script>
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-    <script src="/static/idocv/js/login.js"></script>
+    <script src="/static/idocv/js/user-activate.js"></script>
 
   </body>
 </html>

@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +24,8 @@ import com.mongodb.QueryBuilder;
 @Repository
 public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBean {
 
+	private static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
+	
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO
@@ -40,7 +44,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
 				.append(_ID, objId).append(APP, appId)
 				.append(USERNAME, username).append(PASSWORD, password)
-				.append(EMAIL, email).append(CTIME, time)
+				.append(EMAIL, email).append(CTIME, time).append(STATUS, 0)
 				.append(SIDS, Arrays.asList(new String[] { sid }));
 		try {
 			DBCollection coll = db.getCollection(COLL_USER);
@@ -53,6 +57,22 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 			po.setEmail(email);
 			po.setSids(Arrays.asList(new String[] { sid }));
 			return po;
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	public void updateStatusByEmail(String email, int status) throws DBException {
+		if (StringUtils.isEmpty(email)) {
+			throw new DBException("请提供Email参数！");
+		}
+		DBObject query = QueryBuilder.start(EMAIL).is(email).get();
+		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set")
+				.append(UTIME, System.currentTimeMillis())
+				.append(STATUS, status);
+		try {
+			DBCollection coll = db.getCollection(COLL_USER);
+			coll.update(query, ob.get(), false, true);
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());
 		}
@@ -97,7 +117,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 			throw new DBException("Insufficient parameters!");
 		}
 		try {
-			QueryBuilder query = QueryBuilder.start(USERNAME).regex(Pattern.compile(username, Pattern.CASE_INSENSITIVE));
+			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1).and(USERNAME).regex(Pattern.compile(username, Pattern.CASE_INSENSITIVE));
 			DBCollection coll = db.getCollection(COLL_USER);
 			return convertDBObject2Po(coll.findOne(query.get()));
 		} catch (MongoException e) {
@@ -111,7 +131,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 			throw new DBException("Insufficient parameters!");
 		}
 		try {
-			QueryBuilder query = QueryBuilder.start(EMAIL).regex(Pattern.compile(email, Pattern.CASE_INSENSITIVE));
+			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1).and(EMAIL).regex(Pattern.compile(email, Pattern.CASE_INSENSITIVE));
 			DBCollection coll = db.getCollection(COLL_USER);
 			return convertDBObject2Po(coll.findOne(query.get()));
 		} catch (MongoException e) {
@@ -125,7 +145,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 			throw new DBException("Insufficient parameters!");
 		}
 		try {
-			QueryBuilder query = QueryBuilder.start(SIDS).is(sid);
+			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1).and(SIDS).is(sid);
 			DBCollection coll = db.getCollection(COLL_USER);
 			return convertDBObject2Po(coll.findOne(query.get()));
 		} catch (MongoException e) {
@@ -155,6 +175,9 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 		}
 		if (obj.containsField(CTIME)) {
 			po.setCtime(Long.valueOf(obj.get(CTIME).toString()));
+		}
+		if (obj.containsField(STATUS)) {
+			po.setStatus(Integer.valueOf(obj.get(STATUS).toString()));
 		}
 		if (obj.containsField(SIDS)) {
 			po.setSids((Collection<String>) obj.get(SIDS));

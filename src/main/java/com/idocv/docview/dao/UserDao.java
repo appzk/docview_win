@@ -7,6 +7,8 @@ public interface UserDao {
 
 	UserPo signUp(String appId, String username, String password, String email) throws DBException;
 
+	public void updateStatusByEmail(String email, int status) throws DBException;
+	
 	String addSid(String uid) throws DBException;
 
 	void logout(String sid) throws DBException;
