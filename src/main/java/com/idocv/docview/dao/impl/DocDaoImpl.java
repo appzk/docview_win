@@ -57,7 +57,8 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
 				.append(_ID, rid).append(UUID, uuid).append(APP, app)
 				.append(NAME, name).append(SIZE, size).append(EXT, ext)
-				.append(CTIME, time).append(STATUS, 0).append(MODE, mode);
+				.append(CTIME, time).append(STATUS, 0).append(MODE, mode)
+				.append(LABELS, new String[] { labelId });
 		String pinyin = PinyinUtil.getSortPinYin(name);
 		builder.append(PINYIN, pinyin);
 		if (StringUtils.isNotBlank(uid)) {

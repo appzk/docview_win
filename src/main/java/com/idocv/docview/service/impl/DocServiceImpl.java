@@ -13,7 +13,6 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -103,18 +102,18 @@ public class DocServiceImpl implements DocService {
 		try {
 			// get app & user info
 			if (StringUtils.isBlank(sid)) {
-				throw new DocServiceException("用户sid为空！");
+				throw new DocServiceException("未登录！");
 			}
 			UserPo userPo = userDao.getBySid(sid);
 			if (null == userPo) {
-				throw new DocServiceException("用户未找到！");
+				throw new DocServiceException("用户不存在！");
 			}
 			String app = userPo.getAppId();
 			String uid = userPo.getId();
 			
 			// get label id
 			String labelId = null;
-			if (StringUtils.isNotBlank(labelName) && "all".equalsIgnoreCase(labelName)) {
+			if (StringUtils.isNotBlank(labelName) && !"all".equalsIgnoreCase(labelName)) {
 				LabelPo labelPo = labelDao.get(uid, labelName);
 				if (null != labelPo) {
 					labelId = labelPo.getId();
@@ -144,18 +143,9 @@ public class DocServiceImpl implements DocService {
 			DocPo doc = new DocPo();
 			int size = data.length;
 			String rid = RcUtil.genRid(app, name, size);
-			String uuid = RandomStringUtils.randomAlphanumeric(5);
-			doc.setRid(rid);
+			String uuid = RcUtil.getUuidByRid(rid);
 			String ext = RcUtil.getExt(rid);
-			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
-				uuid += "w";
-			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
-				uuid += "x";
-			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
-				uuid += "p";
-			} else if ("txt".equalsIgnoreCase(ext)) {
-				uuid += "t";
-			}
+			doc.setRid(rid);
 			doc.setUuid(uuid);
 			doc.setName(name);
 			doc.setSize(size);

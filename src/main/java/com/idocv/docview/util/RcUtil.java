@@ -23,7 +23,7 @@ public class RcUtil {
 	private static final String SPLIT = "_";
 
 	/**
-	 * 生成rid，格式：(appId)_(yyyyMMdd)_(HHmmss)_(size)(random)_ext
+	 * 生成rid，格式：(appId)_(yyyyMMdd)_(HHmmss)_(size)(uuid)_ext
 	 * 
 	 * @param uid
 	 * @param fileName
@@ -32,14 +32,30 @@ public class RcUtil {
 	 */
 	public static String genRid(String appId, String fileName, int size) {
 		Date date = new Date();
+		String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+		String uuid = RandomStringUtils.randomAlphabetic(6);
+		if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
+			uuid += "w";
+		} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
+			uuid += "x";
+		} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
+			uuid += "p";
+		} else if ("txt".equalsIgnoreCase(ext)) {
+			uuid += "t";
+		}
 		String dateString = new SimpleDateFormat("yyyyMMdd").format(date);
 		String timeString = new SimpleDateFormat("HHmmss").format(date);
-		String randomString = RandomStringUtils.randomAlphabetic(3);
-		return appId + SPLIT + dateString + SPLIT + timeString + SPLIT + size + randomString + SPLIT + fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+		return appId + SPLIT + dateString + SPLIT + timeString + SPLIT + size + uuid + SPLIT + ext;
+	}
+
+	public static String getUuidByRid(String rid) {
+		validateRid(rid);
+		String[] splits = rid.split(SPLIT);
+		return splits[splits.length -2].replaceFirst("\\d+", "");
 	}
 
 	/**
-	 * 根据rid获取绝对路径，e.g. /appName/yyyy/MMdd/HHmmss_(size)(random).doc
+	 * 根据rid获取绝对路径，e.g. /appName/yyyy/MMdd/HHmmss_(size)(uuid).doc
 	 * 
 	 * @param rid
 	 * @return
