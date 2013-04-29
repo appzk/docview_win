@@ -67,14 +67,10 @@ public class DocServiceImpl implements DocService {
 	static {
 		docTypes.add("doc");
 		docTypes.add("docx");
-		docTypes.add("odt");	// OpenOffice Writer
 		docTypes.add("xls");
 		docTypes.add("xlsx");
-		docTypes.add("ods");	// OpenOffice Spreadsheet
 		docTypes.add("ppt");
 		docTypes.add("pptx");
-		docTypes.add("odp");	// OpenOffice Presentation
-		docTypes.add("pdf");
 		docTypes.add("txt");
 	}
 
@@ -129,7 +125,7 @@ public class DocServiceImpl implements DocService {
 			return addDoc(app, uid, name, data, mode, labelId);
 		} catch (DBException e) {
 			logger.error("save doc by user error: ", e);
-			throw new DocServiceException(e);
+			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
 
@@ -159,6 +155,10 @@ public class DocServiceImpl implements DocService {
 			doc.setCtime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			doc.setMode(mode);
 			
+			if (StringUtils.isBlank(ext) || !docTypes.contains(ext.toLowerCase())) {
+				throw new DocServiceException("请选择一个文档，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt");
+			}
+			
 			// save file meta and file
 			FileUtils.writeByteArrayToFile(new File(rcUtil.getPath(rid)), data);
 
@@ -171,7 +171,7 @@ public class DocServiceImpl implements DocService {
 			return convertPo2Vo(doc);
 		} catch (Exception e) {
 			logger.error("save doc error: ", e);
-			throw new DocServiceException(e);
+			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
 	

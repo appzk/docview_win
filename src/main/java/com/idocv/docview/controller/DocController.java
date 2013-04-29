@@ -64,7 +64,7 @@ public class DocController {
 	 */
 	@ResponseBody
 	@RequestMapping("upload")
-	public String add(HttpServletRequest req,
+	public String upload(HttpServletRequest req,
 			@RequestParam(value = "file", required = true) MultipartFile file,
 			@RequestParam(value = "token", required = false) String token,
 			@RequestParam(value = "mode", defaultValue = "public") String modeString,
