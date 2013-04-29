@@ -122,7 +122,7 @@
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
 	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
 	<script src="/static/idocv/js/user.js"></script>
-    <script src="/static/idocv/js/signup.js"></script>
+    <script src="/static/idocv/js/user-signup.js"></script>
 
   </body>
 </html>

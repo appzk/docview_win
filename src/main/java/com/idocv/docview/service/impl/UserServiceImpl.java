@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 			return po2vo(po);
 		} catch (Exception e) {
 			logger.error("Sign up error: ", e);
-			throw new DocServiceException("注册失败：", e);
+			throw new DocServiceException("注册失败：" + e.getMessage(), e);
 		}
 	}
 
