@@ -23,7 +23,7 @@ public class RcUtil {
 	private static final String SPLIT = "_";
 
 	/**
-	 * 生成rid，格式：(appId)_(yyyyMMdd)_(HHmmss)_(size)(uuid)_ext
+	 * 生成rid，格式：(appId)_(yyyyMMdd)_(HHmmss)_(size)_(uuid)_ext
 	 * 
 	 * @param uid
 	 * @param fileName
@@ -45,17 +45,17 @@ public class RcUtil {
 		}
 		String dateString = new SimpleDateFormat("yyyyMMdd").format(date);
 		String timeString = new SimpleDateFormat("HHmmss").format(date);
-		return appId + SPLIT + dateString + SPLIT + timeString + SPLIT + size + uuid + SPLIT + ext;
+		return appId + SPLIT + dateString + SPLIT + timeString + SPLIT + size + SPLIT + uuid + SPLIT + ext;
 	}
 
 	public static String getUuidByRid(String rid) {
 		validateRid(rid);
 		String[] splits = rid.split(SPLIT);
-		return splits[splits.length -2].replaceFirst("\\d+", "");
+		return splits[splits.length - 2];
 	}
 
 	/**
-	 * 根据rid获取绝对路径，e.g. /appName/yyyy/MMdd/HHmmss_(size)(uuid).doc
+	 * 根据rid获取绝对路径，e.g. /appName/yyyy/MMdd/HHmmss_(size)_(uuid).doc
 	 * 
 	 * @param rid
 	 * @return
@@ -69,7 +69,7 @@ public class RcUtil {
 	public static String getFileNameByRid(String rid) throws IllegalArgumentException{
 		validateRid(rid);
 		String[] splits = rid.split(SPLIT);
-		return splits[splits.length - 3] + SPLIT + splits[splits.length - 2] + "." + splits[splits.length - 1];
+		return splits[splits.length - 4] + SPLIT + splits[splits.length - 3] + SPLIT + splits[splits.length - 2] + "." + splits[splits.length - 1];
 	}
 	
 	public static void validateRid(String rid) throws IllegalArgumentException {

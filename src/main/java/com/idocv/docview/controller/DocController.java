@@ -74,9 +74,9 @@ public class DocController {
 			String ip = IpUtil.getIpAddr(req);
 			byte[] data = file.getBytes();
 			String name = file.getOriginalFilename();
-			int mode = 0;
-			if ("public".equalsIgnoreCase(modeString)) {
-				mode = 1;
+			int mode = 1;
+			if ("private".equalsIgnoreCase(modeString)) {
+				mode = 0;
 			}
 			DocVo vo = null;
 			if (StringUtils.isNotBlank(token)) {
@@ -84,14 +84,7 @@ public class DocController {
 				vo = docService.addByApp(token, name, data, mode);
 			} else {
 				// Upload by user
-				Cookie[] cookies = req.getCookies();
-				String sid = null;
-				for (Cookie cookie : cookies) {
-					if ("IDOCVSID".equalsIgnoreCase(cookie.getName())) {
-						sid = cookie.getValue();
-						break;
-					}
-				}
+				String sid = getSidByHttpServletRequest(req);
 				if (StringUtils.isBlank(sid)) {
 					throw new DocServiceException("请先登录！");
 				}
@@ -237,5 +230,23 @@ public class DocController {
 		} catch (Exception e) {
 			logger.error("download error: ", e);
 		}
+	}
+
+	private static String getSidByHttpServletRequest(HttpServletRequest req) {
+		String sid = null;
+		if (null == req) {
+			return null;
+		}
+		Cookie[] cookies = req.getCookies();
+		if (null == cookies || cookies.length < 1) {
+			return null;
+		}
+		for (Cookie cookie : cookies) {
+			if ("IDOCVSID".equalsIgnoreCase(cookie.getName())) {
+				sid = cookie.getValue();
+				break;
+			}
+		}
+		return sid;
 	}
 }

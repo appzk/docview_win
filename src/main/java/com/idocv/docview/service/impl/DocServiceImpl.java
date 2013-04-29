@@ -108,6 +108,13 @@ public class DocServiceImpl implements DocService {
 			if (null == userPo) {
 				throw new DocServiceException("用户不存在！");
 			}
+			int userStatus = userPo.getStatus();
+			if (userStatus < 1) {
+				throw new DocServiceException("用户邮箱未验证！");
+			}
+			if (userStatus == 1 && mode == 0) {
+				throw new DocServiceException("普通用户只能上传公开文档，要上传私有文档，请升级为会员！");
+			}
 			String app = userPo.getAppId();
 			String uid = userPo.getId();
 			
