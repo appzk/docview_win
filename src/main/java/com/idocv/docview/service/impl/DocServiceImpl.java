@@ -299,9 +299,18 @@ public class DocServiceImpl implements DocService {
 					labelId = labelPo.getId();
 				}
 			}
-			// TODO remove this line afterwards
-			uid = null;
-			return new Paging<DocVo>(convertPo2Vo(docDao.listMyDocs(uid, start, length, labelId, search, queryOrder)), (int) count(false));
+			UserPo userPo = userDao.get(uid, false);
+			List<DocPo> docList;
+			int count = 0;
+			if (100 == userPo.getStatus()) {
+				String app = userPo.getAppId();
+				docList = docDao.listAppDocs(app, start, length, labelId, search, queryOrder);
+				count = docDao.countAppDocs(app, labelId, search);
+			} else {
+				docList = docDao.listMyDocs(uid, start, length, labelId, search, queryOrder);
+				count = docDao.countMyDocs(uid, labelId, search);
+			}
+			return new Paging<DocVo>(convertPo2Vo(docList), count);
 		} catch (DBException e) {
 			logger.error("list doc error: ", e);
 			throw new DocServiceException("list doc error: ", e);

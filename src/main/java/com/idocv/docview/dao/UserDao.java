@@ -13,6 +13,8 @@ public interface UserDao {
 
 	void logout(String sid) throws DBException;
 
+	UserPo get(String id, boolean includeDeleted) throws DBException;
+
 	UserPo getByUsername(String username) throws DBException;
 
 	UserPo getByEmail(String email) throws DBException;

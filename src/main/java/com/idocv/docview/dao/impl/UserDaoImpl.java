@@ -112,6 +112,23 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 	}
 
 	@Override
+	public UserPo get(String id, boolean includeDeleted) throws DBException {
+		if (StringUtils.isBlank(id)) {
+			throw new DBException("Insufficient parameters!");
+		}
+		try {
+			QueryBuilder query = QueryBuilder.start(_ID).is(id);
+			if (!includeDeleted) {
+				query.and(STATUS).notEquals(-1);
+			}
+			DBCollection coll = db.getCollection(COLL_USER);
+			return convertDBObject2Po(coll.findOne(query.get()));
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	@Override
 	public UserPo getByUsername(String username) throws DBException {
 		if (StringUtils.isBlank(username)) {
 			throw new DBException("Insufficient parameters!");

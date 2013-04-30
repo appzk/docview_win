@@ -14,7 +14,7 @@ public class UserPo {
 	private long ctime;
 
 	/**
-	 * 用户状态，0-刚注册，1-已验证邮箱，-1-已删除
+	 * 用户状态，0-刚注册，1-已验证邮箱，-1-已删除，100-该应用的管理员
 	 */
 	private int status;
 	private Collection<String> sids;

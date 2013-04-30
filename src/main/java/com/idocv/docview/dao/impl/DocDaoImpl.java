@@ -218,6 +218,99 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
+	public int countMyDocs(String uid, String labelId, String searchString) throws DBException {
+		try {
+			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1);
+
+			if (StringUtils.isNotBlank(uid)) {
+				query.and(UID).is(uid);
+			}
+			if (StringUtils.isNotBlank(labelId) && !"all".equalsIgnoreCase(labelId)) {
+				query.and(LABELS).is(labelId);
+			}
+
+			if (StringUtils.isNotBlank(searchString)) {
+				List<DBObject> searchQuery = new ArrayList<DBObject>();
+				searchQuery.add(BasicDBObjectBuilder.start(NAME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(CTIME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(UUID, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				query.or(searchQuery.toArray(new DBObject[0]));
+			}
+
+			DBCollection coll = db.getCollection(COLL_DOC);
+			int count = coll.find(query.get()).count();
+			return count;
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	@Override
+	public List<DocPo> listAppDocs(String app, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder) throws DBException {
+		try {
+			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1);
+			if (StringUtils.isBlank(app)) {
+				throw new DBException("请提供应用名称！");
+			}
+			query.and(APP).is(app);
+			if (StringUtils.isNotBlank(labelId) && !"all".equalsIgnoreCase(labelId)) {
+				query.and(LABELS).is(labelId);
+			}
+			
+			if (StringUtils.isNotBlank(searchString)) {
+				List<DBObject> searchQuery = new ArrayList<DBObject>();
+				searchQuery.add(BasicDBObjectBuilder.start(NAME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(CTIME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(UUID, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				query.or(searchQuery.toArray(new DBObject[0]));
+			}
+			
+			DBObject orderBy = BasicDBObjectBuilder.start().add(CTIME, -1).get();
+			if (null != queryOrder) {
+				if ("desc".equalsIgnoreCase(queryOrder.getDirection())) {
+					orderBy = BasicDBObjectBuilder.start().add(queryOrder.getField(), -1).get();
+				} else {
+					orderBy = BasicDBObjectBuilder.start().add(queryOrder.getField(), 1).get();
+				}
+			}
+			
+			DBCollection coll = db.getCollection(COLL_DOC);
+			DBCursor cur = coll.find(query.get()).sort(orderBy).skip(offset).limit(limit);
+			return convertCur2Po(cur);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	@Override
+	public int countAppDocs(String app, String labelId, String searchString) throws DBException {
+		try {
+			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1);
+			if (StringUtils.isBlank(app)) {
+				throw new DBException("请提供应用名称！");
+			}
+			query.and(APP).is(app);
+			if (StringUtils.isNotBlank(labelId) && !"all".equalsIgnoreCase(labelId)) {
+				query.and(LABELS).is(labelId);
+			}
+
+			if (StringUtils.isNotBlank(searchString)) {
+				List<DBObject> searchQuery = new ArrayList<DBObject>();
+				searchQuery.add(BasicDBObjectBuilder.start(NAME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(CTIME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				searchQuery.add(BasicDBObjectBuilder.start(UUID, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
+				query.or(searchQuery.toArray(new DBObject[0]));
+			}
+
+			DBCollection coll = db.getCollection(COLL_DOC);
+			int count = coll.find(query.get()).count();
+			return count;
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	@Override
 	public long count(boolean includeDeleted) throws DBException {
 		try {
 			QueryBuilder query = QueryBuilder.start();

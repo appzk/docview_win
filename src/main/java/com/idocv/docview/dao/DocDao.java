@@ -144,6 +144,42 @@ public interface DocDao {
 	 * @throws DBException
 	 */
 	List<DocPo> listMyDocs(String uid, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder) throws DBException;
+	
+	/**
+	 * Count my documents
+	 * 
+	 * @param uid
+	 * @param labelId
+	 * @param searchString
+	 * @return
+	 * @throws DBException
+	 */
+	int countMyDocs(String uid, String labelId, String searchString) throws DBException;
+	
+	/**
+	 * List Application documents
+	 * 
+	 * @param app
+	 * @param offset
+	 * @param limit
+	 * @param labelId
+	 * @param searchString
+	 * @param queryOrder
+	 * @return
+	 * @throws DBException
+	 */
+	List<DocPo> listAppDocs(String app, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder) throws DBException;
+	
+	/**
+	 * Count app documents
+	 * 
+	 * @param app
+	 * @param labelId
+	 * @param searchString
+	 * @return
+	 * @throws DBException
+	 */
+	int countAppDocs(String app, String labelId, String searchString) throws DBException;
 
 	/**
 	 * Get document count.
