@@ -70,7 +70,15 @@ public interface DocService {
 	 */
 	DocVo getUrl(String url) throws DocServiceException;
 
-	Paging<DocVo> list(String uid, int start, int length, String search, String label, QueryOrder queryOrder) throws DocServiceException;
+	/**
+	 * 文档列表
+	 * 	1. sid存在（已登录）
+	 * 		a. 普通用户：列出对应用户文档（包括私有文档）
+	 * 		b. 应用管理员用户：列出对应应用文档（包括私有文档）
+	 * 	2. sid不存在（未登录）等有app名称
+	 * 		列出对应app公开文档
+	 */
+	Paging<DocVo> list(String app, String sid, int start, int length, String search, String label, QueryOrder queryOrder) throws DocServiceException;
 
 	long count(boolean includeDeleted) throws DocServiceException;
 }

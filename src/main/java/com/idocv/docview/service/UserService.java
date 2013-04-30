@@ -15,7 +15,7 @@ public interface UserService {
 	 * @return
 	 * @throws DocServiceException
 	 */
-	UserVo signUp(String appKey, String username, String password, String email) throws DocServiceException;
+	UserVo add(String token, String username, String password, String email) throws DocServiceException;
 	
 	/**
 	 * Validate Email address

@@ -57,7 +57,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
 				.append(_ID, rid).append(UUID, uuid).append(APP, app)
 				.append(NAME, name).append(SIZE, size).append(EXT, ext)
-				.append(CTIME, time).append(STATUS, 0).append(MODE, mode);
+				.append(CTIME, time).append(STATUS, 0);
 		if (StringUtils.isNotBlank(labelId)) {
 			builder.append(LABELS, new String[] { labelId });
 		}
@@ -120,7 +120,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		}
 		long time = System.currentTimeMillis();
 		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
-		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set").append(MODE, mode).append(UTIME, time);
+		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set").append(STATUS, mode).append(UTIME, time);
 		try {
 			DBCollection coll = db.getCollection(COLL_DOC);
 			coll.update(query, ob.get(), false, true);
@@ -181,9 +181,19 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public List<DocPo> listMyDocs(String uid, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder) throws DBException {
+	public List<DocPo> listMyDocs(String uid, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder, int status) throws DBException {
 		try {
-			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1);
+			QueryBuilder query = QueryBuilder.start();
+			if (-1 == status) {
+				// 包括已删除
+
+			} else if (0 == status) {
+				// 包括私有文档
+				query.and(STATUS).notEquals(-1);
+			} else if (1 == status) {
+				// 只显示公开文档
+				query.and(STATUS).greaterThan(0);
+			}
 
 			if (StringUtils.isNotBlank(uid)) {
 				query.and(UID).is(uid);
@@ -218,9 +228,19 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public int countMyDocs(String uid, String labelId, String searchString) throws DBException {
+	public int countMyDocs(String uid, String labelId, String searchString, int status) throws DBException {
 		try {
-			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1);
+			QueryBuilder query = QueryBuilder.start();
+			if (-1 == status) {
+				// 包括已删除
+
+			} else if (0 == status) {
+				// 包括私有文档
+				query.and(STATUS).notEquals(-1);
+			} else if (1 == status) {
+				// 只显示公开文档
+				query.and(STATUS).greaterThan(0);
+			}
 
 			if (StringUtils.isNotBlank(uid)) {
 				query.and(UID).is(uid);
@@ -246,9 +266,20 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public List<DocPo> listAppDocs(String app, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder) throws DBException {
+	public List<DocPo> listAppDocs(String app, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder, int status) throws DBException {
 		try {
-			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1);
+			QueryBuilder query = QueryBuilder.start();
+			if (-1 == status) {
+				// 包括已删除
+
+			} else if (0 == status) {
+				// 包括私有文档
+				query.and(STATUS).notEquals(-1);
+			} else if (1 == status) {
+				// 只显示公开文档
+				query.and(STATUS).greaterThan(0);
+			}
+
 			if (StringUtils.isBlank(app)) {
 				throw new DBException("请提供应用名称！");
 			}
@@ -283,9 +314,20 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public int countAppDocs(String app, String labelId, String searchString) throws DBException {
+	public int countAppDocs(String app, String labelId, String searchString, int status) throws DBException {
 		try {
-			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1);
+			QueryBuilder query = QueryBuilder.start();
+			if (-1 == status) {
+				// 包括已删除
+
+			} else if (0 == status) {
+				// 包括私有文档
+				query.and(STATUS).notEquals(-1);
+			} else if (1 == status) {
+				// 只显示公开文档
+				query.and(STATUS).greaterThan(0);
+			}
+
 			if (StringUtils.isBlank(app)) {
 				throw new DBException("请提供应用名称！");
 			}
@@ -382,9 +424,6 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		}
 		if (obj.containsField(DOWNLOAD)) {
 			po.setDownloadLog((List<Long>) obj.get(DOWNLOAD));
-		}
-		if (obj.containsField(MODE)) {
-			po.setMode(Integer.valueOf(obj.get(MODE).toString()));
 		}
 		return po;
 	}

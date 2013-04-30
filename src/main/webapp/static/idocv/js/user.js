@@ -42,7 +42,7 @@ $.ajax({
 		var loginHtml = 
 			'<!-- SIGN UP & SIGN IN -->' +
 	          '<ul class="nav pull-right">' +
-	          	'<li><a href="/signup">注册</a></li>' +
+	          	'<li><a href="http://user.idocv.com/signup">注册</a></li>' +
 	          	'<li class="divider-vertical"></li>' +
 	            '<li class="dropdown">' +
 	              '<a class="dropdown-toggle" href="#" data-toggle="dropdown">登录<strong class="caret"></strong></a>' +

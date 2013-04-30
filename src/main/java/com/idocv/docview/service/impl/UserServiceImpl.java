@@ -34,9 +34,9 @@ public class UserServiceImpl implements UserService {
 	private AppDao appDao;
 
 	@Override
-	public UserVo signUp(String appKey, String username, String password, String email) throws DocServiceException {
+	public UserVo add(String token, String username, String password, String email) throws DocServiceException {
 		try {
-			AppPo appPo = appDao.getByToken(appKey);
+			AppPo appPo = appDao.getByToken(token);
 			if (null == appPo || StringUtils.isBlank(appPo.getId())) {
 				throw new DocServiceException("不存在该应用！");
 			}
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 			if (null != vo && StringUtils.isNotBlank(vo.getId())) {
 				throw new DocServiceException("该邮箱已被注册，请选择其他邮箱或直接登录！");
 			}
-			UserPo po = userDao.signUp(appPo.getId(), username, password, email);
+			UserPo po = userDao.add(appPo.getId(), username, password, email);
 
 			// Send email
 			String encodeEmail = URLEncoder.encode(email, "UTF-8");
@@ -163,7 +163,7 @@ public class UserServiceImpl implements UserService {
 			return po2vo(userDao.getBySid(sid));
 		} catch (DBException e) {
 			logger.error("getBySid error: ", e);
-			throw new DocServiceException("getBySid error: ", e);
+			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
 

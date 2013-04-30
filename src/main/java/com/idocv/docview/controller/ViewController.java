@@ -139,7 +139,7 @@ public class ViewController {
 			String ext = RcUtil.getExt(rid);
 
 			// 2. check access mode of docVo
-			int accessMode = docVo.getMode();
+			int accessMode = docVo.getStatus();
 			if (0 == accessMode) {
 				if (StringUtils.isBlank(session)) {
 					throw new DocServiceException("私有文档不能公开访问，请使用会话id来访问！");
@@ -213,7 +213,7 @@ public class ViewController {
 			String ext = RcUtil.getExt(rid);
 
 			// 2. check access mode of docVo
-			int accessMode = docVo.getMode();
+			int accessMode = docVo.getStatus();
 			if (0 == accessMode) {
 				if (StringUtils.isBlank(session)) {
 					throw new DocServiceException("This is NOT a public document, please provide a session id.");

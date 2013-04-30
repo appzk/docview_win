@@ -1,15 +1,14 @@
 $(document).ready(function() {
 	
+	var app = 'eco';
+	var label = $.url().segment(2);
+	
 	/* ---------------------------------------------------------------------- */
 	/*	Sidebar list
 	/* ---------------------------------------------------------------------- */
-	var label = $.url().segment(2);
-	if (uid !== undefined && label === undefined) {
-		window.location = '/doc/list/all';
-	}
 	$(function () {
 		// get append labels
-		$.get('/label/' + uid + '.json', function(data, status) {
+		$.get('/label/' + app + '.json', function(data, status) {
 			var list = $('.sidebar-nav .nav-list');
 			list.append('<li ' + (('all' == label || label === undefined) ? ' class="active"' : '') + '><a href="/open/all">全部</a></li>');
 			list.append('<li ' + (('bilingual-weekly' == label || label === undefined) ? ' class="active"' : '') + '><a href="/open/bilingual-weekly">双语周刊</a></li>');
@@ -29,7 +28,8 @@ $(document).ready(function() {
 			// "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
 			"sPaginationType": "bootstrap",
 			"oLanguage": {
-				"sLengthMenu": "_MENU_ records per page"
+				"sLengthMenu": "_MENU_ records per page",
+				"sEmptyTable": "没有可显示的数据！"
 			},
 			"iDisplayLength": 10,
 			"bServerSide": true,
@@ -56,8 +56,8 @@ $(document).ready(function() {
 			},
 			"fnServerParams": function ( aoData ) {
 				aoData.push(
-					{"name": "label", "value": label},
-					{"name": "uid", "value": uid}
+					{"name": "app", "value": app},
+					{"name": "label", "value": label}
 				);
 			}
 		});

@@ -1,6 +1,5 @@
 package com.idocv.docview.dao.impl;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
@@ -33,19 +32,17 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 	}
 
 	@Override
-	public UserPo signUp(String appId, String username, String password, String email) throws DBException {
+	public UserPo add(String appId, String username, String password, String email) throws DBException {
 		long time = System.currentTimeMillis();
 		if (StringUtils.isBlank(appId) || StringUtils.isBlank(username)
 				|| StringUtils.isBlank(password) || StringUtils.isBlank(email)) {
 			throw new DBException("Insufficient parameters!");
 		}
 		String objId = new ObjectId().toString();
-		String sid = UidUtil.getSid(objId, "appId");
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
 				.append(_ID, objId).append(APP, appId)
 				.append(USERNAME, username).append(PASSWORD, password)
-				.append(EMAIL, email).append(CTIME, time).append(STATUS, 0)
-				.append(SIDS, Arrays.asList(new String[] { sid }));
+				.append(EMAIL, email).append(CTIME, time).append(STATUS, 0);
 		try {
 			DBCollection coll = db.getCollection(COLL_USER);
 			coll.save(builder.get());
@@ -55,7 +52,6 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 			po.setUsername(username);
 			po.setPassword(password);
 			po.setEmail(email);
-			po.setSids(Arrays.asList(new String[] { sid }));
 			return po;
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());
@@ -114,7 +110,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 	@Override
 	public UserPo get(String id, boolean includeDeleted) throws DBException {
 		if (StringUtils.isBlank(id)) {
-			throw new DBException("Insufficient parameters!");
+			throw new DBException("请提供用户id");
 		}
 		try {
 			QueryBuilder query = QueryBuilder.start(_ID).is(id);
@@ -159,7 +155,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 	@Override
 	public UserPo getBySid(String sid) throws DBException {
 		if (StringUtils.isBlank(sid)) {
-			throw new DBException("Insufficient parameters!");
+			throw new DBException("请提供用户sid");
 		}
 		try {
 			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1).and(SIDS).is(sid);

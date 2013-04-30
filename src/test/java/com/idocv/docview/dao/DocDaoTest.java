@@ -49,7 +49,7 @@ public class DocDaoTest {
 	public void testList() {
 		try {
 			String uid = "123456789";
-			List<DocPo> list = docDao.listMyDocs(uid, 0, 0, null, null, null);
+			List<DocPo> list = docDao.listMyDocs(uid, 0, 0, null, null, null, 0);
 			if (!CollectionUtils.isEmpty(list)) {
 				for (DocPo po : list) {
 					System.err.println(po);

@@ -97,7 +97,7 @@
 					</thead>
 					<tbody>
 					  <tr>
-						<td colspan="5" class="dataTables_empty">Loading data from server...</td>
+						<td colspan="6" class="dataTables_empty">正在加载数据...</td>
 					  </tr>
 					</tbody>
 				</table>

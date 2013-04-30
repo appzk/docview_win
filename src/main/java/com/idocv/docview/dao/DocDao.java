@@ -140,10 +140,11 @@ public interface DocDao {
 	 * @param labelId
 	 * @param searchString
 	 * @param queryOrder
+	 * @param status -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
 	 * @return
 	 * @throws DBException
 	 */
-	List<DocPo> listMyDocs(String uid, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder) throws DBException;
+	List<DocPo> listMyDocs(String uid, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder, int status) throws DBException;
 	
 	/**
 	 * Count my documents
@@ -151,10 +152,11 @@ public interface DocDao {
 	 * @param uid
 	 * @param labelId
 	 * @param searchString
+	 * @param status -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
 	 * @return
 	 * @throws DBException
 	 */
-	int countMyDocs(String uid, String labelId, String searchString) throws DBException;
+	int countMyDocs(String uid, String labelId, String searchString, int status) throws DBException;
 	
 	/**
 	 * List Application documents
@@ -165,10 +167,11 @@ public interface DocDao {
 	 * @param labelId
 	 * @param searchString
 	 * @param queryOrder
+	 * @param status -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
 	 * @return
 	 * @throws DBException
 	 */
-	List<DocPo> listAppDocs(String app, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder) throws DBException;
+	List<DocPo> listAppDocs(String app, int offset, int limit, String labelId, String searchString, QueryOrder queryOrder, int status) throws DBException;
 	
 	/**
 	 * Count app documents
@@ -176,10 +179,11 @@ public interface DocDao {
 	 * @param app
 	 * @param labelId
 	 * @param searchString
+	 * @param status -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
 	 * @return
 	 * @throws DBException
 	 */
-	int countAppDocs(String app, String labelId, String searchString) throws DBException;
+	int countAppDocs(String app, String labelId, String searchString, int status) throws DBException;
 
 	/**
 	 * Get document count.

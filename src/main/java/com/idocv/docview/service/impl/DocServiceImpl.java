@@ -153,7 +153,11 @@ public class DocServiceImpl implements DocService {
 			doc.setName(name);
 			doc.setSize(size);
 			doc.setCtime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-			doc.setMode(mode);
+			if (0 == mode) {
+				doc.setStatus(0);
+			} else if (1 == mode) {
+				doc.setStatus(1);
+			}
 			
 			if (StringUtils.isBlank(ext) || !docTypes.contains(ext.toLowerCase())) {
 				throw new DocServiceException("请选择一个文档，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt");
@@ -285,13 +289,25 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public Paging<DocVo> list(String uid, int start, int length, String label, String search, QueryOrder queryOrder) throws DocServiceException {
+	public Paging<DocVo> list(String app, String sid, int start, int length, String label, String search, QueryOrder queryOrder) throws DocServiceException {
 		try {
 			// Label
 			// 1. all
 			// 2. work
 			// 3. personal
 			// 4. other
+
+			// 1. Check sid & get uid
+			String uid = null;
+			UserPo userPo = null;
+			if (StringUtils.isNotBlank(sid)) {
+				userPo = userDao.getBySid(sid);
+				if (null != userPo) {
+					uid = userPo.getId();
+				}
+			}
+
+			// get label id
 			String labelId = "all";
 			if (StringUtils.isNotBlank(label) && !"all".equalsIgnoreCase(label)) {
 				LabelPo labelPo = labelDao.get(uid, label);
@@ -299,16 +315,22 @@ public class DocServiceImpl implements DocService {
 					labelId = labelPo.getId();
 				}
 			}
-			UserPo userPo = userDao.get(uid, false);
+
+			// get document list
 			List<DocPo> docList;
 			int count = 0;
-			if (100 == userPo.getStatus()) {
-				String app = userPo.getAppId();
-				docList = docDao.listAppDocs(app, start, length, labelId, search, queryOrder);
-				count = docDao.countAppDocs(app, labelId, search);
+			if (StringUtils.isNotBlank(uid) && null != userPo) {
+				app = userPo.getAppId();
+				if (100 == userPo.getStatus()) {// 管理员
+					docList = docDao.listAppDocs(app, start, length, labelId, search, queryOrder, 0);
+					count = docDao.countAppDocs(app, labelId, search, 0);
+				} else { // 普通用户
+					docList = docDao.listMyDocs(uid, start, length, labelId, search, queryOrder, 0);
+					count = docDao.countMyDocs(uid, labelId, search, 0);
+				}
 			} else {
-				docList = docDao.listMyDocs(uid, start, length, labelId, search, queryOrder);
-				count = docDao.countMyDocs(uid, labelId, search);
+				docList = docDao.listAppDocs(app, start, length, labelId, search, queryOrder, 1);
+				count = docDao.countAppDocs(app, labelId, search, 1);
 			}
 			return new Paging<DocVo>(convertPo2Vo(docList), count);
 		} catch (DBException e) {
@@ -332,10 +354,10 @@ public class DocServiceImpl implements DocService {
 	}
 
 	private List<DocVo> convertPo2Vo(List<DocPo> poList) {
-		if (CollectionUtils.isEmpty(poList)) {
-			return null;
-		}
 		List<DocVo> list = new ArrayList<DocVo>();
+		if (CollectionUtils.isEmpty(poList)) {
+			return list;
+		}
 		for (DocPo po : poList) {
 			list.add(convertPo2Vo(po));
 		}
@@ -363,7 +385,6 @@ public class DocServiceImpl implements DocService {
 		if (!CollectionUtils.isEmpty(po.getDownloadLog())) {
 			vo.setDownloadCount(po.getDownloadLog().size());
 		}
-		vo.setMode(po.getMode());
 		return vo;
 	}
 }

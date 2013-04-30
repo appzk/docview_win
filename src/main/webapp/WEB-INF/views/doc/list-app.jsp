@@ -34,10 +34,11 @@
           </button>
           <a class="brand" href="http://www.idocv.com">I Doc View</a>
           <div class="nav-collapse collapse">
+          	<p class="navbar-text pull-right">
+              <a href="http://user.idocv.com" class="navbar-link">登录</a>
+            </p>
             <ul class="nav">
-              <li class="active"><a href="/"><i class="icon-home icon-white"></i> Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="http://bbs.idocv.com">社区</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -82,7 +83,7 @@
 					</thead>
 					<tbody>
 					  <tr>
-						<td colspan="5" class="dataTables_empty">Loading data from server...</td>
+						<td colspan="6" class="dataTables_empty">正在加载数据...</td>
 					  </tr>
 					</tbody>
 				</table>
@@ -109,7 +110,9 @@
 	<script src="/static/urlparser/js/purl.js"></script>
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
 	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+	<!-- 
 	<script src="/static/idocv/js/user.js"></script>
+	 -->
 	<script src="/static/datatable/js/jquery.dataTables.js"></script>
 	<script src="/static/datatable/js/DT_bootstrap.js"></script>
 	<script src="/static/js/upload/jquery.ui.widget.js"></script>

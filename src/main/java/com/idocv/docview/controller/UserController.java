@@ -66,7 +66,7 @@ public class UserController {
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "email") String email) {
 		try {
-			UserVo vo = userService.signUp(appkey, username, password, email);
+			UserVo vo = userService.add(appkey, username, password, email);
 			return "{\"uid\":\"" + vo.getId() + "\", \"sid\":\"" + vo.getSid() + "\"}";
 		} catch (Exception e) {
 			logger.error("sign up error <controller>: ", e);
@@ -187,7 +187,7 @@ public class UserController {
 				}
 			}
 			if (StringUtils.isBlank(sid)) {
-				throw new DocServiceException("NOT logged in!");
+				throw new DocServiceException("未登录！");
 			}
 			UserVo vo = userService.getBySid(sid);
 			if (null != vo) {
@@ -195,7 +195,7 @@ public class UserController {
 						"\"sid\":\"" + vo.getSid() + "\"," +
 						"\"username\":\"" + vo.getUsername() + "\"}";
 			} else {
-				return "{\"error\":\"NOT logged in!\"}";
+				return "{\"error\":\"未登录！\"}";
 			}
 		} catch (DocServiceException e) {
 			return "{\"error\":\"" + e.getMessage() + "\"}";

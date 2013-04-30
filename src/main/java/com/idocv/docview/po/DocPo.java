@@ -48,7 +48,7 @@ public class DocPo implements Serializable {
 	private List<String> labels;
 
 	/**
-	 * 状态，0. 刚上传默认; -1. 已经删除;
+	 * 状态，-1：已删除；0：私有文档；1：公开文档
 	 */
 	private int status;
 
@@ -85,11 +85,6 @@ public class DocPo implements Serializable {
 	 * @return
 	 */
 	private List<Long> downloadLog;
-
-	/**
-	 * access mode, 0-default, can be viewed, 1-private, 2-semi-public, 3-public
-	 */
-	private int mode;
 
 	public String getRid() {
 		return rid;
@@ -201,14 +196,6 @@ public class DocPo implements Serializable {
 
 	public void setDownloadLog(List<Long> downloadLog) {
 		this.downloadLog = downloadLog;
-	}
-
-	public int getMode() {
-		return mode;
-	}
-
-	public void setMode(int mode) {
-		this.mode = mode;
 	}
 
 	@Override
