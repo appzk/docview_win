@@ -33,14 +33,15 @@ public class AppDaoImpl extends BaseDaoImpl implements AppDao, InitializingBean 
 	}
 
 	@Override
-	public boolean add(String id, String name, String token, String phone) throws DBException {
+	public boolean add(String id, String name, String token, String phone, String email) throws DBException {
 		long time = System.currentTimeMillis();
 		if (StringUtils.isBlank(id) || StringUtils.isBlank(name) || StringUtils.isBlank(token) || StringUtils.isBlank(phone)) {
-			throw new DBException("Insufficient parameters!");
+			throw new DBException("请提供必要参数！");
 		}
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
 				.append(_ID, id).append(NAME, name).append(TOKEN, token)
-				.append(PHONE, phone).append(STATUS, 0).append(CTIME, time);
+				.append(PHONE, phone).append(EMAIL, email).append(STATUS, 0)
+				.append(CTIME, time);
 		try {
 			DBCollection coll = db.getCollection(COLL_APP);
 			coll.save(builder.get());

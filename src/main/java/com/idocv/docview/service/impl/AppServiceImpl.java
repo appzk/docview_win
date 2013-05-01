@@ -21,9 +21,9 @@ public class AppServiceImpl implements AppService {
 	private AppDao appDao;
 
 	@Override
-	public boolean add(String id, String name, String key, String phone) throws DocServiceException {
+	public boolean add(String id, String name, String key, String phone, String email) throws DocServiceException {
 		try {
-			return appDao.add(id, name, key, phone);
+			return appDao.add(id, name, key, phone, email);
 		} catch (DBException e) {
 			logger.error("Add app error: ", e);
 			throw new DocServiceException(e);

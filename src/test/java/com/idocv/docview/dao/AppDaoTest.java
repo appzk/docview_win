@@ -22,29 +22,39 @@ public class AppDaoTest {
 	@Test
 	public void testAdd() {
 		try {
-			// add doc test
+			// add test app
 			String id = "test";
 			String name = "I Doc View";
 			String token = "testtoken";
 			String phone = "18611898831";
-			appDao.add(id, name, token, phone);
-			System.err.println("Add doc test done!");
+			String email = "godwin668@gmail.com";
+			appDao.add(id, name, token, phone, email);
+			System.err.println("Add test app done!");
 
-			// add doc test
+			// add wev app
 			id = "wev";
 			name = "wev.cc";
 			token = "wevtoken";
 			phone = "18611898831";
-			appDao.add(id, name, token, phone);
-			System.err.println("Add wev.cc done!");
+			appDao.add(id, name, token, phone, email);
+			System.err.println("Add wev app done!");
 
-			// add eco test
+			// add eco app
 			id = "eco";
 			name = "Economist Chinese Edition";
 			token = "ecotoken";
 			phone = "18611898831";
-			appDao.add(id, name, token, phone);
-			System.err.println("Add eco test done!");
+			appDao.add(id, name, token, phone, email);
+			System.err.println("Add eco app done!");
+
+			// add letong app
+			id = "letong";
+			name = "乐通科技";
+			token = "letongtoken";
+			phone = "15025688808";
+			email = "1522415420@qq.com";
+			appDao.add(id, name, token, phone, email);
+			System.err.println("Add letong done!");
 		} catch (DBException e) {
 			e.printStackTrace();
 		}

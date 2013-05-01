@@ -7,7 +7,7 @@ import com.idocv.docview.po.AppPo;
 
 public interface AppDao extends BaseDao {
 
-	boolean add(String id, String name, String key, String phone) throws DBException;
+	boolean add(String id, String name, String key, String phone, String email) throws DBException;
 	
 	AppPo add(AppPo appPo) throws DBException;
 
