@@ -33,7 +33,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 
 	@Override
 	public void add(String app, String uid, String rid, String uuid,
-			String name, long size, String ext, int mode, String labelId)
+			String name, long size, String ext, int status, String labelId)
 			throws DBException {
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		if (StringUtils.isBlank(app)) {
@@ -57,7 +57,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
 				.append(_ID, rid).append(UUID, uuid).append(APP, app)
 				.append(NAME, name).append(SIZE, size).append(EXT, ext)
-				.append(CTIME, time).append(STATUS, 0);
+				.append(CTIME, time).append(STATUS, status);
 		if (StringUtils.isNotBlank(labelId)) {
 			builder.append(LABELS, new String[] { labelId });
 		}

@@ -288,9 +288,9 @@ public class ViewController {
 			@RequestParam(required = false) String name,
 			@RequestParam(value = "mode", defaultValue = "public") String modeString) {
 		try {
-			int mode = 0;
-			if ("public".equalsIgnoreCase(modeString)) {
-				mode = 1;
+			int mode = 1;
+			if ("private".equalsIgnoreCase(modeString)) {
+				mode = 0;
 			}
 			url = URLDecoder.decode(url, "UTF-8");
 			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/[^/]+\\.[^/]+")) {

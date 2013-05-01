@@ -60,11 +60,11 @@ public interface DocDao {
 	 * @param name 名称
 	 * @param size 大小
 	 * @param ext 扩展名
-	 * @param mode 访问模式 0-私有，1-公开
+	 * @param status 文档状态，-1：已删除；0：私有文档；1：公开文档
 	 * @param labelId 文档所属标签id
 	 * @throws DBException
 	 */
-	void add(String app, String uid, String rid, String uuid, String name, long size, String ext, int mode, String labelId) throws DBException;
+	void add(String app, String uid, String rid, String uuid, String name, long size, String ext, int status, String labelId) throws DBException;
 
 	/**
 	 * Delete a document.
