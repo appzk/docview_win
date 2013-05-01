@@ -44,6 +44,11 @@ public class AppPo {
 	private String phone;
 
 	/**
+	 * Email
+	 */
+	private String email;
+
+	/**
 	 * Contact address
 	 */
 	private String address;
@@ -104,6 +109,14 @@ public class AppPo {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getAddress() {

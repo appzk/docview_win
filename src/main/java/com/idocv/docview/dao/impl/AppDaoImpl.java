@@ -150,6 +150,9 @@ public class AppDaoImpl extends BaseDaoImpl implements AppDao, InitializingBean 
 		if (obj.containsField(PHONE)) {
 			po.setPhone(obj.get(PHONE).toString());
 		}
+		if (obj.containsField(EMAIL)) {
+			po.setEmail(obj.get(EMAIL).toString());
+		}
 		if (obj.containsField(CTIME)) {
 			po.setCtime(Long.valueOf(obj.get(CTIME).toString()));
 		}
