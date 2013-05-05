@@ -53,6 +53,17 @@ public class RcUtil {
 		String[] splits = rid.split(SPLIT);
 		return splits[splits.length - 2];
 	}
+	
+	public static long getSizeByRid(String rid) {
+		validateRid(rid);
+		String[] splits = rid.split(SPLIT);
+		String sizeString = splits[3];
+		if (StringUtils.isBlank(sizeString) || !sizeString.matches("\\d+")) {
+			return 0;
+		} else {
+			return Long.valueOf(sizeString);
+		}
+	}
 
 	/**
 	 * 根据rid获取绝对路径，e.g. /appName/yyyy/MMdd/HHmmss_(size)_(uuid).doc

@@ -69,9 +69,7 @@ public class CmdUtil {
 				// do something here...
 			}
 			result = "Exit value: " + exitValue + "\n\n" + "Output: \n" + sbOut.toString() + "\n\nError message: " + sbErr.toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;

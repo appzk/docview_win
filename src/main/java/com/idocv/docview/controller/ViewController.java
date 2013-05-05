@@ -133,7 +133,7 @@ public class ViewController {
 			// 1. get docVo by uuid
 			DocVo docVo = docService.getByUuid(uuid);
 			if (null == docVo || StringUtils.isBlank(docVo.getRid())) {
-				throw new DocServiceException("文档(" + uuid + ") 未找到！");
+				throw new DocServiceException("文档(" + uuid + ")不存在！");
 			}
 			String rid = docVo.getRid();
 			String ext = RcUtil.getExt(rid);

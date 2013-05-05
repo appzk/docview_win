@@ -1,5 +1,8 @@
 package com.idocv.docview.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.vo.ExcelVo;
 import com.idocv.docview.vo.PPTVo;
@@ -16,6 +19,8 @@ import com.idocv.docview.vo.WordVo;
  * 
  */
 public interface PreviewService {
+
+	static List<String> convertingRids = new ArrayList<String>();
 
 	/**
 	 * Convert document(rid) to HTML.
