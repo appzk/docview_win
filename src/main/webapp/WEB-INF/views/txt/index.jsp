@@ -41,7 +41,9 @@
       <div class="row-fluid">
         <div class="span12">
         	<!-- TXT PAGES HERE -->
+        	<!-- 
         	<div class="word-page"><div class="word-content"><pre></pre></div></div>
+        	 -->
         </div><!--/span-->
       </div><!--/row-->
 
