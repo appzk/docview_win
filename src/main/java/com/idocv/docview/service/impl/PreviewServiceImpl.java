@@ -1,10 +1,10 @@
 package com.idocv.docview.service.impl;
 
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.PreviewService;
 import com.idocv.docview.util.CmdUtil;
@@ -36,11 +37,12 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 	private static Logger logger = LoggerFactory.getLogger(PreviewServiceImpl.class);
 	
-	private static List<String> convertingRids = new ArrayList<String>();
-
 	@Resource
 	private RcUtil rcUtil;
 	
+	@Resource
+	private DocDao docDao;
+
 	private @Value("${office.cmd.word2html}")
 	String word2Html;
 
@@ -276,6 +278,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			throw new DocServiceException(404, "文件未找到");
 		}
 		String ext = RcUtil.getExt(rid);
+		long size = RcUtil.getSizeByRid(rid);
+		long startTime = 0;
 		if (convertingRids.contains(rid)) {
 			if (tryCount < 10) {
 				try {
@@ -285,35 +289,48 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				}
 				convert(rid, ++tryCount);
 			} else {
-				throw new DocServiceException("服务器忙，请稍后再试！");
+				if (size > 1000000) {
+					throw new DocServiceException("您的文档较大，正在努力处理中，请稍后再试！");
+				} else {
+					throw new DocServiceException("您的文档正在处理中，请稍后再试！");
+				}
 			}
 		} else {
+			System.err.println("convertingRids(u+) " + rid);
+			startTime = System.currentTimeMillis();
 			convertingRids.add(rid);
 		}
 		try {
+			String convertResult = null;
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
-					CmdUtil.runWindows(word2Html, src, dest);
+					convertResult = CmdUtil.runWindows(word2Html, src, dest);
 				}
 			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
-					CmdUtil.runWindows(excel2Html, src, dest);
+					convertResult = CmdUtil.runWindows(excel2Html, src, dest);
 				}
 			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
 				if (destFile.listFiles().length <= 0) {
-					CmdUtil.runWindows(ppt2Jpg, src, destFile.getAbsolutePath(), "save");
+					convertResult = CmdUtil.runWindows(ppt2Jpg, src, destFile.getAbsolutePath(), "save");
 				}
+			} else if ("txt".equalsIgnoreCase(ext)) {
+				// do nothing.
 			} else {
-				throw new DocServiceException("Unsupported document type!");
+				throw new DocServiceException("目前不支持（" + ext + "）格式！");
 			}
+			// System.err.println("Convert result: " + convertResult);
 			return true;
 		} catch (Exception e) {
 			logger.error("convert error: ", e.fillInStackTrace());
 			throw new DocServiceException(e.getMessage(), e);
 		} finally {
+			System.err.println("convertingRids(u-) " + rid);
+			long endTime = System.currentTimeMillis();
 			convertingRids.remove(rid);
+			System.err.println("Convert " + rid + " with size " + size + " elapse: " + (endTime - startTime) + ", rate: " + (size / ((endTime - startTime) / 1000d)) + " bit/s.");
 		}
 	}
 
@@ -347,25 +364,72 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	}
 	
 	public static String getEncoding(File file) {
-		byte[] b = new byte[3];
+		String charset = "GBK";
+		byte[] first3Bytes = new byte[3];
+		BufferedInputStream bis = null;
 		try {
-			InputStream is = new FileInputStream(file);
-			is.read(b);
-			is.close();
-		} catch (IOException e) {
-			logger.error("Get encoding error: " + e.getMessage());
+			boolean checked = false;
+			bis = new BufferedInputStream(new FileInputStream(file));
+			bis.mark(0);
+			int read = bis.read(first3Bytes, 0, 3);
+			if (read == -1) {
+				return charset; // 文件编码为 ANSI
+			} else if (first3Bytes[0] == (byte) 0xFF && first3Bytes[1] == (byte) 0xFE) {
+				charset = "UTF-16LE"; // 文件编码为 Unicode
+				checked = true;
+			} else if (first3Bytes[0] == (byte) 0xFE && first3Bytes[1] == (byte) 0xFF) {
+				charset = "UTF-16BE"; // 文件编码为 Unicode big endian
+				checked = true;
+			} else if (first3Bytes[0] == (byte) 0xEF && first3Bytes[1] == (byte) 0xBB && first3Bytes[2] == (byte) 0xBF) {
+				charset = "UTF-8"; // 文件编码为 UTF-8
+				checked = true;
+			}
+			bis.reset();
+			if (!checked) {
+				while ((read = bis.read()) != -1) {
+					if (read >= 0xF0) {
+						break;
+					}
+					if (0x80 <= read && read <= 0xBF) {
+						// 单独出现BF以下的，也算是GBK
+						break;
+					}
+					if (0xC0 <= read && read <= 0xDF) {
+						read = bis.read();
+						if (0x80 <= read && read <= 0xBF) {
+							// 双字节 (0xC0 - 0xDF)
+							// (0x80
+							// - 0xBF),也可能在GB编码内
+							continue;
+						} else {
+							break;
+						}
+					} else if (0xE0 <= read && read <= 0xEF) {// 也有可能出错，但是几率较小
+						read = bis.read();
+						if (0x80 <= read && read <= 0xBF) {
+							read = bis.read();
+							if (0x80 <= read && read <= 0xBF) {
+								charset = "UTF-8";
+								break;
+							} else {
+								break;
+							}
+						} else {
+							break;
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				bis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		if (b[0] == -17 && b[1] == -69 && b[2] == -65) {
-			return "UTF-8";
-		} else if ((b[0] == -2 && b[1] == -1) || (b[0] == -1 && b[1] == -2)) {
-			return "unicode";
-		} else if (b[0] == -26 && b[1] == -75 && b[2] == -117) {	// apple
-			return "UTF-8";
-		} else if (b[0] == 97 && b[1] == 98 && b[2] == 99) {		// apple
-			return "UTF-8";
-		} else {
-			return "GBK";
-		}
+		return charset;
 	}
 
 	@Override
