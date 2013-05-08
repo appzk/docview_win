@@ -29,7 +29,7 @@ public class SessionPo implements Serializable {
 	/**
 	 * create time
 	 */
-	private long ctime;
+	private String ctime;
 
 	public String getId() {
 		return id;
@@ -55,11 +55,11 @@ public class SessionPo implements Serializable {
 		this.uuid = uuid;
 	}
 
-	public long getCtime() {
+	public String getCtime() {
 		return ctime;
 	}
 
-	public void setCtime(long ctime) {
+	public void setCtime(String ctime) {
 		this.ctime = ctime;
 	}
 

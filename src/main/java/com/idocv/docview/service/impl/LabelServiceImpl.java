@@ -32,6 +32,9 @@ public class LabelServiceImpl implements LabelService {
 	@Override
 	public void initUser(String uid) throws DocServiceException {
 		try {
+			if (StringUtils.isBlank(uid)) {
+				throw new DocServiceException("初始化用户标签错误，用户未登录！");
+			}
 			Map<String, String> labels = new HashMap<String, String>();
 			labels.put("personal", "个人");
 			labels.put("work", "工作");
@@ -40,7 +43,7 @@ public class LabelServiceImpl implements LabelService {
 			}
 		} catch (Exception e) {
 			logger.error("Init user labels error: ", e);
-			throw new DocServiceException(e);
+			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
 

@@ -57,7 +57,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
 				.append(_ID, rid).append(UUID, uuid).append(APP, app)
 				.append(NAME, name).append(SIZE, size).append(EXT, ext)
-				.append(CTIME, time).append(STATUS, status);
+				.append(CTIME, time).append(UTIME, time).append(STATUS, status);
 		if (StringUtils.isNotBlank(labelId)) {
 			builder.append(LABELS, new String[] { labelId });
 		}
@@ -85,11 +85,10 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		if (StringUtils.isEmpty(uuid)) {
 			throw new DBException("Insufficient parameters!");
 		}
-
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
 		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set")
-				.append(UTIME, System.currentTimeMillis())
-				.append(STATUS, status);
+				.append(UTIME, time).append(STATUS, status);
 		try {
 			DBCollection coll = db.getCollection(COLL_DOC);
 			coll.update(query, ob.get(), false, true);
@@ -118,7 +117,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		if (StringUtils.isEmpty(uuid)) {
 			throw new DBException("Insufficient parameters!");
 		}
-		long time = System.currentTimeMillis();
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
 		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set").append(STATUS, mode).append(UTIME, time);
 		try {
@@ -133,7 +132,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		if (StringUtils.isEmpty(uuid)) {
 			throw new DBException("Insufficient parameters!");
 		}
-		long time = System.currentTimeMillis();
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
 		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$push")
 				.append(field, time).pop().push("$set").append(UTIME, time);

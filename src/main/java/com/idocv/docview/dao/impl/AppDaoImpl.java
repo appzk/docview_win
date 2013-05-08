@@ -1,7 +1,9 @@
 package com.idocv.docview.dao.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,14 +36,14 @@ public class AppDaoImpl extends BaseDaoImpl implements AppDao, InitializingBean 
 
 	@Override
 	public boolean add(String id, String name, String token, String phone, String email) throws DBException {
-		long time = System.currentTimeMillis();
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		if (StringUtils.isBlank(id) || StringUtils.isBlank(name) || StringUtils.isBlank(token) || StringUtils.isBlank(phone)) {
 			throw new DBException("请提供必要参数！");
 		}
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
 				.append(_ID, id).append(NAME, name).append(TOKEN, token)
 				.append(PHONE, phone).append(EMAIL, email).append(STATUS, 0)
-				.append(CTIME, time);
+				.append(CTIME, time).append(UTIME, time);
 		try {
 			DBCollection coll = db.getCollection(COLL_APP);
 			coll.save(builder.get());
@@ -66,11 +68,10 @@ public class AppDaoImpl extends BaseDaoImpl implements AppDao, InitializingBean 
 		if (StringUtils.isEmpty(appId)) {
 			throw new DBException("Insufficient parameters!");
 		}
-
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		DBObject query = QueryBuilder.start(_ID).is(appId).get();
 		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set")
-				.append(UTIME, System.currentTimeMillis())
-				.append(STATUS, status);
+				.append(UTIME, time).append(STATUS, status);
 		try {
 			DBCollection coll = db.getCollection(COLL_APP);
 			coll.update(query, ob.get(), false, true);
@@ -154,16 +155,13 @@ public class AppDaoImpl extends BaseDaoImpl implements AppDao, InitializingBean 
 			po.setEmail(obj.get(EMAIL).toString());
 		}
 		if (obj.containsField(CTIME)) {
-			po.setCtime(Long.valueOf(obj.get(CTIME).toString()));
+			po.setCtime(obj.get(CTIME).toString());
 		}
 		if (obj.containsField(UTIME)) {
-			po.setUtime(Long.valueOf(obj.get(UTIME).toString()));
+			po.setUtime(obj.get(UTIME).toString());
 		}
 		if (obj.containsField(ADDRESS)) {
 			po.setAddress(obj.get(ADDRESS).toString());
-		}
-		if (obj.containsField(UTIME)) {
-			po.setUtime(Long.valueOf(obj.get(UTIME).toString()));
 		}
 		return po;
 	}

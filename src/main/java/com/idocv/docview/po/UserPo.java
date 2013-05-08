@@ -11,7 +11,7 @@ public class UserPo {
 	private String username;
 	private String password;
 	private String email;
-	private long ctime;
+	private String ctime;
 
 	/**
 	 * 用户状态，0-刚注册，1-已验证邮箱，-1-已删除，100-该应用的管理员
@@ -59,11 +59,11 @@ public class UserPo {
 		this.email = email;
 	}
 
-	public long getCtime() {
+	public String getCtime() {
 		return ctime;
 	}
 
-	public void setCtime(long ctime) {
+	public void setCtime(String ctime) {
 		this.ctime = ctime;
 	}
 

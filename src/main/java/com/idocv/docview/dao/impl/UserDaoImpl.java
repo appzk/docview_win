@@ -1,6 +1,8 @@
 package com.idocv.docview.dao.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,7 +35,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 
 	@Override
 	public UserPo add(String appId, String username, String password, String email) throws DBException {
-		long time = System.currentTimeMillis();
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		if (StringUtils.isBlank(appId) || StringUtils.isBlank(username)
 				|| StringUtils.isBlank(password) || StringUtils.isBlank(email)) {
 			throw new DBException("Insufficient parameters!");
@@ -62,10 +64,10 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 		if (StringUtils.isEmpty(email)) {
 			throw new DBException("请提供Email参数！");
 		}
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		DBObject query = QueryBuilder.start(EMAIL).is(email).get();
 		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set")
-				.append(UTIME, System.currentTimeMillis())
-				.append(STATUS, status);
+				.append(UTIME, time).append(STATUS, status);
 		try {
 			DBCollection coll = db.getCollection(COLL_USER);
 			coll.update(query, ob.get(), false, true);
@@ -187,7 +189,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 			po.setEmail(obj.get(EMAIL).toString());
 		}
 		if (obj.containsField(CTIME)) {
-			po.setCtime(Long.valueOf(obj.get(CTIME).toString()));
+			po.setCtime(obj.get(CTIME).toString());
 		}
 		if (obj.containsField(STATUS)) {
 			po.setStatus(Integer.valueOf(obj.get(STATUS).toString()));

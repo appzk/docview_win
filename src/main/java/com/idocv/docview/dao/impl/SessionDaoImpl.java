@@ -91,7 +91,7 @@ public class SessionDaoImpl extends BaseDaoImpl implements SessionDao, Initializ
 			po.setUuid(obj.get(UUID).toString());
 		}
 		if (obj.containsField(CTIME)) {
-			po.setCtime(Long.valueOf(obj.get(CTIME).toString()));
+			po.setCtime(obj.get(CTIME).toString());
 		}
 		return po;
 	}

@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
 				throw new DocServiceException("密码错误！");
 			}
 			if (vo.getStatus() < 1) {
-				throw new DocServiceException("未验证邮箱，请先到您的邮箱激活您的账号！");
+				throw new DocServiceException("您还未验证邮箱，请先到您的邮箱激活账号！");
 			}
 			String sid = userDao.addSid(vo.getId());
 			vo.setSid(sid);

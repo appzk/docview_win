@@ -71,11 +71,10 @@ public class LabelDaoImpl extends BaseDaoImpl implements LabelDao, InitializingB
 		if (StringUtils.isEmpty(id)) {
 			throw new DBException("Insufficient parameters!");
 		}
-
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		DBObject query = QueryBuilder.start(_ID).is(id).get();
 		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set")
-				.append(UTIME, System.currentTimeMillis())
-				.append(STATUS, status);
+				.append(UTIME, time).append(STATUS, status);
 		try {
 			DBCollection coll = db.getCollection(COLL_LABEL);
 			coll.update(query, ob.get(), false, true);

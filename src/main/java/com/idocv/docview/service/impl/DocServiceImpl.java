@@ -335,7 +335,7 @@ public class DocServiceImpl implements DocService {
 			return new Paging<DocVo>(convertPo2Vo(docList), count);
 		} catch (DBException e) {
 			logger.error("list doc error: ", e);
-			throw new DocServiceException("list doc error: ", e);
+			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
 

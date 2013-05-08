@@ -56,12 +56,12 @@ public class AppPo {
 	/**
 	 * Create time
 	 */
-	private long ctime;
+	private String ctime;
 	
 	/**
 	 * Update time
 	 */
-	private long utime;
+	private String utime;
 
 	public String getId() {
 		return id;
@@ -127,19 +127,19 @@ public class AppPo {
 		this.address = address;
 	}
 
-	public long getCtime() {
+	public String getCtime() {
 		return ctime;
 	}
 
-	public void setCtime(long ctime) {
+	public void setCtime(String ctime) {
 		this.ctime = ctime;
 	}
 
-	public long getUtime() {
+	public String getUtime() {
 		return utime;
 	}
 
-	public void setUtime(long utime) {
+	public void setUtime(String utime) {
 		this.utime = utime;
 	}
 

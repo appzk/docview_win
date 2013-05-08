@@ -151,7 +151,8 @@ public class ViewController {
 				}
 				// 6. current time - ctime > expire time ? session expired :
 				// view.
-				long sessionCtime = sessionVo.getCtime();
+				String sessionCtimeString = sessionVo.getCtime();
+				long sessionCtime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sessionCtimeString).getTime();
 				long currentTime = System.currentTimeMillis();
 				if (currentTime - sessionCtime > 3600000) {
 					throw new DocServiceException("会话已过期，请重新获取一个会话！");
@@ -225,7 +226,8 @@ public class ViewController {
 				}
 				// 6. current time - ctime > expire time ? session expired :
 				// view.
-				long sessionCtime = sessionVo.getCtime();
+				String sessionCtimeString = sessionVo.getCtime();
+				long sessionCtime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sessionCtimeString).getTime();
 				long currentTime = System.currentTimeMillis();
 				if (currentTime - sessionCtime > 3600000) {
 					throw new DocServiceException("Session expired, please get a new one!");
