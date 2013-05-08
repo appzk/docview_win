@@ -89,7 +89,7 @@ public class DocServiceImpl implements DocService {
 			return addDoc(app, null, name, data, mode, null);
 		} catch (Exception e) {
 			logger.error("save doc error: ", e);
-			throw new DocServiceException(e);
+			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
 

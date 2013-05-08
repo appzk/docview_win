@@ -321,7 +321,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			} else {
 				throw new DocServiceException("目前不支持（" + ext + "）格式！");
 			}
-			// System.err.println("Convert result: " + convertResult);
+			System.err.println("Convert result: " + convertResult);
 			return true;
 		} catch (Exception e) {
 			logger.error("convert error: ", e.fillInStackTrace());
@@ -330,7 +330,9 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			System.err.println("convertingRids(u-) " + rid);
 			long endTime = System.currentTimeMillis();
 			convertingRids.remove(rid);
-			System.err.println("Convert " + rid + " with size " + size + " elapse: " + (endTime - startTime) + ", rate: " + (size / ((endTime - startTime) / 1000d)) + " bit/s.");
+			if (startTime > 0) {
+				System.err.println("Convert " + rid + " with size " + size + " elapse: " + (endTime - startTime) + ", rate: " + (size / ((endTime - startTime) / 1000d)) + " bit/s.");
+			}
 		}
 	}
 
