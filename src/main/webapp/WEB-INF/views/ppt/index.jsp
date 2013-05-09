@@ -87,6 +87,14 @@
 		<!-- 
 		<a class="fork-reveal" href="http://www.idocv.com"><img style="position: absolute; top: 41px; right: 0; border: 0; max-width: 30%;" src="http://data.idocv.com/idocv-logo-ribbon.png" alt="I Doc View"></a>
 		 -->
+	
+	<!-- Baidu Share BEGIN -->
+	<script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=6&amp;pos=right&amp;uid=6693451" ></script>
+	<script type="text/javascript" id="bdshell_js"></script>
+	<script type="text/javascript">
+	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
+	</script>
+	<!-- Baidu Share END -->
 
 	</body>
 </html>

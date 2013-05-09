@@ -70,6 +70,14 @@
 	<script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
 	<script src="/static/idocv/js/custom.js"></script>
 	<script src="/static/idocv/js/stat.js"></script>
+	
+	<!-- Baidu Share BEGIN -->
+	<script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=6&amp;pos=right&amp;uid=6693451" ></script>
+	<script type="text/javascript" id="bdshell_js"></script>
+	<script type="text/javascript">
+	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
+	</script>
+	<!-- Baidu Share END -->
 
   </body>
 </html>
