@@ -160,7 +160,7 @@ public class DocServiceImpl implements DocService {
 			}
 			
 			if (StringUtils.isBlank(ext) || !docTypes.contains(ext.toLowerCase())) {
-				throw new DocServiceException("请选择一个文档，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt");
+				throw new DocServiceException("暂不支持" + ext + "文件预览，请选择一个文档，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt");
 			}
 			
 			// save file meta and file
