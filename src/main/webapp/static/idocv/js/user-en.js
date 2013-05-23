@@ -99,7 +99,7 @@ $(document).ready(function() {
 							var sid = data.sid;
 							if (sid !== undefined) {
 								// SUCCESS
-								$.cookie('IDOCVSID', sid, { path: '/' });
+								$.cookie('IDOCVSID', sid, { expires: 30, path: '/', domain: '.idocv.com' });
 								window.location.reload();
 							} else {
 								// FAIL
