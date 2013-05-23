@@ -99,7 +99,19 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 
 	@Override
 	public boolean updateUrl(String uuid, String url) throws DBException {
-		return false;
+		if (StringUtils.isEmpty(uuid)) {
+			throw new DBException("请提供必要参数：uuid=" + uuid + ", url=" + url);
+		}
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
+		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set").append(URL, url).append(UTIME, time);
+		try {
+			DBCollection coll = db.getCollection(COLL_DOC);
+			coll.update(query, ob.get(), false, true);
+			return true;
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
 	}
 
 	@Override
@@ -175,8 +187,18 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public DocPo getUrl(String url) throws DBException {
-		return null;
+	public DocPo getUrl(String url, boolean includeDeleted) throws DBException {
+		try {
+			QueryBuilder query = QueryBuilder.start(URL).is(url);
+			if (!includeDeleted) {
+				query.and(STATUS).notEquals(-1);
+			}
+			DBCollection coll = db.getCollection(COLL_DOC);
+			DBObject obj = coll.findOne(query.get());
+			return convertDBObject2Po(obj);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
 	}
 
 	@Override

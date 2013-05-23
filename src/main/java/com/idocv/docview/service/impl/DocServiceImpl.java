@@ -185,7 +185,7 @@ public class DocServiceImpl implements DocService {
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
 		try {
-			DocVo vo = convertPo2Vo(docDao.getUrl(url));
+			DocVo vo = convertPo2Vo(docDao.getUrl(url, false));
 			if (null != vo) {
 				return vo;
 			}
@@ -194,7 +194,7 @@ public class DocServiceImpl implements DocService {
 			urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
 			byte[] bytes = urlResponse.bodyAsBytes();
 			vo = addByApp(token, name, bytes, mode);
-			docDao.updateUrl(vo.getRid(), url);
+			docDao.updateUrl(vo.getUuid(), url);
 			return vo;
 		} catch (IOException e) {
 			logger.error("save url doc error: ", e);
@@ -281,7 +281,7 @@ public class DocServiceImpl implements DocService {
 	@Override
 	public DocVo getUrl(String url) throws DocServiceException {
 		try {
-			return convertPo2Vo(docDao.getUrl(url));
+			return convertPo2Vo(docDao.getUrl(url, false));
 		} catch (DBException e) {
 			logger.error("getUrl doc error: ", e);
 			throw new DocServiceException("getUrl doc error: ", e);

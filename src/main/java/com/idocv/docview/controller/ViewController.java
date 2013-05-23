@@ -305,8 +305,22 @@ public class ViewController {
 			}
 			String uuid = po.getUuid();
 			return "redirect:" + uuid;
+			/*
+			if (uuid.endsWith("w")) {
+				return "word/index";
+			} else if (uuid.endsWith("x")) {
+				return "excel/index";
+			} else if (uuid.endsWith("p")) {
+				return "ppt/index";
+			} else if (uuid.endsWith("t")) {
+				return "txt/index";
+			} else {
+				throw new DocServiceException("URL(" + url + ")不是有效的文档！");
+			}
+			*/
 		} catch (Exception e) {
-			return e.getMessage();
+			logger.error("view error: ", e);
+			return "redirect:/404.html";
 		}
 	}
 }

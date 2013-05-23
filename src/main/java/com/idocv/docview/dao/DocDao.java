@@ -74,7 +74,7 @@ public interface DocDao {
 	/**
 	 * Update Url.
 	 * 
-	 * @param uuid
+	 * @param rid
 	 * @param url
 	 * @return
 	 */
@@ -129,7 +129,7 @@ public interface DocDao {
 	 * @param url
 	 * @return
 	 */
-	DocPo getUrl(String url) throws DBException;
+	DocPo getUrl(String url, boolean includeDeleted) throws DBException;
 
 	/**
 	 * List my documents
