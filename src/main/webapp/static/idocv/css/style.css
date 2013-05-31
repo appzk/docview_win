@@ -62,13 +62,13 @@
 		margin-right: auto;
 		margin-left: auto;
 		margin-bottom: 15px;
-		max-width: 960px;
+		max-width: 795px;
 		background-color:#FFF;
-		-moz-border-radius: 5px;
-		border-radius: 5px;
-		-moz-box-shadow: 0 0 5px 5px #888;
-		-webkit-box-shadow: 0 0 5px 5px#888;
-		box-shadow: 0 0 5px 5px #888;
+		-moz-border-radius: 1px;
+		border-radius: 1px;
+		-moz-box-shadow: 0 0 2px 2px #888;
+		-webkit-box-shadow: 0 0 2px 2px#888;
+		box-shadow: 0 0 2px 2px #888;
 	}
 	
 	.word-page .word-content {
@@ -93,10 +93,10 @@
 
 	.ppt-slide-img {
 		-moz-border-radius: 5px;
-		border-radius: 15px;
-		-moz-box-shadow: 0 0 5px 5px #888;
-		-webkit-box-shadow: 0 0 5px 5px#888;
-		box-shadow: 0 0 5px 5px #888;
+		border-radius: 2px;
+		-moz-box-shadow: 0 0 3px 3px #888;
+		-webkit-box-shadow: 0 0 3px 3px#888;
+		box-shadow: 0 0 3px 3px #888;
 	}
 
 	/* -------------------------------------------------- */

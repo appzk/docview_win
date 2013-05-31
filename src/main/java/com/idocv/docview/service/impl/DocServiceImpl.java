@@ -182,6 +182,7 @@ public class DocServiceImpl implements DocService {
 	@Override
 	public DocVo addUrl(String token, String url, String name, int mode) throws DocServiceException {
 		if (StringUtils.isBlank(token) || StringUtils.isBlank(name) || StringUtils.isBlank(url)) {
+			logger.error("参数不足：token=" + token + ", url=" + url + ", name=" + name + ", mode=" + mode);
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
 		try {
