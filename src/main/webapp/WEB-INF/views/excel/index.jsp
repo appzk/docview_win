@@ -39,6 +39,19 @@
               <!-- EXCEL TAB TITLE(s) HERE -->
             </ul>
           </div><!--/.nav-collapse -->
+          <!-- QR Code start -->
+          <div class="nav-collapse collapse">
+			<ul class="nav pull-right">
+			  <li class="dropdown">
+			    <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon-qrcode icon-white"></i><strong class="caret"></strong></a>
+				<div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+				  <div class="qrcode"></div>
+				  <div style="text-align: center; margin: 8px;">扫描二维码，在手机或Pad中查看文档</div>
+				</div>
+			  </li>
+			</ul>
+		  </div>
+		  <!-- QR Code end -->
         </div>
       </div>
     </div>
@@ -71,6 +84,7 @@
 	<!-- <script src="/static/idocv/js/user.js"></script> -->
 	<script src="/static/loading/js/simpleLoadingModal.min.js"></script>
 	<script src="/static/urlparser/js/purl.js"></script>
+	<script src="/static/qrcode/js/jquery.qrcode.min.js"></script>
 	<script src="/static/idocv/js/excel.js"></script>
 	<script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
 	<script src="/static/idocv/js/custom.js"></script>
