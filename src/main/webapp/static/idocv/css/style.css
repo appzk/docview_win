@@ -3,6 +3,44 @@
 /* ---------------------------------------------------------------------- */
 
 	/* -------------------------------------------------- */
+	/*	Loading style
+	/* -------------------------------------------------- */
+	
+	.loading-mask {
+		position: absolute;
+		background-color: whiteSmoke;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 2000;
+	}
+	
+	.loading-mask .brand {
+		position: absolute;
+		width: 100%;
+		bottom: 20px;
+	}
+	
+	.loading-mask .loading-zone {
+		width: 100%;
+		max-width: 300px;
+		margin: 100px auto;
+	}
+	
+	.loading-mask .loading-zone .progress {
+		height: 13px;
+	}
+	
+	.loading-mask .loading-zone .text {
+		text-align: center;
+		margin: 5px auto;
+	}
+
+
+	/* -------------------------------------------------- */
 	/*	Bootstrap responsive style
 	/* -------------------------------------------------- */
 
@@ -56,6 +94,10 @@
 		-webkit-font-smoothing:antialiased;
 		font-smoothing:antialiased;
 		text-rendering:optimizeLegibility;
+	}
+
+	.word-body table {
+		width: auto;
 	}
 
 	.word-page{

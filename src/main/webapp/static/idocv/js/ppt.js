@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	$('body').simpleLoadingModal();
 	var uuid = $.url().segment(2);
 	var sessionId = $.url().param('session');
 	﻿var address = 'http://api.idocv.com/view/' + uuid;
@@ -49,9 +48,9 @@ $(document).ready(function() {
 		
 		Reveal.addEventListener( 'ready', function( event ) {
 		    // event.currentSlide, event.indexh, event.indexv
-			// hide loader
-			$("#loader").fadeOut();
-			$("#dvGlobalMask").fadeOut();
+			
+			// clear progress bar
+			clearProgress();
 		} );
 		
 	});

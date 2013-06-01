@@ -87,10 +87,10 @@ public class ViewController {
 				return "txt/index";
 //				return "redirect:/page/txt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else {
-				throw new DocServiceException("(" + id + ")不是有效的文档uuid！");
+				throw new DocServiceException("(" + id + ")不是有效的文档！");
 			}
 		} catch (DocServiceException e) {
-			logger.error("view error: ", e);
+			logger.error("view(id) 404 error(id=" + id + ", reason=" + e.getMessage() + "): ", e);
 			return "redirect:/404.html";
 		}
 	}
@@ -187,7 +187,7 @@ public class ViewController {
 			page.setUuid(docVo.getUuid());
 			docService.logView(uuid);
 		} catch (Exception e) {
-			logger.error("jsonUuid error: ", e);
+			logger.error("jsonUuid error(" + id + "): ", e);
 			page = new PageVo<OfficeBaseVo>(null, 0);
 			page.setCode(0);
 			page.setDesc(e.getMessage());
@@ -262,7 +262,7 @@ public class ViewController {
 			page.setUuid(docVo.getUuid());
 			docService.logView(uuid);
 		} catch (Exception e) {
-			logger.error("jsonUuid error: ", e);
+			logger.error("jsonUuid error(" + uuid + "): ", e);
 			page = new PageVo<OfficeBaseVo>(null, 0);
 			page.setCode(0);
 			page.setDesc(e.getMessage());
@@ -278,6 +278,7 @@ public class ViewController {
 		} else if (uuid.endsWith("t")) {
 			model.setViewName("txt/static");
 		} else {
+			logger.error("view(html) 404 error(uuid=" + uuid + ", session=" + session + ")");
 			model.setViewName("404");
 		}
 		return model;
@@ -319,7 +320,7 @@ public class ViewController {
 			}
 			*/
 		} catch (Exception e) {
-			logger.error("view error: ", e);
+			logger.error("view(url) 404 error(url=" + url + ", token=" + token + ", name=" + name + ", reason=" + e.getMessage() + "): ", e);
 			return "redirect:/404.html";
 		}
 	}

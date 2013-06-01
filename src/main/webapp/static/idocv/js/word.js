@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	$('body').simpleLoadingModal();
 	var uuid = $.url().segment(2);
 	var sessionId = $.url().param('session');
 	﻿var address = 'http://api.idocv.com/view/' + uuid;
@@ -13,15 +12,6 @@ $(document).ready(function() {
 			
 			// title
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
-			﻿// header
-			/*
-			$('.icon-qrcode').popover({
-				title: '<a href="/doc/download?id=' + rid + '">下载原文件</a>',
-				content: '<div id="qrcode"></div><script type="text/javascript">setTimeout(function() { $(".qrcode").qrcode("' + address + '"); }, 50);</script>',
-				html: true,
-				placement: 'bottom',
-			});
-			*/
 			$(".qrcode").qrcode(address);
 			
 			// pages
@@ -39,8 +29,7 @@ $(document).ready(function() {
 			$('.span12').append('<div class="alert alert-error">' + data.desc + '</div>');
 		}
 		
-		// hide loader
-		$("#loader").fadeOut();
-		$("#dvGlobalMask").fadeOut();
+		// clear progress bar
+		clearProgress();
 	});
 });

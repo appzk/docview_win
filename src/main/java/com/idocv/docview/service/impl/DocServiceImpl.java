@@ -198,10 +198,10 @@ public class DocServiceImpl implements DocService {
 			docDao.updateUrl(vo.getUuid(), url);
 			return vo;
 		} catch (IOException e) {
-			logger.error("save url doc error: ", e);
+			logger.error("save url doc error, token=" + token + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
 			throw new DocServiceException("saveUrl error: ", e);
 		} catch (DBException e) {
-			logger.error("save url doc error: ", e);
+			logger.error("save url doc error, token=" + token + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
 			throw new DocServiceException("saveUrl error: ", e);
 		}
 	}
