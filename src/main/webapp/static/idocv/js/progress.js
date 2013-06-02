@@ -9,7 +9,7 @@ function updateProgress() {
 		startSeconds = new Date().getTime() / 1000;
 	}
 	curSeconds = new Date().getTime() / 1000;
-	percent = Math.floor( (1 - Math.pow(0.9, (curSeconds - startSeconds))) * 100 );
+	percent = Math.floor( (1 - Math.pow(0.8, (curSeconds - startSeconds))) * 100 );
 	
 	$('.loading-mask .loading-zone .text').text("正在载入..." + percent + "%");
 	$('.progress .bar').css("width", percent + "%");
@@ -26,7 +26,7 @@ function updateRemainderProgress() {
 		clearInterval(remainderInterval);
 		$('.loading-mask').delay(1000).fadeOut(500);
 	} else {
-		percent = percent + 5;
+		percent = percent + 8;
 		if (100 < percent) {
 			percent = 100;
 		}
@@ -38,5 +38,5 @@ function updateRemainderProgress() {
 // Clear Progress Bar
 function clearProgress() {
 	clearInterval(convertInterval);
-	remainderInterval = setInterval(updateRemainderProgress, 100);
+	remainderInterval = setInterval(updateRemainderProgress, 90);
 }
