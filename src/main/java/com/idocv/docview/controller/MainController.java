@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.idocv.docview.exception.DocServiceException;
-import com.idocv.docview.po.AppPo;
 import com.idocv.docview.service.AppService;
+import com.idocv.docview.vo.AppVo;
 
 @Controller
 @RequestMapping("")
@@ -24,7 +24,7 @@ public class MainController {
 			String app = sb.toString().replaceFirst("(http://)?(\\w+)\\.idocv.com/?.*", "$2");
 			System.out.println(sb);
 			boolean existApp = false;
-			AppPo appPo = appService.get(app);
+			AppVo appPo = appService.get(app);
 			if (null != appPo) {
 				existApp = true;
 			}

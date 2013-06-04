@@ -306,15 +306,27 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				if (!destFile.isFile()) {
 					convertResult = CmdUtil.runWindows(word2Html, src, dest);
 				}
+				if (!destFile.isFile()) {
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或其它限制，请取消限制后重试！");
+					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或其它限制，请取消限制后重试！");
+				}
 			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
 					convertResult = CmdUtil.runWindows(excel2Html, src, dest);
+				}
+				if (!destFile.isFile()) {
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或其它限制，请取消限制后重试！");
+					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或其它限制，请取消限制后重试！");
 				}
 			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
 				if (destFile.listFiles().length <= 0) {
 					convertResult = CmdUtil.runWindows(ppt2Jpg, src, destFile.getAbsolutePath(), "save");
+				}
+				if (destFile.listFiles().length <= 0) {
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或其它限制，请取消限制后重试！");
+					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或其它限制，请取消限制后重试！");
 				}
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				// do nothing.

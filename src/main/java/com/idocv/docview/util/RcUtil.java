@@ -10,6 +10,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.idocv.docview.exception.DocServiceException;
+
 
 @Component("rcUtil")
 public class RcUtil {
@@ -30,7 +32,16 @@ public class RcUtil {
 	 * @param size
 	 * @return
 	 */
-	public static String genRid(String appId, String fileName, int size) {
+	public static String genRid(String appId, String fileName, int size) throws DocServiceException {
+		if (StringUtils.isBlank(appId)) {
+			throw new DocServiceException("应用id为空！");
+		}
+		if (StringUtils.isBlank(fileName)) {
+			throw new DocServiceException("文件名为空！");
+		}
+		if (size <= 0) {
+			throw new DocServiceException("文件大小为0！");
+		}
 		Date date = new Date();
 		String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 		String uuid = RandomStringUtils.randomAlphabetic(6);

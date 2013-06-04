@@ -75,17 +75,12 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public DocVo addByApp(String token, String name, byte[] data, int mode) throws DocServiceException {
-		if (StringUtils.isBlank(token)) {
-			throw new DocServiceException(0, "token为空！");
+	@Deprecated
+	public DocVo addByApp(String app, String name, byte[] data, int mode) throws DocServiceException {
+		if (StringUtils.isBlank(app)) {
+			throw new DocServiceException(0, "app为空！");
 		}
 		try {
-			AppPo appPo = appDao.getByToken(token);
-			if (null == appPo || StringUtils.isBlank(appPo.getId())) {
-				logger.error("不存在该应用，token=" + token);
-				throw new DocServiceException(0, "不存在该应用！");
-			}
-			String app = appPo.getId();
 			return addDoc(app, null, name, data, mode, null);
 		} catch (Exception e) {
 			logger.error("save doc error: ", e);
@@ -94,6 +89,62 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
+	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
+		try {
+			// get app & user info
+			if (StringUtils.isBlank(app)) {
+				throw new DocServiceException("应用为空！");
+			}
+			
+			// get label id
+			String labelId = null;
+			if (StringUtils.isNotBlank(labelName) && !"all".equalsIgnoreCase(labelName)) {
+				LabelPo labelPo = labelDao.get(uid, labelName);
+				if (null != labelPo) {
+					labelId = labelPo.getId();
+				}
+			}
+			return addDoc(app, uid, name, data, mode, labelId);
+		} catch (DBException e) {
+			logger.error("save doc by user error: ", e);
+			throw new DocServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public DocVo addUrl(String app, String uid, String name, String url, int mode, String labelName) throws DocServiceException {
+		if (StringUtils.isBlank(app) || StringUtils.isBlank(url)) {
+			logger.error("参数不足：app=" + app + ", uid=" + uid + ", url=" + url + ", name=" + name + ", mode=" + mode);
+			throw new DocServiceException(0, "请提供必要参数！");
+		}
+		try {
+			DocVo vo = convertPo2Vo(docDao.getUrl(url, false));
+			if (null != vo) {
+				return vo;
+			}
+			String host = getHost(url);
+			Response urlResponse = null;
+			urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
+			byte[] bytes = urlResponse.bodyAsBytes();
+			
+			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/[^/]+\\.[^/]+")) {
+				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
+			}
+			
+			vo = add(app, null, name, bytes, mode, null);
+			docDao.updateUrl(vo.getUuid(), url);
+			return vo;
+		} catch (IOException e) {
+			logger.error("save url doc error, app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
+			throw new DocServiceException("saveUrl error: ", e);
+		} catch (DBException e) {
+			logger.error("save url doc error, app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
+			throw new DocServiceException("saveUrl error: ", e);
+		}
+	}
+
+	@Override
+	@Deprecated
 	public DocVo addByUser(String sid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
 		try {
 			// get app & user info
@@ -180,6 +231,7 @@ public class DocServiceImpl implements DocService {
 	}
 	
 	@Override
+	@Deprecated
 	public DocVo addUrl(String token, String url, String name, int mode) throws DocServiceException {
 		if (StringUtils.isBlank(token) || StringUtils.isBlank(name) || StringUtils.isBlank(url)) {
 			logger.error("参数不足：token=" + token + ", url=" + url + ", name=" + name + ", mode=" + mode);

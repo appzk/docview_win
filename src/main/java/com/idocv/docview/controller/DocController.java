@@ -31,6 +31,7 @@ import com.idocv.docview.service.PreviewService;
 import com.idocv.docview.service.UserService;
 import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.vo.AppVo;
 import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.UserVo;
 
@@ -66,35 +67,73 @@ public class DocController {
 	@ResponseBody
 	@RequestMapping("upload")
 	public String upload(HttpServletRequest req,
-			@RequestParam(value = "file", required = true) MultipartFile file,
+			@RequestParam(value = "file", required = false) MultipartFile file,
+			@RequestParam(value = "url", required = false) String url,
+			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "token", required = false) String token,
 			@RequestParam(value = "mode", defaultValue = "public") String modeString,
 			@RequestParam(value = "label", defaultValue = "") String label) {
 		try {
 			// Two ways to upload: App token upload & user Sid upload
 			String ip = IpUtil.getIpAddr(req);
-			byte[] data = file.getBytes();
-			String name = file.getOriginalFilename();
+
+			// get access mode, 0-private, 1-public
 			int mode = 1;
 			if ("private".equalsIgnoreCase(modeString)) {
 				mode = 0;
 			}
-			DocVo vo = null;
+
+			// get app & uid
+			String app = null;
+			String uid = null;
 			if (StringUtils.isNotBlank(token)) {
-				// Upload by App token
-				vo = docService.addByApp(token, name, data, mode);
+				// 1. get app by token
+				AppVo appPo = appService.getByToken(token);
+				if (null == appPo || StringUtils.isBlank(appPo.getId())) {
+					logger.error("不存在该应用，token=" + token);
+					throw new DocServiceException(0, "不存在该应用！");
+				}
+				app = appPo.getId();
 			} else {
-				// Upload by user
 				String sid = getSidByHttpServletRequest(req);
 				if (StringUtils.isBlank(sid)) {
-					throw new DocServiceException("请先登录！");
+					logger.error("请先登录，或通过token来访问！");
+					throw new DocServiceException("请先登录，或通过token来访问！");
 				}
 				UserVo userVo = userService.getBySid(sid);
 				if (null == userVo) {
-					throw new DocServiceException("用户不存在！");
+					logger.error("用户不存在或未登录！");
+					throw new DocServiceException("用户不存在或未登录！");
 				}
-				vo = docService.addByUser(sid, name, data, mode, label);
+				int userStatus = userVo.getStatus();
+				if (userStatus < 1) {
+					logger.error("用户邮箱未验证！");
+					throw new DocServiceException("用户邮箱未验证！");
+				}
+				if (userStatus == 1 && mode == 0) {
+					logger.error("普通用户只能上传公开文档，要上传私有文档，请升级为会员！");
+					throw new DocServiceException("普通用户只能上传公开文档，要上传私有文档，请升级为会员！");
+				}
+				app = userVo.getApp();
+				uid = userVo.getId();
 			}
+
+			// upload data
+			DocVo vo = null;
+			if (null != file) {
+				// upload by multipart/form-data
+				byte[] data = file.getBytes();
+				if (StringUtils.isBlank(name)) {
+					name = file.getOriginalFilename();
+				}
+				vo = docService.add(app, uid, name, data, mode, label);
+			} else if (StringUtils.isNotBlank(url)) {
+				// upload by URL
+				vo = docService.addUrl(app, uid, name, url, mode, label);
+			} else {
+				throw new DocServiceException(0, "上传错误，file和url参数必选其一！");
+			}
+
 			if (null == vo) {
 				throw new Exception("上传失败！");
 			}

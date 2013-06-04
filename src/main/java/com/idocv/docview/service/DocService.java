@@ -24,8 +24,26 @@ public interface DocService {
 	 * @param mode 0-private, 1-public
 	 * @return
 	 */
+	@Deprecated
 	DocVo addByApp(String appId, String name, byte[] data, int mode) throws DocServiceException;
 	
+	/**
+	 * Save normal resource to local directory.
+	 * 
+	 * @param app
+	 * @param uid
+	 * @param name
+	 * @param data
+	 * @param mode
+	 * @param labelName
+	 * @return
+	 * @throws DocServiceException
+	 */
+	DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException;
+	
+	DocVo addUrl(String app, String uid, String name, String url, int mode, String labelName) throws DocServiceException;
+	
+	@Deprecated
 	DocVo addByUser(String sid, String name, byte[] data, int mode, String labelName) throws DocServiceException;
 
 	/**
@@ -36,6 +54,7 @@ public interface DocService {
 	 * @param mode 0-private, 1-public
 	 * @return
 	 */
+	@Deprecated
 	DocVo addUrl(String token, String url, String name, int mode) throws DocServiceException;
 
 	boolean delete(String uuid) throws DocServiceException;

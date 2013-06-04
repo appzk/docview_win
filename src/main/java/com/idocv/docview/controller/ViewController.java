@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.service.AppService;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.PreviewService;
 import com.idocv.docview.service.SessionService;
 import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.vo.AppVo;
 import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.OfficeBaseVo;
 import com.idocv.docview.vo.PageVo;
@@ -36,6 +38,9 @@ public class ViewController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ViewController.class);
 	
+	@Resource
+	private AppService appService;
+
 	@Resource
 	private DocService docService;
 
@@ -289,7 +294,8 @@ public class ViewController {
 			@RequestParam(required = true) String url,
 			@RequestParam(value = "token", defaultValue = "testtoken") String token,
 			@RequestParam(required = false) String name,
-			@RequestParam(value = "mode", defaultValue = "public") String modeString) {
+			@RequestParam(value = "mode", defaultValue = "public") String modeString,
+			@RequestParam(value = "label", defaultValue = "") String label) {
 		try {
 			int mode = 1;
 			if ("private".equalsIgnoreCase(modeString)) {
@@ -299,12 +305,20 @@ public class ViewController {
 			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/[^/]+\\.[^/]+")) {
 				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
 			}
-			String ip = req.getRemoteAddr();
-			DocVo po = docService.addUrl(token, url, name, mode);
-			if (null == po) {
-				throw new DocServiceException("Upload URL document error!");
+			if (StringUtils.isBlank(token)) {
+				throw new DocServiceException("URL上传错误，请提供token参数！");
 			}
-			String uuid = po.getUuid();
+			AppVo appPo = appService.getByToken(token);
+			if (null == appPo || StringUtils.isBlank(appPo.getId())) {
+				logger.error("不存在该应用，token=" + token);
+				throw new DocServiceException(0, "不存在该应用！");
+			}
+			String app = appPo.getId();
+			DocVo vo = docService.addUrl(app, null, name, url, mode, label);
+			if (null == vo) {
+				throw new DocServiceException("上传URL文件错误！");
+			}
+			String uuid = vo.getUuid();
 			return "redirect:" + uuid;
 			/*
 			if (uuid.endsWith("w")) {

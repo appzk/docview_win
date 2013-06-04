@@ -96,7 +96,7 @@
 	}
 
 	.word-body table {
-		width: auto;
+		width: auto !important;
 	}
 
 	.word-page{

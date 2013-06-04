@@ -11,6 +11,7 @@ import com.idocv.docview.exception.DBException;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.AppPo;
 import com.idocv.docview.service.AppService;
+import com.idocv.docview.vo.AppVo;
 
 @Service
 public class AppServiceImpl implements AppService {
@@ -31,9 +32,9 @@ public class AppServiceImpl implements AppService {
 	}
 
 	@Override
-	public AppPo get(String id) throws DocServiceException {
+	public AppVo get(String id) throws DocServiceException {
 		try {
-			return appDao.get(id);
+			return convertPo2Vo(appDao.get(id));
 		} catch (DBException e) {
 			logger.error("get error: ", e);
 			throw new DocServiceException(e);
@@ -41,12 +42,30 @@ public class AppServiceImpl implements AppService {
 	}
 
 	@Override
-	public AppPo getByKey(String key) throws DocServiceException {
+	public AppVo getByToken(String token) throws DocServiceException {
 		try {
-			return appDao.getByToken(key);
+			return convertPo2Vo(appDao.getByToken(token));
 		} catch (DBException e) {
 			logger.error("getByKey error: ", e);
 			throw new DocServiceException(e);
 		}
+	}
+	
+	private AppVo convertPo2Vo(AppPo po) {
+		if (null == po) {
+			return null;
+		}
+		AppVo vo = new AppVo();
+		vo.setId(po.getId());
+		vo.setName(po.getName());
+		vo.setLogo(po.getLogo());
+		vo.setKey(po.getKey());
+		vo.setIps(po.getIps());
+		vo.setPhone(po.getPhone());
+		vo.setEmail(po.getEmail());
+		vo.setAddress(po.getAddress());
+		vo.setCtime(po.getCtime());
+		vo.setUtime(po.getUtime());
+		return vo;
 	}
 }
