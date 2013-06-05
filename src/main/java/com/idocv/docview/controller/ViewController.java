@@ -88,6 +88,8 @@ public class ViewController {
 			} else if (uuid.endsWith("p")) {
 				return "ppt/index";
 //				return "redirect:/page/ppt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
+			} else if (uuid.endsWith("f")) {
+				return "pdf/index";
 			} else if (uuid.endsWith("t")) {
 				return "txt/index";
 //				return "redirect:/page/txt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
@@ -180,8 +182,9 @@ public class ViewController {
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				page = previewService.convertTxt2Html(rid);
 			} else if ("pdf".equalsIgnoreCase(ext)) {
-				// TODO
 				String url = previewService.convertPdf2Swf(rid);
+				page = new PageVo<Serializable>(null, 0);
+				page.setUrl(url);
 			} else {
 				page = new PageVo<OfficeBaseVo>(null, 0);
 				page.setCode(0);
@@ -227,7 +230,8 @@ public class ViewController {
 				// 5. get sessionVo by sessionId
 				SessionVo sessionVo = sessionService.get(session);
 				if (null == sessionVo) {
-					throw new DocServiceException("Session NOT found!");
+					logger.error("不存在该会话！");
+					throw new DocServiceException("不存在该会话！");
 				}
 				// 6. current time - ctime > expire time ? session expired :
 				// view.
@@ -235,10 +239,12 @@ public class ViewController {
 				long sessionCtime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sessionCtimeString).getTime();
 				long currentTime = System.currentTimeMillis();
 				if (currentTime - sessionCtime > 3600000) {
-					throw new DocServiceException("Session expired, please get a new one!");
+					logger.error("会话已过期，请重新获取一个新的会话！");
+					throw new DocServiceException("会话已过期，请重新获取一个新的会话！");
 				}
 				if (!uuid.equals(sessionVo.getUuid())) {
-					throw new DocServiceException("Session is NOT consistent with UUID.");
+					logger.error("该会话与稳定UUID不一致！" + ", session=" + session + ", uuid=" + uuid);
+					throw new DocServiceException("该会话与稳定UUID不一致！");
 				}
 			}
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
@@ -260,7 +266,8 @@ public class ViewController {
 			} else {
 				page = new PageVo<OfficeBaseVo>(null, 0);
 				page.setCode(0);
-				page.setDesc("Error: not a document type.");
+				logger.error("暂不支持该文件类型（" + ext + "）的预览！");
+				page.setDesc("暂不支持该文件类型（" + ext + "）的预览！");
 			}
 			page.setName(docVo.getName());
 			page.setRid(docVo.getRid());

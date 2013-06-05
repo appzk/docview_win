@@ -1,6 +1,8 @@
 package com.idocv.docview.dao.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +34,7 @@ public class SessionDaoImpl extends BaseDaoImpl implements SessionDao, Initializ
 
 	@Override
 	public String add(String appId, String uuid) throws DBException {
-		long time = System.currentTimeMillis();
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		if (StringUtils.isBlank(appId) || StringUtils.isBlank(uuid)) {
 			throw new DBException("Insufficient parameters!");
 		}

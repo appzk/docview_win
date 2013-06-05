@@ -1,9 +1,9 @@
-<%@ page contentType="text/html; charset=utf-8"%>
+﻿<%@ page contentType="text/html; charset=utf-8"%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Text - I Doc View</title>
+    <title>PDF - I Doc View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="在线文档预览、文档协作编辑、幻灯片远程控制、同步信息展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt等。">
     <meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
@@ -23,8 +23,8 @@
     <!-- to be done -->
   </head>
 
-  <body class="word-body">
-  
+  <body style="margin: 0; padding: 0;">
+  	
     <div class="loading-mask" style="display: none;">
       <div class="loading-zone">
         <div class="text">正在载入...0%</div>
@@ -39,49 +39,9 @@
       </div>
     </div>
 
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <!-- FILE NAME HERE -->
-          <!-- QR Code start -->
-          <div class="nav-collapse collapse">
-            <ul class="nav pull-right">
-              <li class="dropdown">
-                <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon-qrcode icon-white"></i><strong class="caret"></strong></a>
-                <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-                  <div class="qrcode"></div>
-                  <div style="text-align: center; margin: 8px;">扫描二维码，在手机或Pad中查看文档</div>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <!-- QR Code end -->
-        </div>
-      </div>
-    </div>
+	<div id="viewerPlaceHolder" style="width:100%;height:100%;"></div>
 
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span12">
-        	<!-- TXT PAGES HERE -->
-        	<!-- 
-        	<div class="word-page"><div class="word-content"><pre></pre></div></div>
-        	 -->
-        </div><!--/span-->
-      </div><!--/row-->
-
-      <hr>
-
-      <footer>
-			Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
-      </footer>
-
-    </div><!--/.fluid-container-->
+	<script src="/static/flex/flexpaper_flash.js"></script>
 
     <!-- Le javascript
     ================================================== -->
@@ -91,12 +51,7 @@
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
 	<script src="/static/idocv/js/progress.js"></script>
 	<script src="/static/urlparser/js/purl.js"></script>
-	<script src="/static/qrcode/js/jquery.qrcode.min.js"></script>
-	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-	<!-- <script src="/static/idocv/js/user.js"></script> -->
-	<script src="/static/idocv/js/txt.js"></script>
-	<script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
-	<script src="/static/idocv/js/custom.js"></script>
+	<script src="/static/idocv/js/pdf.js"></script>
 	<script src="/static/idocv/js/stat.js"></script>
 	
 	<!-- Baidu Share BEGIN -->

@@ -71,6 +71,7 @@ public class DocServiceImpl implements DocService {
 		docTypes.add("xlsx");
 		docTypes.add("ppt");
 		docTypes.add("pptx");
+		docTypes.add("pdf");
 		docTypes.add("txt");
 	}
 

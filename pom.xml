@@ -300,6 +300,7 @@
 				<pom.office.cmd.word2html>D:\idocv\converter\bin\word2html.exe</pom.office.cmd.word2html>
 				<pom.office.cmd.excel2html>D:\idocv\converter\bin\excel2html.exe</pom.office.cmd.excel2html>
 				<pom.office.cmd.ppt2jpg>D:\idocv\converter\bin\ppt2jpg.exe</pom.office.cmd.ppt2jpg>
+				<pom.swftools.cmd.pdf2swf>D:\idocv\converter\bin\pdf2swf.exe</pom.swftools.cmd.pdf2swf>
 			</properties>
 		</profile>
 		<!-- Production -->
@@ -318,6 +319,7 @@
 				<pom.office.cmd.word2html>D:\idocv\converter\bin\word2html.exe</pom.office.cmd.word2html>
 				<pom.office.cmd.excel2html>D:\idocv\converter\bin\excel2html.exe</pom.office.cmd.excel2html>
 				<pom.office.cmd.ppt2jpg>D:\idocv\converter\bin\ppt2jpg.exe</pom.office.cmd.ppt2jpg>
+				<pom.swftools.cmd.pdf2swf>D:\idocv\converter\bin\pdf2swf.exe</pom.swftools.cmd.pdf2swf>
 			</properties>
 		</profile>
 	</profiles>

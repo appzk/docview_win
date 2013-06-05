@@ -51,6 +51,8 @@ public class RcUtil {
 			uuid += "x";
 		} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
 			uuid += "p";
+		} else if ("pdf".equalsIgnoreCase(ext)) {
+			uuid += "f";
 		} else if ("txt".equalsIgnoreCase(ext)) {
 			uuid += "t";
 		}
