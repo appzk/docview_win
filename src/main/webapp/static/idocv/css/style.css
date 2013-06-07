@@ -149,11 +149,9 @@
 		word-wrap: break-word;
 		margin: 0px auto;
 	}
-	/*
 	table, tbody, tfoot, thead, tr, th, td {
-		border: 1px solid black;
+		border: 1px solid #dddddd !important;
 	}
-	*/
 
 	/* -------------------------------------------------- */
 	/*	Back to Top
