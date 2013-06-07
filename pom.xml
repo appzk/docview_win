@@ -243,12 +243,12 @@
 					<useFileMappedBuffer>false</useFileMappedBuffer>
 					<connectors>
 						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-							<port>10690</port>
+							<port>16890</port>
 							<maxIdleTime>60000</maxIdleTime>
 						</connector>
 					</connectors>
 					<stopKey>docviewstopkey</stopKey>
-					<stopPort>10691</stopPort>
+					<stopPort>16891</stopPort>
 					<jvmArgs>-Xms512M -Xmx1024M -XX:PermSize=128M -XX:MaxPermSize=256M</jvmArgs>
 					<systemProperties>
 						<systemProperty>
