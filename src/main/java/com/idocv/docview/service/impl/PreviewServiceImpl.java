@@ -158,7 +158,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 				// get content
 				String sheetFileContent = FileUtils.readFileToString(sheetFiles.get(i), "GBK");
-				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+)(>.*</table>).*(?-i)", "$1" + " class=\"table table-condensed table-bordered table-striped\"" + "$2");
+				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+)(>.*</table>).*(?-i)", "$1" + " class=\"table table-condensed table-bordered\"" + "$2");
 				sheetContent = sheetContent.replaceFirst("table-layout:fixed;", "");
 				sheetContent = processImageUrl(rcUtil.getParseUrlDir(rid) + "index.files/", sheetContent);
 				sheetContent = processStyle(sheetContent);
