@@ -17,7 +17,7 @@ jQuery(document).ready(function($) {
 
 		var settings = {
 				button      : '#back-to-top',
-				text        : 'Back to Top',
+				text        : '返回顶部',
 				min         : 200,
 				fadeIn      : 400,
 				fadeOut     : 400,
