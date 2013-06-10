@@ -45,6 +45,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 	private @Value("${office.cmd.word2html}")
 	String word2Html;
+	private static int WORD_PAGING_LINE_COUNT = 300;
 
 	private @Value("${office.cmd.excel2html}")
 	String excel2Html;
@@ -68,7 +69,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			convert(rid);
 			File htmlFile = new File(rcUtil.getParsePathOfHtml(rid));
 			
-			// read body
+			// check body
 			File bodyFile = new File(rcUtil.getParseDir(rid) + "body.html");
 			File styleFile = new File(rcUtil.getParseDir(rid) + "style.css");
 			String bodyRaw;
@@ -85,22 +86,90 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				bodyRaw = FileUtils.readFileToString(bodyFile, "UTF-8");
 			}
 
+			// check first page existence
+			File firstPageFile = new File(rcUtil.getParseDir(rid) + "1.html");
 			String bodyString = bodyRaw;
+			bodyString = processStyle(bodyString);
+			if (!firstPageFile.isFile()) {
+				List<String> pages = new ArrayList<String>();
+				String pageRegex = "(?s)(?i)(.+?)(<span[^>]+?>[\\s]*<br[^>]*?style=[\"|\'][^>]*page-break-before[^>]+>[\\s]*</span>)(.*)(?-i)";
+				while (bodyString.matches(pageRegex)) {
+					String page = bodyString.replaceFirst(pageRegex, "$1");
+					bodyString = bodyString.replaceFirst(pageRegex, "$3");
+					pages.add(page);
+				}
+				pages.add(bodyString);
+				int curPageNum = 1;
+				// 1. page by manual page breaking
+				for (String page : pages) {
+					String[] lines = page.split("\r?\n");
+					if (lines.length > WORD_PAGING_LINE_COUNT) {
+						// 2. page by lines
+						List<String> subPages = new ArrayList<String>();
+						String subPageString = "";
+						int count = 0;
+						for (int i = 0; i < lines.length; i++, count++) {
+							subPageString += lines[i] + "\n";
+							if (count > WORD_PAGING_LINE_COUNT && StringUtils.isNotBlank(lines[i]) && lines[i].matches("^(\\S+.*?)?</\\w+>$")) {
+								count = 0;
+								subPages.add(subPageString.trim());
+								subPageString = "";
+							}
+						}
+						if (StringUtils.isNotBlank(subPageString)) {
+							subPages.add(subPageString.trim());
+						}
+						
+						if (curPageNum > 1) {
+							String firstSubPageString = subPages.get(0);
+							// </div></div><div class="word-page"><div class="word-content">
+							firstSubPageString = "<div class=\"page-break-before\"></div>\n" + firstSubPageString;
+							subPages.set(0, firstSubPageString);
+						}
+						// write page content to file
+						for (int i = 0; i < subPages.size(); i++) {
+							File curPageFile = new File(rcUtil.getParseDir(rid) + curPageNum + ".html");
+							FileUtils.writeStringToFile(curPageFile, subPages.get(i), "UTF-8");
+							curPageNum++;
+						}
+					} else {
+						// write page content to file
+						File curPageFile = new File(rcUtil.getParseDir(rid) + curPageNum + ".html");
+						FileUtils.writeStringToFile(curPageFile, page, "UTF-8");
+						curPageNum++;
+					}
+					System.out.println("length: " + lines.length);
+				}
+			}
 
 			// modify picture path from RELATIVE to ABSOLUTE url.
 			bodyString = processImageUrl(rcUtil.getParseUrlDir(rid), bodyString);
-			bodyString = processStyle(bodyString);
 			
-			// paging
-			List<String> pages = new ArrayList<String>();
-			String pageRegex = "(?s)(?i)(.+?)(<span[^>]+?>[\\s]*<br[^>]*?style=[\"|\'][^>]*page-break-before[^>]+>[\\s]*</span>)(.*)(?-i)";
-			while (bodyString.matches(pageRegex)) {
-				String page = bodyString.replaceFirst(pageRegex, "$1");
-				bodyString = bodyString.replaceFirst(pageRegex, "$3");
-				pages.add(page);
+			// get page content
+			File curPageFile = new File(rcUtil.getParseDir(rid) + start + ".html");
+			if (!curPageFile.isFile()) {
+				throw new DocServiceException("没有更多内容！");
 			}
-			pages.add(bodyString);
-			
+			List<String> pages = new ArrayList<String>();
+			limit = limit >= 0 ? limit : 0;
+			limit = limit == 0 ? Integer.MAX_VALUE : limit;
+			for (int i = 0; i < limit; i++) {
+				curPageFile = new File(rcUtil.getParseDir(rid) + (start + i) + ".html");
+				if (curPageFile.isFile()) {
+					String curPageString = FileUtils.readFileToString(curPageFile, "UTF-8");
+					/*
+					if (curPageString.startsWith("<div class=\"page-break-before")) {
+						String PAGE_BREAKING_STYLE = "</div></div><div class=\"word-page\"><div class=\"word-content\">";
+						curPageString = curPageString.replaceFirst("(?s)(?i)<div class=\"page-break-before\"></div>", PAGE_BREAKING_STYLE);
+					}
+					*/
+					curPageString = processImageUrl(rcUtil.getParseUrlDir(rid), curPageString);
+					pages.add(curPageString);
+				} else {
+					break;
+				}
+			}
+
 			List<WordVo> data = new ArrayList<WordVo>();
 			// construct vo
 			for (String page : pages) {
@@ -393,6 +462,10 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\"?)([^>]+?>)(?-i)", "$1" + prefix + "$2");
 	}
 	
+	public static void write2File(File file, String content) throws IOException {
+		FileUtils.writeStringToFile(file, content, "UTF-8");
+	}
+
 	public static String getEncoding(File file) {
 		String charset = "GBK";
 		byte[] first3Bytes = new byte[3];
