@@ -12,7 +12,7 @@ function updateProgress() {
 	percent = Math.floor( (1 - Math.pow(0.75, (curSeconds - startSeconds))) * 100 );
 	
 	$('.loading-mask .loading-zone .text').text("正在载入..." + percent + "%");
-	$('.progress .bar').css("width", percent + "%");
+	$('.progress:first .bar').css("width", percent + "%");
 }
 
 function updateRemainderProgress() {
@@ -31,7 +31,7 @@ function updateRemainderProgress() {
 			percent = 100;
 		}
 		$('.loading-mask .loading-zone .text').text("正在载入..." + percent + "%");
-		$('.progress .bar').css("width", percent + "%");
+		$('.progress:first .bar').css("width", percent + "%");
 	}
 }
 	

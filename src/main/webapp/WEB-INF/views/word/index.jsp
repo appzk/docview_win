@@ -82,8 +82,12 @@
       <hr>
 
       <footer>
-			Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+        Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
       </footer>
+      
+      <div class="progress progress-striped active bottom-paging-progress">
+        <div class="bar" style="width: 0%;"></div>
+      </div>
 
     </div><!--/.fluid-container-->
 
@@ -92,8 +96,10 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
 	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/idocv/js/custom.js"></script>
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
 	<script src="/static/idocv/js/progress.js"></script>
+	<script src="/static/scrollspy/js/jquery-scrollspy.js"></script>
 	<script src="/static/urlparser/js/purl.js"></script>
 	<script src="/static/qrcode/js/jquery.qrcode.min.js"></script>
 	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
@@ -102,7 +108,6 @@
 	<script src="/static/infinite-scroll/js/jquery.infinitescroll.js"></script>
 	<script src="/static/idocv/js/word.js"></script>
 	<script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
-	<script src="/static/idocv/js/custom.js"></script>
 	<script src="/static/idocv/js/stat.js"></script>
 	
 	<!-- Baidu Share BEGIN -->

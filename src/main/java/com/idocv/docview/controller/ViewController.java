@@ -170,6 +170,7 @@ public class ViewController {
 			}
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
 					|| "odt".equalsIgnoreCase(ext)) {
+				start = (start - 1) * size + 1;
 				page = previewService.convertWord2Html(rid, start, size);
 			} else if ("xls".equalsIgnoreCase(ext)
 					|| "xlsx".equalsIgnoreCase(ext)
@@ -180,7 +181,8 @@ public class ViewController {
 					|| "odp".equalsIgnoreCase(ext)) {
 				page = previewService.convertPPT2Html(rid, start, size);
 			} else if ("txt".equalsIgnoreCase(ext)) {
-				page = previewService.convertTxt2Html(rid);
+				start = (start - 1) * size + 1;
+				page = previewService.convertTxt2Html(rid, start, size);
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				String url = previewService.convertPdf2Swf(rid);
 				page = new PageVo<Serializable>(null, 0);
@@ -259,7 +261,7 @@ public class ViewController {
 					|| "odp".equalsIgnoreCase(ext)) {
 				page = previewService.convertPPT2Html(rid, start, size);
 			} else if ("txt".equalsIgnoreCase(ext)) {
-				page = previewService.convertTxt2Html(rid);
+				page = previewService.convertTxt2Html(rid, start, size);
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				// TODO
 				String url = previewService.convertPdf2Swf(rid);

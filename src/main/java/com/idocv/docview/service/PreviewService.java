@@ -66,7 +66,7 @@ public interface PreviewService {
 	 * 
 	 * @param rid
 	 */
-	PageVo<TxtVo> convertTxt2Html(String rid) throws DocServiceException;
+	PageVo<TxtVo> convertTxt2Html(String rid, int start, int limit) throws DocServiceException;
 
 	/**
 	 * Convert PDF to SWF file.

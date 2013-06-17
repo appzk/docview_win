@@ -149,9 +149,11 @@
 		word-wrap: break-word;
 		margin: 0px auto;
 	}
+	/*
 	table, tbody, tfoot, thead, tr, th, td {
 		border: 1px solid #dddddd !important;
 	}
+	*/
 
 	/* -------------------------------------------------- */
 	/*	Back to Top
@@ -185,4 +187,16 @@
 	/* -------------------------------------------------- */
 	footer {
 		text-align: center;
+	}
+	
+	/* -------------------------------------------------- */
+	/*	Bottom paging progress
+	/* -------------------------------------------------- */
+	.bottom-paging-progress {
+		position: fixed;
+		width: 100%;
+		bottom: 0px;
+		left: 0px;
+		margin: 0px auto;
+		height: 3px;
 	}

@@ -64,3 +64,26 @@ jQuery(document).ready(function($) {
 	/* end UItoTop (Back to Top) */
 
 });
+
+function bindBottomPagingProgress() {
+	$('.scroll-page').each(function(i) {
+		var position = $(this).position();
+		console.log(position);
+		console.log('min: ' + position.top + ' / max: ' + parseInt(position.top + $(this).height()));
+		$(this).scrollspy({
+			min: position.top,
+			max: position.top + $(this).height(),
+			onEnter: function(element, position) {
+				if(console) console.log('entering ' +  element.id);
+				// $("body").css('background-color', element.id);
+				var percent = Math.round(element.id / totalSize * 100);
+				// alert('percent: ' + percent);
+				$('.bottom-paging-progress .bar').width('' + percent + '%');
+			},
+			onLeave: function(element, position) {
+				if(console) console.log('leaving ' +  element.id);
+				//	$('body').css('background-color','#eee');
+			}
+		});
+	});
+}

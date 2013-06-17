@@ -45,7 +45,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 	private @Value("${office.cmd.word2html}")
 	String word2Html;
-	private static int WORD_PAGING_LINE_COUNT = 300;
+	private static int WORD_PAGING_LINE_COUNT = 200;
+	private static int WORD_PAGING_CHAR_COUNT = 3000;
 
 	private @Value("${office.cmd.excel2html}")
 	String excel2Html;
@@ -103,39 +104,35 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				// 1. page by manual page breaking
 				for (String page : pages) {
 					String[] lines = page.split("\r?\n");
-					if (lines.length > WORD_PAGING_LINE_COUNT) {
-						// 2. page by lines
-						List<String> subPages = new ArrayList<String>();
-						String subPageString = "";
-						int count = 0;
-						for (int i = 0; i < lines.length; i++, count++) {
-							subPageString += lines[i] + "\n";
-							if (count > WORD_PAGING_LINE_COUNT && StringUtils.isNotBlank(lines[i]) && lines[i].matches("^(\\S+.*?)?</\\w+>$")) {
-								count = 0;
-								subPages.add(subPageString.trim());
-								subPageString = "";
-							}
-						}
-						if (StringUtils.isNotBlank(subPageString)) {
+					// 2. page by lines
+					List<String> subPages = new ArrayList<String>();
+					String subPageString = "";
+					int count = 0;
+					for (int i = 0; i < lines.length; i++, count++) {
+						subPageString += lines[i] + "\n";
+						if ((count > WORD_PAGING_LINE_COUNT || subPageString
+								.length() > WORD_PAGING_CHAR_COUNT)
+								&& StringUtils.isNotBlank(lines[i])
+								&& lines[i].matches("^(\\S+.*?)?</\\w+>$")) {
+							count = 0;
 							subPages.add(subPageString.trim());
+							subPageString = "";
 						}
-						
-						if (curPageNum > 1) {
-							String firstSubPageString = subPages.get(0);
-							// </div></div><div class="word-page"><div class="word-content">
-							firstSubPageString = "<div class=\"page-break-before\"></div>\n" + firstSubPageString;
-							subPages.set(0, firstSubPageString);
-						}
-						// write page content to file
-						for (int i = 0; i < subPages.size(); i++) {
-							File curPageFile = new File(rcUtil.getParseDir(rid) + curPageNum + ".html");
-							FileUtils.writeStringToFile(curPageFile, subPages.get(i), "UTF-8");
-							curPageNum++;
-						}
-					} else {
-						// write page content to file
+					}
+					if (StringUtils.isNotBlank(subPageString)) {
+						subPages.add(subPageString.trim());
+					}
+					
+					if (subPages.size() > 0) {
+						String firstSubPageString = subPages.get(0);
+						// </div></div><div class="word-page"><div class="word-content">
+						firstSubPageString = "<div class=\"page-break-before\"></div>\n" + firstSubPageString;
+						subPages.set(0, firstSubPageString);
+					}
+					// write page content to file
+					for (int i = 0; i < subPages.size(); i++) {
 						File curPageFile = new File(rcUtil.getParseDir(rid) + curPageNum + ".html");
-						FileUtils.writeStringToFile(curPageFile, page, "UTF-8");
+						FileUtils.writeStringToFile(curPageFile, subPages.get(i), "UTF-8");
 						curPageNum++;
 					}
 					System.out.println("length: " + lines.length);
@@ -143,19 +140,21 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			}
 
 			// modify picture path from RELATIVE to ABSOLUTE url.
-			bodyString = processImageUrl(rcUtil.getParseUrlDir(rid), bodyString);
+			// bodyString = processImageUrl(rcUtil.getParseUrlDir(rid), bodyString);
 			
 			// get page content
 			File curPageFile = new File(rcUtil.getParseDir(rid) + start + ".html");
 			if (!curPageFile.isFile()) {
-				throw new DocServiceException("没有更多内容！");
+				throw new DocServiceException("已是最后一页！");
 			}
 			List<String> pages = new ArrayList<String>();
 			limit = limit >= 0 ? limit : 0;
 			limit = limit == 0 ? Integer.MAX_VALUE : limit;
+			int totalPageCount = start;
 			for (int i = 0; i < limit; i++) {
 				curPageFile = new File(rcUtil.getParseDir(rid) + (start + i) + ".html");
 				if (curPageFile.isFile()) {
+					totalPageCount = start + i;
 					String curPageString = FileUtils.readFileToString(curPageFile, "UTF-8");
 					/*
 					if (curPageString.startsWith("<div class=\"page-break-before")) {
@@ -169,15 +168,18 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 					break;
 				}
 			}
+			while (new File(rcUtil.getParseDir(rid) + (totalPageCount + 1) + ".html").isFile()) {
+				totalPageCount ++;
+			}
 
 			List<WordVo> data = new ArrayList<WordVo>();
 			// construct vo
-			for (String page : pages) {
+			for (int i = 0; i < pages.size(); i++) {
 				WordVo word = new WordVo();
-				word.setContent(page);
+				word.setContent("<div id=\"" + (start + i) + "\" class=\"scroll-page\">" + pages.get(i) + "</div>");
 				data.add(word);
 			}
-			PageVo<WordVo> page = new PageVo<WordVo>(data, data.size());
+			PageVo<WordVo> page = new PageVo<WordVo>(data, totalPageCount);
 			page.setStyleUrl(rcUtil.getParseUrlDir(rid) + "style.css");
 			return page;
 		} catch (Exception e) {
@@ -297,16 +299,80 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	}
 
 	@Override
-	public PageVo<TxtVo> convertTxt2Html(String rid) throws DocServiceException {
+	public PageVo<TxtVo> convertTxt2Html(String rid, int start, int limit) throws DocServiceException {
 		try {
-			File src = new File(rcUtil.getPath(rid));
+			// check first page existence
+			File srcFile = new File(rcUtil.getPath(rid));
+			if (!srcFile.isFile()) {
+				throw new DocServiceException("原文件未找到！");
+			}
+			File firstPageFile = new File(rcUtil.getParseDir(rid) + "1.txt");
+			if (!firstPageFile.isFile()) {
+				String allContent = FileUtils.readFileToString(srcFile, getEncoding(srcFile));
+				// content = content.replaceAll("\n|\r\n|\r", "<br />");
+				int curPageNum = 1;
+				// 1. page by manual page breaking
+				String[] lines = allContent.split("\r?\n");
+				// 2. page by lines
+				List<String> subPages = new ArrayList<String>();
+				String subPageString = "";
+				int count = 0;
+				for (int i = 0; i < lines.length; i++, count++) {
+					subPageString += lines[i] + "\n";
+					if ((count > WORD_PAGING_LINE_COUNT || subPageString.length() > WORD_PAGING_CHAR_COUNT)) {
+						count = 0;
+						subPages.add(subPageString.trim());
+						subPageString = "";
+					}
+				}
+				if (StringUtils.isNotBlank(subPageString)) {
+					subPages.add(subPageString.trim());
+				}
+				
+				// write page content to file
+				for (int i = 0; i < subPages.size(); i++) {
+					File curPageFile = new File(rcUtil.getParseDir(rid) + curPageNum + ".txt");
+					FileUtils.writeStringToFile(curPageFile, subPages.get(i), "UTF-8");
+					curPageNum++;
+				}
+				System.out.println("length: " + lines.length);
+			}
+			
+			// get page content
+			File curPageFile = new File(rcUtil.getParseDir(rid) + start + ".txt");
+			if (!curPageFile.isFile()) {
+				throw new DocServiceException("没有更多内容！");
+			}
+			
+			int totalPageCount = start;
+			
+			List<String> pages = new ArrayList<String>();
+			limit = limit >= 0 ? limit : 0;
+			limit = limit == 0 ? Integer.MAX_VALUE : limit;
+			for (int i = 0; i < limit; i++) {
+				curPageFile = new File(rcUtil.getParseDir(rid) + (start + i) + ".txt");
+				if (curPageFile.isFile()) {
+					totalPageCount = start + i;
+					String curPageString = FileUtils.readFileToString(curPageFile, "UTF-8");
+					pages.add(curPageString);
+				} else {
+					break;
+				}
+			}
+			
+			while (new File(rcUtil.getParseDir(rid) + (totalPageCount + 1) + ".txt").isFile()) {
+				totalPageCount ++;
+			}
+			
 			List<TxtVo> data = new ArrayList<TxtVo>();
-			String content = FileUtils.readFileToString(src, getEncoding(src));
-			// content = content.replaceAll("\n|\r\n|\r", "<br />");
-			TxtVo vo = new TxtVo();
-			vo.setContent(content);
-			data.add(vo);
-			PageVo<TxtVo> page = new PageVo<TxtVo>(data, 1);
+			// construct vo
+			for (int i = 0; i < pages.size(); i++) {
+				TxtVo vo = new TxtVo();
+				// vo.setContent("<div id=\"" + (start + i) + "\" class=\"scroll-page\"><pre>" + pages.get(i) + "</pre></div>");
+				vo.setContent(pages.get(i));
+				data.add(vo);
+			}
+			PageVo<TxtVo> page = new PageVo<TxtVo>(data, totalPageCount);
 			return page;
 		} catch (IOException e) {
 			logger.error("getTxtContent error: ", e.fillInStackTrace());

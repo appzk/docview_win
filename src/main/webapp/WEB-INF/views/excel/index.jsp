@@ -13,6 +13,11 @@
     <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <style type="text/css">
+      table, tbody, tfoot, thead, tr, th, td {
+        border: 1px solid #dddddd !important;
+      }
+    </style>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -93,6 +98,7 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
 	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/idocv/js/custom.js"></script>
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
 	<script src="/static/idocv/js/progress.js"></script>
 	<script src="/static/urlparser/js/purl.js"></script>
@@ -101,7 +107,6 @@
 	<!-- <script src="/static/idocv/js/user.js"></script> -->
 	<script src="/static/idocv/js/excel.js"></script>
 	<script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
-	<script src="/static/idocv/js/custom.js"></script>
 	<script src="/static/idocv/js/stat.js"></script>
 	
 	<!-- Baidu Share BEGIN -->

@@ -1,14 +1,19 @@
+var totalSize = 1;
 $(document).ready(function() {
 	var uuid = $.url().segment(2);
 	var sessionId = $.url().param('session');
 	﻿var address = 'http://api.idocv.com/view/' + uuid;
 	
-	$.get('/view/' + uuid + '.json?start=1&size=1', {session:sessionId}, function(data, status) {
+	$.get('/view/' + uuid + '.json?start=1&size=5', {session:sessionId}, function(data, status) {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;
 			var uuid = data.uuid;
 			var pages = data.data;
+			totalSize = data.totalSize;
+			if (totalSize < 5) {
+				$('.bottom-paging-progress').hide();
+			}
 			
 			// title
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
@@ -22,7 +27,10 @@ $(document).ready(function() {
 				// $('.span12').append('<div class="word-page"><div class="word-content">' + page.content + '</div></div>');
 			}
 			
-			$('.span12').parent().append('<a id="next" href="/view/' + uuid + '.json?start=2&size=1"></a>');
+			bindBottomPagingProgress();
+			
+			// NEXT page link
+			$('.span12').parent().append('<a id="next" href="/view/' + uuid + '.json?start=2&size=5"></a>');
 			
 			if (document.createStyleSheet){
 				document.createStyleSheet('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />');
@@ -74,6 +82,7 @@ $(document).ready(function() {
 				$theCntr.append(item);
 				//newItems.push(item.attr('id'));
 			}
+			bindBottomPagingProgress();
 			//_addMasonryItem(newItems);
 		});
 	});
