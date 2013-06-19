@@ -18,11 +18,6 @@
 	<link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="/static/idocv/css/style.css" rel="stylesheet">
 	<link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
-	
-	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="/static/bootstrap/js/html5shiv.js"></script>
-    <![endif]-->
 	<!-- BOOTSTRAP STYLE end -->
 
 	<link rel="stylesheet" href="/static/reveal/css/reveal.min.css">
@@ -31,14 +26,9 @@
 	<!-- For syntax highlighting -->
 	<link rel="stylesheet" href="/static/reveal/lib/css/zenburn.css">
 
-	<!-- If the query includes 'print-pdf', use the PDF print sheet -->
-	<script>
-		document.write( '<link rel="stylesheet" href="/static/reveal/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
-	</script>
-
-	<!--[if lt IE 9]>
-	<script src="lib/js/html5shiv.js"></script>
-	<![endif]-->
+    <!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
   </head>
 
   <body>
@@ -67,6 +57,7 @@
 		  </button>
 		  <!-- FILE NAME HERE -->
 		  <!-- QR Code start -->
+		  <!-- 
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               <li class="dropdown">
@@ -78,6 +69,7 @@
               </li>
             </ul>
           </div>
+           -->
           <!-- QR Code end -->
 		</div>
 	  </div>
@@ -107,8 +99,9 @@
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
 	<script src="/static/idocv/js/progress.js"></script>
 	<script src="/static/urlparser/js/purl.js"></script>
+	<!-- 
 	<script src="/static/qrcode/js/jquery.qrcode.min.js"></script>
-	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+	 -->
 	<!-- <script src="/static/idocv/js/user.js"></script> -->
 	<script src="/static/idocv/js/stat.js"></script>
 	

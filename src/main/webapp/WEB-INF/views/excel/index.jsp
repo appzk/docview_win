@@ -19,13 +19,9 @@
       }
     </style>
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="/static/bootstrap/js/html5shiv.js"></script>
     <![endif]-->
-
-    <!-- Fav and touch icons -->
-    <!-- to be done -->
   </head>
 
   <body>
@@ -59,6 +55,7 @@
             </ul>
           </div><!--/.nav-collapse -->
           <!-- QR Code start -->
+          <!-- 
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               <li class="dropdown">
@@ -70,6 +67,7 @@
               </li>
             </ul>
           </div>
+           -->
           <!-- QR Code end -->
         </div>
       </div>
@@ -102,7 +100,9 @@
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
 	<script src="/static/idocv/js/progress.js"></script>
 	<script src="/static/urlparser/js/purl.js"></script>
+	<!-- 
 	<script src="/static/qrcode/js/jquery.qrcode.min.js"></script>
+	 -->
 	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
 	<!-- <script src="/static/idocv/js/user.js"></script> -->
 	<script src="/static/idocv/js/excel.js"></script>

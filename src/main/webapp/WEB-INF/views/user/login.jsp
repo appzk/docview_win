@@ -67,6 +67,7 @@
                       <p><input id="login_rememberme" style="float: left; margin-right: 10px;" type="checkbox" name="login_rememberme" value="1" /></p>
                       <p><label class="string optional" for="user_remember_me">记住我</label></p>
                       <p><input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="登录" /></p>
+                      <p><span id="qqLoginBtn"></span></p>
                       <p>没有账号？点击<a href="/signup">注册</a></p>
                     </form>
                   </div>
@@ -92,12 +93,37 @@
     <!-- Le javascript
     ================================================== -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
-	<script src="/static/bootstrap/js/bootstrap.js"></script>
-	<script src="/static/urlparser/js/purl.js"></script>
-	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+    <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
     <script src="/static/idocv/js/user-login.js"></script>
+    <script src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="100444886" data-redirecturi="http://www.idocv.com" charset="utf-8"></script>
+    <script type="text/javascript">
+        QC.Login({
+            btnId:"qqLoginBtn",	
+            size: "A_M"
+        }, function(reqData, opts){//登录成功
+            //根据返回数据，更换按钮显示状态方法
+            alert("Login success...");
+            var dom = document.getElementById(opts['btnId']),
+            _logoutTemplate=[
+                 //头像
+                 '<span><img src="{figureurl}" class="{size_key}"/></span>',
+                 //昵称
+                 '<span>{nickname}</span>',
+                 //退出
+                 '<span><a href="javascript:QC.Login.signOut();">退出</a></span>'	
+                          ].join("");
+                dom && (dom.innerHTML = QC.String.format(_logoutTemplate, {
+                nickname : QC.String.escHTML(reqData.nickname),
+                figureurl : reqData.figureurl
+            }));
+        }, function(opts){//注销成功
+            alert('QQ登录 注销成功');
+        });
+    </script>
 
   </body>
 </html>

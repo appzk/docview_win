@@ -12,7 +12,7 @@ $(document).ready(function() {
 			
 			// title
 			$('.container-fluid .btn').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
-			$(".qrcode").qrcode(address);
+			// $(".qrcode").qrcode(address);
 			
 			// pages
 			for (i = 0; i < pages.length; i++) {
@@ -53,5 +53,6 @@ $(document).ready(function() {
 			clearProgress();
 		} );
 		
+		clearProgress();
 	});
 });

@@ -17,7 +17,7 @@ $(document).ready(function() {
 			
 			// title
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
-			$(".qrcode").qrcode(address);
+			// $(".qrcode").qrcode(address);
 			
 			// pages
 			// $('.span12').append('<div class="word-page"><div class="word-content"></div></div>');
@@ -59,12 +59,12 @@ $(document).ready(function() {
 		        finishedMsg: "<em>已到最底部！</em>",
 		        img: '/static/loading/img/ajax-loader.gif',
 		        msg: null,
-		        msgText: "<em>正在加载...</em>",
+		        msgText: "<em>正在加载...</em>"
             },
 			debug		 	: true,
 			dataType	 	: 'json',
 			// behavior		: 'twitter',
-			appendCallback	: false, // USE FOR PREPENDING
+			appendCallback	: false // USE FOR PREPENDING
 			// pathParse     	: function( pathStr, nextPage ){ return pathStr.replace('2', nextPage ); }
 		}, function( response ) {
 			var code = response.code;

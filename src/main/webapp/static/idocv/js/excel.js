@@ -12,7 +12,7 @@ $(document).ready(function() {
 			
 			// title
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" href="/doc/download/' + uuid + '">' + data.name + '</a>');
-			$(".qrcode").qrcode(address);
+			// $(".qrcode").qrcode(address);
 			
 			// pages
 			for (i = 0; i < pages.length; i++) {

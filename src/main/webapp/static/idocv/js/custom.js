@@ -68,8 +68,6 @@ jQuery(document).ready(function($) {
 function bindBottomPagingProgress() {
 	$('.scroll-page').each(function(i) {
 		var position = $(this).position();
-		console.log(position);
-		console.log('min: ' + position.top + ' / max: ' + parseInt(position.top + $(this).height()));
 		$(this).scrollspy({
 			min: position.top,
 			max: position.top + $(this).height(),
