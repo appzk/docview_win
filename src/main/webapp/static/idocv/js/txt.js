@@ -26,7 +26,7 @@ $(document).ready(function() {
 				$('.word-content pre').text($('.word-content pre').text() + page.content);
 			}
 			
-			bindBottomPagingProgress();
+			// bindBottomPagingProgress();
 			
 			// NEXT page link
 			$('.span12').parent().append('<a id="next" href="/view/' + uuid + '.json?start=2&size=5"></a>');
@@ -67,15 +67,20 @@ $(document).ready(function() {
 			}
 			var jsonData = response.data;
 			$theCntr = $(".word-content pre");
+			var oldContent = $theCntr.text();
+			oldContent = oldContent.substr(0, oldContent.length - 7);
+			$theCntr.text(oldContent);
 			var newElements = "";
 			//var newItems = new Array();
 			for(var i=0;i<jsonData.length;i++) {
-				var item = $(_renderItem(jsonData[i]));
+				// var item = $(_renderItem(jsonData[i]));
+				var content = jsonData[i].content;
 				//item.css({ opacity: 0 });
-				$theCntr.append(item);
+				// $theCntr.append(item);
+				$theCntr.text($theCntr.text() + '\n\n' + content);
 				//newItems.push(item.attr('id'));
 			}
-			bindBottomPagingProgress();
+			// bindBottomPagingProgress();
 			//_addMasonryItem(newItems);
 		});
 	});

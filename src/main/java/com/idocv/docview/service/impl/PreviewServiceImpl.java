@@ -321,12 +321,12 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 					subPageString += lines[i] + "\n";
 					if ((count > WORD_PAGING_LINE_COUNT || subPageString.length() > WORD_PAGING_CHAR_COUNT)) {
 						count = 0;
-						subPages.add(subPageString.trim());
+						subPages.add(subPageString.substring(0, subPageString.length() - 1));
 						subPageString = "";
 					}
 				}
 				if (StringUtils.isNotBlank(subPageString)) {
-					subPages.add(subPageString.trim());
+					subPages.add(subPageString.substring(0, subPageString.length() - 1));
 				}
 				
 				// write page content to file
@@ -335,7 +335,6 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 					FileUtils.writeStringToFile(curPageFile, subPages.get(i), "UTF-8");
 					curPageNum++;
 				}
-				System.out.println("length: " + lines.length);
 			}
 			
 			// get page content
