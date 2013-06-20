@@ -23,6 +23,7 @@ $(document).ready(function() {
 				slideUrls[i] = page.url;
 				slideThumbUrls[i] = page.thumbUrl;
 				$('.row-fluid .span2').append('<div class="thumbnail" page="' + (i + 1) + '"><img src="' + page.thumbUrl + '"></div>' + (i + 1) + '/' + pages.length + '<br />');
+				$('#page-selector').append('<option>' + (i + 1) + '</option>');
 			}
 			
 			$('.thumbnail').click(function () {
@@ -46,6 +47,10 @@ $(document).ready(function() {
 	
 	$('.slider-img').swipeleft(function() { nextSlide(); });
 	$('.slider-img').swiperight(function() { preSlide(); });
+	$('#page-selector').change(function() {
+		var selectNum = $("#page-selector option:selected").text();
+		gotoSlide(selectNum);
+	});
 });
 
 $(window).resize(function() {

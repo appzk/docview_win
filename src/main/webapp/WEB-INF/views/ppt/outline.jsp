@@ -92,6 +92,12 @@
           <div class="slider-img" style="bottom: 20px; top: 0px; position: relative; width: 100%; text-align: center;">
             <img src="" class="img-polaroid" style="max-height: 100%;">
           </div>
+          <!-- ONLY AVAILABLE ON MOBILE -->
+          <div id="btns" class="span12 hidden-desktop text-center" style="position: fixed; bottom: 10px; left: 0px; z-index: 100;">
+            <select id="page-selector" class="span1" style="width: 80px; margin-top: 10px;">
+              <!-- PAGE NUMBERS HERE -->
+            </select>
+          </div>
         </div>
       </div>
     </div>
