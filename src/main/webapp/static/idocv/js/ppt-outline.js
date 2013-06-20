@@ -43,6 +43,9 @@ $(document).ready(function() {
 		
 		clearProgress();
 	});
+	
+	$('.slider-img').swipeleft(function() { nextSlide(); });
+	$('.slider-img').swiperight(function() { preSlide(); });
 });
 
 $(window).resize(function() {
