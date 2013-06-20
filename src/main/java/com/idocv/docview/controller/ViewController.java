@@ -86,7 +86,14 @@ public class ViewController {
 				return "excel/index";
 //				return "redirect:/page/excel/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("p")) {
-				return "ppt/index";
+				return "ppt/outline";
+				/*
+				if ("outline".equalsIgnoreCase(template)) {
+					return "ppt/outline";
+				} else {
+					return "ppt/index";
+				}
+				*/
 //				return "redirect:/page/ppt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("f")) {
 				return "pdf/index";

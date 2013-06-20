@@ -257,36 +257,26 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	public PageVo<PPTVo> convertPPT2Html(String rid, int start, int limit) throws DocServiceException {
 		try {
 			// get page count
-			File[] slideFiles = new File(rcUtil.getParseDir(rid)).listFiles();
-			if (slideFiles.length <= 0) {
+			File[] slide960Files = new File(rcUtil.getParseDirOfPPT960x720(rid)).listFiles();
+			File[] slide200Files = new File(rcUtil.getParseDirOfPPT200x150(rid)).listFiles();
+			if (slide960Files.length <= 0 || slide200Files.length <= 0) {
 				convert(rid);
-				slideFiles = new File(rcUtil.getParseDir(rid)).listFiles();
+				slide960Files = new File(rcUtil.getParseDirOfPPT960x720(rid)).listFiles();
+				slide200Files = new File(rcUtil.getParseDirOfPPT200x150(rid)).listFiles();
 			}
 
 			// sort file
-			Arrays.sort(slideFiles, new Comparator<File>() {
-
-				@Override
-				public int compare(File o1, File o2) {
-					String name1 = o1.getName();
-					String name2 = o2.getName();
-					String nameRegex = "[^\\d]*?(\\d+).*";
-					try {
-						int nameDigit1 = Integer.valueOf(name1.replaceFirst(nameRegex, "$1"));
-						int nameDigit2 = Integer.valueOf(name2.replaceFirst(nameRegex, "$1"));
-						return nameDigit1 == nameDigit2 ? 0 : (nameDigit1 > nameDigit2 ? 1 : -1);
-					} catch (NumberFormatException e) {
-						return 1;
-					}
-				}
-			});
+			Arrays.sort(slide960Files, new PPT2JPGComparator());
+			Arrays.sort(slide200Files, new PPT2JPGComparator());
 
 			List<PPTVo> data = new ArrayList<PPTVo>();
-			if (slideFiles.length > 0) {
-				for (int i = 0; i < slideFiles.length; i++) {
+			if (slide960Files.length > 0 && slide200Files.length > 0) {
+				for (int i = 0; i < slide960Files.length; i++) {
 					PPTVo ppt = new PPTVo();
-					String url = rcUtil.getParseUrlDir(rid) + slideFiles[i].getName();
+					String url = rcUtil.getParseUrlDir(rid) + "960x720/" + slide960Files[i].getName();
+					String thumbUrl = rcUtil.getParseUrlDir(rid) + "200x150/" + slide200Files[i].getName();
 					ppt.setUrl(url);
+					ppt.setThumbUrl(thumbUrl);
 					data.add(ppt);
 				}
 			}
@@ -458,11 +448,15 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				}
 			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
 				dest = rcUtil.getParseDir(rid);
+				File dir960 = new File(rcUtil.getParseDirOfPPT960x720(rid));
+				File dir200 = new File(rcUtil.getParseDirOfPPT200x150(rid));
 				destFile = new File(dest);
-				if (destFile.listFiles().length <= 0) {
-					convertResult = CmdUtil.runWindows(ppt2Jpg, src, destFile.getAbsolutePath(), "save");
+				if (dir960.listFiles().length <= 0 || dir200.listFiles().length <= 0) {
+					// convertResult = CmdUtil.runWindows(ppt2Jpg, src, destFile.getAbsolutePath(), "save");
+					convertResult = CmdUtil.runWindows(ppt2Jpg, src, dir960.getAbsolutePath() + File.separator, "export", "960", "720");
+					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dir200.getAbsolutePath() + File.separator, "export", "200", "150");
 				}
-				if (destFile.listFiles().length <= 0) {
+				if (dir960.listFiles().length <= 0 || dir200.listFiles().length <= 0) {
 					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或其它限制，请取消限制后重试！");
 					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或其它限制，请取消限制后重试！");
 				}
@@ -604,4 +598,22 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	public boolean validateIp(String ip) throws DocServiceException {
 		return true;
 	}
+}
+
+class PPT2JPGComparator implements Comparator<File> {
+	
+	@Override
+	public int compare(File o1, File o2) {
+		String name1 = o1.getName();
+		String name2 = o2.getName();
+		String nameRegex = "[^\\d]*?(\\d+).*";
+		try {
+			int nameDigit1 = Integer.valueOf(name1.replaceFirst(nameRegex, "$1"));
+			int nameDigit2 = Integer.valueOf(name2.replaceFirst(nameRegex, "$1"));
+			return nameDigit1 == nameDigit2 ? 0 : (nameDigit1 > nameDigit2 ? 1 : -1);
+		} catch (NumberFormatException e) {
+			return 1;
+		}
+	}
+
 }

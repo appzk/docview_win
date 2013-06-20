@@ -87,7 +87,7 @@
 	/*	Word Style
 	/* -------------------------------------------------- */
 
-	.word-body {
+	.word-body, .ppt-body {
 		background-color:#EBEBEB;
 		min-height: 100%;
 		-webkit-font-smoothing:antialiased;
@@ -132,7 +132,7 @@
 	/*	PPT Style
 	/* -------------------------------------------------- */
 
-	.ppt-slide-img {
+	.slider-img img {
 		-moz-border-radius: 5px;
 		border-radius: 2px;
 		-moz-box-shadow: 0 0 3px 3px #888;

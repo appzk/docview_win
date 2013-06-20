@@ -139,6 +139,34 @@ public class RcUtil {
 		return dir;
 	}
 	
+	/**
+	 * 获取PPT解析为jpg图片的目录(200x150)
+	 * 
+	 * @param rid
+	 * @return
+	 */
+	public String getParseDirOfPPT200x150(String rid) {
+		String dir = getParseDir(rid) + "200x150" + File.separator;
+		if (!new File(dir).isDirectory()) {
+			new File(dir).mkdirs();
+		}
+		return dir;
+	}
+
+	/**
+	 * 获取PPT解析为jpg图片的目录(960x720)
+	 * 
+	 * @param rid
+	 * @return
+	 */
+	public String getParseDirOfPPT960x720(String rid) {
+		String dir = getParseDir(rid) + "960x720" + File.separator;
+		if (!new File(dir).isDirectory()) {
+			new File(dir).mkdirs();
+		}
+		return dir;
+	}
+
 	public String getDirectoryByRid(String rid) throws IllegalArgumentException {
 		validateRid(rid);
 		File dir = new File(dataDir + getDirectoryWithoutRootByRid(rid));

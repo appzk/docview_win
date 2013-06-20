@@ -24,9 +24,9 @@ function updateRemainderProgress() {
 	}
 	if (100 == percent) {
 		clearInterval(remainderInterval);
-		$('.loading-mask').delay(600).fadeOut(500);
+		$('.loading-mask').delay(500).fadeOut(500);
 	} else {
-		percent = percent + 8;
+		percent = percent + 4;
 		if (100 < percent) {
 			percent = 100;
 		}
@@ -38,5 +38,5 @@ function updateRemainderProgress() {
 // Clear Progress Bar
 function clearProgress() {
 	clearInterval(convertInterval);
-	remainderInterval = setInterval(updateRemainderProgress, 70);
+	remainderInterval = setInterval(updateRemainderProgress, 30);
 }
