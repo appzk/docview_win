@@ -79,7 +79,7 @@
 
     <div class="container-fluid" style="max-height: 100%;">
       <div class="row-fluid">
-        <div class="span2 visible-desktop" style="position: fixed; top: 60px; left: 20px; bottom: 20px; max-height: 100%; overflow: auto; text-align: center;">
+        <div class="span2 hidden-phone" style="position: fixed; top: 60px; left: 20px; bottom: 20px; max-height: 100%; overflow: auto; text-align: center;">
           <!--Sidebar content-->
           <!-- 
           <div class="thumbnail">
@@ -89,11 +89,13 @@
           -->
         </div>
         <div class="span9 offset2">
-          <div class="slider-img" style="bottom: 20px; top: 0px; position: relative; width: 100%; text-align: center;">
+          <div class="slider-img" style="bottom: 20px; top: 0px; right: 5px; position: relative; width: 100%; text-align: center;">
+            <!-- 
             <img src="" class="img-polaroid" style="max-height: 100%;">
+             -->
           </div>
           <!-- ONLY AVAILABLE ON MOBILE -->
-          <div id="btns" class="span12 hidden-desktop text-center" style="position: fixed; bottom: 10px; left: 0px; z-index: 100;">
+          <div id="btns" class="span12 visible-phone text-center" style="position: fixed; bottom: 10px; left: 0px; z-index: 100;">
             <select id="page-selector" class="span1" style="width: 80px; margin-top: 10px;">
               <!-- PAGE NUMBERS HERE -->
             </select>

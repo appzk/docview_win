@@ -39,7 +39,7 @@ $(document).ready(function() {
 			
 			$('.slider-img').html('<img src="' + pages[0].url + '" class="img-polaroid" style="max-height: 100%;">');
 		} else {
-			$('.slides').append('<section><div class="alert alert-error">' + data.desc + '</div></section>');
+			$('.container-fluid .row-fluid').html('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}
 		
 		clearProgress();
@@ -97,5 +97,6 @@ function gotoSlide(slide) {
 		$(this).attr("src", slideUrls[slide - 1]).fadeIn();
 	});
 	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
+	$('#page-selector').val(slide);
 	$('.bottom-paging-progress .bar').width('' + percent + '%');
 }

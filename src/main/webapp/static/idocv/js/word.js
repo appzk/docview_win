@@ -11,7 +11,7 @@ $(document).ready(function() {
 			var uuid = data.uuid;
 			var pages = data.data;
 			totalSize = data.totalSize;
-			if (totalSize < 5) {
+			if (totalSize < 3) {
 				$('.bottom-paging-progress').hide();
 			}
 			
