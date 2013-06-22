@@ -1,8 +1,8 @@
 var totalSize = 1;
+var uuid = $.url().segment(2);
+var sessionId = $.url().param('session');
+﻿var address = 'http://api.idocv.com/view/' + uuid;
 $(document).ready(function() {
-	var uuid = $.url().segment(2);
-	var sessionId = $.url().param('session');
-	﻿var address = 'http://api.idocv.com/view/' + uuid;
 	
 	$.get('/view/' + uuid + '.json?start=1&size=5', {session:sessionId}, function(data, status) {
 		var code = data.code;
@@ -13,6 +13,7 @@ $(document).ready(function() {
 			totalSize = data.totalSize;
 			if (totalSize < 3) {
 				$('.bottom-paging-progress').hide();
+				$('.paging-bottom-all').hide();
 			}
 			
 			// title
@@ -28,6 +29,21 @@ $(document).ready(function() {
 			}
 			
 			bindBottomPagingProgress();
+			
+			// bottom paging positioning
+			var onePagePercent = 100 / totalSize;
+			var all = totalSize * onePagePercent;
+			for (var i = 0; i < totalSize; i++) {
+				$('.paging-bottom-all').append('<div class="paging-bottom-sub" page-num="' + (i + 1) + '" style="width: ' + onePagePercent + '%;">·</div>');
+			}
+			$(".paging-bottom-sub").click(function(){
+				var id = $(this).attr('page-num');
+				if (! $('#' + id).length) {
+					// page NOT exist, load all page.
+					loadAllPage();
+				}
+				$('html, body').animate({scrollTop:($('#' + id).position().top + 20)}, 'slow');
+			});
 			
 			// NEXT page link
 			$('.span12').parent().append('<a id="next" href="/view/' + uuid + '.json?start=2&size=5"></a>');

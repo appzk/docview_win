@@ -85,3 +85,33 @@ function bindBottomPagingProgress() {
 		});
 	});
 }
+
+	/* ---------------------------------------------------------------------- */
+	/*	Load All pages of WORD || TXT
+	/* ---------------------------------------------------------------------- */
+	function loadAllPage() {
+		$('.word-content').infinitescroll('destroy');
+		$.ajax({
+			type: "GET",
+			url: '/view/' + uuid + '.json?start=1&size=0',
+			data: { session: sessionId },
+			async: false,
+			dataType: "json",
+		}).done(function( data ) {
+			var code = data.code;
+			if (1 == code) {
+				var rid = data.rid;
+				var pages = data.data;
+				
+				// pages
+				$('.span12 .word-page .word-content').html();
+				for (i = 0; i < pages.length; i++) {
+					var page = pages[i];
+					$('.span12 .word-page .word-content').append(page.content);
+				}
+				bindBottomPagingProgress();
+			} else {
+				$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
+			}
+		});
+	}

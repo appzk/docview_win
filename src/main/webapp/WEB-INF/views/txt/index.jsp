@@ -86,6 +86,13 @@
       <div class="progress progress-striped active bottom-paging-progress">
         <div class="bar" style="width: 0%;"></div>
       </div>
+      <div class="paging-bottom-all">
+        <!-- SUB PAGING DIV(s) HERE -->
+        <!-- 
+        <div class="paging-bottom-sub" page-num="1" style="width: 20%;">1</div>
+        ...
+         -->
+      </div>
 
     </div><!--/.fluid-container-->
 
