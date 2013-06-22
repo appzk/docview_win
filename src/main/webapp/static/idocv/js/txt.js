@@ -16,22 +16,23 @@ $(document).ready(function() {
 			}
 			
 			// title
-			$('.container-fluid .btn').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
+			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
 			// $(".qrcode").qrcode(address);
 	
 			// pages
-			$('.span12').append('<div class="word-page"><div class="word-content"><pre></pre></div></div>');
+			// $('.span12').append('<div class="word-page"><div class="word-content"></div></div>');
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
-				$('.word-content pre').text($('.word-content pre').text() + page.content);
+				$('.span12 .word-page .word-content').append(page.content);
+				// $('.span12').append('<div class="word-page"><div class="word-content">' + page.content + '</div></div>');
 			}
 			
-			// bindBottomPagingProgress();
+			bindBottomPagingProgress();
 			
 			// NEXT page link
 			$('.span12').parent().append('<a id="next" href="/view/' + uuid + '.json?start=2&size=5"></a>');
 		} else {
-			$('.span12').append('<div class="alert alert-error">' + data.desc + '</div>');
+			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}
 
 		// clear progress bar
@@ -42,11 +43,11 @@ $(document).ready(function() {
 			// return '<div class="word-page"><div class="word-content">' + data.content + '</div></div>';
 			return data.content;
 		}
-		$('.word-content pre').infinitescroll({
+		$('.word-content').infinitescroll({
 			// callback		: function () { console.log('using opts.callback'); },
 			navSelector  	: "a#next:last",
 			nextSelector 	: "a#next:last",
-			itemSelector 	: ".word-content pre",
+			itemSelector 	: ".word-content",
 			loading: {
 				finished: undefined,
 		        finishedMsg: "<em>已到最底部！</em>",
@@ -62,25 +63,20 @@ $(document).ready(function() {
 		}, function( response ) {
 			var code = response.code;
 			if (code == 0) {
-				$('.word-content pre').infinitescroll('destroy');
+				$('.word-content').infinitescroll('destroy');
 				return;
 			}
 			var jsonData = response.data;
-			$theCntr = $(".word-content pre");
-			var oldContent = $theCntr.text();
-			oldContent = oldContent.substr(0, oldContent.length - 7);
-			$theCntr.text(oldContent);
+			$theCntr = $(".word-content");
 			var newElements = "";
 			//var newItems = new Array();
 			for(var i=0;i<jsonData.length;i++) {
-				// var item = $(_renderItem(jsonData[i]));
-				var content = jsonData[i].content;
+				var item = $(_renderItem(jsonData[i]));
 				//item.css({ opacity: 0 });
-				// $theCntr.append(item);
-				$theCntr.text($theCntr.text() + '\n\n' + content);
+				$theCntr.append(item);
 				//newItems.push(item.attr('id'));
 			}
-			// bindBottomPagingProgress();
+			bindBottomPagingProgress();
 			//_addMasonryItem(newItems);
 		});
 	});

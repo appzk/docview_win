@@ -38,7 +38,7 @@ $(document).ready(function() {
 				$("head").append($('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />'));
 			}
 		} else {
-			$('.span12').append('<div class="alert alert-error">' + data.desc + '</div>');
+			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}
 		
 		// clear progress bar

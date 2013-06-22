@@ -149,6 +149,11 @@
 		word-wrap: break-word;
 		margin: 0px auto;
 	}
+	
+	table td {
+		text-align: center !important;
+	}
+	
 	/*
 	table, tbody, tfoot, thead, tr, th, td {
 		border: 1px solid #dddddd !important;

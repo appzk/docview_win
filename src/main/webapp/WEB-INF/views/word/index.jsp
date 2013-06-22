@@ -10,7 +10,7 @@
     <meta name="author" content="Godwin">
 
     <!-- Le styles -->
-    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 
@@ -67,13 +67,13 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span12">
-       		<!-- WORD PAGES HERE -->
-        	<!-- <div class="word-page"><div class="word-content">WORD CENTENT HERE</div></div> -->
-        	<div class="word-page">
-        		<div class="word-content">
-        			<!-- WORD CENTENT HERE -->
-        		</div>
-        	</div>
+          <!-- WORD PAGES HERE -->
+          <!-- <div class="word-page"><div class="word-content">WORD CENTENT HERE</div></div> -->
+          <div class="word-page">
+            <div class="word-content">
+              <!-- WORD CENTENT HERE -->
+            </div>
+          </div>
         </div><!--/span-->
       </div><!--/row-->
 

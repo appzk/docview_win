@@ -61,7 +61,7 @@ public class ViewController {
 	}
 
 	@RequestMapping("{id}")
-	public String page(@RequestParam(defaultValue = "default") String template,
+	public String page(@RequestParam(defaultValue = "default") String style,
 			@PathVariable String id,
 			@RequestParam(defaultValue = "1") int start,
 			@RequestParam(defaultValue = "5") int size) {
@@ -86,14 +86,11 @@ public class ViewController {
 				return "excel/index";
 //				return "redirect:/page/excel/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("p")) {
-				return "ppt/outline";
-				/*
-				if ("outline".equalsIgnoreCase(template)) {
-					return "ppt/outline";
-				} else {
+				if ("3d".equalsIgnoreCase(style)) {
 					return "ppt/index";
+				} else {
+					return "ppt/outline";
 				}
-				*/
 //				return "redirect:/page/ppt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("f")) {
 				return "pdf/index";

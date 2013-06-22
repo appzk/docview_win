@@ -15,7 +15,7 @@
 
 	<!-- BOOTSTRAP STYLE start -->
 	<!-- Le styles -->
-	<link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/static/idocv/css/style.css" rel="stylesheet">
 	<link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 	<!-- BOOTSTRAP STYLE end -->

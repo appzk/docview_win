@@ -13,6 +13,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -356,10 +357,14 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			List<TxtVo> data = new ArrayList<TxtVo>();
 			// construct vo
 			for (int i = 0; i < pages.size(); i++) {
-				TxtVo vo = new TxtVo();
 				// vo.setContent("<div id=\"" + (start + i) + "\" class=\"scroll-page\"><pre>" + pages.get(i) + "</pre></div>");
-				vo.setContent(pages.get(i));
-				data.add(vo);
+				String content = pages.get(i);
+				if (StringUtils.isNotEmpty(content)) {
+					TxtVo vo = new TxtVo();
+					String escapeContent = StringEscapeUtils.escapeHtml(content).replaceAll("(\r)?\n", "<br />");
+					vo.setContent("<div id=\"" + (start + i) + "\" class=\"scroll-page\">" + escapeContent + "</div>");
+					data.add(vo);
+				}
 			}
 			PageVo<TxtVo> page = new PageVo<TxtVo>(data, totalPageCount);
 			return page;

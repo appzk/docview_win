@@ -10,7 +10,7 @@
     <meta name="author" content="Godwin">
 
     <!-- Le styles -->
-    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 
@@ -44,6 +44,7 @@
             <span class="icon-bar"></span>
           </button>
           <!-- FILE NAME HERE -->
+          <!-- SIGN UP & SIGN IN -->
           <!-- QR Code start -->
           <!-- 
           <div class="nav-collapse collapse">
@@ -66,10 +67,13 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span12">
-        	<!-- TXT PAGES HERE -->
-        	<!-- 
-        	<div class="word-page"><div class="word-content"><pre></pre></div></div>
-        	 -->
+          <!-- TXT PAGES HERE -->
+          <!-- <div class="word-page"><div class="word-content">WORD CENTENT HERE</div></div> -->
+          <div class="word-page">
+            <div class="word-content">
+              <!-- TXT CENTENT HERE -->
+            </div>
+          </div>
         </div><!--/span-->
       </div><!--/row-->
 
@@ -79,7 +83,7 @@
         Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
       </footer>
       
-      <div class="progress progress-striped active bottom-paging-progress" style="display: none;">
+      <div class="progress progress-striped active bottom-paging-progress">
         <div class="bar" style="width: 0%;"></div>
       </div>
 

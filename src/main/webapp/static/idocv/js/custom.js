@@ -72,14 +72,14 @@ function bindBottomPagingProgress() {
 			min: position.top,
 			max: position.top + $(this).height(),
 			onEnter: function(element, position) {
-				if(console) console.log('entering ' +  element.id);
+				// if(console) console.log('entering ' +  element.id);
 				// $("body").css('background-color', element.id);
 				var percent = Math.round(element.id / totalSize * 100);
 				// alert('percent: ' + percent);
 				$('.bottom-paging-progress .bar').width('' + percent + '%');
 			},
 			onLeave: function(element, position) {
-				if(console) console.log('leaving ' +  element.id);
+				// if(console) console.log('leaving ' +  element.id);
 				//	$('body').css('background-color','#eee');
 			}
 		});
