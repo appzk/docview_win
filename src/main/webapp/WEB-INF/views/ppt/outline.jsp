@@ -79,7 +79,7 @@
 
     <div class="container-fluid" style="max-height: 100%;">
       <div class="row-fluid">
-        <div class="span2 hidden-phone" style="position: fixed; top: 60px; left: 20px; bottom: 20px; max-height: 100%; overflow: auto; text-align: center;">
+        <div class="span2 hidden-phone" style="position: fixed; top: 60px; left: 20px; bottom: 20px; padding-right: 5px; border-right: 3px solid #c8c8c8; max-height: 100%; overflow: auto; text-align: center;">
           <!--Sidebar content-->
           <!-- 
           <div class="thumbnail">
