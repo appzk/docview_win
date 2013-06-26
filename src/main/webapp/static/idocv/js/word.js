@@ -28,6 +28,8 @@ $(document).ready(function() {
 				// $('.span12').append('<div class="word-page"><div class="word-content">' + page.content + '</div></div>');
 			}
 			
+			// clear progress bar
+			clearProgress();
 			bindBottomPagingProgress();
 			
 			// bottom paging positioning
