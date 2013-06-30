@@ -58,7 +58,7 @@ public class CmdUtil {
 			builder.redirectErrorStream(true);
 			Process p = builder.start();
 			
-			BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream(), "GBK"));
 			while ((line = bri.readLine()) != null) {
 				sbOut.append(line + "\n");
 			}

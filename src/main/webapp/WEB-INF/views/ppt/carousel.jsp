@@ -77,30 +77,28 @@
       </div>
     </div>
 
-    <div class="container-fluid" style="max-height: 100%;">
-      <div class="row-fluid">
-        <div class="span2 hidden-phone" style="position: fixed; top: 60px; left: 20px; bottom: 20px; padding-right: 5px; border-right: 3px solid #c8c8c8; max-height: 100%; overflow: auto; text-align: center;">
-          <!--Sidebar content-->
+    <div class="container-fluid">
+      <div id="myCarousel" class="carousel slide">
+        <ol class="carousel-indicators">
+          <!-- INDICATORS HERE -->
           <!-- 
-          <div class="thumbnail">
-            <img src="">
-          </div>
-          1/20<br />
-          -->
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1"></li>
+          <li data-target="#myCarousel" data-slide-to="2"></li>
+           -->
+        </ol>
+        <!-- Carousel items -->
+        <div class="carousel-inner">
+          <!-- SLIDE IMAGES HERE -->
+          <!-- 
+          <div class="active item"><img src="http://data.idocv.com/test/2013/0628/112157_667145_nHGQZdp/960x720/slide1.jpg" alt="" style="margin: 0 auto;"></div>
+          <div class="item"><img src="http://data.idocv.com/test/2013/0628/112157_667145_nHGQZdp/960x720/slide1.jpg" alt="" style="margin: 0 auto;"></div>
+          <div class="item"><img src="http://data.idocv.com/test/2013/0628/112157_667145_nHGQZdp/960x720/slide1.jpg" alt="" style="margin: 0 auto;"></div>
+           -->
         </div>
-        <div class="span9 offset2">
-          <div class="slider-img" style="bottom: 20px; top: 0px; right: 5px; position: relative; width: 100%; text-align: center;">
-            <!-- 
-            <img src="" class="img-polaroid" style="max-height: 100%;">
-             -->
-          </div>
-          <!-- ONLY AVAILABLE ON MOBILE -->
-          <div id="btns" class="span12 visible-phone text-center" style="position: fixed; bottom: 10px; left: 0px; z-index: 100;">
-            <select id="page-selector" class="span1" style="width: 80px; margin-top: 10px;">
-              <!-- PAGE NUMBERS HERE -->
-            </select>
-          </div>
-        </div>
+        <!-- Carousel nav -->
+        <a class="carousel-control left hidden-phone" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+        <a class="carousel-control right hidden-phone" href="#myCarousel" data-slide="next">&rsaquo;</a>
       </div>
     </div>
     
@@ -116,18 +114,8 @@
 	<script src="/static/jquery/js/jquery.mobile-events.min.js"></script>
 	<script src="/static/idocv/js/progress.js"></script>
 	<script src="/static/urlparser/js/purl.js"></script>
-	<script src="/static/idocv/js/ppt-outline.js"></script>
+	<script src="/static/idocv/js/ppt-carousel.js"></script>
 	<script src="/static/idocv/js/stat.js"></script>
-	
-	<!-- Baidu Share BEGIN -->
-	<!-- 
-	<script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=6&amp;pos=right&amp;uid=6693451" ></script>
-	<script type="text/javascript" id="bdshell_js"></script>
-	<script type="text/javascript">
-	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
-	</script>
-	 -->
-	<!-- Baidu Share END -->
 
   </body>
 </html>

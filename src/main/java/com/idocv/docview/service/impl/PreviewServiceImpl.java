@@ -272,7 +272,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 			List<PPTVo> data = new ArrayList<PPTVo>();
 			if (slide960Files.length > 0 && slide200Files.length > 0) {
-				for (int i = 0; i < slide960Files.length; i++) {
+				for (int i = 0; i < slide960Files.length && i < slide200Files.length; i++) {
 					PPTVo ppt = new PPTVo();
 					String url = rcUtil.getParseUrlDir(rid) + "960x720/" + slide960Files[i].getName();
 					String thumbUrl = rcUtil.getParseUrlDir(rid) + "200x150/" + slide200Files[i].getName();
