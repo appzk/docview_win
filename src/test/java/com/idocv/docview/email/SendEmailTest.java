@@ -23,7 +23,7 @@ public class SendEmailTest {
 			email.addTo(address, username);
 			email.setFrom("support@idocv.com", "IDocV");
 			email.setSubject(title);
-			email.setAuthentication("idocv.com@gmail.com", "idocv.com88");
+			email.setAuthentication("support@idocv.com", "idocv.com88");
 			email.setStartTLSRequired(true);
 
 			// embed the image and get the content id
