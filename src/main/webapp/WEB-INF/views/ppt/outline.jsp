@@ -58,6 +58,13 @@
           </button>
           <!-- FILE NAME HERE -->
           <!-- SIGN UP & SIGN IN -->
+          
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              <a href="#" title="全屏" class="fullscreen-link"><i class="icon-fullscreen icon-white"></i></a>
+            </p>
+          </div><!--/.nav-collapse -->
+          
           <!-- QR Code start -->
           <!-- 
           <div class="nav-collapse collapse">
@@ -89,7 +96,7 @@
           -->
         </div>
         <div class="span9 offset2">
-          <div class="slider-img" style="bottom: 20px; top: 0px; right: 5px; position: relative; width: 100%; text-align: center;">
+          <div class="slider-img" style="bottom: 20px; top: 0px; right: 5px; padding-bottom: 20px; position: relative; width: 100%; text-align: center;">
             <!-- 
             <img src="" class="img-polaroid" style="max-height: 100%;">
              -->
@@ -116,6 +123,7 @@
 	<script src="/static/jquery/js/jquery.mobile-events.min.js"></script>
 	<script src="/static/idocv/js/progress.js"></script>
 	<script src="/static/urlparser/js/purl.js"></script>
+	<script src="/static/fullscreen/js/jquery.fullscreen-min.js"></script>
 	<script src="/static/idocv/js/ppt-outline.js"></script>
 	<script src="/static/idocv/js/stat.js"></script>
 	

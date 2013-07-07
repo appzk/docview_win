@@ -125,7 +125,12 @@ public class DocServiceImpl implements DocService {
 			}
 			String host = getHost(url);
 			Response urlResponse = null;
-			urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
+			try {
+				urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
+			} catch (Exception e) {
+				logger.error("无法访问资源（" + url + "）");
+				throw new DocServiceException("无法访问资源（" + url + "）");
+			}
 			byte[] bytes = urlResponse.bodyAsBytes();
 			
 			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/[^/]+\\.[^/]+")) {
@@ -135,10 +140,7 @@ public class DocServiceImpl implements DocService {
 			vo = add(app, null, name, bytes, mode, null);
 			docDao.updateUrl(vo.getUuid(), url);
 			return vo;
-		} catch (IOException e) {
-			logger.error("save url doc error, app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
-			throw new DocServiceException("saveUrl error: ", e);
-		} catch (DBException e) {
+		} catch (Exception e) {
 			logger.error("save url doc error, app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
 			throw new DocServiceException("saveUrl error: ", e);
 		}

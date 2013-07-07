@@ -88,8 +88,10 @@ public class ViewController {
 			} else if (uuid.endsWith("p")) {
 				if ("3d".equalsIgnoreCase(style)) {
 					return "ppt/index";
-				} else if ("auto".equalsIgnoreCase(style)) {
+				} else if ("carousel".equalsIgnoreCase(style)) {
 					return "ppt/carousel";
+				} else if ("test".equalsIgnoreCase(style)) {
+					return "ppt/test";
 				} else {
 					return "ppt/outline";
 				}

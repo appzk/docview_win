@@ -37,7 +37,7 @@ $(document).ready(function() {
 				*/
 			});
 			
-			$('.slider-img').html('<img src="' + pages[0].url + '" class="img-polaroid" style="max-height: 100%;">');
+			$('.slider-img').html('<img src="' + pages[0].url + '" class="img-polaroid" style="height: 100%;">');
 		} else {
 			$('.container-fluid .row-fluid').html('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}
@@ -47,6 +47,18 @@ $(document).ready(function() {
 	
 	$('.slider-img').swipeleft(function() { nextSlide(); });
 	$('.slider-img').swiperight(function() { preSlide(); });
+	$('.fullscreen-link').toggle($(document).fullScreen() != null);
+	$('.fullscreen-link').click(function(){
+		$('.slider-img').fullScreen(true);
+	});
+	$(document).bind("fullscreenchange", function() {
+		var isFullscreen = $(document).fullScreen() ? true : false;
+		if (isFullscreen) {
+			$('.slider-img').css('background-color', 'black');
+		} else {
+			$('.slider-img').css('background-color', '');
+		}
+	});
 	$('#page-selector').change(function() {
 		var selectNum = $("#page-selector option:selected").text();
 		gotoSlide(selectNum);
@@ -58,16 +70,30 @@ $(window).resize(function() {
 });
 
 function resetImgSize() {
-	var ww = $(window).width();
-	var wh = $(window).height();
-	$('.slider-img').height(wh - 90);
+	var ww = $(window).width() - 40;
+	var wh = $(window).height() - 90;
+	var isFullScreen = $(document).fullScreen() ? true : false;
+	if (isFullScreen) {
+		ww = ww + 40;
+		wh = wh + 90;
+	}
+	if (ww / wh > 4 / 3) {
+		$('.slider-img').height(wh);
+		$('.slider-img').width(wh * 4 / 3);
+	} else {
+		$('.slider-img').width(ww);
+		$('.slider-img').height(ww * 3 / 4);
+	}
 }
 
 $(document).keydown(function(event){
-	if(event.keyCode == 37 || event.keyCode == 38){
+	if (event.keyCode == 37 || event.keyCode == 38) {
 		preSlide();
-	}else if (event.keyCode == 39 || event.keyCode == 40 || event.keyCode == 32){
+	} else if (event.keyCode == 39 || event.keyCode == 40 || event.keyCode == 32){
 		nextSlide();
+	} else if (event.keyCode == 13) {
+		var isFullscreen = $(document).fullScreen() ? true : false;
+		$('.slider-img').toggleFullScreen();
 	}
 });
 
