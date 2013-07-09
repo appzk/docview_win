@@ -45,8 +45,6 @@ $(document).ready(function() {
 		clearProgress();
 	});
 	
-	$('.slider-img').swipeleft(function() { nextSlide(); });
-	$('.slider-img').swiperight(function() { preSlide(); });
 	$('.fullscreen-link').toggle($(document).fullScreen() != null);
 	$('.fullscreen-link').click(function(){
 		$('.slider-img').fullScreen(true);
@@ -59,10 +57,15 @@ $(document).ready(function() {
 			$('.slider-img').css('background-color', '');
 		}
 	});
+	
 	$('#page-selector').change(function() {
 		var selectNum = $("#page-selector option:selected").text();
 		gotoSlide(selectNum);
 	});
+	
+	// Swipe method is NOT supported in IE6, so it should be the last one.
+	$('.slider-img').swipeleft(function() { nextSlide(); });
+	$('.slider-img').swiperight(function() { preSlide(); });
 });
 
 $(window).resize(function() {
@@ -70,12 +73,17 @@ $(window).resize(function() {
 });
 
 function resetImgSize() {
-	var ww = $(window).width() - 40;
+	var leftW = $('.row-fluid .span2').width() + 20;
+	var windowW = $(window).width();
+	if (windowW < 768) {
+		leftW = -40;
+	}
+	var ww = $(window).width() - 90 - leftW;
 	var wh = $(window).height() - 90;
 	var isFullScreen = $(document).fullScreen() ? true : false;
 	if (isFullScreen) {
-		ww = ww + 40;
-		wh = wh + 90;
+		ww = ww + 90 + leftW;
+		wh = wh + 80;
 	}
 	if (ww / wh > 4 / 3) {
 		$('.slider-img').height(wh);

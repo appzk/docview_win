@@ -92,6 +92,11 @@ public class DocServiceImpl implements DocService {
 	@Override
 	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
 		try {
+			if (data.length > 20000000) {
+				logger.error("您的文件有点大，目前只支持20M以下的文档预览！");
+				throw new DocServiceException("您的文件有点大，目前只支持20M以下的文档预览！");
+			}
+
 			// get app & user info
 			if (StringUtils.isBlank(app)) {
 				throw new DocServiceException("应用为空！");
