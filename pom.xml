@@ -293,7 +293,7 @@
 				<pom.docview.data.dir>D:\idocv\data\</pom.docview.data.dir>
 
 				<!-- Database -->
-				<pom.docview.mongodb.ip>118.244.213.139</pom.docview.mongodb.ip>
+				<pom.docview.mongodb.ip>localhost</pom.docview.mongodb.ip>
 				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
 
 				<!-- Office converter -->
@@ -312,7 +312,7 @@
 				<pom.docview.data.dir>D:\idocv\data\</pom.docview.data.dir>
 
 				<!-- Database -->
-				<pom.docview.mongodb.ip>118.244.213.139</pom.docview.mongodb.ip>
+				<pom.docview.mongodb.ip>localhost</pom.docview.mongodb.ip>
 				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
 
 				<!-- Office converter -->
