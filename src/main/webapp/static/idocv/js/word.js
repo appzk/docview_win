@@ -22,14 +22,15 @@ $(document).ready(function() {
 			
 			// pages
 			// $('.span12').append('<div class="word-page"><div class="word-content"></div></div>');
+			
+			// clear progress bar
+			clearProgress();
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
 				$('.span12 .word-page .word-content').append(page.content);
 				// $('.span12').append('<div class="word-page"><div class="word-content">' + page.content + '</div></div>');
 			}
 			
-			// clear progress bar
-			clearProgress();
 			bindBottomPagingProgress();
 			
 			// bottom paging positioning

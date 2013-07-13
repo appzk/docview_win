@@ -20,6 +20,9 @@ $(document).ready(function() {
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
 			// $(".qrcode").qrcode(address);
 	
+			// clear progress bar
+			clearProgress();
+			
 			// pages
 			// $('.span12').append('<div class="word-page"><div class="word-content"></div></div>');
 			for (i = 0; i < pages.length; i++) {
@@ -28,8 +31,6 @@ $(document).ready(function() {
 				// $('.span12').append('<div class="word-page"><div class="word-content">' + page.content + '</div></div>');
 			}
 			
-			// clear progress bar
-			clearProgress();
 			bindBottomPagingProgress();
 			
 			// bottom paging positioning
