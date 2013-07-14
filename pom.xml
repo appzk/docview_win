@@ -4,7 +4,7 @@
 
 	<groupId>idocv</groupId>
 	<artifactId>docview_win</artifactId>
-	<version>1.0.1_20130206</version>
+	<version>2.0.1_20130714</version>
 	<packaging>war</packaging>
 	<name>docview</name>
 	<description>document online viewer</description>
