@@ -92,6 +92,10 @@ public class ViewController {
 					return "ppt/carousel";
 				} else if ("test".equalsIgnoreCase(style)) {
 					return "ppt/test";
+				} else if ("speaker".equalsIgnoreCase(style)) {
+					return "ppt/sync-speaker";
+				} else if ("audience".equalsIgnoreCase(style)) {
+					return "ppt/sync-audience";
 				} else {
 					return "ppt/outline";
 				}

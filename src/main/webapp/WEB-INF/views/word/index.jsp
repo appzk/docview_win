@@ -9,7 +9,7 @@
     <meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
     <meta name="author" content="Godwin">
 
-    <!-- Le styles -->
+    <!-- styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
@@ -96,7 +96,7 @@
 
     </div><!--/.fluid-container-->
 
-    <!-- Le javascript
+    <!-- JavaSript
     ================================================== -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>

@@ -9,9 +9,6 @@
     <meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
     <meta name="author" content="Godwin">
 
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
 	<!-- BOOTSTRAP STYLE start -->
 	<!-- Le styles -->
 	<link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -64,22 +61,6 @@
               <a href="#" title="全屏" class="fullscreen-link"><i class="icon-fullscreen icon-white"></i></a>
             </p>
           </div><!--/.nav-collapse -->
-          
-          <!-- QR Code start -->
-          <!-- 
-          <div class="nav-collapse collapse">
-            <ul class="nav pull-right">
-              <li class="dropdown">
-                <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon-qrcode icon-white"></i><strong class="caret"></strong></a>
-                <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-                  <div class="qrcode"></div>
-                  <div style="text-align: center; margin: 8px;">扫描二维码，在手机或Pad中查看文档</div>
-                </div>
-              </li>
-            </ul>
-          </div>
-           -->
-          <!-- QR Code end -->
         </div>
       </div>
     </div>
@@ -115,7 +96,7 @@
       <div class="bar" style="width: 0%;"></div>
     </div>
 
-    <!-- Le javascript
+    <!-- JavaSript
     ================================================== -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
@@ -126,16 +107,5 @@
 	<script src="/static/fullscreen/js/jquery.fullscreen-min.js"></script>
 	<script src="/static/idocv/js/ppt-outline.js"></script>
 	<script src="/static/idocv/js/stat.js"></script>
-	
-	<!-- Baidu Share BEGIN -->
-	<!-- 
-	<script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=6&amp;pos=right&amp;uid=6693451" ></script>
-	<script type="text/javascript" id="bdshell_js"></script>
-	<script type="text/javascript">
-	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
-	</script>
-	 -->
-	<!-- Baidu Share END -->
-
   </body>
 </html>
