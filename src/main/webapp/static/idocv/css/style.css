@@ -100,6 +100,7 @@
 	}
 
 	.word-page{
+		line-height: normal;
 		margin-right: auto;
 		margin-left: auto;
 		margin-bottom: 15px;
