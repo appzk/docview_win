@@ -18,6 +18,7 @@ import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -61,6 +62,9 @@ public class DocServiceImpl implements DocService {
 
 	@Resource
 	private ConvertService convertService;
+	
+	@Value("${upload.max.size}")
+	private Long uploadMaxSize;
 
 	private static Set<String> docTypes = new HashSet<String>();
 
@@ -92,8 +96,8 @@ public class DocServiceImpl implements DocService {
 	@Override
 	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
 		try {
-			if (data.length > 20000000) {
-				logger.error("您的文件有点大，目前只支持20M以下的文档预览！");
+			if (data.length > uploadMaxSize) {
+				logger.error("您的文件有点大，目前只支持" + (uploadMaxSize / 1000000) + "M以下的文档预览！");
 				throw new DocServiceException("您的文件有点大，目前只支持20M以下的文档预览！");
 			}
 
