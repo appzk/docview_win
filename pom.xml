@@ -290,17 +290,17 @@
 			<properties>
 				<!-- Data -->
 				<pom.docview.data.url>http://data.idocv.com/</pom.docview.data.url>
-				<pom.docview.data.dir>D:\idocv\data\</pom.docview.data.dir>
+				<pom.docview.data.dir>D:/idocv/data/</pom.docview.data.dir>
 
 				<!-- Database -->
 				<pom.docview.mongodb.ip>localhost</pom.docview.mongodb.ip>
 				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
 
 				<!-- Office converter -->
-				<pom.office.cmd.word2html>D:\idocv\bin\converter\word2html.exe</pom.office.cmd.word2html>
-				<pom.office.cmd.excel2html>D:\idocv\bin\converter\excel2html.exe</pom.office.cmd.excel2html>
-				<pom.office.cmd.ppt2jpg>D:\idocv\bin\converter\ppt2jpg.exe</pom.office.cmd.ppt2jpg>
-				<pom.swftools.cmd.pdf2swf>D:\idocv\bin\converter\pdf2swf.exe</pom.swftools.cmd.pdf2swf>
+				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
+				<pom.office.cmd.excel2html>D:/idocv/bin/converter/excel2html.exe</pom.office.cmd.excel2html>
+				<pom.office.cmd.ppt2jpg>D:/idocv/bin/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
+				<pom.swftools.cmd.pdf2swf>D:/idocv/bin/converter/pdf2swf.exe</pom.swftools.cmd.pdf2swf>
 			</properties>
 		</profile>
 		<!-- Production -->
@@ -309,17 +309,17 @@
 			<properties>
 				<!-- Data -->
 				<pom.docview.data.url>http://data.idocv.com/</pom.docview.data.url>
-				<pom.docview.data.dir>D:\idocv\data\</pom.docview.data.dir>
+				<pom.docview.data.dir>D:/idocv/data/</pom.docview.data.dir>
 
 				<!-- Database -->
 				<pom.docview.mongodb.ip>localhost</pom.docview.mongodb.ip>
 				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
 
 				<!-- Office converter -->
-				<pom.office.cmd.word2html>D:\idocv\bin\converter\word2html.exe</pom.office.cmd.word2html>
-				<pom.office.cmd.excel2html>D:\idocv\bin\converter\excel2html.exe</pom.office.cmd.excel2html>
-				<pom.office.cmd.ppt2jpg>D:\idocv\bin\converter\ppt2jpg.exe</pom.office.cmd.ppt2jpg>
-				<pom.swftools.cmd.pdf2swf>D:\idocv\bin\converter\pdf2swf.exe</pom.swftools.cmd.pdf2swf>
+				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
+				<pom.office.cmd.excel2html>D:/idocv/bin/converter/excel2html.exe</pom.office.cmd.excel2html>
+				<pom.office.cmd.ppt2jpg>D:/idocv/bin/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
+				<pom.swftools.cmd.pdf2swf>D:/idocv/bin/converter/pdf2swf.exe</pom.swftools.cmd.pdf2swf>
 			</properties>
 		</profile>
 	</profiles>
