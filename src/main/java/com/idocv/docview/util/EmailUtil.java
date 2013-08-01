@@ -31,12 +31,12 @@ public class EmailUtil implements Runnable {
 			logger.info("Sending email: username=" + username + ", email=" + address + ", title=" + title + ", content=" + content);
 			HtmlEmail email = new HtmlEmail();
 			email.setCharset("UTF-8");
-			email.setHostName("pop.gmail.com");
+			email.setHostName("smtp.exmail.qq.com");
 			email.addTo(address, username);
 			email.setFrom("support@idocv.com", "IDocV");
 			email.setSubject(title + " - I Doc View");
 			email.setAuthentication("support@idocv.com", "idocv.com88");
-			email.setStartTLSRequired(true);
+			// email.setStartTLSRequired(true);
 
 			// embed the image and get the content id
 			String logoSrc = "http://www.idocv.com/img/logo.png";
@@ -56,4 +56,7 @@ public class EmailUtil implements Runnable {
 		}
 	}
 
+	public static void main(String[] args) {
+		EmailUtil.sendMail("Godwin", "137123093@qq.com", "Test", "Tester");
+	}
 }
