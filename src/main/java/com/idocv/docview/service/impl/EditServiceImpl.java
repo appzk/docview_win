@@ -42,7 +42,7 @@ public class EditServiceImpl implements EditService {
 			throw new DocServiceException("Document(" + uuid + ") NOT found!");
 		}
 		String rid = docVo.getRid();
-		PageVo<WordVo> wordPage = previewService.convertWord2Html(rid, 0, 0);
+		PageVo<WordVo> wordPage = previewService.convertWord2Html(rid, 1, 0);
 		List<WordVo> pageData = wordPage.getData();
 		if (CollectionUtils.isEmpty(pageData)) {
 			logger.error("Document(" + uuid + ") content is empty!");

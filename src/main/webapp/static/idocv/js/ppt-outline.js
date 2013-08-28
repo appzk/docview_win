@@ -26,6 +26,8 @@ $(document).ready(function() {
 				$('#page-selector').append('<option>' + (i + 1) + '</option>');
 			}
 			
+			$('.thumbnail[page="' + curSlide + '"]').addClass('ppt-thumb-border');
+			
 			$('.thumbnail').click(function () {
 				var page_num = $(this).attr('page');
 				gotoSlide(page_num);
@@ -131,6 +133,8 @@ function gotoSlide(slide) {
 		$(this).attr("src", slideUrls[slide - 1]).fadeIn();
 	});
 	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
+	$('.thumbnail').removeClass('ppt-thumb-border');
+	$('.thumbnail[page="' + slide + '"]').addClass('ppt-thumb-border');
 	$('#page-selector').val(slide);
 	$('.bottom-paging-progress .bar').width('' + percent + '%');
 }

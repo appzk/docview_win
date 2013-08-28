@@ -108,9 +108,9 @@
 		background-color:#FFF;
 		-moz-border-radius: 1px;
 		border-radius: 1px;
-		-moz-box-shadow: 0 0 2px 2px #888;
-		-webkit-box-shadow: 0 0 2px 2px #888;
-		box-shadow: 0 0 2px 2px #888;
+		-moz-box-shadow: 0 0 10px 5px #888;
+		-webkit-box-shadow: 0 0 10px 5px #888;
+		box-shadow: 0 0 10px 5px #888;
 	}
 	
 	.word-page .word-content {
@@ -135,14 +135,25 @@
 	
 	.slide-img {
 		margin: 0 auto;
+		bottom: 20px;
+		top: 0px;
+		right: 5px;
+		padding-bottom: 10px;
+		position: relative;
+		width: 100%;
+		text-align: center;
 	}
 
 	.slide-img img {
 		-moz-border-radius: 5px;
 		border-radius: 2px;
-		-moz-box-shadow: 0 0 2px 2px #888;
-		-webkit-box-shadow: 0 0 2px 2px #888;
-		box-shadow: 0 0 2px 2px #888;
+		-moz-box-shadow: 0 0 10px 3px #888;
+		-webkit-box-shadow: 0 0 10px 3px #888;
+		box-shadow: 0 0 10px 3px #888;
+	}
+	
+	.ppt-thumb-border {
+		border: 3px solid darkorange;
 	}
 	
 	/* -------------------------------------------------- */
