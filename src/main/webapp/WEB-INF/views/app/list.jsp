@@ -55,11 +55,14 @@
         
         <hr />
         
+        <!-- 
         <p><a href="http://eco.idocv.com" class="btn btn-primary btn-large">经济学人 &raquo;</a></p>
+         -->
         
       </div>
       
       <!-- Example row of columns -->
+      <!-- 
       <div class="row">
         <div class="span4">
           <h2>Heading</h2>
@@ -77,6 +80,7 @@
           <p><a class="btn" href="#">View details &raquo;</a></p>
         </div>
       </div>
+       -->
 
       <hr>
       
