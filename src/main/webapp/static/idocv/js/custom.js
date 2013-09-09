@@ -8,6 +8,9 @@ jQuery(document).ready(function($) {
 	/*	Custom Functions
 	/* ---------------------------------------------------------------------- */
 
+	if(top !== window) {
+		top.location.href = window.location.href;
+	}
 	
 	/* ---------------------------------------------------------------------- */
 	/*	UItoTop (Back to Top)
