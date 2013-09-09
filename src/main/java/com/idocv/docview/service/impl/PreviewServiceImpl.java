@@ -136,7 +136,6 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 						FileUtils.writeStringToFile(curPageFile, subPages.get(i), "UTF-8");
 						curPageNum++;
 					}
-					System.out.println("length: " + lines.length);
 				}
 			}
 
@@ -218,7 +217,6 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			// get TITLE(s) and CONTENT(s)
 			List<ExcelVo> VoList = new ArrayList<ExcelVo>();
 			String titleFileContent = FileUtils.readFileToString(tabstripFile, "GBK");
-			System.err.println("Processing excel file - " + rid);
 			for (int i = 0; i < sheetFiles.size(); i++) {
 				ExcelVo vo = new ExcelVo();
 
@@ -226,7 +224,6 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				String title = titleFileContent.replaceFirst("(?s)(?i).+?" + sheetFiles.get(i).getName() + ".+?<font[^>]+>(.+?)</font>.*(?-i)", "$1");
 				title = StringUtils.isBlank(title) ? ("Sheet" + (i + 1)) : title;
 				// titleList.add(title);
-				System.err.println("    title" + (i + 1) + " = " + title);
 
 				// get content
 				String sheetFileContent = FileUtils.readFileToString(sheetFiles.get(i), "GBK");
@@ -382,16 +379,16 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			File destFile = new File(dest);
 			if (!destFile.isFile()) {
 				String convertInfo = CmdUtil.runWindows(pdf2swf + " " + src + " -o " + dest + " -f -T 9 -t -s storeallcharacters -s languagedir=C:\\xpdf\\xpdf-chinese-simplified ");
-				System.out.println("Convert info: \n" + convertInfo);
+				logger.info("Convert info: \n" + convertInfo);
 				if (!destFile.isFile()) {
-					System.out.println("Can't convert \"" + src + "\" to \"" + dest + "\", start converting using poly2bitmap parameter...");
+					logger.error("Can't convert \"" + src + "\" to \"" + dest + "\", start converting using poly2bitmap parameter...");
 					convertInfo = CmdUtil.runWindows(pdf2swf + " " + src + " -o " + dest + " -f -T 9 -t -s storeallcharacters -s poly2bitmap -s languagedir=C:\\xpdf\\xpdf-chinese-simplified ");
-					System.out.println("Convert info 2: \n" + convertInfo);
+					logger.info("Convert info 2: \n" + convertInfo);
 				}
 			}
 			return rcUtil.getParseUrlDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".swf";
 		} catch (Exception e) {
-			logger.error("convertPdf2Swf error: ", e.fillInStackTrace());
+			logger.error("convertPdf2Swf error(" + rid + "): ", e.getMessage());
 			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
@@ -429,7 +426,6 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				}
 			}
 		} else {
-			System.err.println("convertingRids(u+) " + rid);
 			startTime = System.currentTimeMillis();
 			convertingRids.add(rid);
 		}
@@ -440,16 +436,22 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 					convertResult = CmdUtil.runWindows(word2Html, src, dest);
 				}
 				if (!destFile.isFile()) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
 					convertResult = CmdUtil.runWindows(excel2Html, src, dest);
 				}
 				if (!destFile.isFile()) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
 				dest = rcUtil.getParseDir(rid);
@@ -462,19 +464,22 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dir200.getAbsolutePath() + File.separator, "export", "200", "150");
 				}
 				if (dir960.listFiles().length <= 0 || dir200.listFiles().length <= 0) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".swf";
 				destFile = new File(dest);
 				if (!destFile.isFile()) {
 					String convertInfo = CmdUtil.runWindows(pdf2swf + " " + src + " -o " + dest + " -f -T 9 -t -s storeallcharacters -s languagedir=C:\\xpdf\\xpdf-chinese-simplified ");
-					System.out.println("Convert info: \n" + convertInfo);
+					logger.info("Convert info: \n" + convertInfo);
 					if (!destFile.isFile()) {
-						System.out.println("Can't convert \"" + src + "\" to \"" + dest + "\", start converting using poly2bitmap parameter...");
+						logger.error("Can't convert \"" + src + "\" to \"" + dest + "\", start converting using poly2bitmap parameter...");
 						convertInfo = CmdUtil.runWindows(pdf2swf + " " + src + " -o " + dest + " -f -T 9 -t -s storeallcharacters -s poly2bitmap -s languagedir=C:\\xpdf\\xpdf-chinese-simplified ");
-						System.out.println("Convert info 2: \n" + convertInfo);
+						logger.info("Convert info 2: \n" + convertInfo);
 					}
 				}
 			} else if ("txt".equalsIgnoreCase(ext)) {
@@ -482,17 +487,17 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			} else {
 				throw new DocServiceException("目前不支持（" + ext + "）格式！");
 			}
-			System.err.println("Convert result: " + convertResult);
+//			logger.info("Convert result: " + convertResult);
 			return true;
 		} catch (Exception e) {
-			logger.error("convert error: ", e.fillInStackTrace());
+			logger.error("convert error(" + rid + "): ", e.getMessage());
 			throw new DocServiceException(e.getMessage(), e);
 		} finally {
-			System.err.println("convertingRids(u-) " + rid);
+//			logger.info("convertingRids(u-) " + rid);
 			long endTime = System.currentTimeMillis();
 			convertingRids.remove(rid);
 			if (startTime > 0) {
-				System.err.println("Convert " + rid + " with size " + size + " elapse: " + (endTime - startTime) + ", rate: " + (size / ((endTime - startTime) / 1000d)) + " bit/s.");
+				logger.info("Convert " + rid + " with size " + size + " elapse: " + (endTime - startTime) + ", rate: " + (size / ((endTime - startTime) / 1000d)) + " bit/s.");;
 			}
 		}
 	}
