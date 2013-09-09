@@ -209,7 +209,7 @@ public class ViewController {
 			page.setUuid(docVo.getUuid());
 			docService.logView(uuid);
 		} catch (Exception e) {
-			logger.error("jsonUuid error(" + id + "): ", e);
+			logger.error("jsonUuid error(" + id + "): " + e.getMessage());
 			page = new PageVo<OfficeBaseVo>(null, 0);
 			page.setCode(0);
 			page.setDesc(e.getMessage());

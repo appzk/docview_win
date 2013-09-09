@@ -14,7 +14,7 @@ $(document).ready(function() {
 			var pages = data.data;
 			
 			// title
-			$('.container-fluid:first .btn:first').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
+			$('.container-fluid:first .btn:first').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 			// $(".qrcode").qrcode(address);
 			
 			// pages
@@ -25,8 +25,6 @@ $(document).ready(function() {
 				$('.row-fluid .span2').append('<div class="thumbnail" page="' + (i + 1) + '"><img src="' + page.thumbUrl + '"></div>' + (i + 1) + '/' + pages.length + '<br />');
 				$('#page-selector').append('<option>' + (i + 1) + '</option>');
 			}
-			
-			$('.thumbnail[page="' + curSlide + '"]').addClass('ppt-thumb-border');
 			
 			$('.thumbnail').click(function () {
 				var page_num = $(this).attr('page');
@@ -39,7 +37,12 @@ $(document).ready(function() {
 				*/
 			});
 			
-			$('.slide-img').html('<img src="' + pages[0].url + '" class="img-polaroid" style="height: 100%;">');
+			$('.slide-img').append('<img src="' + pages[0].url + '" class="img-polaroid" style="height: 100%;">');
+			
+			var percent = Math.ceil((curSlide / slideUrls.length) * 100);
+			$('.thumbnail[page="' + curSlide + '"]').addClass('ppt-thumb-border');
+			$('#page-selector').val(curSlide);
+			$('.bottom-paging-progress .bar').width('' + percent + '%');
 		} else {
 			$('.container-fluid .row-fluid').html('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}
@@ -55,8 +58,10 @@ $(document).ready(function() {
 		var isFullscreen = $(document).fullScreen() ? true : false;
 		if (isFullscreen) {
 			$('.slide-img').css('background-color', 'black');
+			$('.slide-img').contextMenu(true);
 		} else {
 			$('.slide-img').css('background-color', '');
+			$('.slide-img').contextMenu(false);
 		}
 	});
 	
@@ -64,6 +69,39 @@ $(document).ready(function() {
 		var selectNum = $("#page-selector option:selected").text();
 		gotoSlide(selectNum);
 	});
+	$('.slide-img .ppt-turn-left-mask').click(function () {
+		preSlide();
+	});
+	$('.slide-img .ppt-turn-right-mask').click(function () {
+		nextSlide();
+	});
+	
+	// Right click
+	$.contextMenu({
+        selector: '.slide-img',
+        items: {
+        	"next": {
+                name: "下一张",
+                callback: function(key, options) {
+                	nextSlide();
+                }
+            },
+            "previous": {
+                name: "上一张",
+                callback: function(key, options) {
+                	preSlide();
+                }
+            },
+            "sep1": "---------",
+            "exit": {
+                name: "结束放映",
+                callback: function(key, options) {
+                	$('.slide-img').fullScreen(false);
+                }
+            },
+        }
+    });
+	$('.slide-img').contextMenu(false);
 	
 	// Swipe method is NOT supported in IE6, so it should be the last one.
 	$('.slide-img').swipeleft(function() { nextSlide(); });
@@ -129,9 +167,12 @@ function gotoSlide(slide) {
 		slide = slideSum;
 	}
 	curSlide = slide;
+	/*
 	$(".slide-img img").fadeOut(function() {
 		$(this).attr("src", slideUrls[slide - 1]).fadeIn();
 	});
+	*/
+	$(".slide-img img").attr("src", slideUrls[slide - 1]);
 	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
 	$('.thumbnail').removeClass('ppt-thumb-border');
 	$('.thumbnail[page="' + slide + '"]').addClass('ppt-thumb-border');

@@ -4,17 +4,18 @@
   <head>
     <meta charset="utf-8">
     <title>PPT - I Doc View</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="在线文档预览、文档协作编辑、幻灯片远程控制、同步信息展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt等。">
     <meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
     <meta name="author" content="Godwin">
 
-	<!-- BOOTSTRAP STYLE start -->
-	<!-- Le styles -->
-	<link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
-	<link href="/static/idocv/css/style.css" rel="stylesheet">
-	<link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
-	<!-- BOOTSTRAP STYLE end -->
+    <!-- BOOTSTRAP STYLE start -->
+    <!-- Le styles -->
+    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/idocv/css/style.css" rel="stylesheet">
+    <link href="/static/contextMenu/css/jquery.contextMenu.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <!-- BOOTSTRAP STYLE end -->
 
     <style type="text/css">
       .thumbnail{
@@ -78,6 +79,8 @@
         </div>
         <div class="span9 offset2">
           <div class="slide-img">
+            <div class="ppt-turn-left-mask"></div>
+            <div class="ppt-turn-right-mask"></div>
             <!-- 
             <img src="" class="img-polaroid" style="max-height: 100%;">
              -->
@@ -98,14 +101,16 @@
 
     <!-- JavaSript
     ================================================== -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
-	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
-	<script src="/static/jquery/js/jquery.mobile-events.min.js"></script>
-	<script src="/static/idocv/js/progress.js"></script>
-	<script src="/static/urlparser/js/purl.js"></script>
-	<script src="/static/fullscreen/js/jquery.fullscreen-min.js"></script>
-	<script src="/static/idocv/js/ppt-outline.js"></script>
-	<script src="/static/idocv/js/stat.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
+    <script src="/static/contextMenu/js/jquery.contextMenu.js"></script>
+    <script src="/static/contextMenu/js/jquery.ui.position.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/jquery/js/jquery.mobile-events.min.js"></script>
+    <script src="/static/idocv/js/progress.js"></script>
+    <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/fullscreen/js/jquery.fullscreen-min.js"></script>
+    <script src="/static/idocv/js/ppt-outline.js"></script>
+    <script src="/static/idocv/js/stat.js"></script>
   </body>
 </html>

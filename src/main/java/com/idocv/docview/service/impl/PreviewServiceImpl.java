@@ -184,7 +184,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			page.setStyleUrl(rcUtil.getParseUrlDir(rid) + "style.css");
 			return page;
 		} catch (Exception e) {
-			logger.error("convertWord2Html error: ", e.fillInStackTrace());
+			logger.error("convertWord2Html error: " + e.getMessage());
 			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
@@ -284,7 +284,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			PageVo<PPTVo> page = new PageVo<PPTVo>(data, 1);
 			return page;
 		} catch (Exception e) {
-			logger.error("convertPPT2Html error: ", e.fillInStackTrace());
+			logger.error("convertPPT2Html(" + rid + ") error: ", e.fillInStackTrace());
 			throw new DocServiceException(e.getMessage(), e);
 		}
 	}

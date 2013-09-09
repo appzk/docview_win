@@ -81,7 +81,17 @@
 		direction: ltr;
 		cursor: pointer;
 	}
-
+	
+	/* -------------------------------------------------- */
+	/*	Header Style
+	/* -------------------------------------------------- */
+	
+	.navbar .brand {
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+		max-width: 80%;
+	}
 
 	/* -------------------------------------------------- */
 	/*	Word Style
@@ -154,6 +164,22 @@
 	
 	.ppt-thumb-border {
 		border: 3px solid darkorange;
+	}
+	
+	.ppt-turn-left-mask, .ppt-turn-right-mask {
+		position: absolute;
+		width: 50%;
+		height: 100%;
+		top: 0;
+		left: 0px;
+		z-index: 500;
+		cursor: url("../img/arr_left.cur"), auto;
+		display: block;
+	}
+	.ppt-turn-right-mask {
+		left: inherit;
+		right: 0;
+		cursor: url("../img/arr_right.cur"), auto;
 	}
 	
 	/* -------------------------------------------------- */

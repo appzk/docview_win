@@ -11,7 +11,7 @@ $(document).ready(function() {
 			var pages = data.data;
 			
 			// title
-			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" href="/doc/download/' + uuid + '">' + data.name + '</a>');
+			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 			// $(".qrcode").qrcode(address);
 			
 			// pages
