@@ -111,7 +111,7 @@
 	 -->
 	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
 <!-- 	<script src="/static/idocv/js/user.js"></script> -->
-	<script src="/static/infinite-scroll/js/debug.js"></script>
+<!-- 	<script src="/static/infinite-scroll/js/debug.js"></script> -->
 	<script src="/static/infinite-scroll/js/jquery.infinitescroll.js"></script>
 	<script src="/static/idocv/js/word.js"></script>
 	<script src="/static/smart/js/jquery.easing-1.3.min.js"></script>

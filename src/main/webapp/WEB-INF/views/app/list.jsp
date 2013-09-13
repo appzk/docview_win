@@ -47,7 +47,7 @@
     <div class="container-fluid">
     
       <div class="hero-unit">
-        <h1>在线文档预览、协作编辑，幻灯片远程控制、同步展示等 - I Doc View</h1>
+        <h1>在线文档预览、文档协作编辑、幻灯片远程控制、同步信息展示等 - I Doc View</h1>
         
         <br />
         

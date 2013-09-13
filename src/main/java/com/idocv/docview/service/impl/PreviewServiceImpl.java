@@ -194,7 +194,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			convert(rid);
 			File rawFilesDir = new File(rcUtil.getParseDir(rid) + "index.files");
 			if (!rawFilesDir.isDirectory()) {
-				throw new DocServiceException("Can't find parsed directory!");
+				logger.error("未找到解析目录(" + rid + ")！");
+				throw new DocServiceException("未找到解析目录！");
 			}
 
 			File[] excelFiles = rawFilesDir.listFiles();
@@ -211,7 +212,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				}
 			}
 			if (CollectionUtils.isEmpty(sheetFiles) || null == tabstripFile) {
-				throw new Exception("Excel parsed files NOT found!");
+				logger.error("未找到Excel解析文件(" + rid + ")！");
+				throw new Exception("未找到Excel解析文件！");
 			}
 			
 			// get TITLE(s) and CONTENT(s)
@@ -246,7 +248,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			}
 			return page;
 		} catch (Exception e) {
-			logger.error("convertExcel2Html error: ", e.fillInStackTrace());
+			logger.error("convertExcel2Html(" + rid + ") error: ", e.fillInStackTrace());
 			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
@@ -485,6 +487,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				// do nothing.
 			} else {
+				logger.error("目前不支持（" + ext + "）格式！");
 				throw new DocServiceException("目前不支持（" + ext + "）格式！");
 			}
 //			logger.info("Convert result: " + convertResult);

@@ -135,6 +135,7 @@ public class ViewController {
 			@RequestParam(defaultValue = "5") int size) {
 		PageVo<? extends Serializable> page = null;
 		String uuid = null;
+		String rid = null;
 		String session = null;
 		try {
 			if (id.matches("\\w{24}")) {
@@ -154,7 +155,7 @@ public class ViewController {
 			if (null == docVo || StringUtils.isBlank(docVo.getRid())) {
 				throw new DocServiceException("文档(" + uuid + ")不存在！");
 			}
-			String rid = docVo.getRid();
+			rid = docVo.getRid();
 			String ext = RcUtil.getExt(rid);
 
 			// 2. check access mode of docVo
@@ -209,11 +210,12 @@ public class ViewController {
 			page.setUuid(docVo.getUuid());
 			docService.logView(uuid);
 		} catch (Exception e) {
-			logger.error("jsonUuid error(" + id + "): " + e.getMessage());
+			logger.error("jsonUuid error(" + rid + "-" + id + "): " + e.getMessage());
 			page = new PageVo<OfficeBaseVo>(null, 0);
 			page.setCode(0);
 			page.setDesc(e.getMessage());
 			page.setUuid(uuid);
+			page.setRid(rid);
 		}
 		return page;
 	}
@@ -257,7 +259,8 @@ public class ViewController {
 					throw new DocServiceException("会话已过期，请重新获取一个新的会话！");
 				}
 				if (!uuid.equals(sessionVo.getUuid())) {
-					logger.error("该会话与稳定UUID不一致！" + ", session=" + session + ", uuid=" + uuid);
+					logger.error("该会话与稳定UUID不一致！" + ", session=" + session
+							+ ", uuid=" + uuid);
 					throw new DocServiceException("该会话与稳定UUID不一致！");
 				}
 			}
@@ -342,18 +345,12 @@ public class ViewController {
 			String uuid = vo.getUuid();
 			return "redirect:" + uuid;
 			/*
-			if (uuid.endsWith("w")) {
-				return "word/index";
-			} else if (uuid.endsWith("x")) {
-				return "excel/index";
-			} else if (uuid.endsWith("p")) {
-				return "ppt/index";
-			} else if (uuid.endsWith("t")) {
-				return "txt/index";
-			} else {
-				throw new DocServiceException("URL(" + url + ")不是有效的文档！");
-			}
-			*/
+			 * if (uuid.endsWith("w")) { return "word/index"; } else if
+			 * (uuid.endsWith("x")) { return "excel/index"; } else if
+			 * (uuid.endsWith("p")) { return "ppt/index"; } else if
+			 * (uuid.endsWith("t")) { return "txt/index"; } else { throw new
+			 * DocServiceException("URL(" + url + ")不是有效的文档！"); }
+			 */
 		} catch (Exception e) {
 			logger.error("view(url) 404 error(url=" + url + ", token=" + token + ", name=" + name + ", reason=" + e.getMessage() + "): ", e);
 			return "redirect:/404.html";
