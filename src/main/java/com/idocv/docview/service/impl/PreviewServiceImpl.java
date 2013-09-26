@@ -1,18 +1,23 @@
 package com.idocv.docview.service.impl;
 
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -57,6 +62,9 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	
 	private @Value("${swftools.cmd.pdf2swf}")
 	String pdf2swf;
+
+	private static final String IMG_WIDTH_200 = "200";
+	private static final String IMG_WIDTH_960 = "960";
 
 	private static final String encodingString = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=([^\"^>]+?)\"?>.*";
 
@@ -257,26 +265,56 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	public PageVo<PPTVo> convertPPT2Html(String rid, int start, int limit) throws DocServiceException {
 		try {
 			// get page count
-			File[] slide960Files = new File(rcUtil.getParseDirOfPPT960x720(rid)).listFiles();
-			File[] slide200Files = new File(rcUtil.getParseDirOfPPT200x150(rid)).listFiles();
-			if (slide960Files.length <= 0 || slide200Files.length <= 0) {
+			File[] slide200Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_200).listFiles();
+			File[] slide960Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_960).listFiles();
+			if (ArrayUtils.isEmpty(slide200Files) || ArrayUtils.isEmpty(slide960Files)) {
 				convert(rid);
-				slide960Files = new File(rcUtil.getParseDirOfPPT960x720(rid)).listFiles();
-				slide200Files = new File(rcUtil.getParseDirOfPPT200x150(rid)).listFiles();
+				slide200Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_200).listFiles();
+				slide960Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_960).listFiles();
 			}
+			if (ArrayUtils.isEmpty(slide200Files) || ArrayUtils.isEmpty(slide960Files)) {
+				throw new DocServiceException("预览失败，未找到目标文件！");
+			}
+			
+			File imgRatioFile = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_200 + File.separator + "slide1.jpg");
+			if (!imgRatioFile.isFile()) {
+				throw new DocServiceException("");
+			}
+			BufferedImage imgRatio = ImageIO.read(imgRatioFile);
+			float ratio = (float) imgRatio.getHeight() / imgRatio.getWidth();
 
+			List<File> slideImgThumbFiles = new ArrayList<File>();
+			List<File> slideImgFiles = new ArrayList<File>();
+			Map<String, String> notes = new HashMap<String, String>();
+			for (File slideFile : slide200Files) {
+				if (slideFile.getName().toLowerCase().endsWith("jpg")) {
+					slideImgThumbFiles.add(slideFile);
+				} else if (slideFile.getName().toLowerCase().endsWith("note")) {
+					String note = FileUtils.readFileToString(slideFile, "utf-8");
+					notes.put(slideFile.getName(), note);
+				}
+			}
+			for (File slideFile : slide960Files) {
+				if (slideFile.getName().toLowerCase().endsWith("jpg")) {
+					slideImgFiles.add(slideFile);
+				}
+			}
+			
 			// sort file
-			Arrays.sort(slide960Files, new PPT2JPGComparator());
-			Arrays.sort(slide200Files, new PPT2JPGComparator());
+			Collections.sort(slideImgThumbFiles, new FileComparator());
+			Collections.sort(slideImgFiles, new FileComparator());
 
 			List<PPTVo> data = new ArrayList<PPTVo>();
-			if (slide960Files.length > 0 && slide200Files.length > 0) {
-				for (int i = 0; i < slide960Files.length && i < slide200Files.length; i++) {
+			if (!CollectionUtils.isEmpty(slideImgThumbFiles) && !CollectionUtils.isEmpty(slideImgFiles)) {
+				for (int i = 0; i < slideImgThumbFiles.size() && i < slideImgFiles.size(); i++) {
 					PPTVo ppt = new PPTVo();
-					String url = rcUtil.getParseUrlDir(rid) + "960x720/" + slide960Files[i].getName();
-					String thumbUrl = rcUtil.getParseUrlDir(rid) + "200x150/" + slide200Files[i].getName();
+					String thumbUrl = rcUtil.getParseUrlDir(rid) + IMG_WIDTH_200 + "/" + slideImgThumbFiles.get(i).getName();
+					String url = rcUtil.getParseUrlDir(rid) + IMG_WIDTH_960 + "/" + slideImgFiles.get(i).getName();
 					ppt.setUrl(url);
 					ppt.setThumbUrl(thumbUrl);
+					ppt.setRatio(ratio);
+					String note = notes.get("slide" + (i + 1) + ".note");
+					ppt.setNote(note);
 					data.add(ppt);
 				}
 			}
@@ -457,15 +495,14 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				}
 			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
 				dest = rcUtil.getParseDir(rid);
-				File dir960 = new File(rcUtil.getParseDirOfPPT960x720(rid));
-				File dir200 = new File(rcUtil.getParseDirOfPPT200x150(rid));
 				destFile = new File(dest);
-				if (dir960.listFiles().length <= 0 || dir200.listFiles().length <= 0) {
-					// convertResult = CmdUtil.runWindows(ppt2Jpg, src, destFile.getAbsolutePath(), "save");
-					convertResult = CmdUtil.runWindows(ppt2Jpg, src, dir960.getAbsolutePath() + File.separator, "export", "960", "720");
-					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dir200.getAbsolutePath() + File.separator, "export", "200", "150");
+				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles())) {
+					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "export", IMG_WIDTH_200);
 				}
-				if (dir960.listFiles().length <= 0 || dir200.listFiles().length <= 0) {
+				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_960).listFiles())) {
+					convertResult = CmdUtil.runWindows(ppt2Jpg, src, dest, "export", IMG_WIDTH_960);
+				}
+				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles()) || ArrayUtils.isEmpty(new File(dest + "960").listFiles())) {
 					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 					throw new DocServiceException("对不起，该文档（"
@@ -613,7 +650,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	}
 }
 
-class PPT2JPGComparator implements Comparator<File> {
+class FileComparator implements Comparator<File> {
 	
 	@Override
 	public int compare(File o1, File o2) {

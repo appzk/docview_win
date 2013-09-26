@@ -1,5 +1,6 @@
 var slideUrls = new Array();
 var slideThumbUrls = new Array();
+var ratio = 0.75;
 var curSlide = 1;
 $(document).ready(function() {
 	var uuid = $.url().segment(2);
@@ -16,6 +17,9 @@ $(document).ready(function() {
 			// title
 			$('.container-fluid:first .btn:first').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 			// $(".qrcode").qrcode(address);
+			
+			// set ratio
+			ratio = pages[0].ratio;
 			
 			// pages
 			for (i = 0; i < pages.length; i++) {
@@ -38,6 +42,7 @@ $(document).ready(function() {
 			});
 			
 			$('.slide-img').append('<img src="' + pages[0].url + '" class="img-polaroid" style="height: 100%;">');
+			resetImgSize();
 			
 			var percent = Math.ceil((curSlide / slideUrls.length) * 100);
 			$('.thumbnail[page="' + curSlide + '"]').addClass('ppt-thumb-border');
@@ -125,12 +130,12 @@ function resetImgSize() {
 		ww = ww + 90 + leftW;
 		wh = wh + 80;
 	}
-	if (ww / wh > 4 / 3) {
+	if (wh / ww < ratio) {
 		$('.slide-img').height(wh);
-		$('.slide-img').width(wh * 4 / 3);
+		$('.slide-img').width(wh / ratio);
 	} else {
 		$('.slide-img').width(ww);
-		$('.slide-img').height(ww * 3 / 4);
+		$('.slide-img').height(ww * ratio);
 	}
 }
 

@@ -3,15 +3,8 @@ package com.idocv.docview.vo;
 public class PPTVo extends OfficeBaseVo {
 
 	private String thumbUrl;
+	private float ratio;
 	private String note;
-
-	public String getNote() {
-		return note;
-	}
-
-	public void setNote(String note) {
-		this.note = note;
-	}
 
 	public String getThumbUrl() {
 		return thumbUrl;
@@ -21,4 +14,19 @@ public class PPTVo extends OfficeBaseVo {
 		this.thumbUrl = thumbUrl;
 	}
 
+	public float getRatio() {
+		return ratio;
+	}
+
+	public void setRatio(float ratio) {
+		this.ratio = ratio;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
 }
