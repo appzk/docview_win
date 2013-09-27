@@ -285,6 +285,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 
 			List<File> slideImgThumbFiles = new ArrayList<File>();
 			List<File> slideImgFiles = new ArrayList<File>();
+			
+			Map<String, String> titles = new HashMap<String, String>();
 			Map<String, String> notes = new HashMap<String, String>();
 			for (File slideFile : slide200Files) {
 				if (slideFile.getName().toLowerCase().endsWith("jpg")) {
@@ -292,6 +294,9 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				} else if (slideFile.getName().toLowerCase().endsWith("note")) {
 					String note = FileUtils.readFileToString(slideFile, "utf-8");
 					notes.put(slideFile.getName(), note);
+				} else if (slideFile.getName().toLowerCase().endsWith("title")) {
+					String title = FileUtils.readFileToString(slideFile, "utf-8");
+					titles.put(slideFile.getName(), title);
 				}
 			}
 			for (File slideFile : slide960Files) {
@@ -308,6 +313,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			if (!CollectionUtils.isEmpty(slideImgThumbFiles) && !CollectionUtils.isEmpty(slideImgFiles)) {
 				for (int i = 0; i < slideImgThumbFiles.size() && i < slideImgFiles.size(); i++) {
 					PPTVo ppt = new PPTVo();
+					String title = titles.get("slide" + (i + 1) + ".title");
+					ppt.setTitle(title);
 					String thumbUrl = rcUtil.getParseUrlDir(rid) + IMG_WIDTH_200 + "/" + slideImgThumbFiles.get(i).getName();
 					String url = rcUtil.getParseUrlDir(rid) + IMG_WIDTH_960 + "/" + slideImgFiles.get(i).getName();
 					ppt.setUrl(url);
@@ -497,10 +504,10 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles())) {
-					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "export", IMG_WIDTH_200);
+					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "true", IMG_WIDTH_200);
 				}
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_960).listFiles())) {
-					convertResult = CmdUtil.runWindows(ppt2Jpg, src, dest, "export", IMG_WIDTH_960);
+					convertResult = CmdUtil.runWindows(ppt2Jpg, src, dest, "false", IMG_WIDTH_960);
 				}
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles()) || ArrayUtils.isEmpty(new File(dest + "960").listFiles())) {
 					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
