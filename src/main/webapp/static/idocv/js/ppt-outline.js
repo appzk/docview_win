@@ -22,9 +22,14 @@ $(document).ready(function() {
 			ratio = pages[0].ratio;
 			
 			// pages
+			var windowW = $(window).width();
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
-				slideUrls[i] = page.url;
+				if (windowW < 1200) {
+					slideUrls[i] = page.url;
+				} else {
+					slideUrls[i] = page.largeUrl;
+				}
 				slideThumbUrls[i] = page.thumbUrl;
 				$('.row-fluid .span2').append('<div class="thumbnail" page="' + (i + 1) + '"><img src="' + page.thumbUrl + '"></div>' + (i + 1) + '/' + pages.length + '<br />');
 				$('#page-selector').append('<option>' + (i + 1) + '</option>');
@@ -41,7 +46,7 @@ $(document).ready(function() {
 				*/
 			});
 			
-			$('.slide-img').append('<img src="' + pages[0].url + '" class="img-polaroid" style="height: 100%;">');
+			$('.slide-img').append('<img src="' + slideUrls[0] + '" class="img-polaroid" style="height: 100%;">');
 			resetImgSize();
 			
 			var percent = Math.ceil((curSlide / slideUrls.length) * 100);
