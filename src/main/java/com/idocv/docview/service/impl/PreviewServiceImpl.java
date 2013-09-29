@@ -240,7 +240,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				String sheetFileContent = FileUtils.readFileToString(sheetFiles.get(i), "GBK");
 				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+)(>.*</table>).*(?-i)", "$1" + " class=\"table table-condensed table-bordered\"" + "$2");
 				sheetContent = sheetContent.replaceFirst("table-layout:fixed;", "");
-				sheetContent = processImageUrl(rcUtil.getParseUrlDir(rid) + "index.files/", sheetContent);
+				sheetContent = processImageUrl(rcUtil.getParseUrlDir(rid), sheetContent);
 				sheetContent = processStyle(sheetContent);
 				// contentList.add(sheetContent);
 
@@ -592,7 +592,7 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 	 * @return
 	 */
 	public String processImageUrl(String prefix, String content) throws DocServiceException {
-		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\"?)([^>]+?>)(?-i)", "$1" + prefix + "$2");
+		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\"?)([^>]*index.files[/\\\\])?([^>]+?>)(?-i)", "$1" + prefix + "index.files/" + "$3");
 	}
 	
 	public static void write2File(File file, String content) throws IOException {

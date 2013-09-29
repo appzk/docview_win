@@ -3,8 +3,6 @@ package com.idocv.docview.service.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +13,6 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -69,6 +66,9 @@ public class DocServiceImpl implements DocService {
 	@Value("${upload.max.size}")
 	private Long uploadMaxSize;
 
+	@Value("${upload.max.msg}")
+	private String uploadMaxMsg;
+
 	private static Set<String> docTypes = new HashSet<String>();
 
 	static {
@@ -104,8 +104,8 @@ public class DocServiceImpl implements DocService {
 				throw new DocServiceException("添加文件失败：数据为空！");
 			}
 			if (data.length > uploadMaxSize) {
-				logger.error("您的文件有点大，目前只支持" + (uploadMaxSize / 1000000) + "M以下的文档预览！");
-				throw new DocServiceException("您的文件有点大，目前只支持20M以下的文档预览！");
+				logger.error(uploadMaxMsg);
+				throw new DocServiceException(uploadMaxMsg);
 			}
 
 			// get app & user info
@@ -131,7 +131,8 @@ public class DocServiceImpl implements DocService {
 	@Override
 	public DocVo addUrl(String app, String uid, String name, String url, int mode, String labelName) throws DocServiceException {
 		if (StringUtils.isBlank(app) || StringUtils.isBlank(url)) {
-			logger.error("参数不足：app=" + app + ", uid=" + uid + ", url=" + url + ", name=" + name + ", mode=" + mode);
+			logger.error("参数不足：app=" + app + ", uid=" + uid + ", url=" + url
+					+ ", name=" + name + ", mode=" + mode);
 			throw new DocServiceException(0, "请提供必要参数！");
 		}
 		try {
@@ -165,19 +166,12 @@ public class DocServiceImpl implements DocService {
 			byte[] bytes = urlResponse.bodyAsBytes();
 			
 			/*
-			try {
-				String validUrl = url.replaceAll(" ", "%20");
-				InputStream in = new URL(validUrl).openStream();
-				try {
-					bytes = IOUtils.toByteArray(in);
-				} finally {
-					IOUtils.closeQuietly(in);
-				}
-			} catch (Exception e) {
-				logger.error("获取资源(" + url + ")失败：", e);
-				throw new Exception("获取资源(" + url + ")失败！");
-			}
-			*/
+			 * try { String validUrl = url.replaceAll(" ", "%20"); InputStream
+			 * in = new URL(validUrl).openStream(); try { bytes =
+			 * IOUtils.toByteArray(in); } finally { IOUtils.closeQuietly(in); }
+			 * } catch (Exception e) { logger.error("获取资源(" + url + ")失败：", e);
+			 * throw new Exception("获取资源(" + url + ")失败！"); }
+			 */
 			
 			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/[^/]+\\.[^/]+")) {
 				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
@@ -261,7 +255,10 @@ public class DocServiceImpl implements DocService {
 			}
 			
 			if (StringUtils.isBlank(ext) || !docTypes.contains(ext.toLowerCase())) {
-				throw new DocServiceException("暂不支持" + ext + "文件预览，请选择一个文档，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt");
+				throw new DocServiceException(
+						"暂不支持"
+								+ ext
+								+ "文件预览，请选择一个文档，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt");
 			}
 			
 			// save file meta and file
@@ -284,7 +281,8 @@ public class DocServiceImpl implements DocService {
 	@Deprecated
 	public DocVo addUrl(String token, String url, String name, int mode) throws DocServiceException {
 		if (StringUtils.isBlank(token) || StringUtils.isBlank(name) || StringUtils.isBlank(url)) {
-			logger.error("参数不足：token=" + token + ", url=" + url + ", name=" + name + ", mode=" + mode);
+			logger.error("参数不足：token=" + token + ", url=" + url + ", name="
+					+ name + ", mode=" + mode);
 			throw new DocServiceException(0, "Insufficient parameter!");
 		}
 		try {
@@ -425,7 +423,8 @@ public class DocServiceImpl implements DocService {
 			if (StringUtils.isNotBlank(uid) && null != userPo) {
 				app = userPo.getAppId();
 				if (100 == userPo.getStatus()) {// 管理员
-					docList = docDao.listAppDocs(app, start, length, labelId, search, queryOrder, 0);
+					docList = docDao.listAppDocs(app, start, length, labelId,
+							search, queryOrder, 0);
 					count = docDao.countAppDocs(app, labelId, search, 0);
 				} else { // 普通用户
 					docList = docDao.listMyDocs(uid, start, length, labelId, search, queryOrder, 0);
