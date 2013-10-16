@@ -8,9 +8,12 @@ jQuery(document).ready(function($) {
 	/*	Custom Functions
 	/* ---------------------------------------------------------------------- */
 
+	/*
+	 * NOT work in IE 8
 	if(top !== window) {
 		top.location.href = window.location.href;
 	}
+	*/
 	
 	/* ---------------------------------------------------------------------- */
 	/*	UItoTop (Back to Top)
