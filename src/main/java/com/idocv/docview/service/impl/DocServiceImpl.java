@@ -37,6 +37,7 @@ import com.idocv.docview.po.UserPo;
 import com.idocv.docview.service.ConvertService;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.util.UrlUtil;
 import com.idocv.docview.vo.DocVo;
 
 
@@ -143,18 +144,23 @@ public class DocServiceImpl implements DocService {
 			
 			logger.info("[ADD URL start>>>]url=" + url + ", app=" + app + ", uid=" + uid + ", name=" + name);
 			
+			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/[^/]+\\.[^/]+")) {
+				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
+			}
+			
 			String host = getHost(url);
 			Response urlResponse = null;
 			try {
-				String validUrl = url.replaceAll(" ", "%20");
+				String encodedUrl = UrlUtil.encodeUrl(url);
+				encodedUrl = encodedUrl.replaceAll(" ", "%20");
 				// urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
-				urlResponse = Jsoup.connect(validUrl).referrer(host).timeout(5000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
+				urlResponse = Jsoup.connect(encodedUrl).maxBodySize(uploadMaxSize.intValue() + 2000000).referrer(host).timeout(60000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
 				if (urlResponse.statusCode() == 307) {
 				    String sNewUrl = urlResponse.header("Location");
 				    if (sNewUrl != null && sNewUrl.length() > 7) {
 				    	url = sNewUrl;
 				    }
-				    urlResponse = Jsoup.connect(validUrl).referrer(host).timeout(5000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
+				    urlResponse = Jsoup.connect(encodedUrl).referrer(host).timeout(5000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
 				}
 				if (null == urlResponse) {
 					throw new Exception("获取资源(" + url + ")时返回为空！");
@@ -173,17 +179,18 @@ public class DocServiceImpl implements DocService {
 			 * throw new Exception("获取资源(" + url + ")失败！"); }
 			 */
 			
-			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/[^/]+\\.[^/]+")) {
-				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
+			if (bytes.length > uploadMaxSize) {
+				logger.error(uploadMaxMsg);
+				throw new DocServiceException(uploadMaxMsg);
 			}
-			
+
 			vo = add(app, null, name, bytes, mode, null);
 			docDao.updateUrl(vo.getUuid(), url);
-			logger.info("[ADD URL end<<<]url=" + url + ", app=" + app + ", uid=" + uid + ", name=" + name);
+			logger.info("[ADD URL end<<<]url=" + url + ", app=" + app + ", uid=" + uid + ", name=" + name + ", size=" + bytes.length);
 			return vo;
 		} catch (Exception e) {
 			logger.error("save url doc error, app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
-			throw new DocServiceException("saveUrl error: ", e);
+			throw new DocServiceException("saveUrl error: " + e.getMessage(), e);
 		}
 	}
 

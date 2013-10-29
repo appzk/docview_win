@@ -12,29 +12,28 @@ public class CmdUtil {
 	public static String runLinux(String... cmd) {
 		String result = "";
 		StringBuffer sbOut = new StringBuffer();
-		StringBuffer sbErr = new StringBuffer();
 		try {
 			String line;
 			String[] use = { "/bin/sh", "-c" };
 			List<String> cmdList = new ArrayList<String>(Arrays.asList(use));
 			cmdList.addAll(Arrays.asList(cmd));
-			Process p = Runtime.getRuntime().exec(cmdList.toArray(new String[0]));
-			BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			BufferedReader bre = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+			
+			// ﻿Process p = Runtime.getRuntime().exec(cmdList.toArray(new String[0]));
+			ProcessBuilder builder = new ProcessBuilder(cmdList.toArray(new String[0]));
+			builder.redirectErrorStream(true);
+			Process p = builder.start();
+			
+			BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF-8"));
 			while ((line = bri.readLine()) != null) {
 				sbOut.append(line + "\n");
 			}
 			bri.close();
-			while ((line = bre.readLine()) != null) {
-				sbErr.append(line + "\n");
-			}
-			bre.close();
 			Integer exitValue = p.waitFor();
 			// System.out.println("Exit value: " + exitValue);
 			if (0 == exitValue || 1 == exitValue) {
 				// do something here...
 			}
-			result = "Exit value: " + exitValue + "\n\n" + "Output: \n" + sbOut.toString() + "\n\nError message: " + sbErr.toString();
+			result = "Exit value: " + exitValue + "\n\n" + "Output: \n" + sbOut.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
