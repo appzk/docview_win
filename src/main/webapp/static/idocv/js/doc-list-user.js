@@ -64,9 +64,9 @@ $(document).ready(function() {
 		$.get('/label/' + uid + '.json', function(data, status) {
 			var list = $('.sidebar-nav .nav-list');
 			list.append('<li class="nav-header"><i class="icon-user"></i> 我的文档</li>');
-			list.append('<li ' + (('all' == label) ? ' class="active"' : '') + '><a href="/' + username + '/all">全部</a></li>')
+			list.append('<li ' + (('all' == label) ? ' class="active"' : '') + '><a href="/user/' + username + '/all">全部</a></li>')
 			for (var i = 0; i < data.length; i++) {
-				list.append('<li ' + ((data[i].name == label) ? ' class="active"' : '') + '><a href="/' + username + '/' + data[i].name + '">' + data[i].value + '</a></li>');
+				list.append('<li ' + ((data[i].name == label) ? ' class="active"' : '') + '><a href="/user/' + username + '/' + data[i].name + '">' + data[i].value + '</a></li>');
 			}
 			/*
 			list.append('<li><a href="#">+</a></li>');
