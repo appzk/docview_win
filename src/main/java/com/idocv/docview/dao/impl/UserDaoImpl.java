@@ -192,7 +192,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 			po.setCtime(obj.get(CTIME).toString());
 		}
 		if (obj.containsField(STATUS)) {
-			po.setStatus(Integer.valueOf(obj.get(STATUS).toString()));
+			po.setStatus(Double.valueOf(obj.get(STATUS).toString()).intValue());
 		}
 		if (obj.containsField(SIDS)) {
 			po.setSids((Collection<String>) obj.get(SIDS));

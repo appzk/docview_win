@@ -61,7 +61,7 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping("signup.json")
 	public String signUp(HttpServletRequest req,
-			@RequestParam(value = "appkey", defaultValue = "wevtoken") String appkey,
+			@RequestParam(value = "appkey", defaultValue = "testtoken") String appkey,
 			@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "email") String email) {
