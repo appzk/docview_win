@@ -142,8 +142,6 @@ public class DocServiceImpl implements DocService {
 				return vo;
 			}
 			
-			logger.info("[ADD URL start>>>]url=" + url + ", app=" + app + ", uid=" + uid + ", name=" + name);
-			
 			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/[^/]+\\.[^/]+")) {
 				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
 			}
@@ -186,7 +184,7 @@ public class DocServiceImpl implements DocService {
 
 			vo = add(app, null, name, bytes, mode, null);
 			docDao.updateUrl(vo.getUuid(), url);
-			logger.info("[ADD URL end<<<]url=" + url + ", app=" + app + ", uid=" + uid + ", name=" + name + ", size=" + bytes.length);
+			logger.info("[ADDED URL <<<]uuid=" + vo.getUuid() + ", url=" + url + ", name=" + name + ", size=" + bytes.length + ", app=" + app + ", uid=" + uid);
 			return vo;
 		} catch (Exception e) {
 			logger.error("save url doc error, app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
