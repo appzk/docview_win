@@ -1,13 +1,14 @@
 var uid;
 var username;
 var sid;
+var host = $.url().attr('host');
 
 /* ---------------------------------------------------------------------- */
 /*	Check Login
 /* ---------------------------------------------------------------------- */
 $.ajax({
 	type: "GET",
-	url: '/user/checkLogin',
+	url: '/user/checkLogin.json',
 	async: false,
 	dataType: "json",
 }).done(function( data ) {
@@ -16,8 +17,8 @@ $.ajax({
 	
 	// Already logged in user, redirect to his(her) own document list.
 	var label = $.url().segment(2);
-	if (uid !== undefined && label === undefined) {
-		window.location = '/' + username + '/all';
+	if (uid !== undefined) {
+		window.location = '/user/' + username + '/all';
 	}
 });
 
@@ -50,7 +51,7 @@ $(document).ready(function() {
 						var sid = data.sid;
 						if (sid !== undefined) {
 							// SUCCESS
-							$.cookie('IDOCVSID', sid, { expires: 30, path: '/', domain: '.idocv.com' });
+							$.cookie('IDOCVSID', sid, { expires: 30, path: '/', domain: '.' + host + '' });
 							window.location.reload();
 						} else {
 							// FAIL

@@ -99,6 +99,7 @@
     <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
     <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
     <script src="/static/idocv/js/user-login.js"></script>
+    <!-- 
     <script src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="100444886" data-redirecturi="http://www.idocv.com" charset="utf-8"></script>
     <script type="text/javascript">
         QC.Login({
@@ -124,6 +125,7 @@
             alert('QQ登录 注销成功');
         });
     </script>
+     -->
 
   </body>
 </html>

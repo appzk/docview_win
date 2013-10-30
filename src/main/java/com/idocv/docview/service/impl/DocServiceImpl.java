@@ -441,7 +441,7 @@ public class DocServiceImpl implements DocService {
 			}
 			return new Paging<DocVo>(convertPo2Vo(docList), count);
 		} catch (DBException e) {
-			logger.error("list doc error: ", e);
+			logger.error("list doc error: " + e.getMessage());
 			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
@@ -451,7 +451,7 @@ public class DocServiceImpl implements DocService {
 		try {
 			return docDao.count(includeDeleted);
 		} catch (DBException e) {
-			logger.error("count doc error: ", e);
+			logger.error("count doc error: " + e.getMessage());
 			throw new DocServiceException("count doc error: ", e);
 		}
 	}

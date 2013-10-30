@@ -175,7 +175,7 @@ public class UserController {
 	}
 
 	@ResponseBody
-	@RequestMapping("checkLogin")
+	@RequestMapping("checkLogin.json")
 	public String checkLogin(HttpServletRequest req) {
 		try {
 			Cookie[] cookies = req.getCookies();

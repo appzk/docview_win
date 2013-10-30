@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	
 	var oTable;
-	var label = $.url().segment(2);
+	var label = $.url().segment(3);
 	
 	/* ---------------------------------------------------------------------- */
 	/*	File Upload
@@ -57,7 +57,7 @@ $(document).ready(function() {
 	/*	Sidebar list
 	/* ---------------------------------------------------------------------- */
 	if (uid === undefined) {
-		window.location = '/login';
+		window.location = '/user/login';
 	}
 	$(function () {
 		// get append labels
