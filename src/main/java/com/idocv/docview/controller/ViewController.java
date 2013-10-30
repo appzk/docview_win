@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -204,6 +205,10 @@ public class ViewController {
 				page = new PageVo<OfficeBaseVo>(null, 0);
 				page.setCode(0);
 				page.setDesc("不是一个文档！");
+			}
+			if (CollectionUtils.isEmpty(page.getData())) {
+				page.setCode(0);
+				page.setDesc("没有可显示的内容！");
 			}
 			page.setName(docVo.getName());
 			page.setRid(docVo.getRid());

@@ -154,7 +154,8 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 			// get page content
 			File curPageFile = new File(rcUtil.getParseDir(rid) + start + ".html");
 			if (!curPageFile.isFile()) {
-				throw new DocServiceException("已是最后一页！");
+				// The last page.
+				return new PageVo<WordVo>(null, 0);
 			}
 			List<String> pages = new ArrayList<String>();
 			limit = limit >= 0 ? limit : 0;
@@ -551,18 +552,12 @@ public class PreviewServiceImpl implements PreviewService, InitializingBean {
 				logger.error("目前不支持（" + ext + "）格式！");
 				throw new DocServiceException("目前不支持（" + ext + "）格式！");
 			}
-//			logger.info("Convert result: " + convertResult);
 			return true;
 		} catch (Exception e) {
-			logger.error("convert error(" + rid + "): ", e.getMessage());
+			logger.error("convert error(" + rid + "): " + e.getMessage());
 			throw new DocServiceException(e.getMessage(), e);
 		} finally {
-//			logger.info("convertingRids(u-) " + rid);
-			long endTime = System.currentTimeMillis();
 			convertingRids.remove(rid);
-			if (startTime > 0) {
-				logger.info("Convert " + rid + " with size " + size + " elapse: " + (endTime - startTime) + ", rate: " + (size / ((endTime - startTime) / 1000d)) + " bit/s.");;
-			}
 		}
 	}
 
