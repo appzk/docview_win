@@ -51,7 +51,7 @@ $(document).ready(function() {
 						var sid = data.sid;
 						if (sid !== undefined) {
 							// SUCCESS
-							$.cookie('IDOCVSID', sid, { expires: 30, path: '/', domain: '.' + host + '' });
+							$.cookie('IDOCVSID', sid, { expires: 30, path: '/', domain: host + '' });
 							window.location.reload();
 						} else {
 							// FAIL
