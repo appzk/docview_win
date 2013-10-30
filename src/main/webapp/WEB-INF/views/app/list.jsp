@@ -3,9 +3,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Document List - I Doc View</title>
+    <title>HOME - I Doc View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="在线文档预览、协作编辑，幻灯片远程控制、同步演示、画笔同步展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt等。">
+    <meta name="description" content="在线文档预览、文档协作编辑、幻灯片远程控制、同步信息展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt等。">
 	<meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
 
     <!-- Le styles -->
@@ -36,8 +36,6 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a href="/"><i class="icon-home icon-white"></i> Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -55,39 +53,12 @@
         
         <hr />
         
-        <!-- 
-        <p><a href="http://eco.idocv.com" class="btn btn-primary btn-large">经济学人 &raquo;</a></p>
-         -->
-        
       </div>
-      
-      <!-- Example row of columns -->
-      <!-- 
-      <div class="row">
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-       </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-      </div>
-       -->
-
-      <hr>
       
       <hr>
 
       <footer>
-			&copy; <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a> 2013
+        Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
       </footer>
 
     </div><!--/.fluid-container-->

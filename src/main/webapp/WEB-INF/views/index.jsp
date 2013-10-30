@@ -1,17 +1,72 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	<h1>Docview Server Started!</h1>
-	<form name="upload" action="/doc/upload?sid=MTIzNDU2Nzg5MDEyMzQuVUEuMTM0MjA3NjE4NDU4Ni5hODRhY2RlNDg2ZDBkN2Q4NjQwYTBmZWYyMTc4OWM2MQ" method="post" enctype="multipart/form-data">
-		Upload document:<br />
-		<input type="file" name="file" /><br />
-		<input type="submit" value="Submit" /> <input type="reset" value="Reset" />
-	</form>
-</body>
+<%@ page contentType="text/html; charset=utf-8"%>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>HOME - I Doc View</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="在线文档预览、文档协作编辑、幻灯片远程控制、同步信息展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt等。">
+	<meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
+
+    <!-- Le styles -->
+    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/idocv/css/style.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/static/bootstrap/js/html5shiv.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="http://www.idocv.com">I Doc View</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/"><i class="icon-home icon-white"></i> Home</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+    
+      <div class="hero-unit">
+        <h1>在线文档预览、文档协作编辑、幻灯片远程控制、同步信息展示等 - I Doc View</h1>
+        
+        <br />
+        
+        <h4>支持格式：doc, docx, xls, xlsx, ppt, pptx, pdf and txt.</h4>
+        
+        <hr />
+        
+      </div>
+      
+      <hr>
+
+      <footer>
+        Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+    <!-- javascript
+    ================================================== -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
+	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/static/idocv/js/home.js"></script>
+
+  </body>
 </html>
