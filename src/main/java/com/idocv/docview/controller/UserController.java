@@ -69,7 +69,7 @@ public class UserController {
 			UserVo vo = userService.add(appkey, username, password, email);
 			return "{\"uid\":\"" + vo.getId() + "\", \"sid\":\"" + vo.getSid() + "\"}";
 		} catch (Exception e) {
-			logger.error("sign up error <controller>: ", e);
+			logger.error("user signup error <controller>: " + e.getMessage());
 			return "{\"error\":\"" + e.getMessage() + "\"}";
 		}
 	}
@@ -107,7 +107,7 @@ public class UserController {
 			}
 			return "{\"uid\":\"" + vo.getId() + "\", \"status\":\"" + vo.getStatus() + "\"}";
 		} catch (Exception e) {
-			logger.error("activate error <controller>: ", e);
+			logger.error("user activate error <controller>: " + e.getMessage());
 			return "{\"error\":\"" + e.getMessage() + "\"}";
 		}
 	}
@@ -140,7 +140,7 @@ public class UserController {
 				return "{\"error\":\"Can NOT login!\"}";
 			}
 		} catch (DocServiceException e) {
-			logger.error("login error <controller>: ", e);
+			logger.error("user login.json error <controller>: " + e.getMessage());
 			return "{\"error\":\"" + e.getMessage() + "\"}";
 		}
 	}
@@ -169,7 +169,7 @@ public class UserController {
 			userService.logout(sid);
 			return "{\"success\":\"Logged out!\"}";
 		} catch (DocServiceException e) {
-			logger.error("login error <controller>: ", e);
+			logger.error("user logout.json error <controller>: " + e.getMessage());
 			return "{\"error\":\"" + e.getMessage() + "\"}";
 		}
 	}

@@ -18,7 +18,7 @@ import com.idocv.docview.vo.WordVo;
  * @version 1.0
  * 
  */
-public interface PreviewService {
+public interface ViewService {
 
 	static List<String> convertingRids = new ArrayList<String>();
 

@@ -29,7 +29,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.exception.DocServiceException;
-import com.idocv.docview.service.PreviewService;
+import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.CmdUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.ExcelVo;
@@ -39,9 +39,9 @@ import com.idocv.docview.vo.TxtVo;
 import com.idocv.docview.vo.WordVo;
 
 @Service
-public class PreviewServiceImpl implements PreviewService, InitializingBean {
+public class ViewServiceImpl implements ViewService, InitializingBean {
 
-	private static Logger logger = LoggerFactory.getLogger(PreviewServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(ViewServiceImpl.class);
 	
 	@Resource
 	private RcUtil rcUtil;

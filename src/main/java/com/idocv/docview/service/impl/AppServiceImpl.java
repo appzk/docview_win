@@ -26,7 +26,7 @@ public class AppServiceImpl implements AppService {
 		try {
 			return appDao.add(id, name, key, phone, email);
 		} catch (DBException e) {
-			logger.error("Add app error: ", e);
+			logger.error("app add error: " + e.getMessage());
 			throw new DocServiceException(e);
 		}
 	}
@@ -36,7 +36,7 @@ public class AppServiceImpl implements AppService {
 		try {
 			return convertPo2Vo(appDao.get(id));
 		} catch (DBException e) {
-			logger.error("get error: ", e);
+			logger.error("app get error: " + e.getMessage());
 			throw new DocServiceException(e);
 		}
 	}
@@ -46,7 +46,7 @@ public class AppServiceImpl implements AppService {
 		try {
 			return convertPo2Vo(appDao.getByToken(token));
 		} catch (DBException e) {
-			logger.error("getByKey error: ", e);
+			logger.error("app getByKey error: " + e.getMessage());
 			throw new DocServiceException(e);
 		}
 	}

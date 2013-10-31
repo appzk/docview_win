@@ -23,7 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.AppService;
 import com.idocv.docview.service.DocService;
-import com.idocv.docview.service.PreviewService;
+import com.idocv.docview.service.ViewService;
 import com.idocv.docview.service.SessionService;
 import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
@@ -46,7 +46,7 @@ public class ViewController {
 	private DocService docService;
 
 	@Resource
-	private PreviewService previewService;
+	private ViewService previewService;
 
 	@Resource
 	private SessionService sessionService;
@@ -110,7 +110,7 @@ public class ViewController {
 				throw new DocServiceException("(" + id + ")不是有效的文档！");
 			}
 		} catch (DocServiceException e) {
-			logger.error("view(id) 404 error(id=" + id + ", reason=" + e.getMessage() + "): ", e);
+			logger.error("view id(" + id + ") error: " + e.getMessage());
 			return "redirect:/404.html";
 		}
 	}
@@ -215,7 +215,7 @@ public class ViewController {
 			page.setUuid(docVo.getUuid());
 			docService.logView(uuid);
 		} catch (Exception e) {
-			logger.error("jsonUuid error(rid=" + rid + ", id=" + id + "): " + e.getMessage());
+			logger.error("view id.json(" + id + ") error: " + e.getMessage());
 			page = new PageVo<OfficeBaseVo>(null, 0);
 			page.setCode(0);
 			page.setDesc(e.getMessage());
@@ -237,7 +237,7 @@ public class ViewController {
 			// 1. get docVo by uuid
 			DocVo docVo = docService.getByUuid(uuid);
 			if (null == docVo || StringUtils.isBlank(docVo.getRid())) {
-				throw new DocServiceException("Document(" + uuid + ") NOT found!");
+				throw new DocServiceException("文件(" + uuid + ")未找到！");
 			}
 			String rid = docVo.getRid();
 			String ext = RcUtil.getExt(rid);
@@ -246,7 +246,7 @@ public class ViewController {
 			int accessMode = docVo.getStatus();
 			if (0 == accessMode) {
 				if (StringUtils.isBlank(session)) {
-					throw new DocServiceException("This is NOT a public document, please provide a session id.");
+					throw new DocServiceException("这是一个私有文档，请用会话ID来访问！");
 				}
 				// 5. get sessionVo by sessionId
 				SessionVo sessionVo = sessionService.get(session);
@@ -312,7 +312,7 @@ public class ViewController {
 		} else if (uuid.endsWith("t")) {
 			model.setViewName("txt/static");
 		} else {
-			logger.error("view(html) 404 error(uuid=" + uuid + ", session=" + session + ")");
+			logger.error("view uuid.html(" + uuid + ") error: 未知文件格式！");
 			model.setViewName("404");
 		}
 		return model;
@@ -351,7 +351,7 @@ public class ViewController {
 			String uuid = vo.getUuid();
 			return "redirect:" + uuid;
 		} catch (Exception e) {
-			logger.error("view(url) 404 error(url=" + url + ", token=" + token + ", name=" + name + ", reason=" + e.getMessage() + "): ", e);
+			logger.error("view url(" + url + ") error: " + e.getMessage());
 			return "redirect:/404.html";
 		}
 	}

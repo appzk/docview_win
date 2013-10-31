@@ -2,7 +2,6 @@ package com.idocv.docview.service.impl;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -85,20 +84,6 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	@Deprecated
-	public DocVo addByApp(String app, String name, byte[] data, int mode) throws DocServiceException {
-		if (StringUtils.isBlank(app)) {
-			throw new DocServiceException(0, "app为空！");
-		}
-		try {
-			return addDoc(app, null, name, data, mode, null);
-		} catch (Exception e) {
-			logger.error("save doc error: ", e);
-			throw new DocServiceException(e.getMessage(), e);
-		}
-	}
-
-	@Override
 	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
 		try {
 			if (null == data || data.length <= 0) {
@@ -125,7 +110,7 @@ public class DocServiceImpl implements DocService {
 			}
 			return addDoc(app, uid, name, data, mode, labelId);
 		} catch (DBException e) {
-			logger.error("save doc by user error: ", e);
+			logger.error("doc add error: " + e.getMessage());
 			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
@@ -166,7 +151,7 @@ public class DocServiceImpl implements DocService {
 					String encodedUrl = UrlUtil.encodeUrl(url);
 					encodedUrl = encodedUrl.replaceAll(" ", "%20");
 					// urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
-					urlResponse = Jsoup.connect(encodedUrl).maxBodySize(uploadMaxSize.intValue() + 2000000).referrer(host).timeout(60000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
+					urlResponse = Jsoup.connect(encodedUrl).maxBodySize(uploadMaxSize.intValue() + 1000).referrer(host).timeout(60000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
 					if (urlResponse.statusCode() == 307) {
 						String sNewUrl = urlResponse.header("Location");
 						if (sNewUrl != null && sNewUrl.length() > 7) {
@@ -178,7 +163,7 @@ public class DocServiceImpl implements DocService {
 						throw new Exception("获取资源(" + url + ")时返回为空！");
 					}
 				} catch (Exception e) {
-					logger.error("无法访问资源（" + url + "）：", e);
+					logger.error("无法访问资源（" + url + "）：" + e.getMessage());
 					throw new DocServiceException("无法访问资源（" + url + "）");
 				}
 				data = urlResponse.bodyAsBytes();
@@ -194,48 +179,11 @@ public class DocServiceImpl implements DocService {
 
 			vo = add(app, null, name, data, mode, null);
 			docDao.updateUrl(vo.getUuid(), url);
-			logger.info("[ADDED URL <<<]uuid=" + vo.getUuid() + ", url=" + url + ", name=" + name + ", size=" + data.length + ", app=" + app + ", uid=" + uid);
+			logger.info("[ADD URL ok]uuid=" + vo.getUuid() + ", url=" + url + ", name=" + name + ", size=" + data.length + ", app=" + app + ", uid=" + uid);
 			return vo;
 		} catch (Exception e) {
-			logger.error("save url doc error(" + e.getMessage() + "): app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode);
+			logger.error("save url doc error: " + e.getMessage() + ", app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode);
 			throw new DocServiceException("saveUrl error: " + e.getMessage(), e);
-		}
-	}
-
-	@Override
-	@Deprecated
-	public DocVo addByUser(String sid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
-		try {
-			// get app & user info
-			if (StringUtils.isBlank(sid)) {
-				throw new DocServiceException("未登录！");
-			}
-			UserPo userPo = userDao.getBySid(sid);
-			if (null == userPo) {
-				throw new DocServiceException("用户不存在！");
-			}
-			int userStatus = userPo.getStatus();
-			if (userStatus < 1) {
-				throw new DocServiceException("用户邮箱未验证！");
-			}
-			if (userStatus == 1 && mode == 0) {
-				throw new DocServiceException("普通用户只能上传公开文档，要上传私有文档，请升级为会员！");
-			}
-			String app = userPo.getAppId();
-			String uid = userPo.getId();
-			
-			// get label id
-			String labelId = null;
-			if (StringUtils.isNotBlank(labelName) && !"all".equalsIgnoreCase(labelName)) {
-				LabelPo labelPo = labelDao.get(uid, labelName);
-				if (null != labelPo) {
-					labelId = labelPo.getId();
-				}
-			}
-			return addDoc(app, uid, name, data, mode, labelId);
-		} catch (DBException e) {
-			logger.error("save doc by user error: ", e);
-			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
 
@@ -287,37 +235,8 @@ public class DocServiceImpl implements DocService {
 
 			return convertPo2Vo(doc);
 		} catch (Exception e) {
-			logger.error("save doc error: ", e);
+			logger.error("doc adddoc error: " + e.getMessage());
 			throw new DocServiceException(e.getMessage(), e);
-		}
-	}
-	
-	@Override
-	@Deprecated
-	public DocVo addUrl(String token, String url, String name, int mode) throws DocServiceException {
-		if (StringUtils.isBlank(token) || StringUtils.isBlank(name) || StringUtils.isBlank(url)) {
-			logger.error("参数不足：token=" + token + ", url=" + url + ", name="
-					+ name + ", mode=" + mode);
-			throw new DocServiceException(0, "Insufficient parameter!");
-		}
-		try {
-			DocVo vo = convertPo2Vo(docDao.getUrl(url, false));
-			if (null != vo) {
-				return vo;
-			}
-			String host = getHost(url);
-			Response urlResponse = null;
-			urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
-			byte[] bytes = urlResponse.bodyAsBytes();
-			vo = addByApp(token, name, bytes, mode);
-			docDao.updateUrl(vo.getUuid(), url);
-			return vo;
-		} catch (IOException e) {
-			logger.error("save url doc error, token=" + token + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
-			throw new DocServiceException("saveUrl error: ", e);
-		} catch (DBException e) {
-			logger.error("save url doc error, token=" + token + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
-			throw new DocServiceException("saveUrl error: ", e);
 		}
 	}
 
@@ -326,7 +245,7 @@ public class DocServiceImpl implements DocService {
 		try {
 			return docDao.delete(uuid);
 		} catch (DBException e) {
-			logger.error("delete doc error: ", e);
+			logger.error("doc delete error: " + e.getMessage());
 			throw new DocServiceException("delete doc error: ", e);
 		}
 	}
@@ -336,7 +255,7 @@ public class DocServiceImpl implements DocService {
 		try {
 			docDao.logView(uuid);
 		} catch (DBException e) {
-			logger.error("logView error: ", e);
+			logger.error("doc logView error: " + e.getMessage());
 			throw new DocServiceException("logView error: ", e);
 		}
 	}
@@ -346,7 +265,7 @@ public class DocServiceImpl implements DocService {
 		try {
 			docDao.logDownload(uuid);
 		} catch (DBException e) {
-			logger.error("logDownload error: ", e);
+			logger.error("doc logDownload error: " + e.getMessage());
 			throw new DocServiceException("logDownload error: ", e);
 		}
 	}
@@ -369,7 +288,7 @@ public class DocServiceImpl implements DocService {
 			}
 			docDao.updateMode(uuid, mode);
 		} catch (DBException e) {
-			logger.error("updateMode error: ", e);
+			logger.error("doc updateMode error: " + e.getMessage());
 			throw new DocServiceException("updateMode error: ", e);
 		}
 	}
@@ -379,7 +298,7 @@ public class DocServiceImpl implements DocService {
 		try {
 			return convertPo2Vo(docDao.get(rid, false));
 		} catch (DBException e) {
-			logger.error("get doc error: ", e);
+			logger.error("doc get error: " + e.getMessage());
 			throw new DocServiceException("get doc error: ", e);
 		}
 	}
@@ -389,7 +308,7 @@ public class DocServiceImpl implements DocService {
 		try {
 			return convertPo2Vo(docDao.getByUuid(uuid, false));
 		} catch (DBException e) {
-			logger.error("get doc error: ", e);
+			logger.error("doc getByUuid error: " + e.getMessage());
 			throw new DocServiceException("get doc error: ", e);
 		}
 	}
@@ -399,7 +318,7 @@ public class DocServiceImpl implements DocService {
 		try {
 			return convertPo2Vo(docDao.getUrl(url, false));
 		} catch (DBException e) {
-			logger.error("getUrl doc error: ", e);
+			logger.error("doc getUrl error: " + e.getMessage());
 			throw new DocServiceException("getUrl doc error: ", e);
 		}
 	}
@@ -462,7 +381,7 @@ public class DocServiceImpl implements DocService {
 			return docDao.count(includeDeleted);
 		} catch (DBException e) {
 			logger.error("count doc error: " + e.getMessage());
-			throw new DocServiceException("count doc error: ", e);
+			throw new DocServiceException("count doc error: " + e.getMessage());
 		}
 	}
 

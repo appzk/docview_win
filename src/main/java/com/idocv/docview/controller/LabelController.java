@@ -32,7 +32,7 @@ public class LabelController {
 			List<LabelVo> list = labelService.list(uid);
 			return list;
 		} catch (Exception e) {
-			logger.error("Load editor error: ", e);
+			logger.error("label uid.json error: " + e.getMessage());
 			return null;
 		}
 	}

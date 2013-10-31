@@ -27,7 +27,7 @@ import com.idocv.docview.dao.DocDao.QueryOrder;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.AppService;
 import com.idocv.docview.service.DocService;
-import com.idocv.docview.service.PreviewService;
+import com.idocv.docview.service.ViewService;
 import com.idocv.docview.service.UserService;
 import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
@@ -52,7 +52,7 @@ public class DocController {
 	private DocService docService;
 
 	@Resource
-	private PreviewService previewService;
+	private ViewService previewService;
 
 	@Resource
 	private RcUtil rcUtil;
@@ -158,10 +158,9 @@ public class DocController {
 	public String delete(@PathVariable(value = "uuid") String uuid) {
 		try {
 			boolean result = docService.delete(uuid);
-			System.out.println("Result: " + result);
 			return "true";
 		} catch (Exception e) {
-			logger.error("delete error <controller>: ", e);
+			logger.error("delete error <controller>: " + e.getMessage());
 			return "{\"error\":" + e.getMessage() + "}";
 		}
 	}
@@ -193,7 +192,7 @@ public class DocController {
 			docService.updateMode(token, uuid, mode);
 			return "true";
 		} catch (Exception e) {
-			logger.error("delete error <controller>: ", e);
+			logger.error("delete error <controller>: " + e.getMessage());
 			return "{\"error\":" + e.getMessage() + "}";
 		}
 	}
@@ -222,7 +221,7 @@ public class DocController {
 			Paging<DocVo> list = docService.list(app, sid, start, length, label, sSearch, queryOrder);
 			return list;
 		} catch (DocServiceException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("doc list error: " + e.getMessage());
 			return new Paging<DocVo>(new ArrayList<DocVo>(), 0);
 		}
 	}
@@ -242,24 +241,6 @@ public class DocController {
 	/**
 	 * 下载
 	 */
-	@Deprecated
-	@RequestMapping("download")
-	public void download(HttpServletRequest req, HttpServletResponse resp,
-			@RequestParam(value = "id") String id) {
-		try {
-			DocVo vo = docService.get(id);
-			String rid = vo.getRid();
-			String path = rcUtil.getPath(rid);
-			DocResponse.setResponseHeaders(req, resp, vo.getName());
-			IOUtils.write(FileUtils.readFileToByteArray(new File(path)), resp.getOutputStream());
-		} catch (Exception e) {
-			logger.error("download error: ", e);
-		}
-	}
-
-	/**
-	 * 下载
-	 */
 	@RequestMapping("download/{uuid}")
 	public void downloadByUuid(HttpServletRequest req,
 			HttpServletResponse resp, @PathVariable(value = "uuid") String uuid) {
@@ -271,7 +252,7 @@ public class DocController {
 			IOUtils.write(FileUtils.readFileToByteArray(new File(path)), resp.getOutputStream());
 			docService.logDownload(uuid);
 		} catch (Exception e) {
-			logger.error("download error: ", e);
+			logger.error("doc download error: " + e.getMessage());
 		}
 	}
 

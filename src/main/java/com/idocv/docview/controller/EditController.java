@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.idocv.docview.service.EditService;
-import com.idocv.docview.service.PreviewService;
+import com.idocv.docview.service.ViewService;
 
 
 @Controller
@@ -22,7 +22,7 @@ public class EditController {
 	private static final Logger logger = LoggerFactory.getLogger(EditController.class);
 
 	@Resource
-	private PreviewService previewService;
+	private ViewService previewService;
 	
 	@Resource
 	private EditService editService;

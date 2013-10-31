@@ -14,18 +14,6 @@ import com.idocv.docview.vo.DocVo;
  * 
  */
 public interface DocService {
-
-	/**
-	 * Save normal resource to local directory.
-	 * 
-	 * @paramr appId
-	 * @param name
-	 * @param data
-	 * @param mode 0-private, 1-public
-	 * @return
-	 */
-	@Deprecated
-	DocVo addByApp(String appId, String name, byte[] data, int mode) throws DocServiceException;
 	
 	/**
 	 * Save normal resource to local directory.
@@ -42,20 +30,6 @@ public interface DocService {
 	DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException;
 	
 	DocVo addUrl(String app, String uid, String name, String url, int mode, String labelName) throws DocServiceException;
-	
-	@Deprecated
-	DocVo addByUser(String sid, String name, byte[] data, int mode, String labelName) throws DocServiceException;
-
-	/**
-	 * Save URL resource to local directory.
-	 * 
-	 * @param url
-	 * @param name
-	 * @param mode 0-private, 1-public
-	 * @return
-	 */
-	@Deprecated
-	DocVo addUrl(String token, String url, String name, int mode) throws DocServiceException;
 
 	boolean delete(String uuid) throws DocServiceException;
 
@@ -90,12 +64,8 @@ public interface DocService {
 	DocVo getUrl(String url) throws DocServiceException;
 
 	/**
-	 * 文档列表
-	 * 	1. sid存在（已登录）
-	 * 		a. 普通用户：列出对应用户文档（包括私有文档）
-	 * 		b. 应用管理员用户：列出对应应用文档（包括私有文档）
-	 * 	2. sid不存在（未登录）等有app名称
-	 * 		列出对应app公开文档
+	 * 文档列表 1. sid存在（已登录） a. 普通用户：列出对应用户文档（包括私有文档） b. 应用管理员用户：列出对应应用文档（包括私有文档）
+	 * 2. sid不存在（未登录）等有app名称 列出对应app公开文档
 	 */
 	Paging<DocVo> list(String app, String sid, int start, int length, String search, String label, QueryOrder queryOrder) throws DocServiceException;
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.ConvertService;
-import com.idocv.docview.service.PreviewService;
+import com.idocv.docview.service.ViewService;
 
 @Service
 public class ConvertServiceImpl implements ConvertService {
@@ -18,7 +18,7 @@ public class ConvertServiceImpl implements ConvertService {
 	private static final ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 	
 	@Resource
-	private PreviewService previewService;
+	private ViewService previewService;
 
 	private String rid;
 
@@ -26,7 +26,7 @@ public class ConvertServiceImpl implements ConvertService {
 
 	}
 
-	public ConvertServiceImpl(PreviewService previewService, String rid) {
+	public ConvertServiceImpl(ViewService previewService, String rid) {
 		this.previewService = previewService;
 		this.rid = rid;
 	}

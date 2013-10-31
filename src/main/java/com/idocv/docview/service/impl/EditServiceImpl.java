@@ -16,7 +16,7 @@ import org.springframework.util.CollectionUtils;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.EditService;
-import com.idocv.docview.service.PreviewService;
+import com.idocv.docview.service.ViewService;
 import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.PageVo;
 import com.idocv.docview.vo.WordVo;
@@ -31,7 +31,7 @@ public class EditServiceImpl implements EditService {
 	private DocService docService;
 
 	@Resource
-	private PreviewService previewService;
+	private ViewService previewService;
 
 	@Override
 	public String getHtmlBody(String uuid) throws DocServiceException {
