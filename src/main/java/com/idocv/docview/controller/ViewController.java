@@ -23,8 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.AppService;
 import com.idocv.docview.service.DocService;
-import com.idocv.docview.service.ViewService;
 import com.idocv.docview.service.SessionService;
+import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.AppVo;
@@ -62,7 +62,8 @@ public class ViewController {
 	}
 
 	@RequestMapping("{id}")
-	public String page(@RequestParam(defaultValue = "default") String style,
+	public ModelAndView page(ModelAndView model,
+			@RequestParam(defaultValue = "default") String style,
 			@PathVariable String id,
 			@RequestParam(defaultValue = "1") int start,
 			@RequestParam(defaultValue = "5") int size) {
@@ -73,7 +74,7 @@ public class ViewController {
 				// session id
 				SessionVo sessionVo = sessionService.get(id);
 				if (null == sessionVo) {
-					throw new DocServiceException("NOT a valid session!");
+					throw new DocServiceException("无效的会话ID！");
 				}
 				uuid = sessionVo.getUuid();
 				sessionId = sessionVo.getId();
@@ -81,37 +82,49 @@ public class ViewController {
 				uuid = id;
 			}
 			if (uuid.endsWith("w")) {
-				return "word/index";
+				model.setViewName("word/index");
+				return model;
 //				return "redirect:/page/word/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("x")) {
-				return "excel/index";
+				model.setViewName("excel/index");
+				return model;
 //				return "redirect:/page/excel/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("p")) {
 				if ("3d".equalsIgnoreCase(style)) {
-					return "ppt/index";
+					model.setViewName("ppt/index");
+					return model;
 				} else if ("carousel".equalsIgnoreCase(style)) {
-					return "ppt/carousel";
+					model.setViewName("ppt/carousel");
+					return model;
 				} else if ("test".equalsIgnoreCase(style)) {
-					return "ppt/test";
+					model.setViewName("ppt/test");
+					return model;
 				} else if ("speaker".equalsIgnoreCase(style)) {
-					return "ppt/sync-speaker";
+					model.setViewName("ppt/sync-speaker");
+					return model;
 				} else if ("audience".equalsIgnoreCase(style)) {
-					return "ppt/sync-audience";
+					model.setViewName("ppt/sync-audience");
+					return model;
 				} else {
-					return "ppt/outline";
+					model.setViewName("ppt/outline");
+					return model;
 				}
 //				return "redirect:/page/ppt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("f")) {
-				return "pdf/index";
+				model.setViewName("pdf/index");
+				return model;
 			} else if (uuid.endsWith("t")) {
-				return "txt/index";
+				model.setViewName("txt/index");
+				return model;
 //				return "redirect:/page/txt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else {
 				throw new DocServiceException("(" + id + ")不是有效的文档！");
 			}
 		} catch (DocServiceException e) {
 			logger.error("view id(" + id + ") error: " + e.getMessage());
-			return "redirect:/404.html";
+			model.setViewName("404");
+			model.addObject("error", e.getMessage());
+			return model;
 		}
 	}
 
