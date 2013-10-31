@@ -197,7 +197,7 @@ public class DocServiceImpl implements DocService {
 			logger.info("[ADDED URL <<<]uuid=" + vo.getUuid() + ", url=" + url + ", name=" + name + ", size=" + data.length + ", app=" + app + ", uid=" + uid);
 			return vo;
 		} catch (Exception e) {
-			logger.error("save url doc error, app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
+			logger.error("save url doc error(" + e.getMessage() + "): app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode);
 			throw new DocServiceException("saveUrl error: " + e.getMessage(), e);
 		}
 	}
