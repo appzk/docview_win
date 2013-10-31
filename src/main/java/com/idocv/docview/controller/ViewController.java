@@ -319,7 +319,8 @@ public class ViewController {
 	}
 	
 	@RequestMapping("url")
-	public String previewUrl(HttpServletRequest req,
+	public String viewUrl(
+			HttpServletRequest req,
 			@RequestParam(required = true) String url,
 			@RequestParam(value = "token", defaultValue = "testtoken") String token,
 			@RequestParam(required = false) String name,
@@ -349,13 +350,6 @@ public class ViewController {
 			}
 			String uuid = vo.getUuid();
 			return "redirect:" + uuid;
-			/*
-			 * if (uuid.endsWith("w")) { return "word/index"; } else if
-			 * (uuid.endsWith("x")) { return "excel/index"; } else if
-			 * (uuid.endsWith("p")) { return "ppt/index"; } else if
-			 * (uuid.endsWith("t")) { return "txt/index"; } else { throw new
-			 * DocServiceException("URL(" + url + ")不是有效的文档！"); }
-			 */
 		} catch (Exception e) {
 			logger.error("view(url) 404 error(url=" + url + ", token=" + token + ", name=" + name + ", reason=" + e.getMessage() + "): ", e);
 			return "redirect:/404.html";

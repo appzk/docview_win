@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -146,45 +147,54 @@ public class DocServiceImpl implements DocService {
 				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
 			}
 			
-			String host = getHost(url);
-			Response urlResponse = null;
-			try {
-				String encodedUrl = UrlUtil.encodeUrl(url);
-				encodedUrl = encodedUrl.replaceAll(" ", "%20");
-				// urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
-				urlResponse = Jsoup.connect(encodedUrl).maxBodySize(uploadMaxSize.intValue() + 2000000).referrer(host).timeout(60000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
-				if (urlResponse.statusCode() == 307) {
-				    String sNewUrl = urlResponse.header("Location");
-				    if (sNewUrl != null && sNewUrl.length() > 7) {
-				    	url = sNewUrl;
-				    }
-				    urlResponse = Jsoup.connect(encodedUrl).referrer(host).timeout(5000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
+			byte[] data = null;
+			if (StringUtils.isNotBlank(url) && url.matches("file:/{2,3}(.*)")) {
+				// Local File
+				String localPath = url.replaceFirst("file:/{2,3}(.*)", "$1");
+				File srcFile = new File(localPath);
+				if (!srcFile.isFile()) {
+					logger.error("URL预览失败，未找到本地文件（" + localPath + "）");
+					throw new DocServiceException("URL预览失败，未找到本地文件（"
+							+ localPath + "）");
 				}
-				if (null == urlResponse) {
-					throw new Exception("获取资源(" + url + ")时返回为空！");
+				data = FileUtils.readFileToByteArray(srcFile);
+			} else {
+				// Web File
+				String host = getHost(url);
+				Response urlResponse = null;
+				try {
+					String encodedUrl = UrlUtil.encodeUrl(url);
+					encodedUrl = encodedUrl.replaceAll(" ", "%20");
+					// urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
+					urlResponse = Jsoup.connect(encodedUrl).maxBodySize(uploadMaxSize.intValue() + 2000000).referrer(host).timeout(60000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
+					if (urlResponse.statusCode() == 307) {
+						String sNewUrl = urlResponse.header("Location");
+						if (sNewUrl != null && sNewUrl.length() > 7) {
+							url = sNewUrl;
+						}
+						urlResponse = Jsoup.connect(encodedUrl).referrer(host).timeout(5000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
+					}
+					if (null == urlResponse) {
+						throw new Exception("获取资源(" + url + ")时返回为空！");
+					}
+				} catch (Exception e) {
+					logger.error("无法访问资源（" + url + "）：", e);
+					throw new DocServiceException("无法访问资源（" + url + "）");
 				}
-			} catch (Exception e) {
-				logger.error("无法访问资源（" + url + "）：", e);
-				throw new DocServiceException("无法访问资源（" + url + "）");
+				data = urlResponse.bodyAsBytes();
 			}
-			byte[] bytes = urlResponse.bodyAsBytes();
 			
-			/*
-			 * try { String validUrl = url.replaceAll(" ", "%20"); InputStream
-			 * in = new URL(validUrl).openStream(); try { bytes =
-			 * IOUtils.toByteArray(in); } finally { IOUtils.closeQuietly(in); }
-			 * } catch (Exception e) { logger.error("获取资源(" + url + ")失败：", e);
-			 * throw new Exception("获取资源(" + url + ")失败！"); }
-			 */
-			
-			if (bytes.length > uploadMaxSize) {
+			if (ArrayUtils.isEmpty(data)) {
+				throw new DocServiceException("未找到可用的网络或本地文档！");
+			}
+			if (data.length > uploadMaxSize) {
 				logger.error(uploadMaxMsg);
 				throw new DocServiceException(uploadMaxMsg);
 			}
 
-			vo = add(app, null, name, bytes, mode, null);
+			vo = add(app, null, name, data, mode, null);
 			docDao.updateUrl(vo.getUuid(), url);
-			logger.info("[ADDED URL <<<]uuid=" + vo.getUuid() + ", url=" + url + ", name=" + name + ", size=" + bytes.length + ", app=" + app + ", uid=" + uid);
+			logger.info("[ADDED URL <<<]uuid=" + vo.getUuid() + ", url=" + url + ", name=" + name + ", size=" + data.length + ", app=" + app + ", uid=" + uid);
 			return vo;
 		} catch (Exception e) {
 			logger.error("save url doc error, app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode, e);
