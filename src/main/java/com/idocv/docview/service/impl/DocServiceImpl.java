@@ -85,7 +85,7 @@ public class DocServiceImpl implements DocService {
 		docTypes.add("txt");
 	}
 
-	private static final boolean isCheckMacAddress = true;
+	private static final boolean isCheckMacAddress = false;
 	private static final String macAddress = "08-00-27-89-13-7A";
 
 	@Override
