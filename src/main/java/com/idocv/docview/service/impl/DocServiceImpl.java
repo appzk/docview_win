@@ -2,9 +2,11 @@ package com.idocv.docview.service.impl;
 
 
 import java.io.File;
+import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -82,6 +84,9 @@ public class DocServiceImpl implements DocService {
 		docTypes.add("pdf");
 		docTypes.add("txt");
 	}
+
+	private static final boolean isCheckMacAddress = true;
+	private static final String macAddress = "08-00-27-89-13-7A";
 
 	@Override
 	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
@@ -178,6 +183,11 @@ public class DocServiceImpl implements DocService {
 			}
 
 			vo = add(app, null, name, data, mode, null);
+			if (null == vo || StringUtils.isBlank(vo.getUuid())) {
+				logger.error("save url doc error: 无法保存文件" + "app=" + app
+						+ ", url=" + url + ", name=" + name + ", mode=" + mode);
+				throw new DocServiceException("saveUrl error: 保存文件失败！");
+			}
 			docDao.updateUrl(vo.getUuid(), url);
 			logger.info("[ADD URL ok]uuid=" + vo.getUuid() + ", url=" + url + ", name=" + name + ", size=" + data.length + ", app=" + app + ", uid=" + uid);
 			return vo;
@@ -188,6 +198,10 @@ public class DocServiceImpl implements DocService {
 	}
 
 	private DocVo addDoc(String app, String uid, String name, byte[] data, int mode, String labelId) throws DocServiceException {
+		if (!validateMacAddress(macAddress)) {
+			System.out.println("[ERROR] This machine has NOT been authorized!");
+			return null;
+		}
 		if (StringUtils.isBlank(app)) {
 			throw new DocServiceException(0, "应用为空！");
 		}
@@ -422,5 +436,37 @@ public class DocServiceImpl implements DocService {
 			vo.setDownloadCount(po.getDownloadLog().size());
 		}
 		return vo;
+	}
+	
+	private static boolean validateMacAddress(String macAddress) {
+		if (!isCheckMacAddress) {
+			return true;
+		}
+		if (StringUtils.isBlank(macAddress)) {
+			return false;
+		}
+		return getMacAddresses().contains(macAddress.toUpperCase());
+	}
+
+	private static List<String> getMacAddresses() {
+		List<String> macAddresses = new ArrayList<String>();
+		try {
+			Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
+			while (en.hasMoreElements()) {
+				NetworkInterface ni = en.nextElement();
+				byte[] mac = ni.getHardwareAddress();
+				StringBuilder sb = new StringBuilder();
+				if (ArrayUtils.isEmpty(mac)) {
+					continue;
+				}
+				for (int i = 0; i < mac.length; i++) {
+					sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));		
+				}
+				macAddresses.add(sb.toString().toUpperCase());
+			}
+			return macAddresses;
+		} catch (Exception e) {
+			return macAddresses;
+		}
 	}
 }

@@ -27,8 +27,8 @@ import com.idocv.docview.dao.DocDao.QueryOrder;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.AppService;
 import com.idocv.docview.service.DocService;
-import com.idocv.docview.service.ViewService;
 import com.idocv.docview.service.UserService;
+import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.AppVo;
@@ -138,8 +138,7 @@ public class DocController {
 			if (null == vo) {
 				throw new Exception("上传失败！");
 			}
-			logger.info("--> " + ip + " ADD " + vo.getRid());
-			System.err.println("--> " + ip + " ADD " + vo.getRid());
+			System.err.println("--> " + ip + " ADD " + vo.getUuid());
 			return "{\"uuid\":\"" + vo.getUuid() + "\"}";
 		} catch (Exception e) {
 			logger.error("upload error <controller>: " + e.getMessage());
