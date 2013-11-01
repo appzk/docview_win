@@ -12,7 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 /**
- * TT服务停止线程
+ * 服务停止线程
  * 
  * @author Godwin
  * 
@@ -24,20 +24,20 @@ public class ServerStop {
 	public static void main(String[] args){
 		Properties prop = new Properties();
 		try {
-			//读取classpath下的文件
+			// 读取classpath下的文件
 			InputStream is = ServerStop.class.getResourceAsStream("/server_params.properties");
-			//加载propertis配置文件
+			// 加载propertis配置文件
 			prop.load(is);
 			is.close();
-			int port = Integer.parseInt(prop.getProperty("tt.start.stopport"));//停止端口
+			int port = Integer.parseInt(prop.getProperty("tt.start.stopport"));// 停止端口
 			Socket s = new Socket("127.0.0.1", port);
 			logger.info("*** sending jetty stop request.");
 			OutputStream out = s.getOutputStream();
-			out.write((prop.getProperty("tt.start.stopkey")+"\n").getBytes());//停止key
+			out.write((prop.getProperty("tt.start.stopkey") + "\n").getBytes());// 停止key
 			out.flush();
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			IOUtils.copyLarge(s.getInputStream(), bos);
-			logger.info(new String(bos.toByteArray()));//服务端返回的相应内容
+			logger.info(new String(bos.toByteArray()));// 服务端返回的相应内容
 			System.out.println("***************** http server stopped. "+new String(bos.toByteArray())+"*****************");
 			s.close();
 		} catch (UnknownHostException e) {
