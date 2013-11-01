@@ -295,6 +295,33 @@
 				<!-- Database -->
 				<pom.docview.mongodb.ip>localhost</pom.docview.mongodb.ip>
 				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
+				
+				<!-- Upload -->
+				<pom.upload.max.size>2000000</pom.upload.max.size>
+				<pom.upload.max.msg>免费版只支持2M以下的文档预览，详情咨询：400-000-7644</pom.upload.max.msg>
+
+				<!-- Office converter -->
+				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
+				<pom.office.cmd.excel2html>D:/idocv/bin/converter/excel2html.exe</pom.office.cmd.excel2html>
+				<pom.office.cmd.ppt2jpg>D:/idocv/bin/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
+				<pom.swftools.cmd.pdf2swf>D:/idocv/bin/converter/pdf2swf.exe</pom.swftools.cmd.pdf2swf>
+			</properties>
+		</profile>
+		<!-- Consumer -->
+		<profile>
+			<id>consumer</id>
+			<properties>
+				<!-- Data -->
+				<pom.docview.data.url>http://data.idocv.com/</pom.docview.data.url>
+				<pom.docview.data.dir>D:/idocv/data/</pom.docview.data.dir>
+
+				<!-- Database -->
+				<pom.docview.mongodb.ip>localhost</pom.docview.mongodb.ip>
+				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
+				
+				<!-- Upload -->
+				<pom.upload.max.size>10000000</pom.upload.max.size>
+				<pom.upload.max.msg>默认支持10M以内的文档预览，详情请联系管理员！</pom.upload.max.msg>
 
 				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
@@ -314,6 +341,10 @@
 				<!-- Database -->
 				<pom.docview.mongodb.ip>localhost</pom.docview.mongodb.ip>
 				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
+				
+				<!-- Upload -->
+				<pom.upload.max.size>2000000</pom.upload.max.size>
+				<pom.upload.max.msg>免费版只支持2M以下的文档预览，详情咨询：400-000-7644</pom.upload.max.msg>
 
 				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
