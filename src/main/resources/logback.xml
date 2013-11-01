@@ -3,7 +3,7 @@
 <configuration scan="true" scanPeriod="60 seconds">
 	<!-- log base path -->
 	<property name="LOG_HOME" value="logs" />
-	<property name="SRVNAME" value="docview_log" />
+	<property name="SRVNAME" value="docview" />
 	<!-- back log base path -->
 	
 	<property name="LOG_BACK_HOME" value="logs/backup" />
@@ -29,9 +29,9 @@
 	</appender>
 
 	<root level="info">
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="file" />
 	</root>
 	
-	<logger name="com.idocv" level="debug"/>
+	<logger name="com.idocv" level="info"/>
 
 </configuration>

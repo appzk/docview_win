@@ -2,7 +2,9 @@ package com.idocv.docview.controller;
 
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -138,7 +140,7 @@ public class DocController {
 			if (null == vo) {
 				throw new Exception("上传失败！");
 			}
-			System.err.println("--> " + ip + " ADD " + vo.getUuid());
+			logger.info("--> " + ip + " at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " ADD " + vo.getUuid());
 			return "{\"uuid\":\"" + vo.getUuid() + "\"}";
 		} catch (Exception e) {
 			logger.error("upload error <controller>: " + e.getMessage());
