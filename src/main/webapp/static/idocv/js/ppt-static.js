@@ -1,3 +1,8 @@
+/**
+ * Copyright 2013 I Doc View
+ * @author Godwin <godwin668@gmail.com>
+ */
+
 $(document).ready(function() {
 	// Full list of configuration options available here:
 	// https://github.com/hakimel/reveal.js#configuration

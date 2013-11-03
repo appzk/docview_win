@@ -1,3 +1,8 @@
+/**
+ * Copyright 2013 I Doc View
+ * @author Godwin <godwin668@gmail.com>
+ */
+
 // The URL of your web server (the port is set in app.js)
 var url = 'http://draw.idocv.com:8080';
 

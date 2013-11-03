@@ -1,3 +1,8 @@
+/**
+ * Copyright 2013 I Doc View
+ * @author Godwin <godwin668@gmail.com>
+ */
+
 var slideUrls = new Array();
 var slideThumbUrls = new Array();
 var curSlide = 1;

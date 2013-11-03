@@ -1,3 +1,8 @@
+/**
+ * Copyright 2013 I Doc View
+ * @author Godwin <godwin668@gmail.com>
+ */
+
 var totalSize = 1;
 var uuid = $.url().segment(2);
 var sessionId = $.url().param('session');

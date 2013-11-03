@@ -1,4 +1,9 @@
-﻿$(document).ready(function() {
+﻿/**
+ * Copyright 2013 I Doc View
+ * @author Godwin <godwin668@gmail.com>
+ */
+
+$(document).ready(function() {
 	var uuid = $.url().segment(2);
 	var sessionId = $.url().param('session');
 	﻿var address = 'http://api.idocv.com/view/' + uuid;

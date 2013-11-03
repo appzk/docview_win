@@ -1,3 +1,8 @@
+/**
+ * Copyright 2013 I Doc View
+ * @author Godwin <godwin668@gmail.com>
+ */
+
 // If JavaScript is enabled remove 'no-js' class and give 'js' class
 jQuery('html').removeClass('no-js').addClass('js');
 
