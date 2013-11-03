@@ -86,7 +86,7 @@ public class DocServiceImpl implements DocService {
 	}
 
 	private static final boolean isCheckMacAddress = false;
-	private static final String macAddress = "08-00-27-89-13-7A";
+	private static final String macAddress = "34-40-B5-AA-93-40";
 
 	@Override
 	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {

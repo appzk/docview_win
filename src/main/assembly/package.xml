@@ -9,16 +9,6 @@
 
 	<fileSets>
 		<fileSet>
-			<directory>bin</directory>
-			<outputDirectory>/bin</outputDirectory>
-			<includes>
-			    <include>build.xml</include>
-			    <include>stop.sh</include>
-			    <include>start.sh</include>
-			</includes>
-			<useDefaultExcludes>true</useDefaultExcludes>
-		</fileSet>
-		<fileSet>
 			<directory>src/main/webapp</directory>
 			<outputDirectory>/webapp</outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
