@@ -110,10 +110,14 @@ function bindBottomPagingProgress() {
 				var pages = data.data;
 				
 				// pages
-				$('.span12 .word-page .word-content').html();
+				// $('.span12 .word-page .word-content').html();
 				for (i = 0; i < pages.length; i++) {
 					var page = pages[i];
-					$('.span12 .word-page .word-content').append(page.content);
+					if (i == 0) {
+						$('.span12 .word-page .word-content').html(page.content);
+					} else {
+						$('.span12 .word-page .word-content').append(page.content);
+					}
 				}
 				bindBottomPagingProgress();
 			} else {

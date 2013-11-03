@@ -32,11 +32,13 @@
             <span class="icon-bar"></span>
           </button>
           <a class="brand" href="http://www.idocv.com">I Doc View</a>
+          <!-- 
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a href="/"><i class="icon-home icon-white"></i> Home</a></li>
             </ul>
           </div><!--/.nav-collapse -->
+           -->
         </div>
       </div>
     </div>

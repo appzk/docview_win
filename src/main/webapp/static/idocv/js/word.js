@@ -1,7 +1,6 @@
 var totalSize = 1;
 var uuid = $.url().segment(2);
 var sessionId = $.url().param('session');
-﻿var address = 'http://api.idocv.com/view/' + uuid;
 $(document).ready(function() {
 	
 	$.get('/view/' + uuid + '.json?start=1&size=5', {session:sessionId}, function(data, status) {
@@ -18,7 +17,6 @@ $(document).ready(function() {
 			
 			// title
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
-			// $(".qrcode").qrcode(address);
 			
 			// pages
 			// $('.span12').append('<div class="word-page"><div class="word-content"></div></div>');
