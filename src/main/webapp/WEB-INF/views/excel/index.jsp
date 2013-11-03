@@ -55,21 +55,6 @@
               <!-- EXCEL TAB TITLE(s) HERE -->
             </ul>
           </div><!--/.nav-collapse -->
-          <!-- QR Code start -->
-          <!-- 
-          <div class="nav-collapse collapse">
-            <ul class="nav pull-right">
-              <li class="dropdown">
-                <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon-qrcode icon-white"></i><strong class="caret"></strong></a>
-                <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-                  <div class="qrcode"></div>
-                  <div style="text-align: center; margin: 8px;">扫描二维码，在手机或Pad中查看文档</div>
-                </div>
-              </li>
-            </ul>
-          </div>
-           -->
-          <!-- QR Code end -->
         </div>
       </div>
     </div>
@@ -87,38 +72,24 @@
       <hr>
 
       <footer>
-			Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+        Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
       </footer>
 
     </div><!--/.fluid-container-->
 
     <!-- JavaScript
     ================================================== -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
-	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
-	<script src="/static/idocv/js/custom.js"></script>
-	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-	<script src="/static/idocv/js/progress.js"></script>
-	<script src="/static/urlparser/js/purl.js"></script>
-	<!-- 
-	<script src="/static/qrcode/js/jquery.qrcode.min.js"></script>
-	 -->
-	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-	<!-- <script src="/static/idocv/js/user.js"></script> -->
-	<script src="/static/idocv/js/excel.js"></script>
-	<script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
-	<script src="/static/idocv/js/stat.js"></script>
-	
-	<!-- Baidu Share BEGIN -->
-	<!-- 
-	<script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=6&amp;pos=right&amp;uid=6693451" ></script>
-	<script type="text/javascript" id="bdshell_js"></script>
-	<script type="text/javascript">
-	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
-	</script>
-	 -->
-	<!-- Baidu Share END -->
-
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/idocv/js/custom.js"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
+    <script src="/static/idocv/js/progress.js"></script>
+    <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+    <!-- <script src="/static/idocv/js/user.js"></script> -->
+    <script src="/static/idocv/js/excel.js"></script>
+    <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
+    <script src="/static/idocv/js/stat.js"></script>
   </body>
 </html>
