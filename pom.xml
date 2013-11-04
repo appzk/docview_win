@@ -317,7 +317,7 @@
 			<id>consumer</id>
 			<properties>
 				<!-- Data -->
-				<pom.docview.data.url>http://127.0.0.1/data</pom.docview.data.url>
+				<pom.docview.data.url>http://127.0.0.1/data/</pom.docview.data.url>
 				<pom.docview.data.dir>D:/idocv/data/</pom.docview.data.dir>
 
 				<!-- Database -->
