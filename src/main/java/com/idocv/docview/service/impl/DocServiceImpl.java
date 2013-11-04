@@ -7,15 +7,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -85,8 +93,11 @@ public class DocServiceImpl implements DocService {
 		docTypes.add("txt");
 	}
 
-	private static final boolean isCheckMacAddress = false;
-	private static final String macAddress = "34-40-B5-AA-93-40";
+	private static String authUrl = "http://www.idocv.com/auth.json";
+	private static final ObjectMapper om = new ObjectMapper();
+	private static final String macAddress = "52-54-00-BD-AD-F7";
+	private static final boolean isCheckMacAddress = false;	// my edition: false, genuine edition: true;
+	private static final boolean isCheckExpireDate = false;	// trial edition: true, genuine edition: false
 
 	@Override
 	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
@@ -200,6 +211,10 @@ public class DocServiceImpl implements DocService {
 	private DocVo addDoc(String app, String uid, String name, byte[] data, int mode, String labelId) throws DocServiceException {
 		if (!validateMacAddress(macAddress)) {
 			System.out.println("[ERROR] This machine has NOT been authorized!");
+			return null;
+		}
+		if (!validateExpireDate()) {
+			System.out.println("[ERROR] This machine has been expired!");
 			return null;
 		}
 		if (StringUtils.isBlank(app)) {
@@ -436,6 +451,41 @@ public class DocServiceImpl implements DocService {
 			vo.setDownloadCount(po.getDownloadLog().size());
 		}
 		return vo;
+	}
+	
+	private static boolean validateExpireDate() {
+		if (!isCheckExpireDate) {
+			return true;
+		}
+		HttpClient client = new HttpClient();
+		GetMethod method = new GetMethod(authUrl);
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
+		try {
+			int statusCode = client.executeMethod(method);
+			if (statusCode != HttpStatus.SC_OK) {
+				return false;
+			}
+			String response = method.getResponseBodyAsString();
+			List<HashMap<String, String>> authMap = om.readValue(response,
+					new TypeReference<List<HashMap<String, String>>>() {
+					});
+			for (HashMap<String, String> auth : authMap) {
+				String mac = auth.get("mac");
+				String expire = auth.get("expire");
+				String valid = auth.get("valid");
+				if (macAddress.equals(mac)) {
+					Date expireDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(expire);
+					if (expireDate.after(new Date()) && "1".equals(valid)) {
+						return true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			return false;
+		} finally {
+			method.releaseConnection();
+		}
+		return false;
 	}
 	
 	private static boolean validateMacAddress(String macAddress) {
