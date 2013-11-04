@@ -317,7 +317,7 @@
 			<id>consumer</id>
 			<properties>
 				<!-- Data -->
-				<pom.docview.data.url>http://data.idocv.com/</pom.docview.data.url>
+				<pom.docview.data.url>http://127.0.0.1/data</pom.docview.data.url>
 				<pom.docview.data.dir>D:/idocv/data/</pom.docview.data.dir>
 
 				<!-- Database -->
@@ -325,8 +325,8 @@
 				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
 
 				<!-- Upload -->
-				<pom.upload.max.size>10000000</pom.upload.max.size>
-				<pom.upload.max.msg>默认支持10M以内的文档预览，详情请联系管理员！</pom.upload.max.msg>
+				<pom.upload.max.size>20000000</pom.upload.max.size>
+				<pom.upload.max.msg>默认支持20M以内的文档预览，详情请联系管理员！</pom.upload.max.msg>
 
 				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
