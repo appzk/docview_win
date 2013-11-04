@@ -214,7 +214,7 @@ public class DocServiceImpl implements DocService {
 			return null;
 		}
 		if (!validateExpireDate()) {
-			System.out.println("[ERROR] This machine has been expired!");
+			System.out.println("[ERROR] This machine is expired!");
 			return null;
 		}
 		if (StringUtils.isBlank(app)) {
