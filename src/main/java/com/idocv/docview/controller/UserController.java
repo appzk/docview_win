@@ -28,14 +28,12 @@ public class UserController {
 	
 	@RequestMapping("{username}")
 	public String home(@PathVariable(value = "username") String username) {
-		System.out.println("User: " + username);
 		return "doc/list-user";
 	}
 
 	@RequestMapping("{username}/{label}")
 	public String label(@PathVariable(value = "username") String username,
 			@PathVariable(value = "label") String label) {
-		System.out.println("User: " + username + ", label: " + label);
 		return "doc/list-user";
 	}
 
