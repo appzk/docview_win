@@ -3,7 +3,9 @@ package com.idocv.docview.controller;
 import java.io.Serializable;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -212,7 +214,9 @@ public class ViewController {
 				page = previewService.convertTxt2Html(rid, start, size);
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				String url = previewService.convertPdf2Swf(rid);
-				page = new PageVo<Serializable>(null, 0);
+				List<OfficeBaseVo> pdfList = new ArrayList<OfficeBaseVo>();
+				pdfList.add(new OfficeBaseVo());
+				page = new PageVo<OfficeBaseVo>(pdfList, 1);
 				page.setUrl(url);
 			} else {
 				page = new PageVo<OfficeBaseVo>(null, 0);
