@@ -98,6 +98,7 @@ public class DocServiceImpl implements DocService {
 	private static final String macAddress = "52-54-00-BD-AD-F7";
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
+	private static String lastCheckingDate = "2013-01-01";
 
 	@Override
 	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
@@ -457,6 +458,12 @@ public class DocServiceImpl implements DocService {
 		if (!isCheckExpireDate) {
 			return true;
 		}
+		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		if (lastCheckingDate.equals(currentDate)) {
+			return true;
+		}
+		lastCheckingDate = currentDate;
+		
 		HttpClient client = new HttpClient();
 		GetMethod method = new GetMethod(authUrl);
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
