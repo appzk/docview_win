@@ -96,8 +96,8 @@ public class DocServiceImpl implements DocService {
 	private static String authUrl = "http://www.idocv.com/auth.json";
 	private static final ObjectMapper om = new ObjectMapper();
 	private static final String macAddress = "52-54-00-BD-AD-F7";
-	private static final boolean isCheckMacAddress = false;	// my edition: false, genuine edition: true;
-	private static final boolean isCheckExpireDate = false;	// trial edition: true, genuine edition: false
+	private static final boolean isCheckMacAddress = false;
+	private static final boolean isCheckExpireDate = false;
 
 	@Override
 	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
@@ -463,6 +463,7 @@ public class DocServiceImpl implements DocService {
 		try {
 			int statusCode = client.executeMethod(method);
 			if (statusCode != HttpStatus.SC_OK) {
+				System.out.println("[ERROR] Get expire status error(" + statusCode + ")");
 				return false;
 			}
 			String response = method.getResponseBodyAsString();
@@ -481,6 +482,7 @@ public class DocServiceImpl implements DocService {
 				}
 			}
 		} catch (Exception e) {
+			System.out.println("[ERROR] Get expire status error(" + e.getMessage() + ")");
 			return false;
 		} finally {
 			method.releaseConnection();
@@ -495,7 +497,13 @@ public class DocServiceImpl implements DocService {
 		if (StringUtils.isBlank(macAddress)) {
 			return false;
 		}
-		return getMacAddresses().contains(macAddress.toUpperCase());
+		List<String> macAddresses = getMacAddresses();
+		if (macAddresses.contains(macAddress.toUpperCase())) {
+			return true;
+		} else {
+			System.out.println("[ERROR] " + macAddress + " is NOT in " + macAddresses);
+			return false;
+		}
 	}
 
 	private static List<String> getMacAddresses() {
