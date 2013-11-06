@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -338,6 +339,7 @@ public class ViewController {
 	@RequestMapping("url")
 	public String viewUrl(
 			HttpServletRequest req,
+			Model model,
 			@RequestParam(required = true) String url,
 			@RequestParam(value = "token", defaultValue = "testtoken") String token,
 			@RequestParam(required = false) String name,
@@ -369,7 +371,8 @@ public class ViewController {
 			return "redirect:" + uuid;
 		} catch (Exception e) {
 			logger.error("view url(" + url + ") error: " + e.getMessage());
-			return "redirect:/404.html";
+			model.addAttribute("error", e.getMessage());
+			return "404";
 		}
 	}
 }
