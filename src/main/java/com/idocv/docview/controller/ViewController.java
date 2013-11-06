@@ -214,7 +214,7 @@ public class ViewController {
 				start = (start - 1) * size + 1;
 				page = previewService.convertTxt2Html(rid, start, size);
 			} else if ("pdf".equalsIgnoreCase(ext)) {
-				String url = previewService.convertPdf2Swf(rid);
+				String url = previewService.convertPdf2Html(rid);
 				List<OfficeBaseVo> pdfList = new ArrayList<OfficeBaseVo>();
 				pdfList.add(new OfficeBaseVo());
 				page = new PageVo<OfficeBaseVo>(pdfList, 1);
@@ -302,7 +302,7 @@ public class ViewController {
 				page = previewService.convertTxt2Html(rid, start, size);
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				// TODO
-				String url = previewService.convertPdf2Swf(rid);
+				String url = previewService.convertPdf2Html(rid);
 			} else {
 				page = new PageVo<OfficeBaseVo>(null, 0);
 				page.setCode(0);

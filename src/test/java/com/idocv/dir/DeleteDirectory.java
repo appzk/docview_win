@@ -10,8 +10,9 @@ public class DeleteDirectory {
 	private static final String TYPE_WORD = "w";
 	private static final String TYPE_EXCEL = "x";
 	private static final String TYPE_PPT = "p";
+	private static final String TYPE_PDF = "f";
 
-	private static final String DELETE_TYPE = TYPE_PPT;// delete type.
+	private static final String DELETE_TYPE = TYPE_PDF;// delete type.
 
 	public static void main(String[] args) {
 		File dir = new File("D:/idocv/data/test/2013");

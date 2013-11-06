@@ -15,13 +15,7 @@ $(document).ready(function() {
 			var uuid = data.uuid;
 			var url = data.url;
 			
-			var fp = new FlexPaperViewer(
-				'/static/flex/FlexPaperViewer',
-				'viewerPlaceHolder', { config : {
-				SwfFile : escape('' + url + ''),
-				Scale : 0.6, ZoomTransition : 'easeOut', ZoomTime : 0.5, ZoomInterval : 0.2, FitPageOnLoad : false, FitWidthOnLoad : true, PrintEnabled : true, FullScreenAsMaxWindow : false, ProgressiveLoading : false, MinZoomSize : 0.2, MaxZoomSize : 5, SearchMatchAll : false, InitViewMode : 'Portrait', ViewModeToolsVisible : true, ZoomToolsVisible : true, NavToolsVisible : true, CursorToolsVisible : true, SearchToolsVisible : true, localeChain: 'en_US'
-			}});
-			
+			window.location.href=url;
 		} else {
 			$('.span12').append('<div class="alert alert-error">' + data.desc + '</div>');
 		}

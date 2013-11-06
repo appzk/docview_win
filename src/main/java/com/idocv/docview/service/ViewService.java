@@ -69,12 +69,12 @@ public interface ViewService {
 	PageVo<TxtVo> convertTxt2Html(String rid, int start, int limit) throws DocServiceException;
 
 	/**
-	 * Convert PDF to SWF file.
+	 * Convert PDF to HTML file.
 	 * 
 	 * @param rid
 	 * @return URL of the converted SWF
 	 */
-	String convertPdf2Swf(String rid) throws DocServiceException;
+	String convertPdf2Html(String rid) throws DocServiceException;
 
 	/**
 	 * Validate client IP

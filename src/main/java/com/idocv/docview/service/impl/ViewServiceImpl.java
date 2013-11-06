@@ -60,8 +60,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${office.cmd.ppt2jpg}")
 	String ppt2Jpg;
 	
-	private @Value("${swftools.cmd.pdf2swf}")
-	String pdf2swf;
+	private @Value("${pdf.cmd.pdf2html}")
+	String pdf2html;
 
 	private static final String IMG_WIDTH_200 = "200";
 	private static final String IMG_WIDTH_960 = "960";
@@ -434,21 +434,15 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	}
 
 	@Override
-	public String convertPdf2Swf(String rid) throws DocServiceException {
+	public String convertPdf2Html(String rid) throws DocServiceException {
 		try {
-			String src = rcUtil.getPath(rid);
-			String dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".swf";
-			File destFile = new File(dest);
+			convert(rid);
+			String destDir = rcUtil.getParseDir(rid);
+			File destFile = new File(destDir, "index.html");
 			if (!destFile.isFile()) {
-				String convertInfo = CmdUtil.runWindows(pdf2swf + " " + src + " -o " + dest + " -f -T 9 -t -s storeallcharacters -s languagedir=C:\\xpdf\\xpdf-chinese-simplified ");
-				logger.info("Convert info: \n" + convertInfo);
-				if (!destFile.isFile()) {
-					logger.error("Can't convert \"" + src + "\" to \"" + dest + "\", start converting using poly2bitmap parameter...");
-					convertInfo = CmdUtil.runWindows(pdf2swf + " " + src + " -o " + dest + " -f -T 9 -t -s storeallcharacters -s poly2bitmap -s languagedir=C:\\xpdf\\xpdf-chinese-simplified ");
-					logger.info("Convert info 2: \n" + convertInfo);
-				}
+				convert(rid);
 			}
-			return rcUtil.getParseUrlDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".swf";
+			return rcUtil.getParseUrlDir(rid) + "index.html";
 		} catch (Exception e) {
 			logger.error("convertPdf2Swf error(" + rid + "): ", e.getMessage());
 			throw new DocServiceException(e.getMessage(), e);
@@ -475,15 +469,17 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 		if (convertingRids.contains(rid)) {
 			if (tryCount < 10) {
 				try {
-					Thread.sleep(3000);
+					Thread.sleep(6000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					logger.error("等待转换(" + rid + ")出错：" + e.getMessage());
 				}
 				convert(rid, ++tryCount);
 			} else {
 				if (size > 1000000) {
+					logger.info("您的文档较大，正在努力处理中，请稍后再试！");
 					throw new DocServiceException("您的文档较大，正在努力处理中，请稍后再试！");
 				} else {
+					logger.info("您的文档正在处理中，请稍后再试！");
 					throw new DocServiceException("您的文档正在处理中，请稍后再试！");
 				}
 			}
@@ -535,16 +531,12 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if ("pdf".equalsIgnoreCase(ext)) {
-				dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".swf";
-				destFile = new File(dest);
+				String destDir = rcUtil.getParseDir(rid);
 				if (!destFile.isFile()) {
-					String convertInfo = CmdUtil.runWindows(pdf2swf + " " + src + " -o " + dest + " -f -T 9 -t -s storeallcharacters -s languagedir=C:\\xpdf\\xpdf-chinese-simplified ");
+					destDir = destDir.replaceAll("/", "\\\\");
+					destDir = destDir.substring(0, destDir.length() - 1);
+					String convertInfo = CmdUtil.runWindows(pdf2html, "--dest-dir", destDir.replaceAll("/", "\\\\"), "--embed", "cfijo", src.replaceAll("\\\\", "/"), "index.html");
 					logger.info("Convert info: \n" + convertInfo);
-					if (!destFile.isFile()) {
-						logger.error("Can't convert \"" + src + "\" to \"" + dest + "\", start converting using poly2bitmap parameter...");
-						convertInfo = CmdUtil.runWindows(pdf2swf + " " + src + " -o " + dest + " -f -T 9 -t -s storeallcharacters -s poly2bitmap -s languagedir=C:\\xpdf\\xpdf-chinese-simplified ");
-						logger.info("Convert info 2: \n" + convertInfo);
-					}
 				}
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				// do nothing.

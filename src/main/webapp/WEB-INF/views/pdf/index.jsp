@@ -36,10 +36,6 @@
       </div>
     </div>
 
-	<div id="viewerPlaceHolder" style="width:100%;height:100%;"></div>
-
-	<script src="/static/flex/flexpaper_flash.js"></script>
-
     <!-- JavaScript
     ================================================== -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
@@ -50,16 +46,5 @@
 	<script src="/static/urlparser/js/purl.js"></script>
 	<script src="/static/idocv/js/pdf.js"></script>
 	<script src="/static/idocv/js/stat.js"></script>
-	
-	<!-- Baidu Share BEGIN -->
-	<!-- 
-	<script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=6&amp;pos=right&amp;uid=6693451" ></script>
-	<script type="text/javascript" id="bdshell_js"></script>
-	<script type="text/javascript">
-	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
-	</script>
-	 -->
-	<!-- Baidu Share END -->
-
   </body>
 </html>
