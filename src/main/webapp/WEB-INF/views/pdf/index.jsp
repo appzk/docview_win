@@ -20,8 +20,7 @@
     <![endif]-->
   </head>
 
-  <body style="margin: 0; padding: 0;">
-  	
+  <body>
     <div class="loading-mask" style="display: none;">
       <div class="loading-zone">
         <div class="text">正在载入...0%</div>
@@ -35,16 +34,62 @@
         </footer>
       </div>
     </div>
+    
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- FILE NAME HERE -->
+          <!-- SIGN UP & SIGN IN -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <!-- WORD PAGES HERE -->
+          <!-- <div class="word-page"><div class="word-content">WORD CENTENT HERE</div></div> -->
+          <div class="word-page">
+            <div class="word-content">
+              <!-- WORD CENTENT HERE -->
+            </div>
+          </div>
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+      </footer>
+      
+      <div class="progress progress-striped active bottom-paging-progress">
+        <div class="bar" style="width: 0%;"></div>
+      </div>
+      <div class="paging-bottom-all">
+        <!-- SUB PAGING DIV(s) HERE -->
+        <!-- 
+        <div class="paging-bottom-sub" page-num="1" style="width: 20%;">1</div>
+        ...
+         -->
+      </div>
+
+    </div><!--/.fluid-container-->
 
     <!-- JavaScript
     ================================================== -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
-	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
-	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-	<script src="/static/idocv/js/progress.js"></script>
-	<script src="/static/urlparser/js/purl.js"></script>
-	<script src="/static/idocv/js/pdf.js"></script>
-	<script src="/static/idocv/js/stat.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
+    <script src="/static/idocv/js/progress.js"></script>
+    <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/idocv/js/pdf.js"></script>
+    <script src="/static/idocv/js/stat.js"></script>
   </body>
 </html>

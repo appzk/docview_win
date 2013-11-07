@@ -17,7 +17,7 @@ $(document).ready(function() {
 			
 			window.location.href=url;
 		} else {
-			$('.span12').append('<div class="alert alert-error">' + data.desc + '</div>');
+			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}
 		
 		// clear progress bar
