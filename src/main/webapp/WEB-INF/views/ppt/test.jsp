@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="在线文档预览、文档协作编辑、幻灯片远程控制、同步信息展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt等。">
     <meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
-    <meta name="author" content="Godwin">
+    <meta name="copyright" content="I Doc View 2013">
+    <meta name="author" content="godwin668@gmail.com">
 
     <!-- BOOTSTRAP STYLE start -->
     <!-- Le styles -->
@@ -86,7 +87,7 @@
              -->
           </div>
           <!-- ONLY AVAILABLE ON MOBILE -->
-          <div id="btns" class="span12 visible-phone text-center" style="position: fixed; bottom: 10px; left: 0px; z-index: 100;">
+          <div id="btns" class="span12 visible-phone text-center" style="position: fixed; bottom: 10px; left: 0px; z-index: 1000;">
             <select id="page-selector" class="span1" style="width: 80px; margin-top: 10px;">
               <!-- PAGE NUMBERS HERE -->
             </select>
@@ -110,7 +111,7 @@
     <script src="/static/idocv/js/progress.js"></script>
     <script src="/static/urlparser/js/purl.js"></script>
     <script src="/static/fullscreen/js/jquery.fullscreen-min.js"></script>
-    <script src="/static/idocv/js/ppt-outline.js"></script>
+    <script src="/static/idocv/js/ppt-outline-test.js"></script>
     <script src="/static/idocv/js/stat.js"></script>
   </body>
 </html>

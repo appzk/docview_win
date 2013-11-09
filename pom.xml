@@ -302,8 +302,8 @@
 				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
 
 				<!-- Upload -->
-				<pom.upload.max.size>2000000</pom.upload.max.size>
-				<pom.upload.max.msg>免费版只支持2M以下的文档预览，详情咨询：400-000-7644</pom.upload.max.msg>
+				<pom.upload.max.size>1000000</pom.upload.max.size>
+				<pom.upload.max.msg>\u7531\u4e8e\u4f7f\u7528\u91cf\u5de8\u5927\uff0c\u4e91\u5b58\u50a8\u7a7a\u95f4\u6709\u9650\uff0c\u73b0\u5c06\u514d\u8d39\u6587\u6863\u9884\u89c8\u8c03\u6574\u4e3a1M\u4ee5\u5185\uff0c\u5982\u7f51\u7ad9\u6216\u516c\u53f8\u4f7f\u7528\uff0c\u5efa\u8bae\u5b89\u88c5\u9884\u89c8\u670d\u52a1\uff0c\u8be6\u60c5\u54a8\u8be2\uff1a400-000-7644</pom.upload.max.msg>
 
 				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
@@ -326,7 +326,7 @@
 
 				<!-- Upload -->
 				<pom.upload.max.size>20000000</pom.upload.max.size>
-				<pom.upload.max.msg>默认支持20M以内的文档预览，详情请联系管理员！</pom.upload.max.msg>
+				<pom.upload.max.msg>\u9ed8\u8ba4\u652f\u630120M\u4ee5\u5185\u7684\u6587\u6863\u9884\u89c8\uff0c\u8be6\u60c5\u8bf7\u8054\u7cfb\u7ba1\u7406\u5458\uff01</pom.upload.max.msg>
 
 				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
@@ -348,8 +348,8 @@
 				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
 
 				<!-- Upload -->
-				<pom.upload.max.size>2000000</pom.upload.max.size>
-				<pom.upload.max.msg>免费版只支持2M以下的文档预览，详情咨询：400-000-7644</pom.upload.max.msg>
+				<pom.upload.max.size>1000000</pom.upload.max.size>
+				<pom.upload.max.msg>\u7531\u4e8e\u4f7f\u7528\u91cf\u5de8\u5927\uff0c\u4e91\u5b58\u50a8\u7a7a\u95f4\u6709\u9650\uff0c\u73b0\u5c06\u514d\u8d39\u6587\u6863\u9884\u89c8\u8c03\u6574\u4e3a1M\u4ee5\u5185\uff0c\u5982\u7f51\u7ad9\u6216\u516c\u53f8\u4f7f\u7528\uff0c\u5efa\u8bae\u5b89\u88c5\u9884\u89c8\u670d\u52a1\uff0c\u8be6\u60c5\u54a8\u8be2\uff1a400-000-7644</pom.upload.max.msg>
 
 				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>

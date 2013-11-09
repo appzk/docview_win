@@ -42,7 +42,7 @@
       <div class="row-fluid">
         <div class="span12">
           <div class="alert alert-error">
-                                不存在该资源：${error}  <span id='container'></span> 秒后返回主页！
+                                预览失败：${error}&nbsp;&nbsp;&nbsp;<span id='container'></span> 秒后返回主页！
           </div>
         </div><!--/span-->
       </div><!--/row-->
@@ -61,7 +61,7 @@
 	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
 	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
 	<script>
-		var time = 5; //How long (in seconds) to countdown
+		var time = 10; //How long (in seconds) to countdown
 		var page = "http://www.idocv.com"; //The page to redirect to
 		function countDown(){
 			time--;

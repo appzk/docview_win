@@ -198,14 +198,14 @@ public class DocServiceImpl implements DocService {
 			if (null == vo || StringUtils.isBlank(vo.getUuid())) {
 				logger.error("save url doc error: 无法保存文件" + "app=" + app
 						+ ", url=" + url + ", name=" + name + ", mode=" + mode);
-				throw new DocServiceException("saveUrl error: 保存文件失败！");
+				throw new DocServiceException("保存文件失败！");
 			}
 			docDao.updateUrl(vo.getUuid(), url);
 			logger.info("[ADD URL ok]uuid=" + vo.getUuid() + ", url=" + url + ", name=" + name + ", size=" + data.length + ", app=" + app + ", uid=" + uid);
 			return vo;
 		} catch (Exception e) {
 			logger.error("save url doc error: " + e.getMessage() + ", app=" + app + ", url=" + url + ", name=" + name + ", mode=" + mode);
-			throw new DocServiceException("saveUrl error: " + e.getMessage(), e);
+			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
 

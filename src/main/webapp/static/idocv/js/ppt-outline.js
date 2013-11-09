@@ -10,7 +10,6 @@ var curSlide = 1;
 $(document).ready(function() {
 	var uuid = $.url().segment(2);
 	var sessionId = $.url().param('session');
-	﻿var address = 'http://api.idocv.com/view/' + uuid;
 	
 	$.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
 		var code = data.code;
@@ -21,7 +20,6 @@ $(document).ready(function() {
 			
 			// title
 			$('.container-fluid:first .btn:first').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
-			// $(".qrcode").qrcode(address);
 			
 			// set ratio
 			ratio = pages[0].ratio;
@@ -40,17 +38,6 @@ $(document).ready(function() {
 				$('#page-selector').append('<option>' + (i + 1) + '</option>');
 			}
 			
-			$('.thumbnail').click(function () {
-				var page_num = $(this).attr('page');
-				gotoSlide(page_num);
-				/*
-				$('.slide-img img').fadeOut().attr("src", slideUrls[page_num - 1]).fadeIn();
-				var percent = Math.ceil((page_num / slideUrls.length) * 100);
-				$('.bottom-paging-progress .bar').width('' + percent + '%');
-				curSlide = page_num;
-				*/
-			});
-			
 			$('.slide-img').append('<img src="' + slideUrls[0] + '" class="img-polaroid" style="height: 100%;">');
 			resetImgSize();
 			
@@ -58,6 +45,11 @@ $(document).ready(function() {
 			$('.thumbnail[page="' + curSlide + '"]').addClass('ppt-thumb-border');
 			$('#page-selector').val(curSlide);
 			$('.bottom-paging-progress .bar').width('' + percent + '%');
+
+			$('.thumbnail').click(function () {
+				var page_num = $(this).attr('page');
+				gotoSlide(page_num);
+			});
 		} else {
 			$('.container-fluid .row-fluid').html('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}
@@ -91,7 +83,8 @@ $(document).ready(function() {
 		nextSlide();
 	});
 	
-	// Right click
+	// Right click (NOT supported in SOUGOU browser)
+	/*
 	$.contextMenu({
         selector: '.slide-img',
         items: {
@@ -116,6 +109,7 @@ $(document).ready(function() {
             },
         }
     });
+    */
 	$('.slide-img').contextMenu(false);
 	
 	// Swipe method is NOT supported in IE6, so it should be the last one.
