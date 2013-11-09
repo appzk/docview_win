@@ -535,7 +535,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				if (!destFile.isFile()) {
 					destDir = destDir.replaceAll("/", "\\\\");
 					destDir = destDir.substring(0, destDir.length() - 1);
-					String convertInfo = CmdUtil.runWindows(pdf2html, "--dest-dir", destDir.replaceAll("/", "\\\\"), "--embed", "cfijo", src.replaceAll("\\\\", "/"), "index.html");
+					String convertInfo = CmdUtil.runWindows(pdf2html, "--dest-dir", destDir.replaceAll("/", "\\\\"), "--embed", "cfijo", "--fallback", "1", src.replaceAll("\\\\", "/"), "index.html");
 					logger.info("Convert info: \n" + convertInfo);
 				}
 			} else if ("txt".equalsIgnoreCase(ext)) {
