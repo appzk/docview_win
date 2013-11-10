@@ -11,16 +11,18 @@
     <meta name="author" content="godwin668@gmail.com">
 
     <!-- styles -->
-    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/idocv/css/style.css" rel="stylesheet">
-    <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/static/idocv/css/style.css" rel="stylesheet" />
+    <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
+    <link href="/static/pdf2htmlEX/css/base.css" rel="stylesheet" />
+    <link href="/static/pdf2htmlEX/css/fancy.css" rel="stylesheet" />
 
     <!--[if lt IE 9]>
       <script src="/static/bootstrap/js/html5shiv.js"></script>
     <![endif]-->
   </head>
 
-  <body>
+  <body class="pdf-body">
     <div class="loading-mask" style="display: none;">
       <div class="loading-zone">
         <div class="text">正在载入...0%</div>
@@ -34,7 +36,7 @@
         </footer>
       </div>
     </div>
-    
+
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -52,13 +54,15 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span12">
-          <!-- WORD PAGES HERE -->
+          <!-- PDF PAGES HERE -->
           <!-- <div class="word-page"><div class="word-content">WORD CENTENT HERE</div></div> -->
+          <!-- 
           <div class="word-page">
             <div class="word-content">
-              <!-- WORD CENTENT HERE -->
+              <!-- WORD CENTENT HERE
             </div>
           </div>
+           -->
         </div><!--/span-->
       </div><!--/row-->
 
@@ -80,16 +84,21 @@
       </div>
 
     </div><!--/.fluid-container-->
-
-    <!-- JavaScript
+    
+    <!-- JavaSript
     ================================================== -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/idocv/js/custom.js"></script>
     <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
     <script src="/static/idocv/js/progress.js"></script>
+    <script src="/static/scrollspy/js/jquery-scrollspy.js"></script>
     <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+    <script src="/static/infinite-scroll/js/jquery.infinitescroll.js"></script>
     <script src="/static/idocv/js/pdf.js"></script>
+    <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
     <script src="/static/idocv/js/stat.js"></script>
   </body>
 </html>

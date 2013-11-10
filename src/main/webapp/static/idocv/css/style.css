@@ -202,6 +202,41 @@
 	}
 
 	/* -------------------------------------------------- */
+	/*	PDF Style
+	/* -------------------------------------------------- */
+	.pdf-body {
+		background-color:#EBEBEB;
+		min-height: 100%;
+		-webkit-font-smoothing:antialiased;
+		font-smoothing:antialiased;
+		text-rendering:optimizeLegibility;
+	}
+	
+	.pdf-page{
+		line-height: normal;
+		margin-right: auto;
+		margin-left: auto;
+		margin-bottom: 15px;
+		max-width: 795px;
+		background-color:#FFF;
+		-moz-border-radius: 1px;
+		border-radius: 1px;
+		-moz-box-shadow: 0 0 10px 5px #888;
+		-webkit-box-shadow: 0 0 10px 5px #888;
+		box-shadow: 0 0 10px 5px #888;
+	}
+	
+	.pdf-page .pdf-content {
+		background-color:#FFF;
+		max-width: 75%;
+		word-wrap: break-word;
+		word-break: break-all;
+		margin: 0px auto;
+		padding-top: 10%;
+		padding-bottom: 10%;
+	}
+
+	/* -------------------------------------------------- */
 	/*	Table Style
 	/* -------------------------------------------------- */
 

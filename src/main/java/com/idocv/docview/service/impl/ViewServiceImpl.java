@@ -35,6 +35,7 @@ import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.ExcelVo;
 import com.idocv.docview.vo.PPTVo;
 import com.idocv.docview.vo.PageVo;
+import com.idocv.docview.vo.PdfVo;
 import com.idocv.docview.vo.TxtVo;
 import com.idocv.docview.vo.WordVo;
 
@@ -101,6 +102,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			File firstPageFile = new File(rcUtil.getParseDir(rid) + "1.html");
 			String bodyString = bodyRaw;
 			bodyString = processStyle(bodyString);
+
+			// split all pages
 			if (!firstPageFile.isFile()) {
 				List<String> pages = new ArrayList<String>();
 				String pageRegex = "(?s)(?i)(.+?)(<span[^>]+?>[\\s]*<br[^>]*?style=[\"|\'][^>]*page-break-before[^>]+>[\\s]*</span>)(.*)(?-i)";
@@ -434,17 +437,76 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	}
 
 	@Override
-	public String convertPdf2Html(String rid) throws DocServiceException {
+	public PageVo<PdfVo> convertPdf2Html(String rid, int start, int limit) throws DocServiceException {
 		try {
 			convert(rid);
-			String destDir = rcUtil.getParseDir(rid);
-			File destFile = new File(destDir, "index.html");
-			if (!destFile.isFile()) {
-				convert(rid);
+			File htmlFile = new File(rcUtil.getParsePathOfHtml(rid));
+			String htmlRaw = FileUtils.readFileToString(htmlFile, "UTF-8");
+
+			// check first page existence
+			File firstPageFile = new File(rcUtil.getParseDir(rid) + "1.html");
+			String bodyString = htmlRaw;
+
+			// split all pages
+			if (!firstPageFile.isFile()) {
+				List<String> pages = new ArrayList<String>();
+				String pageRegex = "(?s)(?i)(.*?)(<div class=\"pd w0 h0\">.+?></div></div></div>)(.*)(?-i)";
+				while (bodyString.matches(pageRegex)) {
+					String page = bodyString.replaceFirst(pageRegex, "$2");
+					bodyString = bodyString.replaceFirst(pageRegex, "$3");
+					pages.add(page);
+				}
+				if (CollectionUtils.isEmpty(pages)) {
+					logger.error("未找到页面内容（" + rid + "）！");
+					throw new DocServiceException("未找到页面内容！");
+				}
+
+				// save pages
+				for (int i = 0; i < pages.size(); i++) {
+					File curPageFile = new File(rcUtil.getParseDir(rid) + (i + 1) + ".html");
+					FileUtils.writeStringToFile(curPageFile, pages.get(i), "UTF-8");
+				}
 			}
-			return rcUtil.getParseUrlDir(rid) + "index.html";
+			
+			// get page content
+			File curPageFile = new File(rcUtil.getParseDir(rid) + start + ".html");
+			if (!curPageFile.isFile()) {
+				// The last page.
+				return new PageVo<PdfVo>(null, 0);
+			}
+			List<String> pages = new ArrayList<String>();
+			limit = limit >= 0 ? limit : 0;
+			limit = limit == 0 ? Integer.MAX_VALUE : limit;
+			int totalPageCount = start;
+			for (int i = 0; i < limit; i++) {
+				curPageFile = new File(rcUtil.getParseDir(rid) + (start + i) + ".html");
+				if (curPageFile.isFile()) {
+					totalPageCount = start + i;
+					String curPageString = FileUtils.readFileToString(curPageFile, "UTF-8");
+					curPageString = processImageUrlOfPdf(rcUtil.getParseUrlDir(rid), curPageString);
+					pages.add(curPageString);
+				} else {
+					break;
+				}
+			}
+			while (new File(rcUtil.getParseDir(rid) + (totalPageCount + 1) + ".html").isFile()) {
+				totalPageCount ++;
+			}
+
+			List<PdfVo> data = new ArrayList<PdfVo>();
+			// construct vo
+			for (int i = 0; i < pages.size(); i++) {
+				PdfVo pdf = new PdfVo();
+				pdf.setContent("<div id=\"" + (start + i) + "\" class=\"scroll-page\">" + pages.get(i) + "</div>");
+				pdf.setBackground(rcUtil.getParseUrlDir(rid) + "bg" + (i + 1) + ".png");
+				data.add(pdf);
+			}
+			PageVo<PdfVo> page = new PageVo<PdfVo>(data, totalPageCount);
+			page.setStyleUrl(rcUtil.getParseUrlDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".css");
+			page.setUrl(rcUtil.getParseUrlDir(rid) + "index.html");
+			return page;
 		} catch (Exception e) {
-			logger.error("convertPdf2Swf error(" + rid + "): ", e.getMessage());
+			logger.error("convertPdf2Html error: " + e.getMessage());
 			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
@@ -580,6 +642,10 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	 */
 	public String processImageUrl(String prefix, String content) throws DocServiceException {
 		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\"?)([^>]*index.files[/\\\\])?([^>]+?>)(?-i)", "$1" + prefix + "index.files/" + "$3");
+	}
+	
+	public String processImageUrlOfPdf(String prefix, String content) throws DocServiceException {
+		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\"?)([^>]+?>)(?-i)", "$1" + prefix + "$2");
 	}
 	
 	public static void write2File(File file, String content) throws IOException {

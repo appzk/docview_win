@@ -7,6 +7,7 @@ import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.vo.ExcelVo;
 import com.idocv.docview.vo.PPTVo;
 import com.idocv.docview.vo.PageVo;
+import com.idocv.docview.vo.PdfVo;
 import com.idocv.docview.vo.TxtVo;
 import com.idocv.docview.vo.WordVo;
 
@@ -74,7 +75,7 @@ public interface ViewService {
 	 * @param rid
 	 * @return URL of the converted SWF
 	 */
-	String convertPdf2Html(String rid) throws DocServiceException;
+	PageVo<PdfVo> convertPdf2Html(String rid, int start, int limit) throws DocServiceException;
 
 	/**
 	 * Validate client IP
