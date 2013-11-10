@@ -480,7 +480,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			int totalPageCount = start;
 			for (int i = 0; i < limit; i++) {
 				curPageFile = new File(rcUtil.getParseDir(rid) + (start + i) + ".html");
-				if (curPageFile.isFile()) {
+				if (curPageFile.isFile() && new File(rcUtil.getParseDir(rid) + "bg" + (i + 1) + ".png").isFile()) {
 					totalPageCount = start + i;
 					String curPageString = FileUtils.readFileToString(curPageFile, "UTF-8");
 					curPageString = processImageUrlOfPdf(rcUtil.getParseUrlDir(rid), curPageString);
@@ -489,7 +489,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					break;
 				}
 			}
-			while (new File(rcUtil.getParseDir(rid) + (totalPageCount + 1) + ".html").isFile()) {
+			while (new File(rcUtil.getParseDir(rid) + "bg" + (totalPageCount + 1) + ".png").isFile()) {
 				totalPageCount ++;
 			}
 
