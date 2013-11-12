@@ -228,12 +228,9 @@
 	
 	.pdf-page .pdf-content {
 		background-color:#FFF;
-		max-width: 75%;
 		word-wrap: break-word;
 		word-break: break-all;
 		margin: 0px auto;
-		padding-top: 10%;
-		padding-bottom: 10%;
 	}
 
 	/* -------------------------------------------------- */

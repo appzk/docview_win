@@ -61,12 +61,11 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${office.cmd.ppt2jpg}")
 	String ppt2Jpg;
 	
+	private @Value("${pdf.cmd.pdf2img}")
+	String pdf2img;
+
 	private @Value("${pdf.cmd.pdf2html}")
 	String pdf2html;
-
-	private static final String IMG_WIDTH_200 = "200";
-	private static final String IMG_WIDTH_960 = "960";
-	private static final String IMG_WIDTH_1280 = "1280";
 
 	private static final String encodingString = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=([^\"^>]+?)\"?>.*";
 
@@ -437,6 +436,44 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	}
 
 	@Override
+	public PageVo<PdfVo> convertPdf2Img(String rid, int start, int limit) throws DocServiceException {
+		try {
+			// get page count
+			File[] pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
+			if (ArrayUtils.isEmpty(pngFiles)) {
+				convert(rid);
+				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
+			}
+			if (ArrayUtils.isEmpty(pngFiles)) {
+				throw new DocServiceException("预览失败，未找到目标文件！");
+			}
+			
+			List<File> pdfPageFiles = new ArrayList<File>();
+			for (File pngFile : pngFiles) {
+				pdfPageFiles.add(pngFile);
+			}
+
+			// sort file
+			Collections.sort(pdfPageFiles, new FileComparator());
+
+			List<PdfVo> data = new ArrayList<PdfVo>();
+			if (!CollectionUtils.isEmpty(pdfPageFiles)) {
+				for (int i = 0; i < pdfPageFiles.size(); i++) {
+					PdfVo pdf = new PdfVo();
+					String url = rcUtil.getParseUrlDir(rid) + PDF_TO_IMAGE_TYPE + "/" + pdfPageFiles.get(i).getName();
+					pdf.setUrl(url);
+					data.add(pdf);
+				}
+			}
+			PageVo<PdfVo> page = new PageVo<PdfVo>(data, pdfPageFiles.size());
+			return page;
+		} catch (Exception e) {
+			logger.error("convertPPT2Html(" + rid + ") error: ", e.fillInStackTrace());
+			throw new DocServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
 	public PageVo<PdfVo> convertPdf2Html(String rid, int start, int limit) throws DocServiceException {
 		try {
 			convert(rid);
@@ -593,13 +630,20 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if ("pdf".equalsIgnoreCase(ext)) {
-				String destDir = rcUtil.getParseDir(rid);
+				String destDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
+				String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
+				if (!new File(destFirstPage).isFile()) {
+					String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
+					logger.info("Convert info: \n" + convertInfo);
+				}
+				/* pdf2htmlEx
 				if (!destFile.isFile()) {
 					destDir = destDir.replaceAll("/", "\\\\");
 					destDir = destDir.substring(0, destDir.length() - 1);
 					String convertInfo = CmdUtil.runWindows(pdf2html, "--dest-dir", destDir.replaceAll("/", "\\\\"), "--embed", "cfijo", "--fallback", "1", src.replaceAll("\\\\", "/"), "index.html");
 					logger.info("Convert info: \n" + convertInfo);
 				}
+				*/
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				// do nothing.
 			} else {

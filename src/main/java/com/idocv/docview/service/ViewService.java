@@ -21,6 +21,11 @@ import com.idocv.docview.vo.WordVo;
  */
 public interface ViewService {
 
+	static final String IMG_WIDTH_200 = "200";
+	static final String IMG_WIDTH_960 = "960";
+	static final String IMG_WIDTH_1280 = "1280";
+	static final String PDF_TO_IMAGE_TYPE = "png";
+
 	static List<String> convertingRids = new ArrayList<String>();
 
 	/**
@@ -70,10 +75,18 @@ public interface ViewService {
 	PageVo<TxtVo> convertTxt2Html(String rid, int start, int limit) throws DocServiceException;
 
 	/**
+	 * Convert PDF to Image file.
+	 * 
+	 * @param rid
+	 * @return
+	 */
+	PageVo<PdfVo> convertPdf2Img(String rid, int start, int limit) throws DocServiceException;
+	
+	/**
 	 * Convert PDF to HTML file.
 	 * 
 	 * @param rid
-	 * @return URL of the converted SWF
+	 * @return
 	 */
 	PageVo<PdfVo> convertPdf2Html(String rid, int start, int limit) throws DocServiceException;
 

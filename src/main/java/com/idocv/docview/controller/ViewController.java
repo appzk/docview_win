@@ -112,7 +112,8 @@ public class ViewController {
 				}
 //				return "redirect:/page/ppt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("f")) {
-				model.setViewName("pdf/index");
+				// model.setViewName("pdf/index");
+				model.setViewName("pdf/png");
 				return model;
 			} else if (uuid.endsWith("t")) {
 				model.setViewName("txt/index");
@@ -212,7 +213,8 @@ public class ViewController {
 				start = (start - 1) * size + 1;
 				page = previewService.convertTxt2Html(rid, start, size);
 			} else if ("pdf".equalsIgnoreCase(ext)) {
-				page = previewService.convertPdf2Html(rid, 1, 0);
+				// page = previewService.convertPdf2Html(rid, 1, 0);
+				page = previewService.convertPdf2Img(rid, 1, 0);
 			} else {
 				page = new PageVo<OfficeBaseVo>(null, 0);
 				page.setCode(0);

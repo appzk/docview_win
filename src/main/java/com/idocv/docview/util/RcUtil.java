@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.service.ViewService;
 
 
 @Component("rcUtil")
@@ -137,6 +138,21 @@ public class RcUtil {
 			new File(dir).mkdirs();
 		}
 		return dir;
+	}
+
+	/**
+	 * 获取PDF解析文档的本地目录(PNG)
+	 * 
+	 * @param rid
+	 * @return
+	 */
+	public String getParseDirOfPdf2Png(String rid) {
+		String parseDir = getParseDir(rid);
+		String pdf2ImgDir = parseDir + ViewService.PDF_TO_IMAGE_TYPE + File.separator;
+		if (!new File(pdf2ImgDir).isDirectory()) {
+			new File(pdf2ImgDir).mkdirs();
+		}
+		return pdf2ImgDir;
 	}
 
 	public String getDirectoryByRid(String rid) throws IllegalArgumentException {
