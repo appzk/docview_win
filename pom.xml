@@ -309,7 +309,8 @@
 				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
 				<pom.office.cmd.excel2html>D:/idocv/bin/converter/excel2html.exe</pom.office.cmd.excel2html>
 				<pom.office.cmd.ppt2jpg>D:/idocv/bin/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
-				<pom.pdf.cmd.pdf2img>D:/idocv/bin/converter/pdf2img.jar</pom.pdf.cmd.pdf2img>
+				<pom.pdf.cmd.pdf2img.ghostscript>c:/Program Files/gs/gs9.10/bin/gswin64c.exe</pom.pdf.cmd.pdf2img.ghostscript>
+				<pom.pdf.cmd.pdf2img.pdfbox>D:/idocv/bin/converter/pdf2img.jar</pom.pdf.cmd.pdf2img.pdfbox>
 				<pom.pdf.cmd.pdf2html>D:/idocv/bin/converter/pdf2html/pdf2htmlEX.exe</pom.pdf.cmd.pdf2html>
 			</properties>
 		</profile>
@@ -333,7 +334,8 @@
 				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
 				<pom.office.cmd.excel2html>D:/idocv/bin/converter/excel2html.exe</pom.office.cmd.excel2html>
 				<pom.office.cmd.ppt2jpg>D:/idocv/bin/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
-				<pom.pdf.cmd.pdf2img>D:/idocv/bin/converter/pdf2img.jar</pom.pdf.cmd.pdf2img>
+				<pom.pdf.cmd.pdf2img.ghostscript>c:/Program Files/gs/gs9.10/bin/gswin64c.exe</pom.pdf.cmd.pdf2img.ghostscript>
+				<pom.pdf.cmd.pdf2img.pdfbox>D:/idocv/bin/converter/pdf2img.jar</pom.pdf.cmd.pdf2img.pdfbox>
 				<pom.pdf.cmd.pdf2html>D:/idocv/bin/converter/pdf2html/pdf2htmlEX.exe</pom.pdf.cmd.pdf2html>
 			</properties>
 		</profile>
@@ -357,7 +359,8 @@
 				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
 				<pom.office.cmd.excel2html>D:/idocv/bin/converter/excel2html.exe</pom.office.cmd.excel2html>
 				<pom.office.cmd.ppt2jpg>D:/idocv/bin/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
-				<pom.pdf.cmd.pdf2img>D:/idocv/bin/converter/pdf2img.jar</pom.pdf.cmd.pdf2img>
+				<pom.pdf.cmd.pdf2img.ghostscript>c:/Program Files/gs/gs9.10/bin/gswin64c.exe</pom.pdf.cmd.pdf2img.ghostscript>
+				<pom.pdf.cmd.pdf2img.pdfbox>D:/idocv/bin/converter/pdf2img.jar</pom.pdf.cmd.pdf2img.pdfbox>
 				<pom.pdf.cmd.pdf2html>D:/idocv/bin/converter/pdf2html/pdf2htmlEX.exe</pom.pdf.cmd.pdf2html>
 			</properties>
 		</profile>

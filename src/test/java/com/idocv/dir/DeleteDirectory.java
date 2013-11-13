@@ -16,8 +16,9 @@ public class DeleteDirectory {
 
 	public static void main(String[] args) {
 		File dir = new File("D:/idocv/data/test/2013");
-		System.out.println(dir.isDirectory());
+		System.out.println(dir.getAbsolutePath() + " is a directory: " + dir.isDirectory());
 		listAndDeleteDirectory(dir);
+		System.out.println("Done!");
 	}
 
 	public static void listAndDeleteDirectory(File file) {
