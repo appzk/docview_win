@@ -303,7 +303,7 @@
 
 				<!-- Upload -->
 				<pom.upload.max.size>1000000</pom.upload.max.size>
-				<pom.upload.max.msg>\u7531\u4e8e\u4f7f\u7528\u91cf\u5de8\u5927\uff0c\u4e91\u5b58\u50a8\u7a7a\u95f4\u6709\u9650\uff0c\u73b0\u5c06\u514d\u8d39\u6587\u6863\u9884\u89c8\u8c03\u6574\u4e3a1M\u4ee5\u5185\uff0c\u5982\u7f51\u7ad9\u6216\u516c\u53f8\u4f7f\u7528\uff0c\u5efa\u8bae\u5b89\u88c5\u9884\u89c8\u670d\u52a1\uff0c\u8be6\u60c5\u54a8\u8be2\uff1a400-000-7644</pom.upload.max.msg>
+				<pom.upload.max.msg>\u514d\u8d39\u7248\u53ea\u652f\u63011M\u4ee5\u5185\u6587\u4ef6\u9884\u89c8\uff0c\u8be6\u60c5\u54a8\u8be2\uff1a400-000-7644</pom.upload.max.msg>
 
 				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
@@ -353,7 +353,7 @@
 
 				<!-- Upload -->
 				<pom.upload.max.size>1000000</pom.upload.max.size>
-				<pom.upload.max.msg>\u7531\u4e8e\u4f7f\u7528\u91cf\u5de8\u5927\uff0c\u4e91\u5b58\u50a8\u7a7a\u95f4\u6709\u9650\uff0c\u73b0\u5c06\u514d\u8d39\u6587\u6863\u9884\u89c8\u8c03\u6574\u4e3a1M\u4ee5\u5185\uff0c\u5982\u7f51\u7ad9\u6216\u516c\u53f8\u4f7f\u7528\uff0c\u5efa\u8bae\u5b89\u88c5\u9884\u89c8\u670d\u52a1\uff0c\u8be6\u60c5\u54a8\u8be2\uff1a400-000-7644</pom.upload.max.msg>
+				<pom.upload.max.msg>\u514d\u8d39\u7248\u53ea\u652f\u63011M\u4ee5\u5185\u6587\u4ef6\u9884\u89c8\uff0c\u8be6\u60c5\u54a8\u8be2\uff1a400-000-7644</pom.upload.max.msg>
 
 				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:/idocv/bin/converter/word2html.exe</pom.office.cmd.word2html>
