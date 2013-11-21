@@ -61,11 +61,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${office.cmd.ppt2jpg}")
 	String ppt2Jpg;
 	
-	private @Value("${pdf.cmd.pdf2img.ghostscript}")
-	String pdf2imgGhostscript;
-
-	private @Value("${pdf.cmd.pdf2img.pdfbox}")
-	String pdf2imgPdfbox;
+	private @Value("${pdf.cmd.pdf2img}")
+	String pdf2img;
 
 	private @Value("${pdf.cmd.pdf2html}")
 	String pdf2html;
@@ -637,7 +634,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
 				if (!new File(destFirstPage).isFile()) {
 					// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
-					String convertInfo = CmdUtil.runWindows(pdf2imgGhostscript, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a2", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+					String convertInfo = CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a2", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
 					logger.info("Convert info: \n" + convertInfo);
 				}
 				/* pdf2htmlEx
