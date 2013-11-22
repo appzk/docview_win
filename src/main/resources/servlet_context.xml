@@ -52,9 +52,7 @@
 		<property name="cacheSeconds" value="0" />
 	</bean>
 	
-	<!-- 
-	<mvc:view-controller path="/" view-name="doc/list-app"/>
-	 -->
+	<mvc:view-controller path="/" view-name="index"/>
 	<mvc:view-controller path="/doclist" view-name="doclist"/>
 	<mvc:view-controller path="/test" view-name="/test" />
 	<mvc:resources location="/static/" mapping="/static/**" />

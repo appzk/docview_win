@@ -34,7 +34,7 @@ $.ajax({
                 '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user icon-white"></i> ' + username + ' <b class="caret"></b></a>' +
                   '<ul class="dropdown-menu">' +
                     '<li><a href="/user/preferences" style="text-decoration: none;"><i class="icon-cog"></i> Preferences</a></li>' +
-                    '<li><a href="http://www.idocv.com/en/contact.html" style="text-decoration: none;"><i class="icon-envelope"></i> Contact Support</a></li>' +
+                    '<li><a href="http://www.idocv.com" target="_blank" style="text-decoration: none;"><i class="icon-envelope"></i> Contact Support</a></li>' +
                     '<li class="divider"></li>' +
                     '<li><a id="button-logout" href="#" style="text-decoration: none;"><i class="icon-off"></i> Logout</a></li>' +
                   '</ul>' +
