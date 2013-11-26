@@ -99,6 +99,7 @@ public class DocServiceImpl implements DocService {
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
 	private static String lastCheckingDate = "2013-01-01";
+	private static boolean lastCheckingStatus = true;
 
 	@Override
 	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
@@ -461,17 +462,20 @@ public class DocServiceImpl implements DocService {
 		}
 		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 		if (lastCheckingDate.equals(currentDate)) {
-			return true;
+			return lastCheckingStatus;
 		}
 		lastCheckingDate = currentDate;
 		
 		HttpClient client = new HttpClient();
 		GetMethod method = new GetMethod(authUrl);
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
+		method.getParams().setContentCharset("UTF-8");
+		method.setRequestHeader("Content-Type", "text/html; charset=UTF-8");
 		try {
 			int statusCode = client.executeMethod(method);
 			if (statusCode != HttpStatus.SC_OK) {
 				System.out.println("[ERROR] Get expire status error(" + statusCode + ")");
+				lastCheckingStatus = false;
 				return false;
 			}
 			String response = method.getResponseBodyAsString();
@@ -491,10 +495,12 @@ public class DocServiceImpl implements DocService {
 			}
 		} catch (Exception e) {
 			System.out.println("[ERROR] Get expire status error(" + e.getMessage() + ")");
+			lastCheckingStatus = false;
 			return false;
 		} finally {
 			method.releaseConnection();
 		}
+		lastCheckingStatus = false;
 		return false;
 	}
 	
