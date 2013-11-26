@@ -167,6 +167,7 @@ public class DocServiceImpl implements DocService {
 				try {
 					String encodedUrl = UrlUtil.encodeUrl(url);
 					encodedUrl = encodedUrl.replaceAll(" ", "%20");
+					encodedUrl = encodedUrl.contains("://") ? encodedUrl : ("http://" + encodedUrl);
 					// urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
 					urlResponse = Jsoup.connect(encodedUrl).maxBodySize(uploadMaxSize.intValue() + 1000).referrer(host).timeout(60000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
 					if (urlResponse.statusCode() == 307) {
