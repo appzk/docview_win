@@ -122,7 +122,7 @@ $(document).ready(function() {
 					$('td:eq(5)', nRow).html( '<a href="/doc/download/'+aData.uuid+'">下载</a> | <a href="/doc/delete/'+aData.uuid+'" onclick="return confirm(\'确定要删除吗？\');" >删除</a>' );
 				}
 				*/
-				$('td:eq(5)', nRow).html( '<button class="btn btn-primary btn-doc-list-download" uuid="' + aData.uuid + '" type="button">下载</button>&nbsp;<button class="btn btn-primary btn-doc-list-delete" uuid="' + aData.uuid + '" type="button">删除</button>' );
+				$('td:eq(5)', nRow).html( '<button class="btn btn-small btn-primary btn-doc-list-download" uuid="' + aData.uuid + '" type="button">下载</button>&nbsp;<button class="btn btn-small btn-primary btn-doc-list-delete" uuid="' + aData.uuid + '" type="button">删除</button>' );
 			},
 			"fnDrawCallback": function(oSettings, json) {
 				$('.btn-doc-list-download').click(function() {
