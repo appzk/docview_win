@@ -208,7 +208,7 @@ public class ViewController {
 			} else if ("ppt".equalsIgnoreCase(ext)
 					|| "pptx".equalsIgnoreCase(ext)
 					|| "odp".equalsIgnoreCase(ext)) {
-				page = previewService.convertPPT2Html(rid, start, size);
+				page = previewService.convertPPT2Img(rid, start, size);
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				start = (start - 1) * size + 1;
 				page = previewService.convertTxt2Html(rid, start, size);
@@ -293,7 +293,7 @@ public class ViewController {
 			} else if ("ppt".equalsIgnoreCase(ext)
 					|| "pptx".equalsIgnoreCase(ext)
 					|| "odp".equalsIgnoreCase(ext)) {
-				page = previewService.convertPPT2Html(rid, start, size);
+				page = previewService.convertPPT2Img(rid, start, size);
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				page = previewService.convertTxt2Html(rid, start, size);
 			} else if ("pdf".equalsIgnoreCase(ext)) {

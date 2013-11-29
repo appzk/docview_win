@@ -18,7 +18,8 @@ public class CmdUtil {
 			List<String> cmdList = new ArrayList<String>(Arrays.asList(use));
 			cmdList.addAll(Arrays.asList(cmd));
 			
-			// ﻿Process p = Runtime.getRuntime().exec(cmdList.toArray(new String[0]));
+			// ﻿Process p = Runtime.getRuntime().exec(cmdList.toArray(new
+			// String[0]));
 			ProcessBuilder builder = new ProcessBuilder(cmdList.toArray(new String[0]));
 			builder.redirectErrorStream(true);
 			Process p = builder.start();
@@ -52,7 +53,8 @@ public class CmdUtil {
 			List<String> cmdList = new ArrayList<String>(Arrays.asList(use));
 			cmdList.addAll(Arrays.asList(cmd));
 			
-			// ﻿Process p = Runtime.getRuntime().exec(cmdList.toArray(new String[0]));
+			// ﻿Process p = Runtime.getRuntime().exec(cmdList.toArray(new
+			// String[0]));
 			ProcessBuilder builder = new ProcessBuilder(cmdList.toArray(new String[0]));
 			builder.redirectErrorStream(true);
 			Process p = builder.start();
@@ -74,7 +76,27 @@ public class CmdUtil {
 		return result;
 	}
 
+	public static void runWindowsAsync(String... cmd) {
+		new CmdThread(cmd).start();
+	}
+
 	public static void main(String[] args) {
+		runWindowsAsync("ping www.idocv.com -n 10");
 		System.out.println(runWindows("dir"));
+	}
+}
+
+class CmdThread extends Thread {
+
+	private String[] cmd;
+
+	public CmdThread(String[] cmd) {
+		super();
+		this.cmd = cmd;
+	}
+
+	@Override
+	public void run() {
+		CmdUtil.runWindows(cmd);
 	}
 }

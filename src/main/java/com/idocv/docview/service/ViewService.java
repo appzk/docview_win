@@ -22,8 +22,9 @@ import com.idocv.docview.vo.WordVo;
 public interface ViewService {
 
 	static final String IMG_WIDTH_200 = "200";
-	static final String IMG_WIDTH_960 = "960";
-	static final String IMG_WIDTH_1280 = "1280";
+	// static final String IMG_WIDTH_960 = "960";
+	static final String IMG_WIDTH_1024 = "1024";
+	// static final String IMG_WIDTH_1280 = "1280";
 	static final String PDF_TO_IMAGE_TYPE = "png";
 
 	static List<String> convertingRids = new ArrayList<String>();
@@ -65,7 +66,7 @@ public interface ViewService {
 	 * @param limit	slide count to be returned.
 	 * @return
 	 */
-	PageVo<PPTVo> convertPPT2Html(String rid, int start, int limit) throws DocServiceException;
+	PageVo<PPTVo> convertPPT2Img(String rid, int start, int limit) throws DocServiceException;
 	
 	/**
 	 * Get TXT content.

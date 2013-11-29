@@ -28,11 +28,7 @@ $(document).ready(function() {
 			var windowW = $(window).width();
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
-				if (windowW < 1200) {
-					slideUrls[i] = page.url;
-				} else {
-					slideUrls[i] = page.largeUrl;
-				}
+				slideUrls[i] = page.url;
 				slideThumbUrls[i] = page.thumbUrl;
 				$('.row-fluid .span2').append('<div class="thumbnail" page="' + (i + 1) + '"><img src="' + page.thumbUrl + '"></div>' + (i + 1) + '/' + pages.length + '<br />');
 				$('#page-selector').append('<option>' + (i + 1) + '</option>');

@@ -266,32 +266,29 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	}
 
 	@Override
-	public PageVo<PPTVo> convertPPT2Html(String rid, int start, int limit) throws DocServiceException {
+	public PageVo<PPTVo> convertPPT2Img(String rid, int start, int limit) throws DocServiceException {
 		try {
 			// get page count
 			File[] slide200Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_200).listFiles();
-			File[] slide960Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_960).listFiles();
-			File[] slide1280Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_1280).listFiles();
-			if (ArrayUtils.isEmpty(slide200Files) || ArrayUtils.isEmpty(slide960Files) || ArrayUtils.isEmpty(slide1280Files)) {
+			File[] slide1024Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_1024).listFiles();
+			if (ArrayUtils.isEmpty(slide200Files) || ArrayUtils.isEmpty(slide1024Files)) {
 				convert(rid);
 				slide200Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_200).listFiles();
-				slide960Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_960).listFiles();
-				slide1280Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_1280).listFiles();
+				slide1024Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_1024).listFiles();
 			}
-			if (ArrayUtils.isEmpty(slide200Files) || ArrayUtils.isEmpty(slide960Files) || ArrayUtils.isEmpty(slide1280Files)) {
+			if (ArrayUtils.isEmpty(slide200Files) || ArrayUtils.isEmpty(slide1024Files)) {
 				throw new DocServiceException("预览失败，未找到目标文件！");
 			}
 			
 			File imgRatioFile = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_200 + File.separator + "slide1.jpg");
 			if (!imgRatioFile.isFile()) {
-				throw new DocServiceException("");
+				throw new DocServiceException("未找到缩略图！");
 			}
 			BufferedImage imgRatio = ImageIO.read(imgRatioFile);
 			float ratio = (float) imgRatio.getHeight() / imgRatio.getWidth();
 
 			List<File> slideImgThumbFiles = new ArrayList<File>();
 			List<File> slideImgFiles = new ArrayList<File>();
-			List<File> slideImgLargeFiles = new ArrayList<File>();
 			
 			Map<String, String> titles = new HashMap<String, String>();
 			Map<String, String> notes = new HashMap<String, String>();
@@ -306,36 +303,27 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					titles.put(slideFile.getName(), title);
 				}
 			}
-			for (File slideFile : slide960Files) {
+			for (File slideFile : slide1024Files) {
 				if (slideFile.getName().toLowerCase().endsWith("jpg")) {
 					slideImgFiles.add(slideFile);
-				}
-			}
-			for (File slideFile : slide1280Files) {
-				if (slideFile.getName().toLowerCase().endsWith("jpg")) {
-					slideImgLargeFiles.add(slideFile);
 				}
 			}
 
 			// sort file
 			Collections.sort(slideImgThumbFiles, new FileComparator());
 			Collections.sort(slideImgFiles, new FileComparator());
-			Collections.sort(slideImgLargeFiles, new FileComparator());
 
 			List<PPTVo> data = new ArrayList<PPTVo>();
 			if (!CollectionUtils.isEmpty(slideImgThumbFiles)
-					&& !CollectionUtils.isEmpty(slideImgFiles)
-					&& !CollectionUtils.isEmpty(slideImgLargeFiles)) {
-				for (int i = 0; i < slideImgThumbFiles.size() && i < slideImgFiles.size() && i < slideImgLargeFiles.size(); i++) {
+					&& !CollectionUtils.isEmpty(slideImgFiles)) {
+				for (int i = 0; i < slideImgThumbFiles.size() && i < slideImgFiles.size(); i++) {
 					PPTVo ppt = new PPTVo();
 					String title = titles.get("slide" + (i + 1) + ".title");
 					ppt.setTitle(title);
 					String thumbUrl = rcUtil.getParseUrlDir(rid) + IMG_WIDTH_200 + "/" + slideImgThumbFiles.get(i).getName();
-					String url = rcUtil.getParseUrlDir(rid) + IMG_WIDTH_960 + "/" + slideImgFiles.get(i).getName();
-					String largeUrl = rcUtil.getParseUrlDir(rid) + IMG_WIDTH_1280 + "/" + slideImgLargeFiles.get(i).getName();
+					String url = rcUtil.getParseUrlDir(rid) + IMG_WIDTH_1024 + "/" + slideImgFiles.get(i).getName();
 					ppt.setThumbUrl(thumbUrl);
 					ppt.setUrl(url);
-					ppt.setLargeUrl(largeUrl);
 					ppt.setRatio(ratio);
 					String note = notes.get("slide" + (i + 1) + ".note");
 					ppt.setNote(note);
@@ -593,22 +581,16 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					convertResult = CmdUtil.runWindows(word2Html, src, dest);
 				}
 				if (!destFile.isFile()) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					throw new DocServiceException("对不起，该文档（"
-							+ RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
 					convertResult = CmdUtil.runWindows(excel2Html, src, dest);
 				}
 				if (!destFile.isFile()) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					throw new DocServiceException("对不起，该文档（"
-							+ RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
 				dest = rcUtil.getParseDir(rid);
@@ -616,18 +598,12 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles())) {
 					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "true", IMG_WIDTH_200);
 				}
-				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_960).listFiles())) {
-					convertResult = CmdUtil.runWindows(ppt2Jpg, src, dest, "false", IMG_WIDTH_960);
+				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_1024).listFiles())) {
+					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "false", IMG_WIDTH_1024);
 				}
-				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_1280).listFiles())) {
-					convertResult = CmdUtil.runWindows(ppt2Jpg, src, dest, "false", IMG_WIDTH_1280);
-				}
-				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles()) || ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_960).listFiles()) || ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_1280).listFiles())) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					throw new DocServiceException("对不起，该文档（"
-							+ RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles()) || ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_1024).listFiles())) {
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				String destDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
