@@ -433,7 +433,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
 			}
 			if (ArrayUtils.isEmpty(pngFiles)) {
-				throw new DocServiceException("预览失败，未找到目标文件！");
+				throw new DocServiceException("预览失败，请确认源文件能正常打开！");
 			}
 			
 			List<File> pdfPageFiles = new ArrayList<File>();
@@ -581,16 +581,22 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					convertResult = CmdUtil.runWindows(word2Html, src, dest);
 				}
 				if (!destFile.isFile()) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
 					convertResult = CmdUtil.runWindows(excel2Html, src, dest);
 				}
 				if (!destFile.isFile()) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
 				dest = rcUtil.getParseDir(rid);
@@ -602,8 +608,11 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "false", IMG_WIDTH_1024);
 				}
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles()) || ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_1024).listFiles())) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				String destDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
