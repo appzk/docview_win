@@ -433,7 +433,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
 			}
 			if (ArrayUtils.isEmpty(pngFiles)) {
-				throw new DocServiceException("预览失败，请确认源文件能正常打开！");
+				throw new DocServiceException("预览失败，不是一个PDF文件或该文件已损坏！");
 			}
 			
 			List<File> pdfPageFiles = new ArrayList<File>();
