@@ -47,6 +47,16 @@ public interface ViewService {
 	 * @return
 	 */
 	PageVo<WordVo> convertWord2Html(String rid, int start, int limit) throws DocServiceException;
+	
+	/**
+	 * Word page.
+	 * 
+	 * @param rid
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	PageVo<WordVo> convertWord2PdfStamp(String rid, String stamp, float xPercent, float yPercent) throws DocServiceException;
 
 	/**
 	 * A ExcelVo represents one Excel Sheet.

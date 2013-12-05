@@ -306,6 +306,7 @@
 
 				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:/idocv/converter/word2html.exe</pom.office.cmd.word2html>
+				<pom.office.cmd.word2pdfstamp>D:/idocv/converter/word2pdfstamp.exe</pom.office.cmd.word2pdfstamp>
 				<pom.office.cmd.excel2html>D:/idocv/converter/excel2html.exe</pom.office.cmd.excel2html>
 				<pom.office.cmd.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
 				<pom.pdf.cmd.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.pdf.cmd.pdf2img>
@@ -330,6 +331,7 @@
 
 				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:/idocv/converter/word2html.exe</pom.office.cmd.word2html>
+				<pom.office.cmd.word2pdfstamp>D:/idocv/converter/word2pdfstamp.exe</pom.office.cmd.word2pdfstamp>
 				<pom.office.cmd.excel2html>D:/idocv/converter/excel2html.exe</pom.office.cmd.excel2html>
 				<pom.office.cmd.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
 				<pom.pdf.cmd.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.pdf.cmd.pdf2img>
@@ -354,6 +356,7 @@
 
 				<!-- Office converter -->
 				<pom.office.cmd.word2html>D:/idocv/converter/word2html.exe</pom.office.cmd.word2html>
+				<pom.office.cmd.word2pdfstamp>D:/idocv/converter/word2pdfstamp.exe</pom.office.cmd.word2pdfstamp>
 				<pom.office.cmd.excel2html>D:/idocv/converter/excel2html.exe</pom.office.cmd.excel2html>
 				<pom.office.cmd.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
 				<pom.pdf.cmd.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.pdf.cmd.pdf2img>

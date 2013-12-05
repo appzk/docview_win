@@ -6,9 +6,11 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,10 +52,14 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	@Resource
 	private DocDao docDao;
 
-	private @Value("${office.cmd.word2html}")
-	String word2Html;
 	private static int WORD_PAGING_LINE_COUNT = 200;
 	private static int WORD_PAGING_CHAR_COUNT = 3000;
+	
+	private @Value("${office.cmd.word2html}")
+	String word2Html;
+	
+	private @Value("${office.cmd.word2pdfstamp}")
+	String word2PdfStamp;
 
 	private @Value("${office.cmd.excel2html}")
 	String excel2Html;
@@ -193,6 +199,57 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			}
 			PageVo<WordVo> page = new PageVo<WordVo>(data, totalPageCount);
 			page.setStyleUrl(rcUtil.getParseUrlDir(rid) + "style.css");
+			return page;
+		} catch (Exception e) {
+			logger.error("convertWord2Html error: " + e.getMessage());
+			throw new DocServiceException(e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public PageVo<WordVo> convertWord2PdfStamp(String rid, String stamp, float xPercent, float yPercent) throws DocServiceException {
+		try {
+			RcUtil.validateRid(rid);
+			String src = rcUtil.getPath(rid);
+			File srcFile = new File(src);
+			if (!srcFile.isFile()) {
+				logger.error("文件未找到, rid=" + rid);
+				throw new DocServiceException(404, "文件未找到");
+			}
+			String timeString = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+			String dest = rcUtil.getParseDir(rid) + "index";
+			if (StringUtils.isNotBlank(stamp)) {
+				dest += "-stamp-" + timeString;
+			}
+			dest += ".pdf";
+			File destFile = new File(dest);
+			String ext = RcUtil.getExt(rid);
+			String convertResult = null;
+			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
+				if (!destFile.isFile()) {
+					if (StringUtils.isBlank(stamp)) {
+						convertResult = CmdUtil.runWindows(word2PdfStamp, "-src", src, "-dest", dest);
+					} else {
+						convertResult = CmdUtil.runWindows(word2PdfStamp, "-src", src, "-dest", dest, "-stamp", stamp.replaceAll("/", "\\\\"), "-x", String.valueOf(xPercent), "-y", String.valueOf(yPercent));
+					}
+				}
+				if (!destFile.isFile()) {
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+				}
+			} else {
+				throw new DocServiceException("该文档不是有效的doc或docx文档！");
+			}
+			
+			String url = rcUtil.getParseUrlDir(rid) + destFile.getName();
+
+			List<WordVo> data = new ArrayList<WordVo>();
+			// construct vo
+			WordVo word = new WordVo();
+			word.setUrl(url);
+			word.setDestFile(destFile);
+			data.add(word);
+			PageVo<WordVo> page = new PageVo<WordVo>(data, 1);
 			return page;
 		} catch (Exception e) {
 			logger.error("convertWord2Html error: " + e.getMessage());

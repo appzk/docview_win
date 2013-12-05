@@ -1,5 +1,6 @@
 package com.idocv.docview.vo;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class OfficeBaseVo implements Serializable {
@@ -7,6 +8,7 @@ public class OfficeBaseVo implements Serializable {
 	protected String title;
 	protected String content;
 	protected String url;
+	protected File destFile;
 	protected int viewCount;
 	protected int downloadCount;
 
@@ -32,6 +34,14 @@ public class OfficeBaseVo implements Serializable {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public File getDestFile() {
+		return destFile;
+	}
+
+	public void setDestFile(File destFile) {
+		this.destFile = destFile;
 	}
 
 	public int getViewCount() {

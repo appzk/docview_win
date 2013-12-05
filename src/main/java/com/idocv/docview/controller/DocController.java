@@ -11,6 +11,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -35,7 +36,9 @@ import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.AppVo;
 import com.idocv.docview.vo.DocVo;
+import com.idocv.docview.vo.PageVo;
 import com.idocv.docview.vo.UserVo;
+import com.idocv.docview.vo.WordVo;
 
 
 @Controller
@@ -54,7 +57,7 @@ public class DocController {
 	private DocService docService;
 
 	@Resource
-	private ViewService previewService;
+	private ViewService viewService;
 
 	@Resource
 	private RcUtil rcUtil;
@@ -251,6 +254,36 @@ public class DocController {
 			String path = rcUtil.getPath(rid);
 			DocResponse.setResponseHeaders(req, resp, vo.getName());
 			IOUtils.write(FileUtils.readFileToByteArray(new File(path)), resp.getOutputStream());
+			docService.logDownload(uuid);
+		} catch (Exception e) {
+			logger.error("doc download error: " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * 下载PDF
+	 */
+	@RequestMapping("{uuid}/downloadpdf")
+	public void downloadByUuid(HttpServletRequest req,
+			HttpServletResponse resp,
+			@PathVariable(value = "uuid") String uuid,
+			@RequestParam(value = "stamp", required = false) String stamp,
+			@RequestParam(value = "x", defaultValue = "0") float x,
+			@RequestParam(value = "y", defaultValue = "0") float y) {
+		try {
+			DocVo vo = docService.getByUuid(uuid);
+			String rid = vo.getRid();
+			PageVo<WordVo> page = viewService.convertWord2PdfStamp(rid, stamp, x, y);
+			if (null == page || CollectionUtils.isEmpty(page.getData())) {
+				return;
+			}
+			WordVo wordVo = page.getData().get(0);
+			File destFile = wordVo.getDestFile();
+			String nameRaw = vo.getName();
+			String name = nameRaw.substring(0, nameRaw.lastIndexOf("."));
+			name = name + "-" + destFile.getName();
+			DocResponse.setResponseHeaders(req, resp, name);
+			IOUtils.write(FileUtils.readFileToByteArray(destFile), resp.getOutputStream());
 			docService.logDownload(uuid);
 		} catch (Exception e) {
 			logger.error("doc download error: " + e.getMessage());
