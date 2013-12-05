@@ -11,13 +11,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -263,8 +263,8 @@ public class DocController {
 	/**
 	 * 下载PDF
 	 */
-	@RequestMapping("{uuid}/downloadpdf")
-	public void downloadByUuid(HttpServletRequest req,
+	@RequestMapping("{uuid}/pdf")
+	public void downloadPdfByUuid(HttpServletRequest req,
 			HttpServletResponse resp,
 			@PathVariable(value = "uuid") String uuid,
 			@RequestParam(value = "stamp", required = false) String stamp,
@@ -281,7 +281,7 @@ public class DocController {
 			File destFile = wordVo.getDestFile();
 			String nameRaw = vo.getName();
 			String name = nameRaw.substring(0, nameRaw.lastIndexOf("."));
-			name = name + "-" + destFile.getName();
+			name = name + destFile.getName().substring(5);
 			DocResponse.setResponseHeaders(req, resp, name);
 			IOUtils.write(FileUtils.readFileToByteArray(destFile), resp.getOutputStream());
 			docService.logDownload(uuid);

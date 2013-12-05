@@ -58,8 +58,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${office.cmd.word2html}")
 	String word2Html;
 	
-	private @Value("${office.cmd.word2pdfstamp}")
-	String word2PdfStamp;
+	private @Value("${office.cmd.word2pdf}")
+	String word2Pdf;
 
 	private @Value("${office.cmd.excel2html}")
 	String excel2Html;
@@ -228,14 +228,17 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
 					if (StringUtils.isBlank(stamp)) {
-						convertResult = CmdUtil.runWindows(word2PdfStamp, "-src", src, "-dest", dest);
+						convertResult = CmdUtil.runWindows(word2Pdf, "-src", src, "-dest", dest);
 					} else {
-						convertResult = CmdUtil.runWindows(word2PdfStamp, "-src", src, "-dest", dest, "-stamp", stamp.replaceAll("/", "\\\\"), "-x", String.valueOf(xPercent), "-y", String.valueOf(yPercent));
+						convertResult = CmdUtil.runWindows(word2Pdf, "-src", src, "-dest", dest, "-stamp", stamp.replaceAll("/", "\\\\"), "-x", String.valueOf(xPercent), "-y", String.valueOf(yPercent));
 					}
 				}
 				if (!destFile.isFile()) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else {
 				throw new DocServiceException("该文档不是有效的doc或docx文档！");
