@@ -52,12 +52,17 @@
 			cursor: pointer;
 		}
     	.footer-fixed {
+    		background-color: lightblue;
     		position: fixed;
 			bottom: 0px;
 			left: 0px;
 			right: 0px;
-			margin: 20px;
+			margin: 0px;
+			padding: 5px;
 			text-align: center;
+    	}
+    	.paging-bottom-all {
+    		display: none;
     	}
     </style>
 
