@@ -227,6 +227,7 @@
 	}
 	
 	.pdf-page .pdf-content {
+		position: relative;
 		background-color:#FFF;
 		word-wrap: break-word;
 		word-break: break-all;

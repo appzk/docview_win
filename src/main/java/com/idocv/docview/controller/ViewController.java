@@ -47,7 +47,7 @@ public class ViewController {
 	private DocService docService;
 
 	@Resource
-	private ViewService previewService;
+	private ViewService viewService;
 
 	@Resource
 	private SessionService sessionService;
@@ -200,21 +200,21 @@ public class ViewController {
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
 					|| "odt".equalsIgnoreCase(ext)) {
 				start = (start - 1) * size + 1;
-				page = previewService.convertWord2Html(rid, start, size);
+				page = viewService.convertWord2Html(rid, start, size);
 			} else if ("xls".equalsIgnoreCase(ext)
 					|| "xlsx".equalsIgnoreCase(ext)
 					|| "ods".equalsIgnoreCase(ext)) {
-				page = previewService.convertExcel2Html(rid, start, size);
+				page = viewService.convertExcel2Html(rid, start, size);
 			} else if ("ppt".equalsIgnoreCase(ext)
 					|| "pptx".equalsIgnoreCase(ext)
 					|| "odp".equalsIgnoreCase(ext)) {
-				page = previewService.convertPPT2Img(rid, start, size);
+				page = viewService.convertPPT2Img(rid, start, size);
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				start = (start - 1) * size + 1;
-				page = previewService.convertTxt2Html(rid, start, size);
+				page = viewService.convertTxt2Html(rid, start, size);
 			} else if ("pdf".equalsIgnoreCase(ext)) {
 				// page = previewService.convertPdf2Html(rid, 1, 0);
-				page = previewService.convertPdf2Img(rid, 1, 0);
+				page = viewService.convertPdf2Img(rid, 1, 0);
 			} else {
 				page = new PageVo<OfficeBaseVo>(null, 0);
 				page.setCode(0);
@@ -285,19 +285,19 @@ public class ViewController {
 			}
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
 					|| "odt".equalsIgnoreCase(ext)) {
-				page = previewService.convertWord2Html(rid, start, size);
+				page = viewService.convertWord2Html(rid, start, size);
 			} else if ("xls".equalsIgnoreCase(ext)
 					|| "xlsx".equalsIgnoreCase(ext)
 					|| "ods".equalsIgnoreCase(ext)) {
-				page = previewService.convertExcel2Html(rid, start, size);
+				page = viewService.convertExcel2Html(rid, start, size);
 			} else if ("ppt".equalsIgnoreCase(ext)
 					|| "pptx".equalsIgnoreCase(ext)
 					|| "odp".equalsIgnoreCase(ext)) {
-				page = previewService.convertPPT2Img(rid, start, size);
+				page = viewService.convertPPT2Img(rid, start, size);
 			} else if ("txt".equalsIgnoreCase(ext)) {
-				page = previewService.convertTxt2Html(rid, start, size);
+				page = viewService.convertTxt2Html(rid, start, size);
 			} else if ("pdf".equalsIgnoreCase(ext)) {
-				page = previewService.convertPdf2Html(rid, 1, 0);
+				page = viewService.convertPdf2Html(rid, 1, 0);
 			} else {
 				page = new PageVo<OfficeBaseVo>(null, 0);
 				page.setCode(0);
