@@ -23,6 +23,7 @@
     		left: 0px;
     		right: 0px;
     		bottom: 0px;
+/*     		border: 3px solid blue; */
     	}
     	.kineticjs-content {
     		position: absolute;
@@ -30,6 +31,33 @@
     		left: 0px;
     		right: 0px;
     		bottom: 0px;
+/*     		border: 5px solid green; */
+    	}
+    	.file-select-button {
+			position: relative;
+			overflow: hidden;
+			margin-right: 4px;
+			margin-bottom: -10px;
+		}
+		.file-select-button input {
+			position: absolute;
+			top: 0;
+			right: 0;
+			margin: 0;
+			opacity: 0;
+			filter: alpha(opacity=0);
+			transform: translate(-300px, 0) scale(4);
+			font-size: 23px;
+			direction: ltr;
+			cursor: pointer;
+		}
+    	.footer-fixed {
+    		position: fixed;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+			margin: 20px;
+			text-align: center;
     	}
     </style>
 
@@ -86,6 +114,25 @@
 
       <footer>
         Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+      </footer>
+      
+      <footer class="footer-fixed">
+        <div style="margin-bottom: 20px; display: inline;">&nbsp;在第</div>
+        <select class="span1" style="margin-bottom: 0px;">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>全部</option>
+        </select>
+        &nbsp;页加盖
+        <span class="button file-select-button">
+          <span><button class="btn btn-primary" type="button">&nbsp;&nbsp;图章&nbsp;&nbsp;</button></span>
+          <input id="fileupload" type="file" name="file" multiple>
+        </span>
+        &nbsp;并生成&nbsp;
+        <button class="btn btn-primary btn-stamp-pdf-generator" type="button">PDF</button>
       </footer>
       
       <div class="progress progress-striped active bottom-paging-progress">

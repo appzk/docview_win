@@ -45,21 +45,21 @@ private static final Logger logger = LoggerFactory.getLogger(StampController.cla
 			String url = "file:///" + pdfFile.getAbsolutePath();
 			DocVo newVo = docService.addUrl("test", null, name, url, 1, null);
 			String newUuid = newVo.getUuid();
-			return "redirect:" + newUuid + "/edit";
+			return "redirect:" + uuid + "/" + newUuid + "/edit";
 		} catch (Exception e) {
 			logger.error("view stamp(" + uuid + ") error: " + e.getMessage());
 			return "404";
 		}
 	}
 	
-	@RequestMapping("{uuid}/edit")
-	public ModelAndView stampEdit(HttpServletRequest req,
-			ModelAndView model, @PathVariable String uuid) {
+	@RequestMapping("{srcUuid}/{destUuid}/edit")
+	public ModelAndView stampEdit(HttpServletRequest req, ModelAndView model,
+			@PathVariable String srcUuid, @PathVariable String destUuid) {
 		try {
 			model.setViewName("stamp/index");
 			return model;
 		} catch (Exception e) {
-			logger.error("view stamp edit(" + uuid + ") error: " + e.getMessage());
+			logger.error("view stamp edit(" + srcUuid + "-" + destUuid + ") error: " + e.getMessage());
 			model.setViewName("404");
 			model.addObject("error", e.getMessage());
 			return model;

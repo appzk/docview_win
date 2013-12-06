@@ -5,16 +5,20 @@
  */
 
 var uuid = $.url().segment(2);
+var pdfuuid = $.url().segment(3);
 var sessionId = $.url().param('session');
+var stampImg;
+var pageWidth = 795;
+var pageHeight = 1124;
 $(document).ready(
 	function() {
-		$.get('/view/' + uuid + '.json?start=1&size=5', {
+		$.get('/view/' + pdfuuid + '.json?start=1&size=5', {
 			session : sessionId
 		}, function(data, status) {
 			var code = data.code;
 			if (1 == code) {
 				var rid = data.rid;
-				var uuid = data.uuid;
+				// var uuid = data.uuid;
 				var pages = data.data;
 
 				// title
@@ -31,42 +35,54 @@ $(document).ready(
 			// clear progress bar
 			clearProgress();
 
-			initKenetic();
+			$('.btn-stamp-pdf-generator').click(function() {
+				var xx = stampImg.getX();
+				var yy = stampImg.getY();
+				var xPercent = Math.round(xx * 100 / pageWidth);
+				var yPercent = Math.round(yy * 100 / pageHeight);
+				window.location.href='/doc/' + uuid + '/pdf?stamp=d:/idocv-stamp.png&x=' + xPercent + '&y=' + yPercent;
+			});
+			
+			$("img").load(function(){
+				initKenetic();
+			});
 		});
 	});
 
 function initKenetic() {
 	function drawImage(imageObj) {
 		var stage = new Kinetic.Stage({
-			container : "container",
-			width : 600,
-			height : 400
+			container : "container"
 		});
+		
+		pageWidth = $('#container').width();
+		pageHeight = $('#container').height();
+		console.log("pageWidth: " + pageWidth + ", pageHeight: " + pageHeight);
+		stage.setSize(pageWidth, pageHeight);
 		var layer = new Kinetic.Layer();
 
 		// darth vader
-		var darthVaderImg = new Kinetic.Image({
+		stampImg = new Kinetic.Image({
 			image : imageObj,
 			x : stage.getWidth() / 2 - 200 / 2,
-			y : stage.getHeight() / 2 - 200 / 2,
+			y : stage.getHeight() / 4 - 200 / 2,
 			width : 200,
 			height : 200,
 			draggable : true
 		});
 
 		// add cursor styling
-		darthVaderImg.on('mouseover', function() {
+		stampImg.on('mouseover', function() {
 			document.body.style.cursor = 'pointer';
 		});
-		darthVaderImg.on('mouseout', function() {
+		stampImg.on('mouseout', function() {
 			document.body.style.cursor = 'default';
 		});
-		darthVaderImg.on('mousemove', function() {
-			console.log("x=" + darthVaderImg.getX() + ", y="
-					+ darthVaderImg.getY());
+		stampImg.on('mousemove', function() {
+			console.log("x=" + stampImg.getX() + ", y=" + stampImg.getY());
 		});
 
-		layer.add(darthVaderImg);
+		layer.add(stampImg);
 		stage.add(layer);
 	}
 	var imageObj = new Image();
@@ -76,8 +92,8 @@ function initKenetic() {
 	imageObj.src = 'http://www.idocv.com/idocv-stamp.png';
 
 	if (window.File && window.FileList && window.FileReader) {
-		$("input:file").change(function() {
-			var input = document.getElementById("inputFile");
+		$('#fileupload').change(function() {
+			var input = document.getElementById("fileupload");
 			var fReader = new FileReader();
 			fReader.readAsDataURL(input.files[0]);
 			fReader.onloadend = function(event) {
