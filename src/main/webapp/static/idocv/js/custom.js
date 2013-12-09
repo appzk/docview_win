@@ -19,6 +19,15 @@ jQuery(document).ready(function($) {
 		top.location.href = window.location.href;
 	}
 	*/
+	/*
+	if ($.browser.msie && $.browser.version <= 8) {
+		// IE 8 or lower
+	} else {
+		if(top !== window) {
+			top.location.href = window.location.href;
+		}
+	}
+	*/
 	
 	/* ---------------------------------------------------------------------- */
 	/*	UItoTop (Back to Top)

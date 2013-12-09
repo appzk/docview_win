@@ -1,9 +1,12 @@
 package com.idocv.docview.controller;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +54,11 @@ public class ViewController {
 
 	@Resource
 	private SessionService sessionService;
+
+	private static Map<String, String> forbiddenMap = new HashMap<String, String>();
+	static {
+		forbiddenMap.put("rhxx.com.cn", "箬横小学");
+	}
 
 	@RequestMapping("")
 	public void home(HttpServletRequest req, HttpServletResponse resp) {
@@ -144,11 +152,20 @@ public class ViewController {
 	 */
 	@RequestMapping("{id}.json")
 	@ResponseBody
-	public PageVo<? extends Serializable> jsonUuid(
+	public PageVo<? extends Serializable> jsonUuid(HttpServletRequest req,
 			@RequestParam(defaultValue = "default") String template,
 			@PathVariable String id,
 			@RequestParam(defaultValue = "1") int start,
 			@RequestParam(defaultValue = "5") int size) {
+		try {
+			String host = new URL(req.getHeader("Referer")).getHost();
+			if (forbiddenMap.containsKey(host)) {
+				throw new DocServiceException("“" + forbiddenMap.get(host) + "”的免费使用量已用完，请购买正版，详情咨询：400-000-7644");
+			}
+		} catch (Exception e) {
+			logger.error("获取主机失败：" + e.getMessage());
+		}
+
 		PageVo<? extends Serializable> page = null;
 		String uuid = null;
 		String rid = null;

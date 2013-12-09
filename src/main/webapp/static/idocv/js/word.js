@@ -8,6 +8,14 @@ var uuid = $.url().segment(2);
 var sessionId = $.url().param('session');
 $(document).ready(function() {
 	
+	if ($.browser.msie && $.browser.version <= 8) {
+		// IE 8 or lower
+	} else {
+		if(top !== window) {
+			top.location.href = window.location.href;
+		}
+	}
+	
 	$.get('/view/' + uuid + '.json?start=1&size=5', {session:sessionId}, function(data, status) {
 		var code = data.code;
 		if (1 == code) {
