@@ -37,8 +37,8 @@ import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.AppVo;
 import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.PageVo;
+import com.idocv.docview.vo.PdfVo;
 import com.idocv.docview.vo.UserVo;
-import com.idocv.docview.vo.WordVo;
 
 
 @Controller
@@ -273,12 +273,12 @@ public class DocController {
 		try {
 			DocVo vo = docService.getByUuid(uuid);
 			String rid = vo.getRid();
-			PageVo<WordVo> page = viewService.convertWord2PdfStamp(rid, stamp, x, y);
+			PageVo<PdfVo> page = viewService.convertWord2PdfStamp(rid, stamp, x, y);
 			if (null == page || CollectionUtils.isEmpty(page.getData())) {
 				return;
 			}
-			WordVo wordVo = page.getData().get(0);
-			File destFile = wordVo.getDestFile();
+			PdfVo pdfVo = page.getData().get(0);
+			File destFile = pdfVo.getDestFile();
 			String nameRaw = vo.getName();
 			String name = nameRaw.substring(0, nameRaw.lastIndexOf("."));
 			name = name + destFile.getName().substring(5);

@@ -56,7 +56,7 @@ public interface ViewService {
 	 * @param limit
 	 * @return
 	 */
-	PageVo<WordVo> convertWord2PdfStamp(String rid, String stamp, float xPercent, float yPercent) throws DocServiceException;
+	PageVo<PdfVo> convertWord2PdfStamp(String rid, String stamp, float xPercent, float yPercent) throws DocServiceException;
 
 	/**
 	 * A ExcelVo represents one Excel Sheet.
@@ -100,6 +100,18 @@ public interface ViewService {
 	 * @return
 	 */
 	PageVo<PdfVo> convertPdf2Html(String rid, int start, int limit) throws DocServiceException;
+	
+	/**
+	 * Stamp PDf
+	 * 
+	 * @param rid
+	 * @param stamp
+	 * @param x
+	 * @param y
+	 * @return
+	 * @throws DocServiceException
+	 */
+	PageVo<PdfVo> pdfStamp(String rid, String stamp, float x, float y) throws DocServiceException;
 
 	/**
 	 * Validate client IP

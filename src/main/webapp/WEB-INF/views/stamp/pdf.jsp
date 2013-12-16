@@ -123,12 +123,13 @@
       
       <footer class="footer-fixed">
         <div style="margin-bottom: 20px; display: inline;">&nbsp;在第</div>
-        <select class="span1" style="margin-bottom: 0px;">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
+        <select class="span1 slct-stamp-page" style="margin-bottom: 0px;">
+          <option value="no">无</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
           <option>全部</option>
         </select>
         &nbsp;页加盖
@@ -166,7 +167,7 @@
     <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js"></script>
     <script src="/static/kinetic/js/kinetic-v4.7.4.min.js"></script>
-    <script src="/static/idocv/js/stamp.js"></script>
+    <script src="/static/idocv/js/stamp-pdf.js"></script>
     <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
     <script src="/static/idocv/js/stat.js"></script>
   </body>

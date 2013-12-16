@@ -4,15 +4,16 @@
  * @author Godwin <godwin668@gmail.com>
  */
 
-var uuid = $.url().segment(2);
-var pdfuuid = $.url().segment(3);
+var uuid = $.url().segment(3);
 var sessionId = $.url().param('session');
 var stampImg;
-var pageWidth = 795;
-var pageHeight = 1124;
+var pageWidth = 795;	// 595
+var pageHeight = 1124;	// 842
+var stampShow = 0;
+var stage;
 $(document).ready(
 	function() {
-		$.get('/view/' + pdfuuid + '.json?start=1&size=5', {
+		$.get('/view/' + uuid + '.json?start=1&size=5', {
 			session : sessionId
 		}, function(data, status) {
 			var code = data.code;
@@ -37,27 +38,38 @@ $(document).ready(
 
 			$('.btn-stamp-pdf-generator').click(function() {
 				var xx = stampImg.getX();
-				var yy = stampImg.getY();
-				var xPercent = Math.round(xx * 100 / pageWidth);
-				var yPercent = Math.round(yy * 100 / pageHeight);
-				window.location.href='/doc/' + uuid + '/pdf?stamp=d:/idocv-stamp.png&x=' + xPercent + '&y=' + yPercent;
+				var yy = pageHeight - stampImg.getY();
+				// var xPercent = Math.round(xx * 100 / pageWidth);
+				// var yPercent = Math.round(yy * 100 / pageHeight);
+				window.location.href='/stamp/pdf/' + uuid + '/down?' + ((1 === stampShow) ? 'stamp=d:/idocv-stamp.png&' : '') + 'x=' + xx + '&y=' + yy;
 			});
 			
 			$("img").load(function(){
 				initKenetic();
+			});
+			
+			$('.slct-stamp-page').change(function() {
+				var sv = $('.slct-stamp-page option:selected').val();
+				if ('no' === sv) {
+					$('canvas').hide();
+					stampShow = 0;
+				} else {
+					$('canvas').show();
+					stampShow = 1;
+				}
 			});
 		});
 	});
 
 function initKenetic() {
 	function drawImage(imageObj) {
-		var stage = new Kinetic.Stage({
+		stage = new Kinetic.Stage({
 			container : "container"
 		});
+		// stage.setVisible(false);
 		
 		pageWidth = $('#container').width();
 		pageHeight = $('#container').height();
-		console.log("pageWidth: " + pageWidth + ", pageHeight: " + pageHeight);
 		stage.setSize(pageWidth, pageHeight);
 		var layer = new Kinetic.Layer();
 
@@ -66,8 +78,8 @@ function initKenetic() {
 			image : imageObj,
 			x : stage.getWidth() / 2 - 200 / 2,
 			y : stage.getHeight() / 4 - 200 / 2,
-			width : 200,
-			height : 200,
+			width : 156,
+			height : 156,
 			draggable : true
 		});
 
@@ -84,6 +96,7 @@ function initKenetic() {
 
 		layer.add(stampImg);
 		stage.add(layer);
+		$('canvas').hide();
 	}
 	var imageObj = new Image();
 	imageObj.onload = function() {

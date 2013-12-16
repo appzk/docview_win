@@ -46,7 +46,7 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.5</version>
+			<version>1.8</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-httpclient</groupId>
@@ -182,6 +182,14 @@
 			<version>2.6.12</version>
 		</dependency>
 		<!-- Office end -->
+		
+		<!-- PDFBox start -->
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>1.8.3</version>
+		</dependency>
+		<!-- PDFBox end -->
 
 		<!-- Etherpad -->
 		<dependency>
@@ -311,6 +319,7 @@
 				<pom.office.cmd.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
 				<pom.pdf.cmd.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.pdf.cmd.pdf2img>
 				<pom.pdf.cmd.pdf2html>D:/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.pdf.cmd.pdf2html>
+				<pom.pdf.cmd.pdfsign>D:/idocv/converter/pdfsign/JSignPdf.jar</pom.pdf.cmd.pdfsign>
 			</properties>
 		</profile>
 		<!-- Consumer -->
@@ -336,6 +345,7 @@
 				<pom.office.cmd.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
 				<pom.pdf.cmd.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.pdf.cmd.pdf2img>
 				<pom.pdf.cmd.pdf2html>D:/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.pdf.cmd.pdf2html>
+				<pom.pdf.cmd.pdfsign>D:/idocv/converter/pdfsign/JSignPdf.jar</pom.pdf.cmd.pdfsign>
 			</properties>
 		</profile>
 		<!-- Production -->
@@ -361,6 +371,7 @@
 				<pom.office.cmd.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
 				<pom.pdf.cmd.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.pdf.cmd.pdf2img>
 				<pom.pdf.cmd.pdf2html>D:/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.pdf.cmd.pdf2html>
+				<pom.pdf.cmd.pdfsign>D:/idocv/converter/pdfsign/JSignPdf.jar</pom.pdf.cmd.pdfsign>
 			</properties>
 		</profile>
 	</profiles>

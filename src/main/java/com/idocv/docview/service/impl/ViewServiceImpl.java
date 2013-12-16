@@ -73,6 +73,12 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${pdf.cmd.pdf2html}")
 	String pdf2html;
 
+	// private @Value("${pdf.cmd.pdftk}")
+	// String pdftk;
+
+	private @Value("${pdf.cmd.pdfsign}")
+	String pdfSign;
+
 	private static final String encodingString = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=([^\"^>]+?)\"?>.*";
 
 	@Override
@@ -207,7 +213,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	}
 	
 	@Override
-	public PageVo<WordVo> convertWord2PdfStamp(String rid, String stamp, float xPercent, float yPercent) throws DocServiceException {
+	public PageVo<PdfVo> convertWord2PdfStamp(String rid, String stamp, float xPercent, float yPercent) throws DocServiceException {
 		try {
 			RcUtil.validateRid(rid);
 			String src = rcUtil.getPath(rid);
@@ -246,13 +252,13 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			
 			String url = rcUtil.getParseUrlDir(rid) + destFile.getName();
 
-			List<WordVo> data = new ArrayList<WordVo>();
+			List<PdfVo> data = new ArrayList<PdfVo>();
 			// construct vo
-			WordVo word = new WordVo();
-			word.setUrl(url);
-			word.setDestFile(destFile);
-			data.add(word);
-			PageVo<WordVo> page = new PageVo<WordVo>(data, 1);
+			PdfVo pdf = new PdfVo();
+			pdf.setUrl(url);
+			pdf.setDestFile(destFile);
+			data.add(pdf);
+			PageVo<PdfVo> page = new PageVo<PdfVo>(data, 1);
 			return page;
 		} catch (Exception e) {
 			logger.error("convertWord2Html error: " + e.getMessage());
@@ -592,6 +598,78 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			return page;
 		} catch (Exception e) {
 			logger.error("convertPdf2Html error: " + e.getMessage());
+			throw new DocServiceException(e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public PageVo<PdfVo> pdfStamp(String rid, String stamp, float x, float y) throws DocServiceException {
+		try {
+			RcUtil.validateRid(rid);
+			String src = rcUtil.getPath(rid);
+			File srcFile = new File(src);
+			if (!srcFile.isFile()) {
+				logger.error("文件未找到, rid=" + rid);
+				throw new DocServiceException(404, "文件未找到");
+			}
+			String dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + "_signed.pdf";
+			File destFile = new File(dest);
+			String ext = RcUtil.getExt(rid);
+			String convertResult = null;
+			if ("pdf".equalsIgnoreCase(ext)) {
+				if (StringUtils.isBlank(stamp)) {
+					destFile = srcFile;
+				} else {
+					// convertResult = CmdUtil.runWindows(word2Pdf, "-dest",
+					// destStampPdf, "-stamp", stamp.replaceAll("/", "\\\\"),
+					// "-x", String.valueOf(xPercent), "-y",
+					// String.valueOf(yPercent));
+					// convertResult += CmdUtil.runWindows(pdftk, src,
+					// "multistamp", destStampPdf, "output",
+					// destStampPdfResult);
+					x = 595F / 795 * x;
+					y = 842F / 1124 * y;
+					convertResult += CmdUtil.runWindows("java", "-jar",
+							pdfSign, "--disable-modify-content", "-kst", "jks",
+							"-ksf", "d:\\test\\key\\test.keystore", "-ksp",
+							"testtest", "-V", "--render-mode",
+							"GRAPHIC_AND_DESCRIPTION", "--img-path",
+							stamp.replaceAll("/", "\\\\"), "-pg", "1", "-llx",
+							"" + x, "-lly", "" + y, "-urx", "" + (x + 117),
+							"-ury", "" + (y - 234), "-d",
+							rcUtil.getParseDir(rid), src);
+
+					/*
+					 * Map<String, String> metas = new HashMap<String,
+					 * String>(); metas.put("x", "" + Math.round(xPercent));
+					 * metas.put("y", "" + Math.round(yPercent));
+					 * metas.put("page", "" + 1); metas.put("stamp", "1");
+					 * PDFUtil.setPDFMeta(destFile, metas);
+					 */
+				}
+				if (!destFile.isFile()) {
+					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+				}
+			} else {
+				throw new DocServiceException("该文件不是有效的pdf文档！");
+			}
+			
+			String url = rcUtil.getParseUrlDir(rid) + destFile.getName();
+
+			List<PdfVo> data = new ArrayList<PdfVo>();
+			// construct vo
+			PdfVo pdf = new PdfVo();
+			pdf.setUrl(url);
+			pdf.setDestFile(destFile);
+			data.add(pdf);
+			PageVo<PdfVo> page = new PageVo<PdfVo>(data, 1);
+			return page;
+		} catch (Exception e) {
+			logger.error("convertWord2Html error: " + e.getMessage());
 			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
