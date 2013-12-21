@@ -5,6 +5,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -47,6 +50,8 @@ public class DocController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DocController.class);
 
+	private static ObjectMapper om = new ObjectMapper();
+
 	@Resource
 	private AppService appService;
 	
@@ -71,13 +76,16 @@ public class DocController {
 	 */
 	@ResponseBody
 	@RequestMapping("upload")
-	public String upload(HttpServletRequest req,
+	public Map<String, String> upload(
+			HttpServletRequest req,
+			HttpServletResponse resp,
 			@RequestParam(value = "file", required = false) MultipartFile file,
 			@RequestParam(value = "url", required = false) String url,
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "token", required = false) String token,
 			@RequestParam(value = "mode", defaultValue = "public") String modeString,
 			@RequestParam(value = "label", defaultValue = "") String label) {
+		Map<String, String> result = new HashMap<String, String>();
 		try {
 			// Two ways to upload: App token upload & user Sid upload
 			String ip = IpUtil.getIpAddr(req);
@@ -144,11 +152,12 @@ public class DocController {
 				throw new Exception("上传失败！");
 			}
 			logger.info("--> " + ip + " at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " ADD " + vo.getUuid());
-			return "{\"uuid\":\"" + vo.getUuid() + "\"}";
+			result.put("uuid", vo.getUuid());
 		} catch (Exception e) {
 			logger.error("upload error <controller>: " + e.getMessage());
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			result.put("error", e.getMessage());
 		}
+		return result;
 	}
 	
 	/**
