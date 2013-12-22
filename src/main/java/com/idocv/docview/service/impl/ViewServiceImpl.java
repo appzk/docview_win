@@ -721,6 +721,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				if (!destFile.isFile()) {
 					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("Convert Result: \n" + convertResult);
 					throw new DocServiceException("对不起，该文档（"
 							+ RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
@@ -732,6 +733,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				if (!destFile.isFile()) {
 					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("Convert Result: \n" + convertResult);
 					throw new DocServiceException("对不起，该文档（"
 							+ RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
@@ -748,6 +750,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles()) || ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_1024).listFiles())) {
 					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					logger.error("Convert Result: \n" + convertResult);
 					throw new DocServiceException("对不起，该文档（"
 							+ RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
@@ -774,7 +777,6 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				logger.error("目前不支持（" + ext + "）格式！");
 				throw new DocServiceException("目前不支持（" + ext + "）格式！");
 			}
-			logger.info("convert result: \n" + convertResult);
 			return true;
 		} catch (Exception e) {
 			logger.error("convert error(" + rid + "): " + e.getMessage());
