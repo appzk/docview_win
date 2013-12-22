@@ -105,7 +105,8 @@ function initKenetic() {
 	imageObj.src = 'http://www.idocv.com/idocv-stamp.png';
 
 	if (window.File && window.FileList && window.FileReader) {
-		$('#fileupload').change(function() {
+		$('#fileupload').change(function(e) {
+			e.preventDefault();
 			var input = document.getElementById("fileupload");
 			var fReader = new FileReader();
 			fReader.readAsDataURL(input.files[0]);
