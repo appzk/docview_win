@@ -774,6 +774,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				logger.error("目前不支持（" + ext + "）格式！");
 				throw new DocServiceException("目前不支持（" + ext + "）格式！");
 			}
+			logger.info("convert result: \n" + convertResult);
 			return true;
 		} catch (Exception e) {
 			logger.error("convert error(" + rid + "): " + e.getMessage());
