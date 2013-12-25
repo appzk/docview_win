@@ -675,6 +675,10 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	}
 
 	public boolean convert(String rid) throws DocServiceException {
+		String ext = RcUtil.getExt(rid);
+		if (!rcUtil.isSupportView(ext)) {
+			throw new DocServiceException("不支持" + ext + "类型文件预览，详情请联系管理员！");
+		}
 		return convert(rid, 0);
 	}
 

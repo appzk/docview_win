@@ -1,12 +1,9 @@
 package com.idocv.docview.controller;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
@@ -55,10 +53,8 @@ public class ViewController {
 	@Resource
 	private SessionService sessionService;
 
-	private static Map<String, String> forbiddenMap = new HashMap<String, String>();
-	static {
-		forbiddenMap.put("rhxx.com.cn", "箬横小学");
-	}
+	private @Value("${page.load.async}")
+	boolean pageLoadAsync;
 
 	@RequestMapping("")
 	public void home(HttpServletRequest req, HttpServletResponse resp) {
@@ -157,15 +153,6 @@ public class ViewController {
 			@PathVariable String id,
 			@RequestParam(defaultValue = "1") int start,
 			@RequestParam(defaultValue = "5") int size) {
-		try {
-			String host = new URL(req.getHeader("Referer")).getHost();
-			if (forbiddenMap.containsKey(host)) {
-				throw new DocServiceException("“" + forbiddenMap.get(host) + "”的免费使用量已用完，请购买正版，详情咨询：400-000-7644");
-			}
-		} catch (Exception e) {
-			logger.error("获取主机失败：" + e.getMessage());
-		}
-
 		PageVo<? extends Serializable> page = null;
 		String uuid = null;
 		String rid = null;
@@ -380,7 +367,7 @@ public class ViewController {
 				throw new DocServiceException("上传URL文件错误！");
 			}
 			String uuid = vo.getUuid();
-			return "redirect:" + uuid;
+			return "redirect:" + uuid + (pageLoadAsync ? "" : ".html");
 		} catch (Exception e) {
 			logger.error("view url(" + url + ") error: " + e.getMessage());
 			model.addAttribute("error", e.getMessage());

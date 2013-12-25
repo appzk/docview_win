@@ -23,6 +23,12 @@ public class RcUtil {
 	private @Value("${docview.data.dir}")
 	String dataDir;
 
+	private @Value("${filetype.upload}")
+	String uploadTypes;
+
+	private @Value("${filetype.view}")
+	String viewTypes;
+
 	private static final String SPLIT = "_";
 
 	/**
@@ -184,5 +190,33 @@ public class RcUtil {
 			name = name.substring(0, name.lastIndexOf("."));
 		}
 		return name;
+	}
+
+	public boolean isSupportUpload(String ext) {
+		String[] supportTypes = uploadTypes.split(",|;");
+		if (null == ext) {
+			ext = "";
+		}
+		ext = ext.toLowerCase();
+		for (String supportType : supportTypes) {
+			if (ext.matches(supportType)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isSupportView(String ext) {
+		String[] supportTypes = viewTypes.split(",|;");
+		if (null == ext) {
+			ext = "";
+		}
+		ext = ext.toLowerCase();
+		for (String supportType : supportTypes) {
+			if (ext.matches(supportType)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

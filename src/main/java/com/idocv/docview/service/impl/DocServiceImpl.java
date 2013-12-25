@@ -249,11 +249,8 @@ public class DocServiceImpl implements DocService {
 				doc.setStatus(1);
 			}
 			
-			if (StringUtils.isBlank(ext) || !docTypes.contains(ext.toLowerCase())) {
-				throw new DocServiceException(
-						"暂不支持"
-								+ ext
-								+ "文件预览，请选择一个文档，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt");
+			if (!rcUtil.isSupportUpload(ext)) {
+				throw new DocServiceException("不支持上传" + ext + "文件，详情请联系管理员！");
 			}
 			
 			// save file meta and file
