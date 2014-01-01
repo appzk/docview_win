@@ -81,7 +81,9 @@
 
     </div><!--/.fluid-container-->
     
+    <!-- 
     <a href="http://www.idocv.com"><img style="position: fixed; top: 80px; right: 20px; max-width: 15%" alt="在线文档预览双十一特惠" src="http://data.idocv.com/promotion_20131111.jpg"></a>
+     -->
 
     <!-- JavaSript
     ================================================== -->
