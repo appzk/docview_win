@@ -182,14 +182,6 @@
 			<version>2.6.12</version>
 		</dependency>
 		<!-- Office end -->
-		
-		<!-- PDFBox start -->
-		<dependency>
-			<groupId>org.apache.pdfbox</groupId>
-			<artifactId>pdfbox</artifactId>
-			<version>1.8.3</version>
-		</dependency>
-		<!-- PDFBox end -->
 
 		<!-- Etherpad -->
 		<dependency>
