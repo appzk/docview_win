@@ -1,13 +1,6 @@
 package com.idocv.docview.controller;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -24,14 +16,11 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.idocv.docview.common.DocResponse;
-import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.ViewService;
-import com.idocv.docview.util.PDFUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.PageVo;
@@ -161,52 +150,6 @@ private static final Logger logger = LoggerFactory.getLogger(StampController.cla
 			docService.logDownload(uuid);
 		} catch (Exception e) {
 			logger.error("pdf stamp download error: " + e.getMessage());
-		}
-	}
-
-	/**
-	 * Validate a PDF
-	 * 
-	 * @param uuid
-	 */
-	@RequestMapping("pdf/{uuid}/validate")
-	@ResponseBody
-	public Map<String, String> validatePdf(@PathVariable(value = "uuid") String uuid) {
-		Map<String, String> result = new HashMap<String, String>();
-		result.put("code", "1");
-		result.put("desc", "正常！");
-		try {
-			DocVo vo = docService.getByUuid(uuid);
-			String rid = vo.getRid();
-			String src = rcUtil.getPath(rid);
-			File srcFile = new File(src);
-			if (!srcFile.isFile()) {
-				throw new DocServiceException("源文件未找到！");
-			}
-			String srcMd5 = PDFUtil.getMd5(srcFile);
-			Map<String, String> metas = PDFUtil.getPDFMetas(srcFile);
-			String isStamp = metas.get("stamp");
-			if (StringUtils.isBlank(isStamp) || !"1".equals(isStamp)) {
-				result.put("desc", "该PDF未被签章！");
-				return result;
-			}
-			
-			Path path = Paths.get(src);
-			BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
-			FileTime ftCreate = attrs.creationTime();
-			FileTime ftLastModified = attrs.lastModifiedTime();
-			long diffTime = ftCreate.toMillis() - ftLastModified.toMillis();
-			diffTime = diffTime > 0 ? diffTime : -diffTime;
-			if (diffTime > 10000) {
-				result.put("code", "0");
-				result.put("desc", "该签章PDF已被篡改！");
-				return result;
-			}
-			result.put("desc", "该签章PDF未被篡改！");
-			return result;
-		} catch (Exception e) {
-			logger.error("Validate PDF error: " + e.getMessage());
-			return result;
 		}
 	}
 }
