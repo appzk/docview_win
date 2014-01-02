@@ -31,6 +31,17 @@ public class RcUtil {
 
 	private static final String SPLIT = "_";
 
+	// abbreviations
+	private static final String ABBR_WORD = "w";
+	private static final String ABBR_EXCEL = "x";
+	private static final String ABBR_PPT = "p";
+	private static final String ABBR_PDF = "f";
+	private static final String ABBR_TXT = "t";
+	private static final String ABBR_IMG = "i";
+	private static final String ABBR_AUDIO = "a";
+	private static final String ABBR_VIDEO = "v";
+	private static final String ABBR_OTHER = "o";
+
 	/**
 	 * 生成rid，格式：(appId)_(yyyyMMdd)_(HHmmss)_(size)_(uuid)_ext
 	 * 
@@ -53,15 +64,27 @@ public class RcUtil {
 		String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 		String uuid = RandomStringUtils.randomAlphabetic(6);
 		if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
-			uuid += "w";
+			uuid += ABBR_WORD;
 		} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
-			uuid += "x";
+			uuid += ABBR_EXCEL;
 		} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
-			uuid += "p";
+			uuid += ABBR_PPT;
 		} else if ("pdf".equalsIgnoreCase(ext)) {
-			uuid += "f";
+			uuid += ABBR_PDF;
 		} else if ("txt".equalsIgnoreCase(ext)) {
-			uuid += "t";
+			uuid += ABBR_TXT;
+		} else if ("jpg".equalsIgnoreCase(ext) || "jpeg".equalsIgnoreCase(ext)
+				|| "png".equalsIgnoreCase(ext) || "bmp".equalsIgnoreCase(ext)) {
+			uuid += ABBR_IMG;
+		} else if ("wma".equalsIgnoreCase(ext) || "mp3".equalsIgnoreCase(ext)
+				|| "midi".equalsIgnoreCase(ext)) {
+			uuid += ABBR_AUDIO;
+		} else if ("avi".equalsIgnoreCase(ext) || "rm".equalsIgnoreCase(ext)
+				|| "rmvb".equalsIgnoreCase(ext) || "mpeg".equalsIgnoreCase(ext)
+				|| "dat".equalsIgnoreCase(ext) || "mov".equalsIgnoreCase(ext)) {
+			uuid += ABBR_VIDEO;
+		} else {
+			uuid += ABBR_OTHER;
 		}
 		String dateString = new SimpleDateFormat("yyyyMMdd").format(date);
 		String timeString = new SimpleDateFormat("HHmmss").format(date);
