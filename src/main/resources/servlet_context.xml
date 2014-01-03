@@ -15,6 +15,10 @@
     
     <context:property-placeholder location="classpath:server_params.properties" />
     
+    <context:annotation-config />
+	<task:annotation-driven />
+	<context:component-scan base-package="com.idocv.docview" />
+    
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="webBindingInitializer">
 			<bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
@@ -67,6 +71,6 @@
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxInMemorySize" value="1000000"/>
 		<property name="maxUploadSize" value="50000000"/>
-	</bean>	
-
+	</bean>
+	
 </beans>
