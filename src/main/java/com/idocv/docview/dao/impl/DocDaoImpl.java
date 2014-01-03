@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
@@ -407,14 +408,14 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 			return null;
 		}
 		DocPo po = new DocPo();
+		if (obj.containsField(_ID)) {
+			po.setRid(obj.get(_ID).toString());
+		}
 		if (obj.containsField(APP)) {
 			po.setApp(obj.get(APP).toString());
 		}
 		if (obj.containsField(UID)) {
 			po.setUid(obj.get(UID).toString());
-		}
-		if (obj.containsField(_ID)) {
-			po.setRid(obj.get(_ID).toString());
 		}
 		if (obj.containsField(UUID)) {
 			po.setUuid(obj.get(UUID).toString());
@@ -445,6 +446,9 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		}
 		if (obj.containsField(DOWNLOAD)) {
 			po.setDownloadLog((List<Long>) obj.get(DOWNLOAD));
+		}
+		if (obj.containsField(METAS)) {
+			po.setMetas((Map<String, Object>) obj.get(METAS));
 		}
 		return po;
 	}

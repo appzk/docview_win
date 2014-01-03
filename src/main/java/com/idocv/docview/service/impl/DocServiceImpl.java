@@ -429,7 +429,7 @@ public class DocServiceImpl implements DocService {
 		return list;
 	}
 	
-	private DocVo convertPo2Vo(DocPo po) {
+	public static DocVo convertPo2Vo(DocPo po) {
 		if (null == po) {
 			return null;
 		}
@@ -450,6 +450,7 @@ public class DocServiceImpl implements DocService {
 		if (!CollectionUtils.isEmpty(po.getDownloadLog())) {
 			vo.setDownloadCount(po.getDownloadLog().size());
 		}
+		vo.setMetas(po.getMetas());
 		return vo;
 	}
 	

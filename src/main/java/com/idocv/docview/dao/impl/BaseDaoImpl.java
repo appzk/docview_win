@@ -32,6 +32,8 @@ public class BaseDaoImpl implements BaseDao {
 	public static final String VIEW = "view";
 	public static final String DOWNLOAD = "download";
 
+	public static final String METAS = "metas";
+
 	public static final String ADDRESS = "address";
 	public static final String TOKEN = "token";
 	public static final String IPS = "ips";

@@ -2,6 +2,7 @@ package com.idocv.docview.po;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -85,6 +86,13 @@ public class DocPo implements Serializable {
 	 * @return
 	 */
 	private List<Long> downloadLog;
+
+	/**
+	 * 其它参数
+	 * 
+	 * @return
+	 */
+	private Map<String, Object> metas;
 
 	public String getRid() {
 		return rid;
@@ -196,6 +204,14 @@ public class DocPo implements Serializable {
 
 	public void setDownloadLog(List<Long> downloadLog) {
 		this.downloadLog = downloadLog;
+	}
+
+	public Map<String, Object> getMetas() {
+		return metas;
+	}
+
+	public void setMetas(Map<String, Object> metas) {
+		this.metas = metas;
 	}
 
 	@Override

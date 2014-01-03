@@ -1,6 +1,7 @@
 package com.idocv.docview.vo;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -68,17 +69,18 @@ public class DocVo implements Serializable {
 
 	/**
 	 * preview count
-	 * 
-	 * @return
 	 */
 	private int viewCount;
 
 	/**
 	 * download count
-	 * 
-	 * @return
 	 */
 	private int downloadCount;
+
+	/**
+	 * Other params
+	 */
+	private Map<String, Object> metas;
 
 	public String getRid() {
 		return rid;
@@ -182,6 +184,14 @@ public class DocVo implements Serializable {
 
 	public void setDownloadCount(int downloadCount) {
 		this.downloadCount = downloadCount;
+	}
+
+	public Map<String, Object> getMetas() {
+		return metas;
+	}
+
+	public void setMetas(Map<String, Object> metas) {
+		this.metas = metas;
 	}
 
 	@Override
