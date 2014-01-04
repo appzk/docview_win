@@ -1,6 +1,7 @@
 package com.idocv.docview.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -62,9 +63,10 @@ public interface DocDao {
 	 * @param ext 扩展名
 	 * @param status 文档状态，-1：已删除；0：私有文档；1：公开文档
 	 * @param labelId 文档所属标签id
+	 * @param metas 文件其它元数据
 	 * @throws DBException
 	 */
-	void add(String app, String uid, String rid, String uuid, String name, long size, String ext, int status, String labelId) throws DBException;
+	void add(String app, String uid, String rid, String uuid, String name, int size, String ext, int status, String labelId, Map<String, Object> metas) throws DBException;
 
 	/**
 	 * Delete a document.

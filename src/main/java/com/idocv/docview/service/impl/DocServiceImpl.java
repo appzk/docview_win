@@ -257,7 +257,7 @@ public class DocServiceImpl implements DocService {
 			FileUtils.writeByteArrayToFile(new File(rcUtil.getPath(rid)), data);
 
 			// save info
-			docDao.add(app, uid, rid, uuid, name, size, ext, mode, labelId);
+			docDao.add(app, uid, rid, uuid, name, size, ext, mode, labelId, null);
 
 			// Asynchronously convert document
 			convertService.convert(rid);

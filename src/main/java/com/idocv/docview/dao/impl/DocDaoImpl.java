@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.exception.DBException;
@@ -34,8 +35,8 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 
 	@Override
 	public void add(String app, String uid, String rid, String uuid,
-			String name, long size, String ext, int status, String labelId)
-			throws DBException {
+			String name, int size, String ext, int status, String labelId,
+			Map<String, Object> metas) throws DBException {
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		if (StringUtils.isBlank(app)) {
 			throw new DBException("应用为空！");
@@ -62,6 +63,9 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		if (StringUtils.isNotBlank(labelId)) {
 			builder.append(LABELS, new String[] { labelId });
 		}
+		if (!CollectionUtils.isEmpty(metas)) {
+			builder.append(METAS, metas);
+		}
 		String pinyin = PinyinUtil.getSortPinYin(name);
 		builder.append(PINYIN, pinyin);
 		if (StringUtils.isNotBlank(uid)) {
@@ -73,7 +77,6 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());
 		}
-
 	}
 
 	@Override

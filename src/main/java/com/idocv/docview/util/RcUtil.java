@@ -17,10 +17,10 @@ import com.idocv.docview.service.ViewService;
 @Component("rcUtil")
 public class RcUtil {
 
-	private @Value("${docview.data.url}")
+	private @Value("${data.url}")
 	String dataUrl;
 
-	private @Value("${docview.data.dir}")
+	private @Value("${data.dir}")
 	String dataDir;
 
 	private @Value("${filetype.upload}")

@@ -55,28 +55,28 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private static int WORD_PAGING_LINE_COUNT = 200;
 	private static int WORD_PAGING_CHAR_COUNT = 3000;
 	
-	private @Value("${office.cmd.word2html}")
+	private @Value("${converter.word2html}")
 	String word2Html;
 	
-	private @Value("${office.cmd.word2pdf}")
+	private @Value("${converter.word2pdf}")
 	String word2Pdf;
 
-	private @Value("${office.cmd.excel2html}")
+	private @Value("${converter.excel2html}")
 	String excel2Html;
 
-	private @Value("${office.cmd.ppt2jpg}")
+	private @Value("${converter.ppt2jpg}")
 	String ppt2Jpg;
 	
-	private @Value("${pdf.cmd.pdf2img}")
+	private @Value("${converter.pdf2img}")
 	String pdf2img;
 
-	private @Value("${pdf.cmd.pdf2html}")
+	private @Value("${converter.pdf2html}")
 	String pdf2html;
 
-	// private @Value("${pdf.cmd.pdftk}")
+	// private @Value("${converter.pdftk}")
 	// String pdftk;
 
-	private @Value("${pdf.cmd.pdfsign}")
+	private @Value("${converter.pdfsign}")
 	String pdfSign;
 
 	private static final String encodingString = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=([^\"^>]+?)\"?>.*";

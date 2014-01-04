@@ -27,9 +27,9 @@ public class DocDaoTest {
 			String appId = "doc";
 			String uuid = "abcdw";
 			String name = "test.doc";
-			long size = 1;
+			int size = 1;
 			String ext = "doc";
-			docDao.add(appId, null, id, uuid, name, size, ext, 1, null);
+			docDao.add(appId, null, id, uuid, name, size, ext, 1, null, null);
 		} catch (DBException e) {
 			e.printStackTrace();
 		}

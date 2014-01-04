@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -31,6 +33,7 @@ import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.ClusterService;
+import com.idocv.docview.service.ConvertService;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
 
@@ -45,6 +48,9 @@ public class ClusterServiceImpl implements ClusterService {
 	@Resource
 	private RcUtil rcUtil;
 
+	@Resource
+	private ConvertService convertService;
+
 	private @Value("${cluster.dfs.server.upload}")
 	String clusterDfsServerUpload;
 
@@ -52,7 +58,51 @@ public class ClusterServiceImpl implements ClusterService {
 	public DocVo add(String fileName, byte[] data, String appid, String uid,
 			String tid, String sid, String mode) throws DocServiceException {
 		System.out.println("[CLUSTER] adding file...");
-		return null;
+		try {
+			// 1. validate user params
+			// 2. get fileName md5
+			// 3. set DocPo and save to database
+			DocPo doc = new DocPo();
+			int size = data.length;
+			String rid = RcUtil.genRid(appid, fileName, size);
+			String uuid = RcUtil.getUuidByRid(rid);
+			String ext = RcUtil.getExt(rid);
+			doc.setRid(rid);
+			doc.setUuid(uuid);
+			doc.setName(fileName);
+			doc.setSize(size);
+			doc.setCtime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+			doc.setStatus(1);
+			Map<String, Object> metas = new HashMap<String, Object>();
+			metas.put("appid", appid);
+			metas.put("uid", uid);
+			metas.put("tid", tid);
+			metas.put("sid", sid);
+			metas.put("mode", mode);
+			doc.setMetas(metas);
+
+			if (!rcUtil.isSupportUpload(ext)) {
+				throw new DocServiceException("不支持上传" + ext + "文件，详情请联系管理员！");
+			}
+
+			// save file meta and file
+			FileUtils.writeByteArrayToFile(new File(rcUtil.getPath(rid)), data);
+
+			// save info
+			docDao.add(appid, uid, rid, uuid, fileName, size, ext, 1, null, metas);
+
+			// Asynchronously convert document
+			convertService.convert(rid);
+
+			// 4. upload to cluster
+			upload2DFSInstantly(uuid);
+
+			// 5. return
+			return DocServiceImpl.convertPo2Vo(doc);
+		} catch (Exception e) {
+			logger.error("[CLUSTER] add file error: " + e.getMessage());
+			throw new DocServiceException(e.getMessage(), e);
+		}
 	}
 
 	@Override

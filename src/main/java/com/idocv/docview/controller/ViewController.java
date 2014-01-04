@@ -53,7 +53,7 @@ public class ViewController {
 	@Resource
 	private SessionService sessionService;
 
-	private @Value("${page.load.async}")
+	private @Value("${view.page.load.async}")
 	boolean pageLoadAsync;
 
 	@RequestMapping("")

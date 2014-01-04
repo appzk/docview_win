@@ -17,8 +17,8 @@
 
 	<!-- Database -->
 	<bean id="mongo" class="com.idocv.docview.db.AppMongoConn">
-		<constructor-arg value="${docview.mongodb.ip}" />
-		<constructor-arg value="${docview.mongodb.port}" />
+		<constructor-arg value="${db.mongodb.ip}" />
+		<constructor-arg value="${db.mongodb.port}" />
 	</bean>
 	<bean id="docviewDb" class="com.idocv.docview.db.DbFactoryBean">
 		<property name="mongo" ref="mongo" />

@@ -293,25 +293,25 @@
 			</activation>
 			<properties>
 				<!-- Data -->
-				<pom.docview.data.url>http://data.idocv.com/</pom.docview.data.url>
-				<pom.docview.data.dir>D:/idocv/data/</pom.docview.data.dir>
+				<pom.data.url>http://data.idocv.com/</pom.data.url>
+				<pom.data.dir>D:/idocv/data/</pom.data.dir>
 
 				<!-- Database -->
-				<pom.docview.mongodb.ip>localhost</pom.docview.mongodb.ip>
-				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
+				<pom.db.mongodb.ip>localhost</pom.db.mongodb.ip>
+				<pom.db.mongodb.port>27017</pom.db.mongodb.port>
 
 				<!-- Upload -->
 				<pom.upload.max.size>1000000</pom.upload.max.size>
 				<pom.upload.max.msg>\u514d\u8d39\u7248\u53ea\u652f\u63011M\u4ee5\u5185\u6587\u4ef6\u9884\u89c8\uff0c\u8be6\u60c5\u54a8\u8be2\uff1a400-000-7644</pom.upload.max.msg>
 
 				<!-- Office converter -->
-				<pom.office.cmd.word2html>D:/idocv/converter/word2html.exe</pom.office.cmd.word2html>
-				<pom.office.cmd.word2pdf>D:/idocv/converter/word2pdf.exe</pom.office.cmd.word2pdf>
-				<pom.office.cmd.excel2html>D:/idocv/converter/excel2html.exe</pom.office.cmd.excel2html>
-				<pom.office.cmd.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
-				<pom.pdf.cmd.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.pdf.cmd.pdf2img>
-				<pom.pdf.cmd.pdf2html>D:/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.pdf.cmd.pdf2html>
-				<pom.pdf.cmd.pdfsign>D:/idocv/converter/pdfsign/JSignPdf.jar</pom.pdf.cmd.pdfsign>
+				<pom.converter.word2html>D:/idocv/converter/word2html.exe</pom.converter.word2html>
+				<pom.converter.word2pdf>D:/idocv/converter/word2pdf.exe</pom.converter.word2pdf>
+				<pom.converter.excel2html>D:/idocv/converter/excel2html.exe</pom.converter.excel2html>
+				<pom.converter.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.converter.ppt2jpg>
+				<pom.converter.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.converter.pdf2img>
+				<pom.converter.pdf2html>D:/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.converter.pdf2html>
+				<pom.converter.pdfsign>D:/idocv/converter/pdfsign/JSignPdf.jar</pom.converter.pdfsign>
 			</properties>
 		</profile>
 		<!-- Consumer -->
@@ -319,25 +319,25 @@
 			<id>consumer</id>
 			<properties>
 				<!-- Data -->
-				<pom.docview.data.url>http://127.0.0.1/data/</pom.docview.data.url>
-				<pom.docview.data.dir>D:/idocv/data/</pom.docview.data.dir>
+				<pom.data.url>http://127.0.0.1/data/</pom.data.url>
+				<pom.data.dir>D:/idocv/data/</pom.data.dir>
 
 				<!-- Database -->
-				<pom.docview.mongodb.ip>localhost</pom.docview.mongodb.ip>
-				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
+				<pom.db.mongodb.ip>localhost</pom.db.mongodb.ip>
+				<pom.db.mongodb.port>27017</pom.db.mongodb.port>
 
 				<!-- Upload -->
 				<pom.upload.max.size>20000000</pom.upload.max.size>
 				<pom.upload.max.msg>\u9ed8\u8ba4\u652f\u630120M\u4ee5\u5185\u7684\u6587\u6863\u9884\u89c8\uff0c\u8be6\u60c5\u8bf7\u8054\u7cfb\u7ba1\u7406\u5458\uff01</pom.upload.max.msg>
 
 				<!-- Office converter -->
-				<pom.office.cmd.word2html>D:/idocv/converter/word2html.exe</pom.office.cmd.word2html>
-				<pom.office.cmd.word2pdf>D:/idocv/converter/word2pdf.exe</pom.office.cmd.word2pdf>
-				<pom.office.cmd.excel2html>D:/idocv/converter/excel2html.exe</pom.office.cmd.excel2html>
-				<pom.office.cmd.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
-				<pom.pdf.cmd.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.pdf.cmd.pdf2img>
-				<pom.pdf.cmd.pdf2html>D:/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.pdf.cmd.pdf2html>
-				<pom.pdf.cmd.pdfsign>D:/idocv/converter/pdfsign/JSignPdf.jar</pom.pdf.cmd.pdfsign>
+				<pom.converter.word2html>D:/idocv/converter/word2html.exe</pom.converter.word2html>
+				<pom.converter.word2pdf>D:/idocv/converter/word2pdf.exe</pom.converter.word2pdf>
+				<pom.converter.excel2html>D:/idocv/converter/excel2html.exe</pom.converter.excel2html>
+				<pom.converter.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.converter.ppt2jpg>
+				<pom.converter.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.converter.pdf2img>
+				<pom.converter.pdf2html>D:/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.converter.pdf2html>
+				<pom.converter.pdfsign>D:/idocv/converter/pdfsign/JSignPdf.jar</pom.converter.pdfsign>
 			</properties>
 		</profile>
 		<!-- Production -->
@@ -345,25 +345,25 @@
 			<id>prod</id>
 			<properties>
 				<!-- Data -->
-				<pom.docview.data.url>http://data.idocv.com/</pom.docview.data.url>
-				<pom.docview.data.dir>D:/idocv/data/</pom.docview.data.dir>
+				<pom.data.url>http://data.idocv.com/</pom.data.url>
+				<pom.data.dir>D:/idocv/data/</pom.data.dir>
 
 				<!-- Database -->
-				<pom.docview.mongodb.ip>localhost</pom.docview.mongodb.ip>
-				<pom.docview.mongodb.port>27017</pom.docview.mongodb.port>
+				<pom.db.mongodb.ip>localhost</pom.db.mongodb.ip>
+				<pom.db.mongodb.port>27017</pom.db.mongodb.port>
 
 				<!-- Upload -->
 				<pom.upload.max.size>1000000</pom.upload.max.size>
 				<pom.upload.max.msg>\u514d\u8d39\u7248\u53ea\u652f\u63011M\u4ee5\u5185\u6587\u4ef6\u9884\u89c8\uff0c\u8be6\u60c5\u54a8\u8be2\uff1a400-000-7644</pom.upload.max.msg>
 
 				<!-- Office converter -->
-				<pom.office.cmd.word2html>D:/idocv/converter/word2html.exe</pom.office.cmd.word2html>
-				<pom.office.cmd.word2pdf>D:/idocv/converter/word2pdf.exe</pom.office.cmd.word2pdf>
-				<pom.office.cmd.excel2html>D:/idocv/converter/excel2html.exe</pom.office.cmd.excel2html>
-				<pom.office.cmd.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.office.cmd.ppt2jpg>
-				<pom.pdf.cmd.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.pdf.cmd.pdf2img>
-				<pom.pdf.cmd.pdf2html>D:/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.pdf.cmd.pdf2html>
-				<pom.pdf.cmd.pdfsign>D:/idocv/converter/pdfsign/JSignPdf.jar</pom.pdf.cmd.pdfsign>
+				<pom.converter.word2html>D:/idocv/converter/word2html.exe</pom.converter.word2html>
+				<pom.converter.word2pdf>D:/idocv/converter/word2pdf.exe</pom.converter.word2pdf>
+				<pom.converter.excel2html>D:/idocv/converter/excel2html.exe</pom.converter.excel2html>
+				<pom.converter.ppt2jpg>D:/idocv/converter/ppt2jpg.exe</pom.converter.ppt2jpg>
+				<pom.converter.pdf2img>D:/idocv/converter/pdf2img/gswin64c.exe</pom.converter.pdf2img>
+				<pom.converter.pdf2html>D:/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.converter.pdf2html>
+				<pom.converter.pdfsign>D:/idocv/converter/pdfsign/JSignPdf.jar</pom.converter.pdfsign>
 			</properties>
 		</profile>
 	</profiles>
