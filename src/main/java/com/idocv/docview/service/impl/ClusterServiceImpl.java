@@ -3,7 +3,6 @@ package com.idocv.docview.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,6 +33,7 @@ import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.ClusterService;
 import com.idocv.docview.service.ConvertService;
+import com.idocv.docview.service.ThdService;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
 
@@ -51,8 +51,17 @@ public class ClusterServiceImpl implements ClusterService {
 	@Resource
 	private ConvertService convertService;
 
+	private @Value("${cluster.switch}")
+	boolean clusterSwitch;
+
+	private @Value("${cluster.upload2dfs.mode}")
+	int clusterUpload2dfsMode = 0;
+
 	private @Value("${cluster.dfs.server.upload}")
 	String clusterDfsServerUpload;
+
+	@Resource
+	private ThdService thdService;
 
 	@Override
 	public DocVo add(String fileName, byte[] data, String appid, String uid,
@@ -60,11 +69,15 @@ public class ClusterServiceImpl implements ClusterService {
 		System.out.println("[CLUSTER] adding file...");
 		try {
 			// 1. validate user params
+			thdService.validateUser(uid, tid, sid);
+
 			// 2. get fileName md5
-			// 3. set DocPo and save to database
-			DocPo doc = new DocPo();
 			int size = data.length;
 			String rid = RcUtil.genRid(appid, fileName, size);
+			String md5FileName = thdService.getFileMd5(rcUtil.getPath(rid));
+
+			// 3. set DocPo and save to database
+			DocPo doc = new DocPo();
 			String uuid = RcUtil.getUuidByRid(rid);
 			String ext = RcUtil.getExt(rid);
 			doc.setRid(rid);
@@ -80,6 +93,8 @@ public class ClusterServiceImpl implements ClusterService {
 			metas.put("sid", sid);
 			metas.put("mode", mode);
 			doc.setMetas(metas);
+			String url = "dfs:///" + appid + "/" + md5FileName + "." + ext;
+			doc.setUrl(url);
 
 			if (!rcUtil.isSupportUpload(ext)) {
 				throw new DocServiceException("不支持上传" + ext + "文件，详情请联系管理员！");
@@ -106,26 +121,33 @@ public class ClusterServiceImpl implements ClusterService {
 	}
 
 	@Override
-	public DocVo upload(DocPo po) throws DocServiceException {
-		System.out.println("[CLUSTER] uploading file...");
-		return null;
-	}
-
-	@Override
 	@Async
 	public void upload2DFSInstantly(String uuid) {
-		System.out.println("[CLUSTER] uploading file " + uuid + "...");
+		if (!clusterSwitch || 0 == clusterUpload2dfsMode
+				|| 2 == clusterUpload2dfsMode) {
+			return;
+		}
+		uploadUuid2Remote(uuid);
+		System.out.println("[CLUSTER] upload file " + uuid + " success...");
 	}
 
 	@Override
 	@Scheduled(cron = "${cluster.upload2dfs.cron}")
-	public void upload2DFSBatch() {
-		DateFormat dateFormat = DateFormat.getDateTimeInstance();
-		String formattedDate = dateFormat.format(new Date());
-		System.out.println("[CLUSTER] current time: " + formattedDate);
+	public void upload2DFSBatchTask() {
+		if (!clusterSwitch || 0 == clusterUpload2dfsMode) {
+			return;
+		}
+		// TODO
+		// get all files need to upload to DFS
+		// upload those files sequentially
+		// upload elapse & file count
+		System.out.println("[CLUSTER] upload batch task done.");
 	}
 
 	public void uploadUuid2Remote(String uuid) {
+		if (!clusterSwitch) {
+			return;
+		}
 		try {
 			DocVo vo = DocServiceImpl.convertPo2Vo(docDao.getByUuid(uuid, false));
 			String rid = vo.getRid();
@@ -134,13 +156,22 @@ public class ClusterServiceImpl implements ClusterService {
 			Map<String, Object> params = vo.getMetas();
 			byte[] bytes = FileUtils.readFileToByteArray(new File(src));
 			upload2Remote(fileName, bytes, params);
+			// TODO
+			// update upload status
 		} catch (Exception e) {
 			logger.error("[CLUSTER] upload uuid(" + uuid + ") to remote error: " + e.getMessage());
 		}
 	}
 
-	public boolean upload2Remote(String fileName, byte[] bytes,
-			Map<String, Object> params) {
+	/**
+	 * Real upload process. Used by uploadUuid2Remote
+	 * 
+	 * @param fileName
+	 * @param bytes
+	 * @param params
+	 * @return
+	 */
+	private boolean upload2Remote(String fileName, byte[] bytes, Map<String, Object> params) {
 		try {
 			HttpClient client = new HttpClient();
 			StringBuffer paramString = new StringBuffer();

@@ -65,11 +65,10 @@ public class CmdUtil {
 			}
 			bri.close();
 			Integer exitValue = p.waitFor();
-			// System.out.println("Exit value: " + exitValue);
 			if (0 == exitValue || 1 == exitValue) {
 				// do something here...
 			}
-			result = "Exit value: " + exitValue + "\n\n" + "Output: \n" + sbOut.toString() + "\n\nError message: " + sbErr.toString();
+			result = exitValue + ":" + sbOut.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
