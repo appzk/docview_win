@@ -1,5 +1,7 @@
 package com.idocv.docview.service.impl;
 
+import java.io.File;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,12 @@ public class ThdServiceImpl implements ThdService {
 		if (!thdUploadCheckSwitch) {
 			return true;
 		}
+
+		if (!new File(thdUploadChecker).isFile()) {
+			logger.error("[CLUSTER] 未找到指定的用户校验工具！");
+			throw new DocServiceException("未找到指定的用户校验工具！");
+		}
+
 		String result = CmdUtil.runWindows("java", "-jar", thdUploadChecker, uid, tid, sid);
 		if (StringUtils.isNotBlank(result) && result.matches("(?s).*?:(\\w{1,}).*")) {
 			String validCode = result.replaceFirst("(?s).*?:(\\w{1,}).*", "$1");
@@ -43,6 +51,10 @@ public class ThdServiceImpl implements ThdService {
 
 	@Override
 	public String getFileMd5(String src) throws DocServiceException {
+		if (!new File(thdUploadFileMd5).isFile()) {
+			logger.error("[CLUSTER] 未找到指定的MD5工具！");
+			throw new DocServiceException("未找到指定的MD5工具！");
+		}
 		String result = CmdUtil.runWindows("java", "-jar", thdUploadFileMd5, src);
 		if (StringUtils.isNotBlank(result) && result.matches("(?s).*?:(\\w{32}).*")) {
 			String md5 = result.replaceFirst("(?s).*?:(\\w{32}).*", "$1");
