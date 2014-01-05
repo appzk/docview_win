@@ -52,7 +52,7 @@ public class XiWangController {
 			if (null == vo) {
 				throw new Exception("上传失败！");
 			}
-			logger.info("[CLUSTER] USER( " + uid + ") uploaded file: " + vo);
+			logger.info("[CLUSTER] USER( " + uid + ") uploaded file: " + vo.getUuid());
 			result.put("uuid", vo.getUuid());
 		} catch (Exception e) {
 			logger.error("upload error <controller>: " + e.getMessage());
