@@ -124,6 +124,7 @@ public class ClusterServiceImpl implements ClusterService {
 
 			// save info
 			docDao.add(appid, uid, rid, uuid, fileName, size, ext, 1, null, metas);
+			docDao.updateUrl(uuid, url);
 
 			// Asynchronously convert document
 			convertService.convert(rid);

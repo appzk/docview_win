@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,13 +39,13 @@ public class XiWangController {
 	 */
 	@ResponseBody
 	@RequestMapping("xiwang/upload")
-	public Map<String, String> upload(@RequestParam MultipartFile file,
+	public Map<String, Object> upload(@RequestParam MultipartFile file,
 			@RequestParam(value = "appid") String appid,
 			@RequestParam(value = "uid") String uid,
 			@RequestParam(value = "tid") String tid,
 			@RequestParam(value = "sid") String sid,
 			@RequestParam(value = "mode") String mode) {
-		Map<String, String> result = new HashMap<String, String>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			byte[] data = file.getBytes();
 			String fileName = file.getOriginalFilename();
@@ -54,6 +55,12 @@ public class XiWangController {
 			}
 			logger.info("[CLUSTER] USER( " + uid + ") uploaded file: " + vo.getUuid());
 			result.put("uuid", vo.getUuid());
+			String dfsUrl = vo.getUrl();
+			if (StringUtils.isNotBlank(dfsUrl) && dfsUrl.matches("dfs:/{2,3}[^/]+/(\\w{32}\\.\\w+)")) {
+				result.put("md5filename", dfsUrl.replaceFirst("dfs:/{2,3}[^/]+/(\\w{32}\\.\\w+)", "$1"));
+			}
+			
+			result.putAll(vo.getMetas());
 		} catch (Exception e) {
 			logger.error("upload error <controller>: " + e.getMessage());
 			result.put("error", e.getMessage());
