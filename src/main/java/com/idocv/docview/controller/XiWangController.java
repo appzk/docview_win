@@ -7,13 +7,16 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.ClusterService;
 import com.idocv.docview.vo.DocVo;
 
@@ -24,6 +27,9 @@ public class XiWangController {
 	
 	@Resource
 	private ClusterService clusterService;
+
+	private @Value("${view.page.load.async}")
+	boolean pageLoadAsync;
 
 	/**
 	 * upload
@@ -63,18 +69,22 @@ public class XiWangController {
 	 * @param ext
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping("{appId}/{md5Filename:\\w{32}}.{ext:[a-zA-Z]{3,4}}")
-	public Map<String, String> test(
+	@RequestMapping("{appId}/{fileMd5:\\w{32}}.{ext:[a-zA-Z]{3,4}}")
+	public String view(Model model,
 			@PathVariable(value = "appId") String appId,
-			@PathVariable(value = "md5Filename") String md5Filename,
+			@PathVariable(value = "fileMd5") String fileMd5,
 			@PathVariable(value = "ext") String ext) {
-		Map<String, String> result = new HashMap<String, String>();
-		result.put("code", "1");
-		result.put("app", appId);
-		result.put("md5", md5Filename);
-		result.put("ext", ext);
-		return result;
+		try {
+			DocVo vo = clusterService.addUrl(appId, fileMd5, ext);
+			if (null == vo) {
+				throw new DocServiceException("获取文件失败！");
+			}
+			String uuid = vo.getUuid();
+			return "redirect:/view/" + uuid + (pageLoadAsync ? "" : ".html");
+		} catch (Exception e) {
+			logger.error("[CLUSTER] view " + appId + "/" + fileMd5 + "." + ext + " error: " + e.getMessage());
+			model.addAttribute("error", e.getMessage());
+			return "404";
+		}
 	}
-
 }

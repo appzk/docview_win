@@ -20,4 +20,14 @@ public interface ClusterService {
 	 */
 	public void upload2DFSBatchTask();
 
+	/**
+	 * Add remote file to local
+	 * 
+	 * @param appId
+	 * @param fileMd5
+	 * @param ext
+	 * @return
+	 * @throws DocServiceException
+	 */
+	DocVo addUrl(String appId, String fileMd5, String ext) throws DocServiceException;
 }

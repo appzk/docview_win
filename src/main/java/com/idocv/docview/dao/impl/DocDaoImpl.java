@@ -85,6 +85,28 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		return true;
 	}
 
+	@Override
+	public boolean updateField(String uuid, String name, String value) throws DBException {
+		if (StringUtils.isEmpty(uuid) || StringUtils.isEmpty(name)) {
+			throw new DBException("请提供必要参数：uuid=" + uuid + ", name=" + name);
+		}
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
+		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().append(UTIME, time);
+		if (StringUtils.isNotBlank(value)) {
+			ob.push("$set").append(name, value);
+		} else {
+			ob.push("$unset").append(name, 1);
+		}
+		try {
+			DBCollection coll = db.getCollection(COLL_DOC);
+			coll.update(query, ob.get(), false, true);
+			return true;
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
 	private void updateStatus(String uuid, int status) throws DBException {
 		if (StringUtils.isEmpty(uuid)) {
 			throw new DBException("Insufficient parameters!");
@@ -386,6 +408,19 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 			}
 			DBCollection coll = db.getCollection(COLL_DOC);
 			return coll.count(query.get());
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	@Override
+	public List<DocPo> listNewlyAddedFiles() throws DBException {
+		try {
+			QueryBuilder query = QueryBuilder.start("metas.remote").notEquals("1");
+			DBObject orderBy = BasicDBObjectBuilder.start().add(CTIME, 1).get();
+			DBCollection coll = db.getCollection(COLL_DOC);
+			DBCursor cur = coll.find(query.get()).sort(orderBy);
+			return convertCur2Po(cur);
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());
 		}

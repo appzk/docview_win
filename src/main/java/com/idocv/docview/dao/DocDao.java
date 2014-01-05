@@ -54,16 +54,26 @@ public interface DocDao {
 	/**
 	 * 添加文档
 	 * 
-	 * @param app 应用id
-	 * @param uid 用户id
-	 * @param rid 文档id（用于主键，文档存储路径）
-	 * @param uuid 文档唯一标示id
-	 * @param name 名称
-	 * @param size 大小
-	 * @param ext 扩展名
-	 * @param status 文档状态，-1：已删除；0：私有文档；1：公开文档
-	 * @param labelId 文档所属标签id
-	 * @param metas 文件其它元数据
+	 * @param app
+	 *            应用id
+	 * @param uid
+	 *            用户id
+	 * @param rid
+	 *            文档id（用于主键，文档存储路径）
+	 * @param uuid
+	 *            文档唯一标示id
+	 * @param name
+	 *            名称
+	 * @param size
+	 *            大小
+	 * @param ext
+	 *            扩展名
+	 * @param status
+	 *            文档状态，-1：已删除；0：私有文档；1：公开文档
+	 * @param labelId
+	 *            文档所属标签id
+	 * @param metas
+	 *            文件其它元数据
 	 * @throws DBException
 	 */
 	void add(String app, String uid, String rid, String uuid, String name, int size, String ext, int status, String labelId, Map<String, Object> metas) throws DBException;
@@ -72,6 +82,17 @@ public interface DocDao {
 	 * Delete a document.
 	 */
 	boolean delete(String uuid) throws DBException;
+	
+	/**
+	 * update field
+	 * 
+	 * @param uuid
+	 * @param name
+	 * @param value if NULL, unset the field
+	 * @return
+	 * @throws DBException
+	 */
+	boolean updateField(String uuid, String name, String value) throws DBException;
 
 	/**
 	 * Update Url.
@@ -142,7 +163,8 @@ public interface DocDao {
 	 * @param labelId
 	 * @param searchString
 	 * @param queryOrder
-	 * @param status -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
+	 * @param status
+	 *            -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
 	 * @return
 	 * @throws DBException
 	 */
@@ -154,7 +176,8 @@ public interface DocDao {
 	 * @param uid
 	 * @param labelId
 	 * @param searchString
-	 * @param status -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
+	 * @param status
+	 *            -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
 	 * @return
 	 * @throws DBException
 	 */
@@ -169,7 +192,8 @@ public interface DocDao {
 	 * @param labelId
 	 * @param searchString
 	 * @param queryOrder
-	 * @param status -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
+	 * @param status
+	 *            -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
 	 * @return
 	 * @throws DBException
 	 */
@@ -181,7 +205,8 @@ public interface DocDao {
 	 * @param app
 	 * @param labelId
 	 * @param searchString
-	 * @param status -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
+	 * @param status
+	 *            -1：包括已删除文档；0：包括私有文档；1：只列出公开文档
 	 * @return
 	 * @throws DBException
 	 */
@@ -195,4 +220,12 @@ public interface DocDao {
 	 * @throws DBException
 	 */
 	public long count(boolean includeDeleted) throws DBException;
+
+	/**
+	 * Get newly added files that has NOT yet uploaded to DFS, only use this method under cluster environment
+	 * 
+	 * @return
+	 * @throws DBException
+	 */
+	List<DocPo> listNewlyAddedFiles() throws DBException;
 }

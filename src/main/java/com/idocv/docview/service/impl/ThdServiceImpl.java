@@ -48,7 +48,7 @@ public class ThdServiceImpl implements ThdService {
 			String md5 = result.replaceFirst("(?s).*?:(\\w{32}).*", "$1");
 			return md5;
 		}
-		logger.error("[CLUSTER] 获取文件MD5失败：src=" + src + ", return=" + result);
+		logger.error("[CLUSTER] 获取文件MD5失败：file=" + src + ", return=" + result);
 		throw new DocServiceException("获取文件MD5失败！");
 	}
 
