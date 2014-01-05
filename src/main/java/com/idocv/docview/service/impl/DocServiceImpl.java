@@ -95,7 +95,7 @@ public class DocServiceImpl implements DocService {
 
 	private static String authUrl = "http://www.idocv.com/auth.json";
 	private static final ObjectMapper om = new ObjectMapper();
-	private static final String macAddress = "34-40-B5-AA-93-40";
+	private static final String macAddress = "52-54-00-47-C9-4C";
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
 	private static String lastCheckingDate = "2013-01-01";
@@ -454,7 +454,7 @@ public class DocServiceImpl implements DocService {
 		return vo;
 	}
 	
-	private static boolean validateExpireDate() {
+	public static boolean validateExpireDate() {
 		if (!isCheckExpireDate) {
 			return true;
 		}
@@ -487,6 +487,7 @@ public class DocServiceImpl implements DocService {
 				if (macAddress.equals(mac)) {
 					Date expireDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(expire);
 					if (expireDate.after(new Date()) && "1".equals(valid)) {
+						lastCheckingStatus = true;
 						return true;
 					}
 				}
