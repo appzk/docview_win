@@ -92,11 +92,11 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		}
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
-		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().append(UTIME, time);
+		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set").append(UTIME, time);
 		if (StringUtils.isNotBlank(value)) {
-			ob.push("$set").append(name, value);
+			ob.append(name, value);
 		} else {
-			ob.push("$unset").append(name, 1);
+			ob.pop().push("$unset").append(name, 1);
 		}
 		try {
 			DBCollection coll = db.getCollection(COLL_DOC);

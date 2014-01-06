@@ -46,6 +46,7 @@ public class XiWangController {
 			@RequestParam(value = "sid") String sid,
 			@RequestParam(value = "mode") String mode) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> dataMap = new HashMap<String, Object>();
 		try {
 			byte[] data = file.getBytes();
 			String fileName = file.getOriginalFilename();
@@ -54,18 +55,22 @@ public class XiWangController {
 				throw new Exception("上传失败！");
 			}
 			logger.info("[CLUSTER] USER( " + uid + ") uploaded file: " + vo.getUuid());
-			result.put("uuid", vo.getUuid());
+			dataMap.put("uuid", vo.getUuid());
 			String dfsUrl = vo.getUrl();
 			if (StringUtils.isNotBlank(dfsUrl) && dfsUrl.matches("dfs:/{2,3}[^/]+/(\\w{32}\\.\\w+)")) {
-				result.put("md5filename", dfsUrl.replaceFirst("dfs:/{2,3}[^/]+/(\\w{32}\\.\\w+)", "$1"));
+				dataMap.put("md5filename", dfsUrl.replaceFirst("dfs:/{2,3}[^/]+/(\\w{32}\\.\\w+)", "$1"));
 			}
-			
-			result.putAll(vo.getMetas());
+			dataMap.putAll(vo.getMetas());
+			result.put("data", dataMap);
+			result.put("ret", 0);
+			result.put("msg", "success");
+			return result;
 		} catch (Exception e) {
 			logger.error("upload error <controller>: " + e.getMessage());
-			result.put("error", e.getMessage());
+			result.put("ret", -1);
+			result.put("msg", e.getMessage());
+			return result;
 		}
-		return result;
 	}
 
 	/**

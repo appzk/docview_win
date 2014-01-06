@@ -161,12 +161,14 @@ public class ClusterServiceImpl implements ClusterService {
 			List<DocPo> newFileList = docDao.listNewlyAddedFiles();
 			long startTime = System.currentTimeMillis();
 			// upload those files sequentially
-			if (!CollectionUtils.isEmpty(newFileList)) {
-				logger.info("[CLUSTER] start uploading " + newFileList.size() + " new file(s) to DFS...");
-				for (DocPo newFile : newFileList) {
-					String uuid = newFile.getUuid();
-					uploadUuid2Remote(uuid);
-				}
+			if (CollectionUtils.isEmpty(newFileList)) {
+				logger.info("[CLUSTER] There is NO new file need to uplaod to DFS");
+				return;
+			}
+			logger.info("[CLUSTER] start uploading " + newFileList.size() + " new file(s) to DFS...");
+			for (DocPo newFile : newFileList) {
+				String uuid = newFile.getUuid();
+				uploadUuid2Remote(uuid);
 			}
 
 			// upload elapse & file count
@@ -176,7 +178,7 @@ public class ClusterServiceImpl implements ClusterService {
 			logger.info("[CLUSTER] successfully synchronised newly added "
 					+ newFileList.size() + " files within " + elapse
 					+ "second(s) from " + df.format(new Date(startTime))
-					+ " to " + df.format(new Date(startTime)));
+					+ " to " + df.format(new Date(endTime)));
 		} catch (DBException e) {
 			logger.error("[CLUSTER] Get newly added files error: " + e.getMessage());
 		}
@@ -226,7 +228,7 @@ public class ClusterServiceImpl implements ClusterService {
 	 * @param params
 	 * @return
 	 */
-	private boolean upload2Remote(String fileName, byte[] bytes, Map<String, Object> params) {
+	private boolean upload2Remote(String fileName, byte[] bytes, Map<String, Object> params) throws DocServiceException{
 		try {
 			HttpClient client = new HttpClient();
 			StringBuffer paramString = new StringBuffer();
@@ -241,7 +243,7 @@ public class ClusterServiceImpl implements ClusterService {
 				url = url + "?" + paramString;
 			}
 			PostMethod filePost = new PostMethod(url);
-			Part[] parts = { new FilePart("filename", new ByteArrayPartSource(fileName, bytes)) {
+			Part[] parts = { new FilePart("file", new ByteArrayPartSource(fileName, bytes)) {
 
 				@Override
 				protected void sendDispositionHeader(OutputStream out) throws IOException {
@@ -265,10 +267,11 @@ public class ClusterServiceImpl implements ClusterService {
 				return true;
 			}
 			logger.error("[CLUSTER] upload to remote error with result: " + result + ", params=" + params);
+			throw new DocServiceException("[CLUSTER] upload to remote error with result: " + result + ", params=" + params);
 		} catch (Exception e) {
 			logger.error("[CLUSTER] upload to remote error: " + e.getMessage() + ", params=" + params);
+			throw new DocServiceException("[CLUSTER] upload to remote error: " + e.getMessage() + ", params=" + params);
 		}
-		return false;
 	}
 
 	@Override
