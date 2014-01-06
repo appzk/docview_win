@@ -162,6 +162,7 @@ public class ClusterServiceImpl implements ClusterService {
 			long startTime = System.currentTimeMillis();
 			// upload those files sequentially
 			if (!CollectionUtils.isEmpty(newFileList)) {
+				logger.info("[CLUSTER] start uploading " + newFileList.size() + " new file(s) to DFS...");
 				for (DocPo newFile : newFileList) {
 					String uuid = newFile.getUuid();
 					uploadUuid2Remote(uuid);
