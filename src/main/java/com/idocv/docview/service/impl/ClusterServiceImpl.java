@@ -333,8 +333,11 @@ public class ClusterServiceImpl implements ClusterService {
 			FileUtils.writeByteArrayToFile(new File(rcUtil.getPath(rid)), data);
 
 			// save info
-			docDao.add(appId, null, rid, uuid, fileName, size, ext, 1, null, null);
-
+			Map<String, Object> metas = new HashMap<String, Object>();
+			metas.put("remote", "1");
+			docDao.add(appId, null, rid, uuid, fileName, size, ext, 1, null, metas);
+			docDao.updateUrl(uuid, url);
+			
 			// Asynchronously convert document
 			convertService.convert(rid);
 			return DocServiceImpl.convertPo2Vo(doc);
