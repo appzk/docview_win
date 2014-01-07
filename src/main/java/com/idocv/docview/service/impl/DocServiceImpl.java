@@ -484,7 +484,7 @@ public class DocServiceImpl implements DocService {
 				String mac = auth.get("mac");
 				String expire = auth.get("expire");
 				String valid = auth.get("valid");
-				if (macAddress.equals(mac)) {
+				if (macAddress.equalsIgnoreCase(mac)) {
 					Date expireDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(expire);
 					if (expireDate.after(new Date()) && "1".equals(valid)) {
 						lastCheckingStatus = true;
