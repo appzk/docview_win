@@ -80,7 +80,7 @@ public class ClusterServiceImpl implements ClusterService {
 
 	@Override
 	public DocVo add(String fileName, byte[] data, String appid, String uid,
-			String tid, String sid, String mode) throws DocServiceException {
+			String tid, String sid, int mode) throws DocServiceException {
 		try {
 			if (!DocServiceImpl.validateExpireDate()) {
 				System.out.println("[ERROR] This machine is expired!");

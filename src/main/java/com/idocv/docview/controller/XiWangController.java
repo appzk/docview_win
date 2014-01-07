@@ -1,6 +1,8 @@
 package com.idocv.docview.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -44,7 +46,7 @@ public class XiWangController {
 			@RequestParam(value = "uid") String uid,
 			@RequestParam(value = "tid") String tid,
 			@RequestParam(value = "sid") String sid,
-			@RequestParam(value = "mode") String mode) {
+			@RequestParam(value = "mode") int mode) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		try {
@@ -61,8 +63,17 @@ public class XiWangController {
 				dataMap.put("md5filename", dfsUrl.replaceFirst("dfs:/{2,3}[^/]+/(\\w{32}\\.\\w+)", "$1"));
 			}
 			dataMap.putAll(vo.getMetas());
-			result.put("data", dataMap);
+			dataMap.put("filename", fileName);
+			String ext = (StringUtils.isNotBlank(fileName) && fileName
+					.contains(".")) ? fileName.substring(fileName
+					.lastIndexOf(".") + 1) : "";
+			dataMap.put("suffix", ext);
+			dataMap.put("filesize", data.length);
+			List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+			dataList.add(dataMap);
+			result.put("data", dataList);
 			result.put("ret", 0);
+			result.put("errcode", 0);
 			result.put("msg", "success");
 			return result;
 		} catch (Exception e) {
