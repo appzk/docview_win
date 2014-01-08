@@ -99,10 +99,26 @@ public class ClusterServiceImpl implements ClusterService {
 			// 3. get fileName md5
 			String md5FileName = thdService.getFileMd5(srcFile);
 
-			// 3. set DocPo and save to database
+			// 4. if file md5 already exist, return
+			String ext = RcUtil.getExt(rid);
+			if (!rcUtil.isSupportUpload(ext)) {
+				throw new DocServiceException("不支持上传" + ext + "文件，详情请联系管理员！");
+			}
+			String url = "dfs:///" + appid + "/" + md5FileName + "." + ext;
+			DocVo vo = DocServiceImpl.convertPo2Vo(docDao.getUrl(url, false));
+			if (null != vo) {
+				// remove just created file
+				try {
+					FileUtils.forceDelete(srcFile);
+				} catch (Exception e) {
+					logger.error("[CLUSTER] delete file(" + srcFile + ") error: " + e.getMessage());
+				}
+				return vo;
+			}
+
+			// 5. set DocPo and save to database
 			DocPo doc = new DocPo();
 			String uuid = RcUtil.getUuidByRid(rid);
-			String ext = RcUtil.getExt(rid);
 			doc.setRid(rid);
 			doc.setUuid(uuid);
 			doc.setName(fileName);
@@ -116,13 +132,7 @@ public class ClusterServiceImpl implements ClusterService {
 			metas.put("sid", sid);
 			metas.put("mode", mode);
 			doc.setMetas(metas);
-			String url = "dfs:///" + appid + "/" + md5FileName + "." + ext;
 			doc.setUrl(url);
-
-			if (!rcUtil.isSupportUpload(ext)) {
-				throw new DocServiceException("不支持上传" + ext + "文件，详情请联系管理员！");
-			}
-
 			// save info
 			docDao.add(appid, uid, rid, uuid, fileName, size, ext, 1, null, metas);
 			docDao.updateUrl(uuid, url);
