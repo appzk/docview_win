@@ -92,7 +92,7 @@ public class XiWangController {
 	 * @param ext
 	 * @return
 	 */
-	@RequestMapping("{appId}/{fileMd5:\\w{32}}.{ext:[a-zA-Z]{3,4}}")
+	@RequestMapping("{appId}/{fileMd5:\\w{32}}.{ext:[\\w]{3,4}}")
 	public String view(Model model,
 			@PathVariable(value = "appId") String appId,
 			@PathVariable(value = "fileMd5") String fileMd5,

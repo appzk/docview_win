@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -53,8 +55,14 @@ public class ViewController {
 	@Resource
 	private SessionService sessionService;
 
+	private @Value("${filetype.view.template}")
+	String filetypeViewTemplate;
+
 	private @Value("${view.page.load.async}")
 	boolean pageLoadAsync;
+
+	@Resource
+	private RcUtil rcUtil;
 
 	@RequestMapping("")
 	public void home(HttpServletRequest req, HttpServletResponse resp) {
@@ -75,6 +83,7 @@ public class ViewController {
 		String uuid = null;
 		String sessionId = null;
 		try {
+			// check UUID
 			if (id.matches("\\w{24}")) {
 				// session id
 				SessionVo sessionVo = sessionService.get(id);
@@ -86,14 +95,30 @@ public class ViewController {
 			} else {
 				uuid = id;
 			}
+
+			// check extension
+			DocVo docVo = docService.getByUuid(uuid);
+			if (null == docVo || StringUtils.isBlank(docVo.getRid())) {
+				throw new DocServiceException("文档(" + uuid + ")不存在！");
+			}
+			String rid = docVo.getRid();
+			String ext = RcUtil.getExt(rid);
+			if (StringUtils.isBlank(ext)) {
+				logger.error("无法预览无后缀名的文件(" + uuid + ")！");
+				throw new DocServiceException("无法预览无后缀名的文件(" + uuid + ")！");
+			}
+			if (!rcUtil.isSupportView(ext)) {
+				logger.error("暂不支持预览文件" + uuid + "(" + ext + ")！");
+				throw new DocServiceException("暂不支持预览文件" + uuid + "(" + ext
+						+ ")！");
+			}
+
 			if (uuid.endsWith("w")) {
 				model.setViewName("word/index");
 				return model;
-//				return "redirect:/page/word/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("x")) {
 				model.setViewName("excel/index");
 				return model;
-//				return "redirect:/page/excel/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("p")) {
 				if ("3d".equalsIgnoreCase(style)) {
 					model.setViewName("ppt/index");
@@ -114,17 +139,31 @@ public class ViewController {
 					model.setViewName("ppt/outline");
 					return model;
 				}
-//				return "redirect:/page/ppt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
 			} else if (uuid.endsWith("f")) {
-				// model.setViewName("pdf/index");
 				model.setViewName("pdf/png");
 				return model;
 			} else if (uuid.endsWith("t")) {
 				model.setViewName("txt/index");
 				return model;
-//				return "redirect:/page/txt/index.html?uuid=" + uuid + (null == sessionId ? "" : "&session=" + sessionId);
+			}
+			if (StringUtils.isNotBlank(filetypeViewTemplate) && filetypeViewTemplate.contains(ext)) {
+				// jpg,gif,png,bmp@image#mp3,midi@audio#avi,rmvb,mp4,mkv@video
+				String templateName = filetypeViewTemplate.replaceFirst(".*?" + ext + ".*?@(\\w+).*", "$1");
+				model.setViewName("template/" + templateName);
+				String dfsUrl = docVo.getUrl();
+				String appId = docVo.getApp();
+				String uid = docVo.getUid();
+				Map<String, Object> attMap = new HashMap<String, Object>();
+				attMap.put("url", dfsUrl);
+				attMap.put("app", appId);
+				attMap.put("uid", uid);
+				attMap.put("uuid", uuid);
+				attMap.put("ext", ext);
+				model.addAllObjects(attMap);
+				return model;
 			} else {
-				throw new DocServiceException("(" + id + ")不是有效的文档！");
+				throw new DocServiceException("未找到文件" + uuid + "(" + ext
+						+ ")的预览模板，请联系管理员！");
 			}
 		} catch (DocServiceException e) {
 			logger.error("view id(" + id + ") error: " + e.getMessage());

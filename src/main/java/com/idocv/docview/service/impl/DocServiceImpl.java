@@ -96,8 +96,8 @@ public class DocServiceImpl implements DocService {
 	private static String authUrl = "http://www.idocv.com/auth.json";
 	private static final ObjectMapper om = new ObjectMapper();
 	public static final String macAddress = "00-50-56-91-07-98";
-	private static final boolean isCheckMacAddress = false;
-	private static final boolean isCheckExpireDate = false;
+	private static final boolean isCheckMacAddress = true;
+	private static final boolean isCheckExpireDate = true;
 	private static String lastCheckingDate = "2013-01-01";
 	private static boolean lastCheckingStatus = true;
 
@@ -437,6 +437,7 @@ public class DocServiceImpl implements DocService {
 		vo.setRid(po.getRid());
 		vo.setUuid(po.getUuid());
 		vo.setApp(po.getApp());
+		vo.setUid(po.getUid());
 		vo.setName(po.getName());
 		vo.setSize(po.getSize());
 		vo.setStatus(po.getStatus());
