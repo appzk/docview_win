@@ -55,8 +55,8 @@ public class ViewController {
 	@Resource
 	private SessionService sessionService;
 
-	private @Value("${filetype.view.template}")
-	String filetypeViewTemplate;
+	private @Value("${thd.view.template}")
+	String thdViewTemplate;
 
 	private @Value("${view.page.load.async}")
 	boolean pageLoadAsync;
@@ -146,9 +146,9 @@ public class ViewController {
 				model.setViewName("txt/index");
 				return model;
 			}
-			if (StringUtils.isNotBlank(filetypeViewTemplate) && filetypeViewTemplate.contains(ext)) {
+			if (StringUtils.isNotBlank(thdViewTemplate) && thdViewTemplate.contains(ext)) {
 				// jpg,gif,png,bmp@image#mp3,midi@audio#avi,rmvb,mp4,mkv@video
-				String templateName = filetypeViewTemplate.replaceFirst(".*?" + ext + ".*?@(\\w+).*", "$1");
+				String templateName = thdViewTemplate.replaceFirst(".*?" + ext + ".*?@(\\w+).*", "$1");
 				model.setViewName("template/" + templateName);
 				String dfsUrl = docVo.getUrl();
 				String appId = docVo.getApp();
