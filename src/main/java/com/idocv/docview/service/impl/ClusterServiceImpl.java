@@ -90,10 +90,14 @@ public class ClusterServiceImpl implements ClusterService {
 			// 1. validate user params
 			thdService.validateUser(uid, tid, sid);
 
-			// 2. get fileName md5
+			// 2. save file
 			int size = data.length;
 			String rid = RcUtil.genRid(appid, fileName, size);
-			String md5FileName = thdService.getFileMd5(rcUtil.getPath(rid));
+			File srcFile = new File(rcUtil.getPath(rid));
+			FileUtils.writeByteArrayToFile(srcFile, data);
+
+			// 3. get fileName md5
+			String md5FileName = thdService.getFileMd5(srcFile);
 
 			// 3. set DocPo and save to database
 			DocPo doc = new DocPo();
@@ -118,9 +122,6 @@ public class ClusterServiceImpl implements ClusterService {
 			if (!rcUtil.isSupportUpload(ext)) {
 				throw new DocServiceException("不支持上传" + ext + "文件，详情请联系管理员！");
 			}
-
-			// save file meta and file
-			FileUtils.writeByteArrayToFile(new File(rcUtil.getPath(rid)), data);
 
 			// save info
 			docDao.add(appid, uid, rid, uuid, fileName, size, ext, 1, null, metas);

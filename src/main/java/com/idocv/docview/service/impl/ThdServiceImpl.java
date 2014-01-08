@@ -50,12 +50,16 @@ public class ThdServiceImpl implements ThdService {
 	}
 
 	@Override
-	public String getFileMd5(String src) throws DocServiceException {
+	public String getFileMd5(File src) throws DocServiceException {
 		if (!new File(thdUploadFileMd5).isFile()) {
 			logger.error("[CLUSTER] 未找到指定的MD5工具！");
 			throw new DocServiceException("未找到指定的MD5工具！");
 		}
-		String result = CmdUtil.runWindows("java", "-jar", thdUploadFileMd5, src);
+		if (!src.isFile()) {
+			logger.error("[CLUSTER] 获取文件MD5失败：未找到源文件（" + src.getAbsolutePath() + "）");
+			throw new DocServiceException("获取文件MD5失败：源文件未找到！");
+		}
+		String result = CmdUtil.runWindows("java", "-jar", thdUploadFileMd5, src.getAbsolutePath());
 		if (StringUtils.isNotBlank(result) && result.matches("(?s).*?:(\\w{32}).*")) {
 			String md5 = result.replaceFirst("(?s).*?:(\\w{32}).*", "$1");
 			return md5;

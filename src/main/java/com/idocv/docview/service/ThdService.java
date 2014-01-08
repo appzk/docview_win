@@ -1,5 +1,7 @@
 package com.idocv.docview.service;
 
+import java.io.File;
+
 import com.idocv.docview.exception.DocServiceException;
 
 public interface ThdService {
@@ -22,5 +24,5 @@ public interface ThdService {
 	 * @return
 	 * @throws DocServiceException
 	 */
-	String getFileMd5(String src) throws DocServiceException;
+	String getFileMd5(File src) throws DocServiceException;
 }
