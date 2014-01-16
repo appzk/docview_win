@@ -75,6 +75,9 @@ public class ClusterServiceImpl implements ClusterService {
 	@Value("${upload.max.msg}")
 	private String uploadMaxMsg;
 
+	@Value("${thd.upload.unique}")
+	private boolean isUniqueUpload;
+
 	@Resource
 	private ThdService thdService;
 
@@ -105,15 +108,19 @@ public class ClusterServiceImpl implements ClusterService {
 				throw new DocServiceException("不支持上传" + ext + "文件，详情请联系管理员！");
 			}
 			String url = "dfs:///" + appid + "/" + md5FileName + "." + ext;
-			DocVo vo = DocServiceImpl.convertPo2Vo(docDao.getUrl(url, false));
-			if (null != vo) {
-				// remove just created file
-				try {
-					FileUtils.forceDelete(srcFile);
-				} catch (Exception e) {
-					logger.error("[CLUSTER] delete file(" + srcFile + ") error: " + e.getMessage());
+
+			// check existence
+			if (isUniqueUpload) {
+				DocVo vo = DocServiceImpl.convertPo2Vo(docDao.getUrl(url, false));
+				if (null != vo) {
+					// remove just created file
+					try {
+						FileUtils.forceDelete(srcFile);
+					} catch (Exception e) {
+						logger.error("[CLUSTER] delete file(" + srcFile + ") error: " + e.getMessage());
+					}
+					return vo;
 				}
-				return vo;
 			}
 
 			// 5. set DocPo and save to database
