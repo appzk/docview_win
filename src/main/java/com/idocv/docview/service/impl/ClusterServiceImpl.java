@@ -78,6 +78,9 @@ public class ClusterServiceImpl implements ClusterService {
 	@Value("${thd.upload.unique}")
 	private boolean isUniqueUpload;
 
+	@Value("${thd.upload.convert}")
+	private boolean isUploadConvert;
+
 	@Resource
 	private ThdService thdService;
 
@@ -145,7 +148,9 @@ public class ClusterServiceImpl implements ClusterService {
 			docDao.updateUrl(uuid, url);
 
 			// Asynchronously convert document
-			convertService.convert(rid);
+			if (isUploadConvert) {
+				convertService.convert(rid);
+			}
 
 			// 4. upload to cluster
 			upload2DFSInstantly(uuid);

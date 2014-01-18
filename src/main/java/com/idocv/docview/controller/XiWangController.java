@@ -52,11 +52,13 @@ public class XiWangController {
 		try {
 			byte[] data = file.getBytes();
 			String fileName = file.getOriginalFilename();
+			long start = System.currentTimeMillis();
 			DocVo vo = clusterService.add(fileName, data, appid, uid, tid, sid, mode);
+			long end = System.currentTimeMillis();
 			if (null == vo) {
 				throw new Exception("上传失败！");
 			}
-			logger.info("[CLUSTER] USER( " + uid + ") uploaded file: " + vo.getUuid());
+			logger.info("[CLUSTER] USER( " + uid + ") uploaded file: " + vo.getUuid() + ", length: " + data.length + ", elapse: " + (end - start) + " miliseconds.");
 			dataMap.put("uuid", vo.getUuid());
 			String dfsUrl = vo.getUrl();
 			if (StringUtils.isNotBlank(dfsUrl) && dfsUrl.matches("dfs:/{2,3}[^/]+/(\\w{32}\\.\\w+)")) {
