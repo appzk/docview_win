@@ -40,7 +40,7 @@ public class XiWangController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("xiwang/upload")
+	@RequestMapping(value = { "xiwang/upload", "ciwong/upload" })
 	public Map<String, Object> upload(@RequestParam MultipartFile file,
 			@RequestParam(value = "appid") String appid,
 			@RequestParam(value = "uid") String uid,
