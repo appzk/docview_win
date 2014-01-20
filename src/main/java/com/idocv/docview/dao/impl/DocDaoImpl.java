@@ -449,46 +449,46 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 			return null;
 		}
 		DocPo po = new DocPo();
-		if (obj.containsField(_ID)) {
+		if (obj.containsField(_ID) && null != obj.get(_ID)) {
 			po.setRid(obj.get(_ID).toString());
 		}
-		if (obj.containsField(APP)) {
+		if (obj.containsField(APP) && null != obj.get(APP)) {
 			po.setApp(obj.get(APP).toString());
 		}
-		if (obj.containsField(UID)) {
+		if (obj.containsField(UID) && null != obj.get(UID)) {
 			po.setUid(obj.get(UID).toString());
 		}
-		if (obj.containsField(UUID)) {
+		if (obj.containsField(UUID) && null != obj.get(UUID)) {
 			po.setUuid(obj.get(UUID).toString());
 		}
-		if (obj.containsField(NAME)) {
+		if (obj.containsField(NAME) && null != obj.get(NAME)) {
 			po.setName(obj.get(NAME).toString());
 		}
-		if (obj.containsField(SIZE)) {
+		if (obj.containsField(SIZE) && null != obj.get(SIZE)) {
 			po.setSize(Long.valueOf(obj.get(SIZE).toString()));
 		}
-		if (obj.containsField(STATUS)) {
+		if (obj.containsField(STATUS) && null != obj.get(STATUS)) {
 			po.setStatus(Integer.valueOf(obj.get(STATUS).toString()));
 		}
-		if (obj.containsField(CTIME)) {
+		if (obj.containsField(CTIME) && null != obj.get(CTIME)) {
 			po.setCtime(obj.get(CTIME).toString());
 		}
-		if (obj.containsField(UTIME)) {
+		if (obj.containsField(UTIME) && null != obj.get(UTIME)) {
 			po.setUtime(obj.get(UTIME).toString());
 		}
-		if (obj.containsField(EXT)) {
+		if (obj.containsField(EXT) && null != obj.get(EXT)) {
 			po.setExt(obj.get(EXT).toString());
 		}
-		if (obj.containsField(URL)) {
+		if (obj.containsField(URL) && null != obj.get(URL)) {
 			po.setUrl(obj.get(URL).toString());
 		}
-		if (obj.containsField(VIEW)) {
+		if (obj.containsField(VIEW) && null != obj.get(VIEW)) {
 			po.setViewLog((List<Long>) obj.get(VIEW));
 		}
-		if (obj.containsField(DOWNLOAD)) {
+		if (obj.containsField(DOWNLOAD) && null != obj.get(DOWNLOAD)) {
 			po.setDownloadLog((List<Long>) obj.get(DOWNLOAD));
 		}
-		if (obj.containsField(METAS)) {
+		if (obj.containsField(METAS) && null != obj.get(METAS)) {
 			po.setMetas((Map<String, Object>) obj.get(METAS));
 		}
 		return po;
