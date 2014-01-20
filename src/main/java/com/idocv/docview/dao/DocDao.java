@@ -76,7 +76,7 @@ public interface DocDao {
 	 *            文件其它元数据
 	 * @throws DBException
 	 */
-	void add(String app, String uid, String rid, String uuid, String name, int size, String ext, int status, String labelId, Map<String, Object> metas) throws DBException;
+	void add(String app, String uid, String rid, String uuid, String name, int size, String ext, int status, String labelId, Map<String, Object> metas, String url) throws DBException;
 
 	/**
 	 * Delete a document.

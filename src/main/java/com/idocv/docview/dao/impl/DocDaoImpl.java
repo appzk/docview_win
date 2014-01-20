@@ -36,7 +36,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	@Override
 	public void add(String app, String uid, String rid, String uuid,
 			String name, int size, String ext, int status, String labelId,
-			Map<String, Object> metas) throws DBException {
+			Map<String, Object> metas, String url) throws DBException {
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		if (StringUtils.isBlank(app)) {
 			throw new DBException("应用为空！");
@@ -65,6 +65,9 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		}
 		if (!CollectionUtils.isEmpty(metas)) {
 			builder.append(METAS, metas);
+		}
+		if (StringUtils.isBlank(url)) {
+			builder.append(URL, url);
 		}
 		String pinyin = PinyinUtil.getSortPinYin(name);
 		builder.append(PINYIN, pinyin);

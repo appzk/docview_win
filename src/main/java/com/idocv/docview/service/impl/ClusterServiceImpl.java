@@ -99,11 +99,15 @@ public class ClusterServiceImpl implements ClusterService {
 			// 2. save file
 			int size = data.length;
 			String rid = RcUtil.genRid(appid, fileName, size);
+			String uuid = RcUtil.getUuidByRid(rid);
 			File srcFile = new File(rcUtil.getPath(rid));
 			FileUtils.writeByteArrayToFile(srcFile, data);
 
 			// 3. get fileName md5
+			long md5Start = System.currentTimeMillis();
 			String md5FileName = thdService.getFileMd5(srcFile);
+			long md5End = System.currentTimeMillis();
+			logger.info("[CLUSTER] get md5 of " + uuid + " elapse: " + (md5End - md5Start) + " miliseconds.");
 
 			// 4. if file md5 already exist, return
 			String ext = RcUtil.getExt(rid);
@@ -128,7 +132,6 @@ public class ClusterServiceImpl implements ClusterService {
 
 			// 5. set DocPo and save to database
 			DocPo doc = new DocPo();
-			String uuid = RcUtil.getUuidByRid(rid);
 			doc.setRid(rid);
 			doc.setUuid(uuid);
 			doc.setName(fileName);
@@ -144,8 +147,8 @@ public class ClusterServiceImpl implements ClusterService {
 			doc.setMetas(metas);
 			doc.setUrl(url);
 			// save info
-			docDao.add(appid, uid, rid, uuid, fileName, size, ext, 1, null, metas);
-			docDao.updateUrl(uuid, url);
+			docDao.add(appid, uid, rid, uuid, fileName, size, ext, 1, null, metas, url);
+			// docDao.updateUrl(uuid, url);
 
 			// Asynchronously convert document
 			if (isUploadConvert) {
@@ -362,8 +365,7 @@ public class ClusterServiceImpl implements ClusterService {
 			// save info
 			Map<String, Object> metas = new HashMap<String, Object>();
 			metas.put("remote", "1");
-			docDao.add(appId, null, rid, uuid, fileName, size, ext, 1, null, metas);
-			docDao.updateUrl(uuid, url);
+			docDao.add(appId, null, rid, uuid, fileName, size, ext, 1, null, metas, url);
 			
 			// Asynchronously convert document
 			convertService.convert(rid);
