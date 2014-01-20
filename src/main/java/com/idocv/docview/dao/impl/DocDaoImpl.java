@@ -66,7 +66,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		if (!CollectionUtils.isEmpty(metas)) {
 			builder.append(METAS, metas);
 		}
-		if (StringUtils.isBlank(url)) {
+		if (StringUtils.isNotBlank(url)) {
 			builder.append(URL, url);
 		}
 		String pinyin = PinyinUtil.getSortPinYin(name);
