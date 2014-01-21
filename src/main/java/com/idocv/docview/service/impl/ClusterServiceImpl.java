@@ -81,6 +81,12 @@ public class ClusterServiceImpl implements ClusterService {
 	@Value("${thd.upload.convert}")
 	private boolean isUploadConvert;
 
+	@Value("${thd.upload.check.switch}")
+	private boolean thdUploadCheckSwitch = false;
+
+	@Value("${thd.upload.md5.switch}")
+	private boolean thdUploadMd5Switch = false;
+
 	@Resource
 	private ThdService thdService;
 
@@ -92,22 +98,30 @@ public class ClusterServiceImpl implements ClusterService {
 				System.out.println("[ERROR] This machine is expired!");
 				return null;
 			}
-
-			// 1. validate user params
-			thdService.validateUser(uid, tid, sid);
-
-			// 2. save file
 			int size = data.length;
 			String rid = RcUtil.genRid(appid, fileName, size);
 			String uuid = RcUtil.getUuidByRid(rid);
+
+			// 1. validate user params
+			if (thdUploadCheckSwitch) {
+				long checkStart = System.currentTimeMillis();
+				thdService.validateUser(uid, tid, sid);
+				long checkEnd = System.currentTimeMillis();
+				logger.info("[CLUSTER] " + uuid + " - check elapse: " + (checkEnd - checkStart) + " miliseconds.");
+			}
+
+			// 2. save file
 			File srcFile = new File(rcUtil.getPath(rid));
 			FileUtils.writeByteArrayToFile(srcFile, data);
 
 			// 3. get fileName md5
-			long md5Start = System.currentTimeMillis();
-			String md5FileName = thdService.getFileMd5(srcFile);
-			long md5End = System.currentTimeMillis();
-			logger.info("[CLUSTER] get md5 of " + uuid + " elapse: " + (md5End - md5Start) + " miliseconds.");
+			String md5FileName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+			if (thdUploadMd5Switch) {
+				long md5Start = System.currentTimeMillis();
+				md5FileName = thdService.getFileMd5(srcFile);
+				long md5End = System.currentTimeMillis();
+				logger.info("[CLUSTER] " + uuid + " - md5 elapse: " + (md5End - md5Start) + " miliseconds.");
+			}
 
 			// 4. if file md5 already exist, return
 			String ext = RcUtil.getExt(rid);
