@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.ByteArrayPartSource;
@@ -118,9 +119,15 @@ public class ClusterServiceImpl implements ClusterService {
 			String md5FileName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 			if (thdUploadMd5Switch) {
 				long md5Start = System.currentTimeMillis();
+				md5FileName = DigestUtils.md5Hex(data);
+				long md5Mid = System.currentTimeMillis();
 				md5FileName = thdService.getFileMd5(srcFile);
 				long md5End = System.currentTimeMillis();
-				logger.info("[CLUSTER] " + uuid + " - md5 elapse: " + (md5End - md5Start) + " miliseconds.");
+
+				long firstElapse = md5Mid - md5Start;
+				long secondElapse = md5End - md5Mid;
+				long allElapse = md5End - md5Start;
+				logger.info("[CLUSTER] " + uuid + " - md5 elapse: " + allElapse + "(" + firstElapse + "|" + secondElapse + ") miliseconds.");
 			}
 
 			// 4. if file md5 already exist, return
