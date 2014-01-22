@@ -1,7 +1,6 @@
 package com.idocv.docview.service;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 
 import com.idocv.docview.exception.DocServiceException;
 
@@ -15,6 +14,6 @@ import com.idocv.docview.exception.DocServiceException;
  */
 public interface ConvertService extends Callable<Boolean> {
 
-	Future<Boolean> convert(String rid) throws DocServiceException;
+	void convert(String rid) throws DocServiceException;
 
 }

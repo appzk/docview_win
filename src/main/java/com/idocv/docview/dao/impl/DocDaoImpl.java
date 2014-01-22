@@ -18,6 +18,7 @@ import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.exception.DBException;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.util.PinyinUtil;
+import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -31,7 +32,15 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		// TODO
+		if (null != db) {
+			DBCollection coll;
+			coll = db.getCollection(COLL_DOC);
+			coll.ensureIndex(BasicDBObjectBuilder.start().add(_ID, 1).get());
+			coll.ensureIndex(BasicDBObjectBuilder.start().add(UUID, 1).get());
+			coll.ensureIndex(BasicDBObjectBuilder.start().add(CTIME, 1).get());
+			coll.ensureIndex(BasicDBObjectBuilder.start().add(STATUS, 1).get());
+			coll.ensureIndex(BasicDBObjectBuilder.start().add(STATUS_CONVERT, 1).get());
+		}
 	}
 
 	@Override
@@ -90,14 +99,36 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public boolean updateField(String uuid, String name, String value) throws DBException {
+	public boolean updateFieldById(String id, String name, Object value) throws DBException {
+		if (StringUtils.isEmpty(id) || StringUtils.isEmpty(name)) {
+			throw new DBException("请提供必要参数：id=" + id + ", name=" + name);
+		}
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		DBObject query = QueryBuilder.start(_ID).is(id).get();
+		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set").append(UTIME, time);
+		if (null != value) {
+			ob.append(name, value);
+		} else {
+			ob.pop().push("$unset").append(name, 1);
+		}
+		try {
+			DBCollection coll = db.getCollection(COLL_DOC);
+			coll.update(query, ob.get(), false, true);
+			return true;
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+	
+	@Override
+	public boolean updateFieldByUuid(String uuid, String name, Object value) throws DBException {
 		if (StringUtils.isEmpty(uuid) || StringUtils.isEmpty(name)) {
 			throw new DBException("请提供必要参数：uuid=" + uuid + ", name=" + name);
 		}
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		DBObject query = QueryBuilder.start(UUID).is(uuid).get();
 		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set").append(UTIME, time);
-		if (StringUtils.isNotBlank(value)) {
+		if (null != value) {
 			ob.append(name, value);
 		} else {
 			ob.pop().push("$unset").append(name, 1);
@@ -407,6 +438,29 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 			DBCollection coll = db.getCollection(COLL_DOC);
 			int count = coll.find(query.get()).count();
 			return count;
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	@Override
+	public List<String> listDocIdsNotConverted(int size) throws DBException {
+		List<String> idList = new ArrayList<String>();
+		try {
+			List<DBObject> objs = new ArrayList<DBObject>();
+			objs.add(BasicDBObjectBuilder.start(STATUS_CONVERT, STATUS_CONVERT_INIT).get());
+			objs.add(BasicDBObjectBuilder.start().push(STATUS_CONVERT).add("$exists", false).get());
+			QueryBuilder query = QueryBuilder.start().or(objs.toArray(new DBObject[] {}));
+			DBObject orderBy = BasicDBObjectBuilder.start().add(CTIME, 1).get();
+			DBCollection coll = db.getCollection(COLL_DOC);
+			DBCursor cur = coll.find(query.get(), new BasicDBObject(_ID, 1)).sort(orderBy).limit(size);
+			while (cur.hasNext()) {
+				DBObject obj = cur.next();
+				if (obj.containsField(_ID) && null != obj.get(_ID)) {
+					idList.add(obj.get(_ID).toString());
+				}
+			}
+			return idList;
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());
 		}

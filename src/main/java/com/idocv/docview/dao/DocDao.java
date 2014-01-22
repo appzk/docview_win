@@ -86,13 +86,24 @@ public interface DocDao {
 	/**
 	 * update field
 	 * 
+	 * @param id
+	 * @param name
+	 * @param value if NULL, unset the field
+	 * @return
+	 * @throws DBException
+	 */
+	boolean updateFieldById(String id, String name, Object value) throws DBException;
+	
+	/**
+	 * update field
+	 * 
 	 * @param uuid
 	 * @param name
 	 * @param value if NULL, unset the field
 	 * @return
 	 * @throws DBException
 	 */
-	boolean updateField(String uuid, String name, String value) throws DBException;
+	boolean updateFieldByUuid(String uuid, String name, Object value) throws DBException;
 
 	/**
 	 * Update Url.
@@ -211,6 +222,15 @@ public interface DocDao {
 	 * @throws DBException
 	 */
 	int countAppDocs(String app, String labelId, String searchString, int status, long startTime, long endTime) throws DBException;
+
+	/**
+	 * Get ID list of docs NOT yet converted
+	 * 
+	 * @param size
+	 * @return
+	 * @throws DBException
+	 */
+	List<String> listDocIdsNotConverted(int size) throws DBException;
 
 	/**
 	 * Get document count.

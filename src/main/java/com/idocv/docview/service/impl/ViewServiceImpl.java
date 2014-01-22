@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.idocv.docview.dao.BaseDao;
 import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.ViewService;
@@ -677,9 +678,20 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	public boolean convert(String rid) throws DocServiceException {
 		String ext = RcUtil.getExt(rid);
 		if (!rcUtil.isSupportView(ext)) {
+			try {
+				docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_NOT_SUPPORT);
+			} catch (Exception e) {
+				logger.error("update field of " + rid + " error: " + e.getMessage());
+			}
 			throw new DocServiceException("不支持" + ext + "类型文件预览，详情请联系管理员！");
 		}
-		return convert(rid, 0);
+		convert(rid, 0);
+		try {
+			docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_SUCCESS);
+		} catch (Exception e) {
+			logger.error(rid + " - update " + BaseDao.STATUS_CONVERT + " error: " + e.getMessage());
+		}
+		return true;
 	}
 
 	private boolean convert(String rid, int tryCount) throws DocServiceException {

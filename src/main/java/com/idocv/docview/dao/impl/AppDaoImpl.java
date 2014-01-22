@@ -31,7 +31,6 @@ public class AppDaoImpl extends BaseDaoImpl implements AppDao, InitializingBean 
 			coll.ensureIndex(BasicDBObjectBuilder.start().add(_ID, 1).get());
 
 		}
-
 	}
 
 	@Override

@@ -3,11 +3,14 @@ package com.idocv.docview.db;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.mongodb.QueryBuilder;
 
 public class MongoBase {
 	protected static String dbHost = "localhost";
@@ -24,6 +27,22 @@ public class MongoBase {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void main(String[] args) {
+		init();
+		coll.insert(BasicDBObjectBuilder.start("_id", "aaa").add("name", "Godwin").add("age", 28).get());
+		coll.insert(BasicDBObjectBuilder.start("_id", "bbb").add("name", "Gao").add("age", 29).get());
+		coll.insert(BasicDBObjectBuilder.start("_id", "ccc").add("name", "Congying").add("age", 25).get());
+
+		List<DBObject> objs = new ArrayList<DBObject>();
+		objs.add(BasicDBObjectBuilder.start("age", 28).get());
+		objs.add(BasicDBObjectBuilder.start().push("age").add("$exists", true).get());
+		QueryBuilder query = QueryBuilder.start().or(objs.toArray(new DBObject[] {}));
+		System.out.println("query: " + query.get());
+		DBCursor cur = coll.find(query.get(), new BasicDBObject("_id", 1));
+		List<DBObject> list = convertDBCursor2List(cur);
+		printList(list);
 	}
 
 	public static List<DBObject> list() {

@@ -79,9 +79,6 @@ public class ClusterServiceImpl implements ClusterService {
 	@Value("${thd.upload.unique}")
 	private boolean isUniqueUpload;
 
-	@Value("${thd.upload.convert}")
-	private boolean isUploadConvert;
-
 	@Value("${thd.upload.check.switch}")
 	private boolean thdUploadCheckSwitch = false;
 
@@ -172,9 +169,7 @@ public class ClusterServiceImpl implements ClusterService {
 			// docDao.updateUrl(uuid, url);
 
 			// Asynchronously convert document
-			if (isUploadConvert) {
-				convertService.convert(rid);
-			}
+			convertService.convert(rid);
 
 			// 4. upload to cluster
 			upload2DFSInstantly(uuid);
@@ -260,7 +255,7 @@ public class ClusterServiceImpl implements ClusterService {
 			upload2Remote(fileName, bytes, params);
 
 			// update remote status
-			docDao.updateField(uuid, "metas.remote", "1");
+			docDao.updateFieldByUuid(uuid, "metas.remote", "1");
 			logger.info("[CLUSTER] upload uuid(" + uuid + ") to DFS success!");
 		} catch (Exception e) {
 			logger.error("[CLUSTER] upload uuid(" + uuid + ") to remote error: " + e.getMessage());
