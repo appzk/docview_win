@@ -210,7 +210,7 @@ public interface DocDao {
 	 * @return
 	 * @throws DBException
 	 */
-	int countAppDocs(String app, String labelId, String searchString, int status) throws DBException;
+	int countAppDocs(String app, String labelId, String searchString, int status, long startTime, long endTime) throws DBException;
 
 	/**
 	 * Get document count.

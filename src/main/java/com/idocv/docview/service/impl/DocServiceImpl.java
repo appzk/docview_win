@@ -388,14 +388,14 @@ public class DocServiceImpl implements DocService {
 				if (100 == userPo.getStatus()) {// 管理员
 					docList = docDao.listAppDocs(app, start, length, labelId,
 							search, queryOrder, 0);
-					count = docDao.countAppDocs(app, labelId, search, 0);
+					count = docDao.countAppDocs(app, labelId, search, 0, 0, 0);
 				} else { // 普通用户
 					docList = docDao.listMyDocs(uid, start, length, labelId, search, queryOrder, 0);
 					count = docDao.countMyDocs(uid, labelId, search, 0);
 				}
 			} else {
 				docList = docDao.listAppDocs(app, start, length, labelId, search, queryOrder, 1);
-				count = docDao.countAppDocs(app, labelId, search, 1);
+				count = docDao.countAppDocs(app, labelId, search, 1, 0, 0);
 			}
 			return new Paging<DocVo>(convertPo2Vo(docList), count);
 		} catch (DBException e) {

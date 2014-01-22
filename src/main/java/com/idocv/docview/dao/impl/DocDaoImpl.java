@@ -1,6 +1,7 @@
 package com.idocv.docview.dao.impl;
 
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -364,7 +365,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public int countAppDocs(String app, String labelId, String searchString, int status) throws DBException {
+	public int countAppDocs(String app, String labelId, String searchString, int status, long startTime, long endTime) throws DBException {
 		try {
 			QueryBuilder query = QueryBuilder.start();
 			if (-1 == status) {
@@ -378,10 +379,9 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 				query.and(STATUS).greaterThan(0);
 			}
 
-			if (StringUtils.isBlank(app)) {
-				throw new DBException("请提供应用名称！");
+			if (StringUtils.isNotBlank(app)) {
+				query.and(APP).is(app);
 			}
-			query.and(APP).is(app);
 			if (StringUtils.isNotBlank(labelId) && !"all".equalsIgnoreCase(labelId)) {
 				query.and(LABELS).is(labelId);
 			}
@@ -392,6 +392,16 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 				searchQuery.add(BasicDBObjectBuilder.start(CTIME, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
 				searchQuery.add(BasicDBObjectBuilder.start(UUID, Pattern.compile(searchString, Pattern.CASE_INSENSITIVE)).get());
 				query.or(searchQuery.toArray(new DBObject[0]));
+			}
+			
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			if (startTime > 0) {
+				String startTimeString = df.format(new Date(startTime));
+				query.and(CTIME).greaterThanEquals(startTimeString);
+			}
+			if (endTime > 0) {
+				String endTimeString = df.format(new Date(endTime));
+				query.and(CTIME).lessThanEquals(endTimeString);
 			}
 
 			DBCollection coll = db.getCollection(COLL_DOC);
