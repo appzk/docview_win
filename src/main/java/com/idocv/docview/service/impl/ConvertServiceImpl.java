@@ -69,12 +69,12 @@ public class ConvertServiceImpl implements ConvertService {
 				while (true) {
 					if (convertQueue.isEmpty()) {
 						emptyCheckCount++;
-						logger.info("convert queue is EMPTY, notify to add some convert task to queue...");
+						logger.info("[CONVERT] convert queue is EMPTY, triggering batch convert...");
 						startBatchConvert();
 						try {
 							Thread.sleep(10000 * emptyCheckCount);
 						} catch (Exception e) {
-							logger.error("convert thread sleep error: " + e.getMessage());
+							logger.error("[CONVERT] convert thread sleep error: " + e.getMessage());
 						}
 						continue;
 					}
@@ -82,7 +82,7 @@ public class ConvertServiceImpl implements ConvertService {
 					int count = 0;
 					try {
 						String rid = convertQueue.take();
-						logger.info("start converting(" + rid + ") from convert queue(" + convertQueue.size() + ")");
+						logger.info("[CONVERT] start converting(" + rid + ") from convert queue(" + convertQueue.size() + ")");
 						ConvertService convertService = new ConvertServiceImpl(previewService, rid);
 						es.submit(convertService);
 						count++;
@@ -91,7 +91,7 @@ public class ConvertServiceImpl implements ConvertService {
 							Thread.sleep(convertBatchInterval);
 						}
 					} catch (Exception e) {
-						logger.error("take RID from convert queue error: " + e.getMessage());
+						logger.error("[CONVERT] take RID from convert queue error: " + e.getMessage());
 					}
 				}
 			};
@@ -138,7 +138,7 @@ public class ConvertServiceImpl implements ConvertService {
 				return;
 			}
 		} catch (Exception e) {
-			logger.error("check upload frequency error: " + e.getMessage());
+			logger.error("[SYSTEM LOAD] check upload frequency error: " + e.getMessage());
 			return;
 		}
 		
@@ -157,7 +157,7 @@ public class ConvertServiceImpl implements ConvertService {
 				return;
 			}
 		} catch (Exception e) {
-			logger.error("check memeory usage error: " + e.getMessage());
+			logger.error("[SYSTEM LOAD] check memeory usage error: " + e.getMessage());
 			return;
 		}
 
@@ -182,10 +182,10 @@ public class ConvertServiceImpl implements ConvertService {
 				if (CollectionUtils.isEmpty(rids)) {
 					return;
 				}
-				logger.info("adding " + rids.size() + " docs to convert queue...");
+				logger.info("[CONVERT] adding " + rids.size() + " docs to convert queue...");
 				convertQueue.addAll(rids);
 			} catch (Exception e) {
-				logger.error("list doc IDs NOT converted error: " + e.getMessage());
+				logger.error("[CONVERT] list doc IDs NOT converted error: " + e.getMessage());
 				return;
 			}
 		}
