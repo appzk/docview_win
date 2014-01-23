@@ -7,8 +7,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CmdUtil {
 	
+	private static final Logger logger = LoggerFactory.getLogger(CmdUtil.class);
+
 	public static String runLinux(String... cmd) {
 		String result = "";
 		StringBuffer sbOut = new StringBuffer();
@@ -53,10 +58,9 @@ public class CmdUtil {
 			List<String> cmdList = new ArrayList<String>(Arrays.asList(use));
 			cmdList.addAll(Arrays.asList(cmd));
 			
-			// ﻿Process p = Runtime.getRuntime().exec(cmdList.toArray(new
-			// String[0]));
 			ProcessBuilder builder = new ProcessBuilder(cmdList.toArray(new String[0]));
 			builder.redirectErrorStream(true);
+			long start = System.currentTimeMillis();
 			Process p = builder.start();
 			
 			BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream(), "GBK"));
@@ -65,9 +69,11 @@ public class CmdUtil {
 			}
 			bri.close();
 			Integer exitValue = p.waitFor();
+			long end = System.currentTimeMillis();
 			if (0 == exitValue || 1 == exitValue) {
 				// do something here...
 			}
+			logger.debug("[CMD] run " + cmdList + " success within " + (end - start) + " milisecond(s).");
 			result = exitValue + ":" + sbOut.toString();
 		} catch (Exception e) {
 			e.printStackTrace();

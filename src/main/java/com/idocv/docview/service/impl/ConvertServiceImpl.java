@@ -31,12 +31,14 @@ public class ConvertServiceImpl implements ConvertService {
 	private static final Logger logger = LoggerFactory.getLogger(ConvertServiceImpl.class);
 	
 	private static final ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-	private static final int cpuCount = Runtime.getRuntime().availableProcessors();
+	public static final int cpuCount = Runtime.getRuntime().availableProcessors();
 	
-	private static final BlockingQueue<String> convertQueue = new ArrayBlockingQueue<String>(100000);
+	public static final BlockingQueue<String> convertQueue = new ArrayBlockingQueue<String>(100000);
 
-	private static final MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+	public static final MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
 	
+	public static long uploadRate = 0;
+
 	public static boolean SYSTEM_LOAD_HIGH = false;
 	
 	@Resource
@@ -130,7 +132,7 @@ public class ConvertServiceImpl implements ConvertService {
 			long now = System.currentTimeMillis();
 			long fiveMinutesBack = now - 300000;
 			int countOfFiveMinutes = docDao.countAppDocs(null, null, null, 0, fiveMinutesBack, now);
-			int uploadRate = countOfFiveMinutes / 5;
+			uploadRate = countOfFiveMinutes / 5;
 			logger.info("[SYSTEM LOAD] upload rate: " + uploadRate + "(" + countOfFiveMinutes + "/" + "5)/m");
 			if (uploadRate >= convertSwitchThresholdUploadFrequency) {
 				SYSTEM_LOAD_HIGH = true;

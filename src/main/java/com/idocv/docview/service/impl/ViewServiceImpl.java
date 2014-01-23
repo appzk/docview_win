@@ -6,6 +6,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -685,7 +687,15 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			}
 			throw new DocServiceException("不支持" + ext + "类型文件预览，详情请联系管理员！");
 		}
+		long startConvert = System.currentTimeMillis();
 		convert(rid, 0);
+		long endConvert = System.currentTimeMillis();
+		long size = RcUtil.getSizeByRid(rid);
+		long elapse = endConvert - startConvert;
+		elapse = elapse <= 0 ? 1 : elapse;
+		double rate = (double) size / elapse;
+		rate = new BigDecimal(rate).setScale(2, RoundingMode.HALF_UP).doubleValue();
+		logger.info("[CONVERT SUCCESS] " + rid + " of size " + size + " within " + (endConvert - startConvert) + " milisecond(s), convert rate: " + rate + " k/s");
 		try {
 			docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_SUCCESS);
 		} catch (Exception e) {
