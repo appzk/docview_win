@@ -41,4 +41,9 @@ public class SystemController {
 	public String info() {
 		return "system/info";
 	}
+
+	@RequestMapping("memory")
+	public String memory() {
+		return "system/memory";
+	}
 }

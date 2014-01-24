@@ -14,6 +14,12 @@
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <style type="text/css">
+      .container {
+        border: solid 1px black;
+        display: inline-block;
+      }
+    </style>
 
     <!--[if lt IE 9]>
       <script src="/static/bootstrap/js/html5shiv.js"></script>
@@ -41,8 +47,8 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">系统信息</li>
-              <li class="active"><a href="/system/info">基本信息</a></li>
-              <li><a href="/system/memory">内存信息</a></li>
+              <li><a href="/system/info">基本信息</a></li>
+              <li class="active"><a href="/system/memory">内存信息</a></li>
               <li class="divider"></li>
             </ul>
           </div><!--/.well -->
@@ -50,16 +56,8 @@
         <div class="span10">
           <div class="row-fluid">
             <div class="span12">
-              <div class="hero-unit">
-                >CPU核数：<div class="system-info-cpu-cuont"></div>
-                >转换队列文档数：<div class="system-info-queue-size"></div>
-                >当前机器负载：<div class="system-info-high-load"></div>
-                >内存初始大小（堆内存）：<div class="system-info-mem-init"></div>
-                >已使用内存（堆内存）：<div class="system-info-mem-used"></div>
-                >最大分配内存（堆内存）：<div class="system-info-mem-max"></div>
-                >内存使用率（堆内存）：<div class="system-info-mem-rate"></div>
-                >最近5分钟内每分钟平均上次文件数：<div class="system-info-upload-avg"></div>
-              </div>
+              <div id="chartContainer-heap-minute" class="container span9" style="height: 300px;"></div>
+              <div id="chartContainer-heap-second" class="container span3" style="height: 300px;"></div>
             </div><!--/span-->
           </div><!--/row-->
         </div><!--/span-->
@@ -79,10 +77,11 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
     <script src="/static/bootstrap/js/bootstrap.js"></script>
-	<script src="/static/urlparser/js/purl.js"></script>
-	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-	<script src="/static/idocv/js/user.js"></script>
-	<script src="/static/idocv/js/system-info.js"></script>
+    <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+    <script src="/static/idocv/js/user.js"></script>
+    <script src="/static/canvasjs/js/canvasjs.min.js"></script>
+    <script src="/static/idocv/js/system-info-memory.js"></script>
   </body>
 </html>

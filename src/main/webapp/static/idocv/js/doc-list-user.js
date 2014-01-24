@@ -121,16 +121,17 @@ $(document).ready(function() {
 				} else {
 					$('td:eq(5)', nRow).html( '<a href="/doc/download/'+aData.uuid+'">下载</a> | <a href="/doc/delete/'+aData.uuid+'" onclick="return confirm(\'确定要删除吗？\');" >删除</a>' );
 				}
-				*/
 				if (uuid.charAt(uuid.length-1) == "w") {
 					$('td:eq(5)', nRow).html( '<button class="btn btn-small btn-primary btn-doc-list-download-pdf" uuid="' + aData.uuid + '" type="button">PDF</button>&nbsp;<button class="btn btn-small btn-primary btn-doc-list-download" uuid="' + aData.uuid + '" type="button">下载</button>&nbsp;<button class="btn btn-small btn-danger btn-doc-list-delete" uuid="' + aData.uuid + '" type="button">删除</button>&nbsp;<button class="btn btn-small btn-primary btn-doc-list-word-stamp" uuid="' + aData.uuid + '" type="button">签章</button>' );
 				} else if (uuid.charAt(uuid.length-1) == "f") {
 					$('td:eq(5)', nRow).html( '<button class="btn btn-small btn-primary btn-doc-list-download-pdf" uuid="' + aData.uuid + '" type="button">PDF</button>&nbsp;<button class="btn btn-small btn-primary btn-doc-list-download" uuid="' + aData.uuid + '" type="button">下载</button>&nbsp;<button class="btn btn-small btn-danger btn-doc-list-delete" uuid="' + aData.uuid + '" type="button">删除</button>&nbsp;<button class="btn btn-small btn-primary btn-doc-list-pdf-stamp" uuid="' + aData.uuid + '" type="button">签章</button>' );
 				} else {
-					$('td:eq(5)', nRow).html( '<button class="btn btn-small btn-primary btn-doc-list-download" uuid="' + aData.uuid + '" type="button">下载</button>&nbsp;<button class="btn btn-small btn-danger btn-doc-list-delete" uuid="' + aData.uuid + '" type="button">删除</button>' );
 				}
+				 */
+				$('td:eq(5)', nRow).html( '<button class="btn btn-small btn-primary btn-doc-list-download" uuid="' + aData.uuid + '" type="button">下载</button>&nbsp;<button class="btn btn-small btn-danger btn-doc-list-delete" uuid="' + aData.uuid + '" type="button">删除</button>' );
 			},
 			"fnDrawCallback": function(oSettings, json) {
+				/*
 				$('.btn-doc-list-download-pdf').click(function() {
 					var uuid = $(this).attr('uuid');
 					window.location.href='/doc/' + uuid + '/pdf';
@@ -143,6 +144,7 @@ $(document).ready(function() {
 					var uuid = $(this).attr('uuid');
 					window.open('/stamp/pdf/' + uuid);
 				});
+				*/
 				$('.btn-doc-list-download').click(function() {
 					var uuid = $(this).attr('uuid');
 					window.location.href='/doc/download/' + uuid;
