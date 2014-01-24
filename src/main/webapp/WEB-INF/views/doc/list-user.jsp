@@ -6,7 +6,7 @@
     <title>Document List - I Doc View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="在线文档预览、文档协作编辑、幻灯片远程控制、同步信息展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt等。">
-	<meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
+    <meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
 
     <!-- Le styles -->
     <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -68,42 +68,42 @@
           <div class="row-fluid">
             <div class="span12">
               <span class="button large fileinput-button">
-				<span><button class="btn btn-large btn-success" type="button">&nbsp;&nbsp;&nbsp;上传一个文档&nbsp;&nbsp;&nbsp;</button></span>
-				<input id="fileupload" type="file" name="file" data-url="/doc/upload" multiple>
-			  </span>
-			  <div id="upload-result" style="display: inline-block; margin: 5px 10px;">
-			  </div>
+                <span><button class="btn btn-large btn-success" type="button">&nbsp;&nbsp;&nbsp;上传一个文档&nbsp;&nbsp;&nbsp;</button></span>
+                <input id="fileupload" type="file" name="file" data-url="/doc/upload" multiple>
+              </span>
+              <div id="upload-result" style="display: inline-block; margin: 5px 10px;">
+              </div>
             </div><!--/span-->
           </div><!--/row-->
           <div class="row-fluid upload-progress" style="display: none;">
             <div class="span12">
-			  <div class="progress progress-striped active" style="margin: 10px 0px 0px;">
-				<div class="bar" style="width: 0%;"></div>
-			  </div>
+              <div class="progress progress-striped active" style="margin: 10px 0px 0px;">
+                <div class="bar" style="width: 0%;"></div>
+              </div>
             </div><!--/span-->
           </div><!--/row-->
           <div class="row-fluid">
             <div class="span12">
               <!-- CONTENT HERE -->
-	          <div class="container span12" style="margin-top: 15px; overflow: auto;">
-				<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered responsive" id="doctable">
-				  <thead>
-					<tr>
-					  <th width="30%" style="text-align: center;">名称</th>
-					  <th width="15%" style="text-align: center;">时间</th>
-					  <th width="10%" style="text-align: center;">大小</th>
-					  <th width="10%" style="text-align: center;">UUID</th>
-					  <th width="10%" style="text-align: center;">浏览/下载</th>
-					  <th width="25%" style="text-align: center;">操作</th>
-					</tr>
-					</thead>
-					<tbody>
-					  <tr>
-						<td colspan="6" class="dataTables_empty">正在加载数据...</td>
-					  </tr>
-					</tbody>
-				</table>
-			  </div>
+              <div class="container span12" style="margin-top: 15px; overflow: auto;">
+                <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered responsive" id="doctable">
+                  <thead>
+                    <tr>
+                      <th width="30%" style="text-align: center;">名称</th>
+                      <th width="15%" style="text-align: center;">时间</th>
+                      <th width="10%" style="text-align: center;">大小</th>
+                      <th width="10%" style="text-align: center;">UUID</th>
+                      <th width="10%" style="text-align: center;">浏览/下载</th>
+                      <th width="25%" style="text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="dataTables_empty">正在加载数据...</td>
+                      </tr>
+                    </tbody>
+                </table>
+              </div>
             </div><!--/span-->
           </div><!--/row-->
         </div><!--/span-->
@@ -112,7 +112,7 @@
       <hr>
 
       <footer>
-			&copy; <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a> 2013
+            &copy; <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a> 2013
       </footer>
 
     </div><!--/.fluid-container-->
@@ -120,18 +120,18 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
-	<script src="/static/bootstrap/js/bootstrap.js"></script>
-	<script src="/static/urlparser/js/purl.js"></script>
-	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-	<script src="/static/idocv/js/user.js"></script>
-	<script src="/static/datatable/js/jquery.dataTables.js"></script>
-	<script src="/static/datatable/js/DT_bootstrap.js"></script>
-	<script src="/static/js/upload/jquery.ui.widget.js"></script>
-	<script src="/static/js/upload/jquery.iframe-transport.js"></script>
-	<script src="/static/js/upload/jquery.fileupload.js"></script>
-	<script src="/static/idocv/js/doc-list-user.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+    <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+    <script src="/static/idocv/js/user.js"></script>
+    <script src="/static/datatable/js/jquery.dataTables.js"></script>
+    <script src="/static/datatable/js/DT_bootstrap.js"></script>
+    <script src="/static/js/upload/jquery.ui.widget.js"></script>
+    <script src="/static/js/upload/jquery.iframe-transport.js"></script>
+    <script src="/static/js/upload/jquery.fileupload.js"></script>
+    <script src="/static/idocv/js/doc-list-user.js"></script>
   </body>
 </html>

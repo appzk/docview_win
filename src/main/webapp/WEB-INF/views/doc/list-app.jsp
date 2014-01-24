@@ -6,7 +6,7 @@
     <title>Document List - I Doc View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="在线文档预览、协作编辑，幻灯片远程控制、同步演示、画笔同步展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt等。">
-	<meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
+    <meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
 
     <!-- Le styles -->
     <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -34,7 +34,7 @@
           </button>
           <a class="brand" href="http://www.idocv.com">I Doc View</a>
           <div class="nav-collapse collapse">
-          	<p class="navbar-text pull-right">
+              <p class="navbar-text pull-right">
               <a href="http://user.idocv.com" class="navbar-link">登录</a>
             </p>
             <ul class="nav">
@@ -69,25 +69,25 @@
           <div class="row-fluid">
             <div class="span12">
               <!-- CONTENT HERE -->
-	          <div class="container span12" style="overflow: auto;">
-				<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered responsive" id="doctable">
-				  <thead>
-					<tr>
-					  <th width="35%" style="text-align: center;">名称</th>
-					  <th width="20%" style="text-align: center;">时间</th>
-					  <th width="10%" style="text-align: center;">大小</th>
-					  <th width="15%" style="text-align: center;">分享URL</th>
-					  <th width="10%" style="text-align: center;">浏览/下载</th>
-					  <th width="10%" style="text-align: center;">操作</th>
-					</tr>
-					</thead>
-					<tbody>
-					  <tr>
-						<td colspan="6" class="dataTables_empty">正在加载数据...</td>
-					  </tr>
-					</tbody>
-				</table>
-			  </div>
+              <div class="container span12" style="overflow: auto;">
+                <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered responsive" id="doctable">
+                  <thead>
+                    <tr>
+                      <th width="35%" style="text-align: center;">名称</th>
+                      <th width="20%" style="text-align: center;">时间</th>
+                      <th width="10%" style="text-align: center;">大小</th>
+                      <th width="15%" style="text-align: center;">分享URL</th>
+                      <th width="10%" style="text-align: center;">浏览/下载</th>
+                      <th width="10%" style="text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="dataTables_empty">正在加载数据...</td>
+                      </tr>
+                    </tbody>
+                </table>
+              </div>
             </div><!--/span-->
           </div><!--/row-->
         </div><!--/span-->
@@ -96,7 +96,7 @@
       <hr>
 
       <footer>
-			<a href="http://www.ecocn.org" target="_blank"><img alt="http://www.ecocn.org" src="http://www.ecocn.org/static/image/common/logo.png"></a> &nbsp;|&nbsp; &copy; <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a> 2013
+            <a href="http://www.ecocn.org" target="_blank"><img alt="http://www.ecocn.org" src="http://www.ecocn.org/static/image/common/logo.png"></a> &nbsp;|&nbsp; &copy; <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a> 2013
       </footer>
 
     </div><!--/.fluid-container-->
@@ -104,20 +104,20 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
-	<script src="/static/bootstrap/js/bootstrap.js"></script>
-	<script src="/static/urlparser/js/purl.js"></script>
-	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-	<!-- 
-	<script src="/static/idocv/js/user.js"></script>
-	 -->
-	<script src="/static/datatable/js/jquery.dataTables.js"></script>
-	<script src="/static/datatable/js/DT_bootstrap.js"></script>
-	<script src="/static/js/upload/jquery.ui.widget.js"></script>
-	<script src="/static/js/upload/jquery.iframe-transport.js"></script>
-	<script src="/static/js/upload/jquery.fileupload.js"></script>
-	<script src="/static/idocv/js/doc-list-app.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+    <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+    <!-- 
+    <script src="/static/idocv/js/user.js"></script>
+     -->
+    <script src="/static/datatable/js/jquery.dataTables.js"></script>
+    <script src="/static/datatable/js/DT_bootstrap.js"></script>
+    <script src="/static/js/upload/jquery.ui.widget.js"></script>
+    <script src="/static/js/upload/jquery.iframe-transport.js"></script>
+    <script src="/static/js/upload/jquery.fileupload.js"></script>
+    <script src="/static/idocv/js/doc-list-app.js"></script>
   </body>
 </html>

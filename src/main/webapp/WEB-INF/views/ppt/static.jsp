@@ -71,33 +71,33 @@
 
 		</div>
 
-		<script src="/static/reveal/lib/js/head.min.js"></script>
-		<script src="/static/reveal/js/reveal.min.js"></script>
+    <script src="/static/reveal/lib/js/head.min.js"></script>
+    <script src="/static/reveal/js/reveal.min.js"></script>
 
-		<!-- Le javascript
-	    ================================================== -->
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
-		<script src="/static/bootstrap/js/bootstrap.min.js"></script>
-		<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-		<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-		<!-- <script src="/static/idocv/js/user.js"></script> -->
-		<script src="/static/loading/js/simpleLoadingModal.min.js"></script>
-		<script src="/static/urlparser/js/purl.js"></script>
-		<script src="/static/idocv/js/ppt-static.js"></script>
-		<script src="/static/idocv/js/stat.js"></script>
+    <!-- Le javascript
+    ================================================== -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+    <!-- <script src="/static/idocv/js/user.js"></script> -->
+    <script src="/static/loading/js/simpleLoadingModal.min.js"></script>
+    <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/idocv/js/ppt-static.js"></script>
+    <script src="/static/idocv/js/stat.js"></script>
 		
-		<!-- 
-		<a class="fork-reveal" href="http://www.idocv.com"><img style="position: absolute; top: 41px; right: 0; border: 0; max-width: 30%;" src="http://data.idocv.com/idocv-logo-ribbon.png" alt="I Doc View"></a>
-		 -->
+    <!-- 
+    <a class="fork-reveal" href="http://www.idocv.com"><img style="position: absolute; top: 41px; right: 0; border: 0; max-width: 30%;" src="http://data.idocv.com/idocv-logo-ribbon.png" alt="I Doc View"></a>
+     -->
 	
-	<!-- Baidu Share BEGIN -->
-	<script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=6&amp;pos=right&amp;uid=6693451" ></script>
-	<script type="text/javascript" id="bdshell_js"></script>
-	<script type="text/javascript">
-	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
-	</script>
-	<!-- Baidu Share END -->
+    <!-- Baidu Share BEGIN -->
+    <script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=6&amp;pos=right&amp;uid=6693451" ></script>
+    <script type="text/javascript" id="bdshell_js"></script>
+    <script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
+    </script>
+    <!-- Baidu Share END -->
 
 	</body>
 </html>
