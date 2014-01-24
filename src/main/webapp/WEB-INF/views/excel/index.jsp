@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <title>Excel - I Doc View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="在线文档预览、文档协作编辑、幻灯片远程控制、同步信息展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx和txt等。">
+    <meta name="description" content="在线文档预览、文档协作编辑、幻灯片远程控制、同步信息展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx, pdf和txt等。">
     <meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
-    <meta name="copyright" content="I Doc View 2013">
+    <meta name="copyright" content="I Doc View 2014">
     <meta name="author" content="godwin668@gmail.com">
 
     <!-- styles -->
