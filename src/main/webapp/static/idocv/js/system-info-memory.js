@@ -89,6 +89,12 @@ $(document).ready(function() {
 		var memRate = info.memRate;
 		var uploadAvg = info.uploadAvg;
 		
+		if (memRate >= 0.8) {
+			chart_heap_minute.options.title.fontColor = 'red';
+		} else {
+			chart_heap_minute.options.title.fontColor = 'black';
+		}
+		
 		var realText = '堆内存使用率（分钟）  实时：' + Math.floor((memUsed / 1000)) + 'k / ' + Math.floor((memMax / 1000)) + 'k';
 		chart_heap_minute.options.title.text = realText;
 
