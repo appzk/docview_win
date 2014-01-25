@@ -29,6 +29,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
+          <a class="brand" href="http://www.idocv.com">I Doc View</a>
           <!-- FILE NAME HERE -->
           <!-- SIGN UP & SIGN IN -->
         </div>
@@ -40,10 +41,12 @@
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li class="nav-header">系统信息</li>
+              <li class="nav-header">系统</li>
               <li class="active"><a href="/system/info">基本信息</a></li>
               <li><a href="/system/memory">内存信息</a></li>
               <li class="divider"></li>
+              <li class="nav-header">文档</li>
+              <li><a class="nav-doc-list" href="#">文档管理</a></li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->

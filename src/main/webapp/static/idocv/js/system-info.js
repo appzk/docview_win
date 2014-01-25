@@ -14,6 +14,13 @@ $(document).ready(function() {
 	if (uid === undefined) {
 		window.location = '/user/login';
 	}
+	
+	// link
+	$('.nav-doc-list').click(function () {
+		if (username !== undefined && username !== '') {
+			window.location = '/user/' + username + '/all';
+		}
+	});
 
 	getInfo();
 	
