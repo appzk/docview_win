@@ -7,6 +7,7 @@ import org.springframework.beans.factory.DisposableBean;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
+import com.mongodb.MongoOptions;
 
 public class AppMongoConn implements DisposableBean{
 	private String host;
@@ -18,6 +19,12 @@ public class AppMongoConn implements DisposableBean{
 		this.host = host;
 		this.port = port;
 		mongo = new Mongo(host, port);
+		MongoOptions mongoOptions = mongo.getMongoOptions();
+		mongoOptions.setAutoConnectRetry(true);
+		mongoOptions.setConnectionsPerHost(300);
+		mongoOptions.setThreadsAllowedToBlockForConnectionMultiplier(8000);
+		int options = mongo.getOptions();
+		System.err.println("##[MONGO INFO] mongoOptions: " + options + " - " + mongoOptions);
 	}
 
 	public String getHost() {
