@@ -330,7 +330,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			return page;
 		} catch (Exception e) {
 			logger.error("convertExcel2Html(" + rid + ") error: ", e.fillInStackTrace());
-			throw new DocServiceException(e.getMessage(), e);
+			throw new DocServiceException(e.getMessage());
 		}
 	}
 
