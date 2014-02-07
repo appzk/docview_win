@@ -688,7 +688,17 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			throw new DocServiceException("不支持" + ext + "类型文件预览，详情请联系管理员！");
 		}
 		long startConvert = System.currentTimeMillis();
-		convert(rid, 0);
+		try {
+			convert(rid, 0);
+		} catch (Exception e) {
+			try {
+				docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_FAIL);
+			} catch (Exception eu) {
+				logger.error("update field of " + rid + " error: " + eu.getMessage());
+				throw new DocServiceException(e.getMessage());
+			}
+			throw new DocServiceException(e.getMessage());
+		}
 		long endConvert = System.currentTimeMillis();
 		long size = RcUtil.getSizeByRid(rid);
 		long elapse = endConvert - startConvert;
