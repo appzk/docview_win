@@ -134,11 +134,10 @@ $(document).ready(function() {
 			if (dps_heap_minute.length >= 9 && dps_heap_minute.length < 59) {
 				chart_heap_minute.options.axisX.minimum = -60;
 			} else if (dps_heap_minute.length >= 59) {
-				chart_heap_minute.options.axisX.minimum = -120;
+				chart_heap_minute.options.axisX.minimum = -180;
 			}
 			
-			if (dps_heap_minute.length > dataLength_heap_minute)
-			{
+			if (dps_heap_minute.length > dataLength_heap_minute) {
 				dps_heap_minute.shift();
 			}
 		}
