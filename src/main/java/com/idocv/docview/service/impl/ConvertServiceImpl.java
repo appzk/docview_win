@@ -67,31 +67,25 @@ public class ConvertServiceImpl implements ConvertService {
 	public ConvertServiceImpl() {
 		new Thread() {
 			public void run() {
-				int emptyCheckCount = 1;
+				int emptyCheckCount = 0;
 				while (true) {
 					if (convertQueue.isEmpty()) {
 						emptyCheckCount++;
 						logger.info("[CONVERT] convert queue is EMPTY, triggering batch convert...");
 						startBatchConvert();
 						try {
-							Thread.sleep(10000 * emptyCheckCount);
+							Thread.sleep(convertBatchInterval * emptyCheckCount);
 						} catch (Exception e) {
 							logger.error("[CONVERT] convert thread sleep error: " + e.getMessage());
 						}
 						continue;
 					}
-					emptyCheckCount = 1;
-					int count = 0;
+					emptyCheckCount = 0;
 					try {
 						String rid = convertQueue.take();
 						logger.info("[CONVERT] start converting(" + rid + ") from convert queue(" + convertQueue.size() + ")");
 						ConvertService convertService = new ConvertServiceImpl(previewService, rid);
 						es.submit(convertService);
-						count++;
-						if (count >= cpuCount) {
-							count = 0;
-							Thread.sleep(convertBatchInterval);
-						}
 					} catch (Exception e) {
 						logger.error("[CONVERT] take RID from convert queue error: " + e.getMessage());
 					}
