@@ -80,10 +80,19 @@ public class ConvertServiceImpl implements ConvertService {
 						}
 						continue;
 					}
+					if (SYSTEM_LOAD_HIGH) {
+						logger.info("[CONVERT] system load is high, waiting for 10 seconds...");
+						try {
+							Thread.sleep(10000);
+						} catch (Exception e) {
+							logger.error("[CONVERT] convert thread(high load waiting) sleep error: " + e.getMessage());
+						}
+						continue;
+					}
 					emptyCheckCount = 0;
 					try {
 						String rid = convertQueue.take();
-						logger.info("[CONVERT] start converting(" + rid + ") from convert queue(" + convertQueue.size() + ")");
+						logger.info("[CONVERT] start converting(" + rid + ") from convert queue(" + (convertQueue.size() + 1) + ")");
 						ConvertService convertService = new ConvertServiceImpl(previewService, rid);
 						es.submit(convertService);
 					} catch (Exception e) {
@@ -122,16 +131,17 @@ public class ConvertServiceImpl implements ConvertService {
 	@Scheduled(cron = "${convert.switch.check.system.load.cron}")
 	public void checkSystemLoad() {
 		// check upload frequency within last five minutes
+		boolean isHighLoad = false;
 		try {
 			long now = System.currentTimeMillis();
 			long fiveMinutesBack = now - 300000;
 			int countOfFiveMinutes = docDao.countAppDocs(null, null, null, 0, fiveMinutesBack, now);
 			uploadRate = countOfFiveMinutes / 5;
-			logger.info("[SYSTEM LOAD] upload rate: " + uploadRate + "(" + countOfFiveMinutes + "/" + "5)/m");
-			if (uploadRate >= convertSwitchThresholdUploadFrequency) {
-				SYSTEM_LOAD_HIGH = true;
+			if (uploadRate < convertSwitchThresholdUploadFrequency) {
+				logger.info("[SYSTEM LOAD] upload rate: " + uploadRate + "(" + countOfFiveMinutes + "/" + "5)/m");
+			} else {
+				isHighLoad = true;
 				logger.warn("[SYSTEM LOAD] upload rate: " + uploadRate + "(" + countOfFiveMinutes + "/" + "5)/m");
-				return;
 			}
 		} catch (Exception e) {
 			logger.error("[SYSTEM LOAD] check upload frequency error: " + e.getMessage());
@@ -146,11 +156,11 @@ public class ConvertServiceImpl implements ConvertService {
 			long max = memoryUsage.getMax();
 			double memoryRate = (double) used / max;
 			memoryRate = new BigDecimal(memoryRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
-			logger.info("[SYSTEM LOAD] memory rate: " + memoryRate + "(" + init + "|" + used + "|" + max + ")");
-			if (memoryRate >= convertSwitchThresholdMemoryUsage) {
-				SYSTEM_LOAD_HIGH = true;
+			if (memoryRate < convertSwitchThresholdMemoryUsage) {
+				logger.info("[SYSTEM LOAD] memory rate: " + memoryRate + "(" + init + "|" + used + "|" + max + ")");
+			} else {
+				isHighLoad = true;
 				logger.warn("[SYSTEM LOAD] memory rate: " + memoryRate + "(" + init + "|" + used + "|" + max + ")");
-				return;
 			}
 		} catch (Exception e) {
 			logger.error("[SYSTEM LOAD] check memeory usage error: " + e.getMessage());
@@ -160,6 +170,10 @@ public class ConvertServiceImpl implements ConvertService {
 		// check CPU usage
 		// TODO
 
+		if (isHighLoad) {
+			SYSTEM_LOAD_HIGH = true;
+			return;
+		}
 		SYSTEM_LOAD_HIGH = false;
 
 		// check converting queue
