@@ -79,7 +79,7 @@ public class ConvertServiceImpl implements ConvertService {
 						logger.info("[CONVERT] convert queue is EMPTY, triggering batch convert...");
 						startBatchConvert();
 						try {
-							Thread.sleep(convertBatchInterval * emptyCheckCount);
+							Thread.sleep(convertBatchInterval + (2000 * emptyCheckCount));
 						} catch (Exception e) {
 							logger.error("[CONVERT] convert thread sleep error: " + e.getMessage());
 						}
