@@ -7,6 +7,7 @@ public interface BaseDao {
 	static final String COLL_DOC = "doc";
 	static final String COLL_LABEL = "label";
 	static final String COLL_SESSION = "session";
+	static final String COLL_CACHE = "cache";
 
 	// fields
 	static final String _ID = "_id";

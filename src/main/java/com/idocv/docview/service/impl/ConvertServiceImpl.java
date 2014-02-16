@@ -20,8 +20,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.idocv.docview.dao.CacheDao;
 import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.ConvertService;
 import com.idocv.docview.service.ViewService;
 
@@ -43,6 +45,9 @@ public class ConvertServiceImpl implements ConvertService {
 	
 	@Resource
 	private DocDao docDao;
+
+	@Resource
+	private CacheDao cacheDao;
 
 	@Resource
 	private ViewService previewService;
@@ -188,10 +193,18 @@ public class ConvertServiceImpl implements ConvertService {
 		if (!SYSTEM_LOAD_HIGH) {
 			// get batch docs
 			try {
-				List<String> rids = docDao.listDocIdsNotConverted(convertBatchSize);
+				String batchConvertStart = cacheDao.getGlobal("batchConvertStart");
+				List<String> rids = docDao.listDocIdsNotConverted(batchConvertStart, convertBatchSize);
 				if (CollectionUtils.isEmpty(rids)) {
 					return;
 				}
+
+				// set batch convert time point
+				String lastRid = rids.get(rids.size() - 1);
+				DocPo lastDoc = docDao.get(lastRid, false);
+				String lastDocCtime = lastDoc.getCtime();
+				cacheDao.setGlobal("batchConvertStart", lastDocCtime);
+
 				logger.info("[CONVERT] adding " + rids.size() + " docs to convert queue...");
 				convertQueue.addAll(rids);
 			} catch (Exception e) {

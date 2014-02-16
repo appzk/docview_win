@@ -230,7 +230,7 @@ public interface DocDao {
 	 * @return
 	 * @throws DBException
 	 */
-	List<String> listDocIdsNotConverted(int size) throws DBException;
+	List<String> listDocIdsNotConverted(String startTime, int size) throws DBException;
 
 	/**
 	 * Get document count.

@@ -444,13 +444,16 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public List<String> listDocIdsNotConverted(int size) throws DBException {
+	public List<String> listDocIdsNotConverted(String startTime, int size) throws DBException {
 		List<String> idList = new ArrayList<String>();
 		try {
 			List<DBObject> objs = new ArrayList<DBObject>();
 			objs.add(BasicDBObjectBuilder.start(STATUS_CONVERT, STATUS_CONVERT_INIT).get());
 			objs.add(BasicDBObjectBuilder.start().push(STATUS_CONVERT).add("$exists", false).get());
 			QueryBuilder query = QueryBuilder.start().or(objs.toArray(new DBObject[] {}));
+			if (StringUtils.isNotBlank(startTime) && startTime.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+				query.and(CTIME).greaterThan(startTime);
+			}
 			DBObject orderBy = BasicDBObjectBuilder.start().add(CTIME, 1).get();
 			DBCollection coll = db.getCollection(COLL_DOC);
 			DBCursor cur = coll.find(query.get(), new BasicDBObject(_ID, 1)).sort(orderBy).limit(size);
