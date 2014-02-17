@@ -1,7 +1,5 @@
 package com.idocv.docview.service;
 
-import java.io.File;
-
 import com.idocv.docview.exception.DocServiceException;
 
 public interface ThdService {
@@ -16,13 +14,4 @@ public interface ThdService {
 	 * @throws DocServiceException
 	 */
 	boolean validateUser(String uid, String tid, String sid) throws DocServiceException;
-
-	/**
-	 * Get Third Party specific file MD5, throws Exception if failed
-	 * 
-	 * @param src
-	 * @return
-	 * @throws DocServiceException
-	 */
-	String getFileMd5(File src) throws DocServiceException;
 }

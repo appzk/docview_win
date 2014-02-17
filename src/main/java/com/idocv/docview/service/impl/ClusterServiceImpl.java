@@ -82,9 +82,6 @@ public class ClusterServiceImpl implements ClusterService {
 	@Value("${thd.upload.check.switch}")
 	private boolean thdUploadCheckSwitch = false;
 
-	@Value("${thd.upload.md5.switch}")
-	private boolean thdUploadMd5Switch = false;
-
 	@Resource
 	private ThdService thdService;
 
@@ -103,9 +100,12 @@ public class ClusterServiceImpl implements ClusterService {
 			// 1. validate user params
 			if (thdUploadCheckSwitch) {
 				long checkStart = System.currentTimeMillis();
-				thdService.validateUser(uid, tid, sid);
+				if (!thdService.validateUser(uid, tid, sid)) {
+					logger.warn("[CLUSTER] " + uuid + " - check user fail, uid=" + uid + ", tid=" + tid + ", sid=" + sid);
+					throw new DocServiceException("用户验证失败");
+				}
 				long checkEnd = System.currentTimeMillis();
-				logger.info("[CLUSTER] " + uuid + " - check elapse: " + (checkEnd - checkStart) + " miliseconds.");
+				logger.info("[CLUSTER] " + uuid + " - check user elapse: " + (checkEnd - checkStart) + " miliseconds.");
 			}
 
 			// 2. save file
@@ -113,19 +113,11 @@ public class ClusterServiceImpl implements ClusterService {
 			FileUtils.writeByteArrayToFile(srcFile, data);
 
 			// 3. get fileName md5
-			String md5FileName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-			if (thdUploadMd5Switch) {
-				long md5Start = System.currentTimeMillis();
-				md5FileName = DigestUtils.md5Hex(data);
-				long md5Mid = System.currentTimeMillis();
-				md5FileName = thdService.getFileMd5(srcFile);
-				long md5End = System.currentTimeMillis();
-
-				long firstElapse = md5Mid - md5Start;
-				long secondElapse = md5End - md5Mid;
-				long allElapse = md5End - md5Start;
-				logger.info("[CLUSTER] " + uuid + " - md5 elapse: " + allElapse + "(" + firstElapse + "|" + secondElapse + ") miliseconds.");
-			}
+			long md5Start = System.currentTimeMillis();
+			String md5FileName = DigestUtils.md5Hex(data);
+			long md5End = System.currentTimeMillis();
+			long md5Elapse = md5End - md5Start;
+			logger.info("[CLUSTER] " + uuid + " - get md5 elapse: " + md5Elapse + " miliseconds.");
 
 			// 4. if file md5 already exist, return
 			String ext = RcUtil.getExt(rid);

@@ -1,7 +1,6 @@
 package com.idocv.docview.service.impl;
 
-import java.io.File;
-
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,52 +19,33 @@ public class ThdServiceImpl implements ThdService {
 	private @Value("${thd.upload.check.switch}")
 	boolean thdUploadCheckSwitch = false;
 
-	private @Value("${thd.upload.checker}")
-	String thdUploadChecker;
-
-	private @Value("${thd.upload.file.md5}")
-	String thdUploadFileMd5;
+	private @Value("${thd.upload.check.key}")
+	String thdUploadCheckKey;
 
 	@Override
 	public boolean validateUser(String uid, String tid, String sid) throws DocServiceException {
-		if (!thdUploadCheckSwitch) {
-			return true;
+		String uidTid = uid + tid;
+		if (StringUtils.isBlank(uid) || StringUtils.isBlank(tid)
+				|| StringUtils.isBlank(sid)
+				|| StringUtils.isBlank(thdUploadCheckKey)
+				|| uidTid.length() < thdUploadCheckKey.length()
+				|| uidTid.length() >= 4096) {
+			return false;
 		}
-
-		if (!new File(thdUploadChecker).isFile()) {
-			logger.error("[CLUSTER] 未找到指定的用户校验工具！");
-			throw new DocServiceException("未找到指定的用户校验工具！");
-		}
-
-		String result = CmdUtil.runWindows("java", "-jar", thdUploadChecker, uid, tid, sid);
-		if (StringUtils.isNotBlank(result) && result.matches("(?s).*?:(\\w{1,}).*")) {
-			String validCode = result.replaceFirst("(?s).*?:(\\w{1,}).*", "$1");
-			if ("1".equalsIgnoreCase(validCode)) {
-				return true;
+		byte[] xorStr = new byte[uidTid.length()];
+		byte securityKey[] = thdUploadCheckKey.getBytes();
+		byte toXorByte[] = uidTid.getBytes();
+		for (int i = 0, j = 0; i < uidTid.length(); i++, ++j) {
+			if (j >= thdUploadCheckKey.length()) {
+				j = 0;
 			}
+			xorStr[i] = (byte) (securityKey[j] ^ toXorByte[i]);
 		}
-		logger.error("[CLUSTER] 验证用户失败，uid=" + uid + ", tid=" + tid + ", sid="
-				+ sid + ", return=" + result);
-		throw new DocServiceException("用户验证失败！");
-	}
-
-	@Override
-	public String getFileMd5(File src) throws DocServiceException {
-		if (!new File(thdUploadFileMd5).isFile()) {
-			logger.error("[CLUSTER] 未找到指定的MD5工具！");
-			throw new DocServiceException("未找到指定的MD5工具！");
+		String resSid = DigestUtils.md5Hex(xorStr);
+		if (!resSid.equals(sid)) {
+			return false;
 		}
-		if (!src.isFile()) {
-			logger.error("[CLUSTER] 获取文件MD5失败：未找到源文件（" + src.getAbsolutePath() + "）");
-			throw new DocServiceException("获取文件MD5失败：源文件未找到！");
-		}
-		String result = CmdUtil.runWindows("java", "-jar", thdUploadFileMd5, src.getAbsolutePath());
-		if (StringUtils.isNotBlank(result) && result.matches("(?s).*?:(\\w{32}).*")) {
-			String md5 = result.replaceFirst("(?s).*?:(\\w{32}).*", "$1");
-			return md5;
-		}
-		logger.error("[CLUSTER] 获取文件MD5失败：file=" + src + ", return=" + result);
-		throw new DocServiceException("获取文件MD5失败！");
+		return true;
 	}
 
 	public static void main(String[] args) {
