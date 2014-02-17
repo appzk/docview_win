@@ -726,7 +726,6 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 		}
 		String ext = RcUtil.getExt(rid);
 		long size = RcUtil.getSizeByRid(rid);
-		long startTime = 0;
 		if (convertingRids.contains(rid)) {
 			if (tryCount < 10) {
 				try {
@@ -745,7 +744,6 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				}
 			}
 		} else {
-			startTime = System.currentTimeMillis();
 			convertingRids.add(rid);
 		}
 		try {
