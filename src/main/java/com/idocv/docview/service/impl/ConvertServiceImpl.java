@@ -86,9 +86,16 @@ public class ConvertServiceImpl implements ConvertService {
 						continue;
 					}
 					if (SYSTEM_LOAD_HIGH) {
-						logger.info("[CONVERT] system load is high, waiting for 10 seconds...");
+						logger.info("[CONVERT] system load is high, shutting down all current convert tasks...");
 						try {
-							Thread.sleep(10000);
+							cacheDao.setGlobal("batchConvertStart", null);
+							es.shutdownNow();
+						} catch (Exception e) {
+							logger.error("[CONVERT] shuwdown all converting tasks error: " + e.getMessage());
+						}
+						try {
+							logger.info("[CONVERT] system load is high, waiting for 10 minutes...");
+							Thread.sleep(600000);
 						} catch (Exception e) {
 							logger.error("[CONVERT] convert thread(high load waiting) sleep error: " + e.getMessage());
 						}
