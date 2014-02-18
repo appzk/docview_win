@@ -35,17 +35,21 @@ public class CacheDaoImpl extends BaseDaoImpl implements CacheDao, InitializingB
 
 	@Override
 	public void setGlobal(String key, String value) throws DBException {
-		if (StringUtils.isBlank(key) || StringUtils.isBlank(value)) {
-			logger.error("设置全局变量失败：KEY(" + key + ")和VALUE(" + value + ")不能为空！");
-			throw new DBException("设置全局变量失败：KEY(" + key + ")和VALUE(" + value
-					+ ")不能为空！");
+		if (StringUtils.isBlank(key)) {
+			logger.error("设置全局变量失败：KEY(" + key + ")不能为空！");
+			throw new DBException("设置全局变量失败：KEY(" + key + ")不能为空！");
 		}
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		DBObject query = QueryBuilder.start(_ID).is("global").get();
-		BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set").append(UTIME, time).append(key, value);
+		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start().push("$set").append(UTIME, time);
+		if (StringUtils.isBlank(value)) {
+			builder.pop().push("$unset").append(key, 1);
+		} else {
+			builder.append(key, value);
+		}
 		try {
 			DBCollection coll = db.getCollection(COLL_CACHE);
-			coll.update(query, ob.get(), true, true);
+			coll.update(query, builder.get(), true, true);
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());
 		}

@@ -484,12 +484,15 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public List<DocPo> listNewlyAddedFiles() throws DBException {
+	public List<DocPo> listNewlyAddedFiles(String startTime, int size) throws DBException {
 		try {
 			QueryBuilder query = QueryBuilder.start("metas.remote").notEquals("1");
+			if (StringUtils.isNotBlank(startTime) && startTime.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+				query.and(CTIME).greaterThan(startTime);
+			}
 			DBObject orderBy = BasicDBObjectBuilder.start().add(CTIME, 1).get();
 			DBCollection coll = db.getCollection(COLL_DOC);
-			DBCursor cur = coll.find(query.get()).sort(orderBy);
+			DBCursor cur = coll.find(query.get()).sort(orderBy).limit(size);
 			return convertCur2Po(cur);
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());

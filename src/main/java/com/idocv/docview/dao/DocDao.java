@@ -247,5 +247,5 @@ public interface DocDao {
 	 * @return
 	 * @throws DBException
 	 */
-	List<DocPo> listNewlyAddedFiles() throws DBException;
+	List<DocPo> listNewlyAddedFiles(String startTime, int size) throws DBException;
 }

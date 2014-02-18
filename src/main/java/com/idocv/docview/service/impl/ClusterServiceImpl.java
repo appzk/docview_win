@@ -22,6 +22,7 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.util.EncodingUtil;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -33,8 +34,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.idocv.docview.dao.CacheDao;
 import com.idocv.docview.dao.DocDao;
-import com.idocv.docview.exception.DBException;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.ClusterService;
@@ -51,6 +52,9 @@ public class ClusterServiceImpl implements ClusterService {
 	
 	@Resource
 	private DocDao docDao;
+
+	@Resource
+	private CacheDao cacheDao;
 
 	@Resource
 	private RcUtil rcUtil;
@@ -81,6 +85,12 @@ public class ClusterServiceImpl implements ClusterService {
 
 	@Value("${thd.upload.check.switch}")
 	private boolean thdUploadCheckSwitch = false;
+
+	@Value("${cluster.upload2dfs.batch.size}")
+	private int clusterUpload2dfsBatchSize;
+
+	@Value("${cluster.upload2dfs.batch.interval}")
+	private int clusterUpload2dfsBatchInterval;
 
 	@Resource
 	private ThdService thdService;
@@ -191,29 +201,46 @@ public class ClusterServiceImpl implements ClusterService {
 			return;
 		}
 		try {
-			// get all files need to upload to DFS
-			List<DocPo> newFileList = docDao.listNewlyAddedFiles();
-			long startTime = System.currentTimeMillis();
-			// upload those files sequentially
-			if (CollectionUtils.isEmpty(newFileList)) {
-				logger.info("[CLUSTER] There is NO new file need to uplaod to DFS");
-				return;
-			}
-			logger.info("[CLUSTER] start uploading " + newFileList.size() + " new file(s) to DFS...");
-			for (DocPo newFile : newFileList) {
-				String uuid = newFile.getUuid();
-				uploadUuid2Remote(uuid);
-			}
+			while (true) {
+				if (ConvertServiceImpl.SYSTEM_LOAD_HIGH) {
+					logger.info("[CLUSTER] system load is high, stop upload to DFS.");
+					return;
+				}
+				// get some files need to upload to DFS
+				String upload2DfsStart = cacheDao.getGlobal("upload2DfsStart");
+				String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+				if (StringUtils.isNotBlank(upload2DfsStart) && !upload2DfsStart.startsWith(currentDate)) {
+					upload2DfsStart = null;
+					cacheDao.setGlobal("upload2DfsStart", null);
+				}
 
-			// upload elapse & file count
-			long endTime = System.currentTimeMillis();
-			long elapse = (endTime - startTime) / 1000;
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			logger.info("[CLUSTER] successfully synchronised newly added "
-					+ newFileList.size() + " files within " + elapse
-					+ "second(s) from " + df.format(new Date(startTime))
-					+ " to " + df.format(new Date(endTime)));
-		} catch (DBException e) {
+				List<DocPo> newFileList = docDao.listNewlyAddedFiles(upload2DfsStart, clusterUpload2dfsBatchSize);
+				// upload those files sequentially
+				if (CollectionUtils.isEmpty(newFileList)) {
+					logger.info("[CLUSTER] There is NO new file need to uplaod to DFS");
+					return;
+				}
+				DocPo lastDoc = newFileList.get(newFileList.size() - 1);
+				String lastDocCtime = lastDoc.getCtime();
+				cacheDao.setGlobal("upload2DfsStart", lastDocCtime);
+				
+				logger.info("[CLUSTER] start uploading " + newFileList.size() + " new file(s) to DFS...");
+				for (DocPo newFile : newFileList) {
+					String uuid = newFile.getUuid();
+					long uploadStart = System.currentTimeMillis();
+					uploadUuid2Remote(uuid);
+					long uploadEnd = System.currentTimeMillis();
+					long uploadElapse = uploadEnd - uploadStart;
+					DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					logger.info("[CLUSTER] " + uuid + " uploaded to DFS within " + uploadElapse + " milisecond(s) from " + df.format(new Date(uploadStart)) + " to " + df.format(new Date(uploadEnd)));
+				}
+				try {
+					Thread.sleep(clusterUpload2dfsBatchInterval);
+				} catch (Exception e) {
+
+				}
+			}
+		} catch (Exception e) {
 			logger.error("[CLUSTER] Get newly added files error: " + e.getMessage());
 		}
 	}
