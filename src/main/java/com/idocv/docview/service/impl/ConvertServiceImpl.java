@@ -122,7 +122,12 @@ public class ConvertServiceImpl implements ConvertService {
 
 	@Override
 	public Boolean call() throws Exception {
-		previewService.convert(rid);
+		try {
+			previewService.convert(rid);
+		} catch (Exception e) {
+			logger.error("[CONVERT] convert(" + rid + ") task error: " + e.getMessage());
+			return false;
+		}
 		return true;
 	}
 
