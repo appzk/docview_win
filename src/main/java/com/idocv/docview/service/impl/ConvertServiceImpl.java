@@ -5,7 +5,12 @@ import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -43,6 +48,9 @@ public class ConvertServiceImpl implements ConvertService {
 
 	public static boolean SYSTEM_LOAD_HIGH = false;
 	
+	public static DateFormat dfMinute = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private static Map<String, Integer> lastMinuteCountMap = new HashMap<String, Integer>();
+
 	@Resource
 	private DocDao docDao;
 
@@ -140,6 +148,22 @@ public class ConvertServiceImpl implements ConvertService {
 		if (convertSwitchMode == 1 && SYSTEM_LOAD_HIGH) {
 			return;
 		}
+
+		// check last minute upload frequency
+		String currentMinute = dfMinute.format(new Date());
+		Integer lastMinuteCount = lastMinuteCountMap.get(currentMinute);
+		if (null == lastMinuteCount) {
+			lastMinuteCountMap.clear();
+			lastMinuteCountMap.put(currentMinute, 1);
+		} else if (lastMinuteCount < convertSwitchThresholdUploadFrequency) {
+			lastMinuteCount++;
+			lastMinuteCountMap.put(currentMinute, lastMinuteCount);
+		} else {
+			// Load is high
+			SYSTEM_LOAD_HIGH = true;
+			return;
+		}
+
 		ConvertService convertService = new ConvertServiceImpl(previewService, rid);
 		es.submit(convertService);
 		return;
