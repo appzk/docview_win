@@ -125,7 +125,7 @@ public class ConvertServiceImpl implements ConvertService {
 		try {
 			previewService.convert(rid);
 		} catch (Exception e) {
-			logger.error("[CONVERT] convert(" + rid + ") task error: " + e.getMessage());
+			logger.warn("[CONVERT] convert(" + rid + ") task fail: " + e.getMessage());
 			return false;
 		}
 		return true;
