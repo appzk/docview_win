@@ -747,15 +747,13 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			convertingRids.add(rid);
 		}
 		try {
-			String convertResult = null;
+			String convertResult = "";
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
 					convertResult = CmdUtil.runWindows(word2Html, src, dest);
 				}
 				if (!destFile.isFile()) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					logger.error("Convert Result: \n" + convertResult);
+					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
 					throw new DocServiceException("对不起，该文档（"
 							+ RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
@@ -765,9 +763,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					convertResult = CmdUtil.runWindows(excel2Html, src, dest);
 				}
 				if (!destFile.isFile()) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					logger.error("Convert Result: \n" + convertResult);
+					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
 					throw new DocServiceException("对不起，该文档（"
 							+ RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
@@ -776,15 +772,13 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles())) {
-					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "true", IMG_WIDTH_200);
+					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "false", IMG_WIDTH_200);
 				}
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_1024).listFiles())) {
 					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "false", IMG_WIDTH_1024);
 				}
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles()) || ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_1024).listFiles())) {
-					logger.error("对不起，该文档（" + RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
-					logger.error("Convert Result: \n" + convertResult);
+					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
 					throw new DocServiceException("对不起，该文档（"
 							+ RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
@@ -794,8 +788,13 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
 				if (!new File(destFirstPage).isFile()) {
 					// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
-					String convertInfo = CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a2", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
-					logger.info("Convert info: \n" + convertInfo);
+					convertResult = CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a2", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+				}
+				if (!new File(destFirstPage).isFile()) {
+					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 				/* pdf2htmlEx
 				if (!destFile.isFile()) {
@@ -811,9 +810,10 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				logger.error("目前不支持（" + ext + "）格式！");
 				throw new DocServiceException("目前不支持（" + ext + "）格式！");
 			}
+			logger.debug("[CONVERT DEBUG] " + rid + " - " + convertResult);
 			return true;
 		} catch (Exception e) {
-			logger.error("convert error(" + rid + "): " + e.getMessage());
+			logger.error("[CONVERT ERROR] " + rid + " - " + e.getMessage());
 			throw new DocServiceException(e.getMessage(), e);
 		} finally {
 			convertingRids.remove(rid);
