@@ -3,6 +3,7 @@ package com.idocv.docview.service.impl;
 
 import java.io.File;
 import java.net.NetworkInterface;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,9 +96,11 @@ public class DocServiceImpl implements DocService {
 
 	private static String authUrl = "http://www.idocv.com/auth.json";
 	private static final ObjectMapper om = new ObjectMapper();
-	public static final String macAddress = "78-2B-CB-72-DD-26";
+	public static final String macAddress = "D4-3D-7E-0C-4F-EE";
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
+	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
+	private static final String expireDateString = "2014-05-25 00:00:00";
 	private static String lastCheckingDate = "2013-01-01";
 	private static boolean lastCheckingStatus = true;
 
@@ -465,6 +468,20 @@ public class DocServiceImpl implements DocService {
 		}
 		lastCheckingDate = currentDate;
 		
+		if (StringUtils.isNotBlank(expireDateString)) {
+			try {
+				Date expireDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(expireDateString);
+				if (expireDate.after(new Date())) {
+					lastCheckingStatus = true;
+					return true;
+				}
+			} catch (ParseException e) {
+				
+			}
+			lastCheckingStatus = false;
+			return false;
+		}
+
 		HttpClient client = new HttpClient();
 		GetMethod method = new GetMethod(authUrl);
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
