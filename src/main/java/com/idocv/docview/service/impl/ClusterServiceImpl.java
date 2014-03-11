@@ -99,10 +99,12 @@ public class ClusterServiceImpl implements ClusterService {
 	public DocVo add(String fileName, byte[] data, String appid, String uid,
 			String tid, String sid, int mode) throws DocServiceException {
 		try {
-			String dataUrl = rcUtil.getDataUrl();
-			if (StringUtils.isBlank(dataUrl) || !dataUrl.toLowerCase().contains(DocServiceImpl.domain)) {
-				System.out.println("[ERROR] This software is only authorized to <" + DocServiceImpl.domain + ">!");
-				return null;
+			if (DocServiceImpl.isCheckDomain) {
+				String dataUrl = rcUtil.getDataUrl();
+				if (StringUtils.isBlank(dataUrl) || !dataUrl.toLowerCase().contains(DocServiceImpl.domain)) {
+					System.out.println("[ERROR] This software is only authorized to <" + DocServiceImpl.domain + ">!");
+					return null;
+				}
 			}
 			int size = data.length;
 			String rid = RcUtil.genRid(appid, fileName, size);
