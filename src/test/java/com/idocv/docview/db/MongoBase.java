@@ -3,7 +3,8 @@ package com.idocv.docview.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mongodb.BasicDBObject;
+import org.apache.commons.lang.StringUtils;
+
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -35,14 +36,14 @@ public class MongoBase {
 		coll.insert(BasicDBObjectBuilder.start("_id", "bbb").add("name", "Gao").add("age", 29).get());
 		coll.insert(BasicDBObjectBuilder.start("_id", "ccc").add("name", "Congying").add("age", 25).get());
 
-		List<DBObject> objs = new ArrayList<DBObject>();
-		objs.add(BasicDBObjectBuilder.start("age", 28).get());
-		objs.add(BasicDBObjectBuilder.start().push("age").add("$exists", true).get());
-		QueryBuilder query = QueryBuilder.start().or(objs.toArray(new DBObject[] {}));
-		System.out.println("query: " + query.get());
-		DBCursor cur = coll.find(query.get(), new BasicDBObject("_id", 1));
-		List<DBObject> list = convertDBCursor2List(cur);
-		printList(list);
+		QueryBuilder query = QueryBuilder.start("_id").is("aaa");
+		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start().push("$set").append("utime", "uuuuu");
+		if (StringUtils.isBlank(null)) {
+			builder.pop().push("$unset").append("name", 1);
+		} else {
+			builder.append("name", "NNNNNN");
+		}
+		coll.update(query.get(), builder.get(), true, true);
 	}
 
 	public static List<DBObject> list() {

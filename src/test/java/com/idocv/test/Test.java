@@ -1,30 +1,14 @@
 package com.idocv.test;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Test {
 	public static void main(String[] args) {
-		MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-		while (true) {
-			MemoryUsage memoryUsage = memoryMXBean.getHeapMemoryUsage();
-			long init = memoryUsage.getInit();
-			long used = memoryUsage.getUsed();
-			long max = memoryUsage.getMax();
-			double memoryRate = (double) used / max;
-			memoryRate = new BigDecimal(memoryRate).setScale(2,
-					RoundingMode.HALF_UP).doubleValue();
-			System.out.println("memory rate: " + memoryRate + ", init: " + init
-					+ ", used: " + used + ", max: " + max);
-			try {
-				Thread.sleep(2000);
-				byte[] data = new byte[10240];
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		String time = "2014-02-17 04:57:07";
+
+		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		System.out.println("cur:" + currentDate);
+		System.out.println(time.startsWith(currentDate));
 	}
 }
