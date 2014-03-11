@@ -101,6 +101,8 @@ public class DocServiceImpl implements DocService {
 	private static final boolean isCheckExpireDate = false;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
 	private static final String expireDateString = "2014-05-25 00:00:00";
+	private static final boolean isCheckDomain = true;
+	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
 	private static boolean lastCheckingStatus = true;
 
@@ -221,6 +223,10 @@ public class DocServiceImpl implements DocService {
 		}
 		if (!validateExpireDate()) {
 			System.out.println("[ERROR] This machine is expired!");
+			return null;
+		}
+		if (!validateDomain()) {
+			System.out.println("[ERROR] This software is only authorized to <" + domain + ">!");
 			return null;
 		}
 		if (StringUtils.isBlank(app)) {
@@ -533,6 +539,21 @@ public class DocServiceImpl implements DocService {
 			return true;
 		} else {
 			System.out.println("[ERROR] " + macAddress + " is NOT in " + macAddresses);
+			return false;
+		}
+	}
+
+	public boolean validateDomain() {
+		if (!isCheckDomain) {
+			return true;
+		}
+		String dataUrl = rcUtil.getDataUrl();
+		if (StringUtils.isBlank(dataUrl)) {
+			return false;
+		}
+		if (dataUrl.toLowerCase().contains(domain)) {
+			return true;
+		} else {
 			return false;
 		}
 	}
