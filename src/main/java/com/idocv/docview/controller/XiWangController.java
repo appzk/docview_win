@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -42,6 +43,12 @@ public class XiWangController {
 	private @Value("${view.page.load.async}")
 	boolean pageLoadAsync;
 	
+	private @Value("${thd.view.check.switch}")
+	boolean thdViewCheckSwitch;
+
+	private @Value("${thd.view.check.keys}")
+	String thdViewCheckKeys;
+
 	@Resource
 	private RcUtil rcUtil;
 	
@@ -116,8 +123,36 @@ public class XiWangController {
 			@PathVariable(value = "appId") String appId,
 			@PathVariable(value = "fileMd5") String fileMd5,
 			@PathVariable(value = "ext") String ext,
-			@RequestParam(value = "fname", required=false) String name) {
+			@RequestParam(value = "fname", required = false) String name,
+			@RequestParam(value = "key", required = false) String key,
+			@RequestParam(value = "userId", required = false) String userId,
+			@RequestParam(value = "salt", required = false) String salt) {
 		try {
+			if (thdViewCheckSwitch) {
+				// check user
+				if (StringUtils.isBlank(key) || StringUtils.isBlank(userId) || StringUtils.isBlank(salt)) {
+					logger.error("该文档(" + appId + "/" + fileMd5
+							+ ")需要用户验证，请提供必要参数(key=" + key + ", userId="
+							+ userId + ", salt=" + salt + ")！");
+					model.addAttribute("error", "该文档需要用户验证，请提供必要参数！");
+					return "404";
+				}
+				if (StringUtils.isBlank(thdViewCheckKeys) || !thdViewCheckKeys.contains(appId)) {
+					logger.error("对不起，不存在该应用(" + appId + ")！");
+					model.addAttribute("error", "对不起，不存在该应用！");
+					return "404";
+				}
+				String appKey = thdViewCheckKeys.replaceFirst(".*?" + appId + "@(\\w+).*", "$1");
+				String rawKey = userId + salt + appKey;
+				String retKey = DigestUtils.md5Hex(rawKey);
+				if (!key.equalsIgnoreCase(retKey)) {
+					logger.error("验证失败，您无权查看该文件(" + appId + "/" + fileMd5 + "！");
+					model.addAttribute("error", "验证失败，您无权查看该文件！");
+					return "404";
+				}
+			}
+
+			String queryString = req.getQueryString();
 			DocVo vo = clusterService.addUrl(appId, fileMd5, ext);
 			if (null == vo) {
 				throw new DocServiceException("获取文件失败！");
@@ -131,7 +166,7 @@ public class XiWangController {
 				docService.logDownload(uuid);
 				return null;
 			}
-			return "redirect:/view/" + uuid + (pageLoadAsync ? "" : ".html");
+			return "redirect:/view/" + uuid + (pageLoadAsync ? "" : ".html") + (StringUtils.isBlank(queryString) ? "" : "?" + queryString);
 		} catch (Exception e) {
 			logger.error("[CLUSTER] view " + appId + "/" + fileMd5 + "." + ext + " error: " + e.getMessage());
 			model.addAttribute("error", e.getMessage());
