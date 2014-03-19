@@ -1,12 +1,17 @@
 package com.idocv.docview.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +24,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.idocv.docview.common.DocResponse;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.ClusterService;
+import com.idocv.docview.service.DocService;
+import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
 
 @Controller
@@ -33,6 +41,12 @@ public class XiWangController {
 
 	private @Value("${view.page.load.async}")
 	boolean pageLoadAsync;
+	
+	@Resource
+	private RcUtil rcUtil;
+	
+	@Resource
+	private DocService docService;
 
 	/**
 	 * upload
@@ -95,16 +109,28 @@ public class XiWangController {
 	 * @return
 	 */
 	@RequestMapping("{appId}/{fileMd5:\\w{32}}.{ext:[\\w]{3,4}}")
-	public String view(Model model,
+	public String view(
+			HttpServletRequest req,
+			HttpServletResponse resp,
+			Model model,
 			@PathVariable(value = "appId") String appId,
 			@PathVariable(value = "fileMd5") String fileMd5,
-			@PathVariable(value = "ext") String ext) {
+			@PathVariable(value = "ext") String ext,
+			@RequestParam(value = "fname", required=false) String name) {
 		try {
 			DocVo vo = clusterService.addUrl(appId, fileMd5, ext);
 			if (null == vo) {
 				throw new DocServiceException("获取文件失败！");
 			}
 			String uuid = vo.getUuid();
+			if (StringUtils.isNotBlank(name)) {
+				String rid = vo.getRid();
+				String path = rcUtil.getPath(rid);
+				DocResponse.setResponseHeaders(req, resp, name);
+				IOUtils.write(FileUtils.readFileToByteArray(new File(path)), resp.getOutputStream());
+				docService.logDownload(uuid);
+				return null;
+			}
 			return "redirect:/view/" + uuid + (pageLoadAsync ? "" : ".html");
 		} catch (Exception e) {
 			logger.error("[CLUSTER] view " + appId + "/" + fileMd5 + "." + ext + " error: " + e.getMessage());
