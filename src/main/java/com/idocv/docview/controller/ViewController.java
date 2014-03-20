@@ -161,6 +161,10 @@ public class ViewController {
 				attMap.put("ext", ext);
 				attMap.put("name", docVo.getName());
 				attMap.put("size", docVo.getSize());
+				if (StringUtils.isNotBlank(dfsUrl) && dfsUrl.matches(".*?/(\\w{32}).\\w+")) {
+					String md5 = dfsUrl.replaceFirst(".*?/(\\w{32}).\\w+", "$1");
+					attMap.put("md5", md5);
+				}
 				model.addAllObjects(attMap);
 				return model;
 			} else {

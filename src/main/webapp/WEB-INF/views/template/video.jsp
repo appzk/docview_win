@@ -47,6 +47,7 @@
           <h3>ext: ${ext}</h3>
           <h3>name: ${name}</h3>
           <h3>size: ${size}</h3>
+          <h3>md5: ${md5}</h3>
         </div><!--/span-->
       </div><!--/row-->
 
