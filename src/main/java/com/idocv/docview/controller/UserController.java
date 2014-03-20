@@ -1,5 +1,8 @@
 package com.idocv.docview.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -58,18 +61,22 @@ public class UserController {
 	 */
 	@ResponseBody
 	@RequestMapping("signup.json")
-	public String signUp(HttpServletRequest req,
+	public Map<String, String> signUp(
+			HttpServletRequest req,
 			@RequestParam(value = "appkey", defaultValue = "testtoken") String appkey,
 			@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "email") String email) {
+		Map<String, String> map = new HashMap<String, String>();
 		try {
 			UserVo vo = userService.add(appkey, username, password, email);
-			return "{\"uid\":\"" + vo.getId() + "\", \"sid\":\"" + vo.getSid() + "\"}";
+			map.put("uid", vo.getId());
+			map.put("sid", vo.getSid());
 		} catch (Exception e) {
 			logger.error("user signup error <controller>: " + e.getMessage());
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			map.put("error", e.getMessage());
 		}
+		return map;
 	}
 
 	/**
@@ -95,18 +102,23 @@ public class UserController {
 	 */
 	@ResponseBody
 	@RequestMapping("activate.json")
-	public String activateJson(
+	public Map<String, String> activateJson(
 			@RequestParam(value = "email") String email,
 			@RequestParam(value = "key") String key) {
+		Map<String, String> map = new HashMap<String, String>();
 		try {
 			UserVo vo = userService.activate(email, key);
 			if (null == vo) {
-				return "{\"error\":\"用户不存在！\"}";
+				map.put("error", "用户不存在！");
+				return map;
 			}
-			return "{\"uid\":\"" + vo.getId() + "\", \"status\":\"" + vo.getStatus() + "\"}";
+			map.put("uid", vo.getId());
+			map.put("status", String.valueOf(vo.getStatus()));
+			return map;
 		} catch (Exception e) {
 			logger.error("user activate error <controller>: " + e.getMessage());
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			map.put("error", e.getMessage());
+			return map;
 		}
 	}
 
@@ -129,18 +141,20 @@ public class UserController {
 	 */
 	@ResponseBody
 	@RequestMapping("login.json")
-	public String login(String user, String password) {
+	public Map<String, String> login(String user, String password) {
+		Map<String, String> map = new HashMap<String, String>();
 		try {
 			UserVo vo = userService.login(user, password);
 			if (null != vo) {
-				return "{\"sid\":\"" + vo.getSid() + "\"}";
+				map.put("sid", vo.getSid());
 			} else {
-				return "{\"error\":\"Can NOT login!\"}";
+				map.put("error", "登陆失败！");
 			}
 		} catch (DocServiceException e) {
 			logger.error("user login.json error <controller>: " + e.getMessage());
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			map.put("error", e.getMessage());
 		}
+		return map;
 	}
 
 	/**
@@ -152,7 +166,8 @@ public class UserController {
 	 */
 	@ResponseBody
 	@RequestMapping("logout.json")
-	public String logout(HttpServletRequest req) {
+	public Map<String, String> logout(HttpServletRequest req) {
+		Map<String, String> map = new HashMap<String, String>();
 		try {
 			Cookie[] cookies = req.getCookies();
 			String sid = null;
@@ -165,16 +180,18 @@ public class UserController {
 				throw new DocServiceException("NOT logged in!");
 			}
 			userService.logout(sid);
-			return "{\"success\":\"Logged out!\"}";
+			map.put("success", "Logged out!");
 		} catch (DocServiceException e) {
 			logger.error("user logout.json error <controller>: " + e.getMessage());
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			map.put("error", e.getMessage());
 		}
+		return map;
 	}
 
 	@ResponseBody
 	@RequestMapping("checkLogin.json")
-	public String checkLogin(HttpServletRequest req) {
+	public Map<String, String> checkLogin(HttpServletRequest req) {
+		Map<String, String> map = new HashMap<String, String>();
 		try {
 			Cookie[] cookies = req.getCookies();
 			String sid = null;
@@ -189,14 +206,17 @@ public class UserController {
 			}
 			UserVo vo = userService.getBySid(sid);
 			if (null != vo) {
-				return "{\"uid\":\"" + vo.getId() + "\"," +
-						"\"sid\":\"" + vo.getSid() + "\"," +
-						"\"username\":\"" + vo.getUsername() + "\"}";
+				map.put("uid", vo.getId());
+				map.put("sid", vo.getSid());
+				map.put("username", vo.getUsername());
+				return map;
 			} else {
-				return "{\"error\":\"未登录！\"}";
+				map.put("error", "未登录！");
+				return map;
 			}
 		} catch (DocServiceException e) {
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			map.put("error", e.getMessage());
+			return map;
 		}
 	}
 }

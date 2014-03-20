@@ -29,6 +29,22 @@
 		</property>
 		<property name="messageConverters">
 			<list>
+				<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" >
+					<property name="supportedMediaTypes">
+						<list>
+							<bean class="org.springframework.http.MediaType">
+								<constructor-arg index="0" value="application" />
+								<constructor-arg index="1" value="json" />
+								<constructor-arg index="2" value="UTF-8" />
+							</bean>
+							<bean class="org.springframework.http.MediaType">
+								<constructor-arg index="0" value="text" />
+								<constructor-arg index="1" value="*" />
+								<constructor-arg index="2" value="UTF-8" />
+							</bean>
+						</list>
+			        </property>
+				</bean>
 				<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
 				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
 					<property name="writeAcceptCharset" value="false"/>
@@ -38,7 +54,6 @@
 				<bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
 				<bean class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter" />
 				<bean class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter" />
-				<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
 			</list>
 		</property>
 	</bean>
