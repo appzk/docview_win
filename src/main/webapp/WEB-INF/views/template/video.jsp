@@ -45,6 +45,8 @@
           <h3>uid: ${uid}</h3>
           <h3>uuid: ${uuid}</h3>
           <h3>ext: ${ext}</h3>
+          <h3>name: ${name}</h3>
+          <h3>size: ${size}</h3>
         </div><!--/span-->
       </div><!--/row-->
 

@@ -159,6 +159,8 @@ public class ViewController {
 				attMap.put("uid", uid);
 				attMap.put("uuid", uuid);
 				attMap.put("ext", ext);
+				attMap.put("name", docVo.getName());
+				attMap.put("size", docVo.getSize());
 				model.addAllObjects(attMap);
 				return model;
 			} else {
