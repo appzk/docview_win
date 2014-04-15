@@ -15,6 +15,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -260,5 +261,92 @@ public class XiWangController {
 			page.setRid(rid);
 		}
 		return page;
+	}
+
+	/**
+	 * get document content by uuid in json format
+	 * 
+	 * 1. get docVo by uuid 2. check access mode of docVo 3. public mode ->
+	 * direct view 4. semi-public | private mode -> 5 5. get sessionVo by
+	 * sessionId 6. current time - ctime > expire time ? session expired : view.
+	 * PageVo<? extends Serializable> page = null;
+	 * 
+	 */
+	@RequestMapping("{appId}/{fileMd5:\\w{32}}.{ext:[\\w]{3,4}}.jsonp")
+	public void jsonpUuid(HttpServletRequest req,
+			HttpServletResponse resp, Model model,
+			@PathVariable(value = "appId") String appId,
+			@PathVariable(value = "fileMd5") String fileMd5,
+			@PathVariable(value = "ext") String ext,
+			@RequestParam(value = "fname", required = false) String name,
+			@RequestParam(value = "key", required = false) String key,
+			@RequestParam(value = "userId", required = false) String userId,
+			@RequestParam(value = "salt", required = false) String salt,
+			@RequestParam(defaultValue = "1") int start,
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(required = true) String callback) {
+		PageVo<? extends Serializable> page = null;
+		String rid = null;
+		String uuid = null;
+		try {
+			DocVo vo = clusterService.addUrl(appId, fileMd5, ext);
+			if (null == vo) {
+				throw new DocServiceException("获取文件失败！");
+			}
+			uuid = vo.getUuid();
+			// 1. get docVo by uuid
+			DocVo docVo = docService.getByUuid(uuid);
+			if (null == docVo || StringUtils.isBlank(docVo.getRid())) {
+				throw new DocServiceException("文档(" + uuid + ")不存在！");
+			}
+			rid = docVo.getRid();
+			ext = RcUtil.getExt(rid);
+
+			// 2. check access mode of docVo
+			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
+					|| "odt".equalsIgnoreCase(ext)) {
+				start = (start - 1) * size + 1;
+				page = viewService.convertWord2Html(rid, start, size);
+			} else if ("xls".equalsIgnoreCase(ext)
+					|| "xlsx".equalsIgnoreCase(ext)
+					|| "ods".equalsIgnoreCase(ext)) {
+				page = viewService.convertExcel2Html(rid, start, size);
+			} else if ("ppt".equalsIgnoreCase(ext)
+					|| "pptx".equalsIgnoreCase(ext)
+					|| "odp".equalsIgnoreCase(ext)) {
+				page = viewService.convertPPT2Img(rid, start, size);
+			} else if ("txt".equalsIgnoreCase(ext)) {
+				start = (start - 1) * size + 1;
+				page = viewService.convertTxt2Html(rid, start, size);
+			} else if ("pdf".equalsIgnoreCase(ext)) {
+				// page = previewService.convertPdf2Html(rid, 1, 0);
+				page = viewService.convertPdf2Img(rid, 1, 0);
+			} else {
+				page = new PageVo<OfficeBaseVo>(null, 0);
+				page.setCode(0);
+				page.setDesc("不是一个文档！");
+			}
+			if (CollectionUtils.isEmpty(page.getData())) {
+				page.setCode(0);
+				page.setDesc("没有可显示的内容！");
+			}
+			page.setName(docVo.getName());
+			page.setRid(docVo.getRid());
+			page.setUuid(docVo.getUuid());
+			docService.logView(uuid);
+		} catch (Exception e) {
+			logger.error("view json(" + uuid + ") error: " + e.getMessage());
+			page = new PageVo<OfficeBaseVo>(null, 0);
+			page.setCode(0);
+			page.setDesc(e.getMessage());
+			page.setUuid(uuid);
+			page.setRid(rid);
+		}
+		try {
+			String result = callback + "(" + new ObjectMapper().writeValueAsString(page) + ");";
+			resp.getWriter().write(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
