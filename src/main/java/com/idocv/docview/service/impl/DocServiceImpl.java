@@ -105,6 +105,7 @@ public class DocServiceImpl implements DocService {
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
 	private static boolean lastCheckingStatus = true;
+	private static File macAuthFile = new File("d:/idocv/auth.txt");
 
 	@Override
 	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
@@ -217,7 +218,7 @@ public class DocServiceImpl implements DocService {
 	}
 
 	private DocVo addDoc(String app, String uid, String name, byte[] data, int mode, String labelId) throws DocServiceException {
-		if (!validateMacAddress(macAddress)) {
+		if (!validateMacAddressFromAuthFile()) {
 			System.out.println("[ERROR] This machine has NOT been authorized!");
 			return null;
 		}
@@ -523,6 +524,49 @@ public class DocServiceImpl implements DocService {
 		} finally {
 			method.releaseConnection();
 		}
+		lastCheckingStatus = false;
+		return false;
+	}
+	
+	public static boolean validateMacAddressFromAuthFile() {
+		if (!isCheckMacAddress) {
+			return true;
+		}
+		
+		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		if (lastCheckingDate.equals(currentDate)) {
+			return lastCheckingStatus;
+		}
+		lastCheckingDate = currentDate;
+		try {
+			String authString = FileUtils.readFileToString(macAuthFile, "utf-8");
+			System.out.println("Auth String: " + authString);
+			if (null != authString && authString.matches("(\\w{12})(\\d{8})(\\d+)")) {
+				String authMac = authString.replaceFirst("(\\w{12})(\\d{8})(\\d+)", "$1");
+				String authDate = authString.replaceFirst("(\\w{12})(\\d{8})(\\d+)", "$2");
+				String authCode = authString.replaceFirst("(\\w{12})(\\d{8})(\\d+)", "$3");
+				List<String> macAddresses = getMacAddresses();
+				for (String curMac : macAddresses) {
+					if (null != curMac && curMac.replaceAll("-", "").equalsIgnoreCase(authMac)) {
+						byte[] bytes = authMac.getBytes();
+						StringBuffer curAuthCodeSb = new StringBuffer();
+						for (int i = 0; i < bytes.length - 1; i += 2) {
+							int c = bytes[i] << 2 & bytes[i + 1];
+							curAuthCodeSb.append(c);
+						}
+						if (authCode.equalsIgnoreCase(curAuthCodeSb.toString())) {
+							lastCheckingStatus = true;
+							return true;
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("[ERROR] This machine has NOT been authorized(" + e.getMessage() + ")!");
+			lastCheckingStatus = false;
+			return false;
+		}
+		System.out.println("[ERROR] Machine NOT authorized!");
 		lastCheckingStatus = false;
 		return false;
 	}

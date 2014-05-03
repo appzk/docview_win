@@ -106,6 +106,12 @@ public class ClusterServiceImpl implements ClusterService {
 					return null;
 				}
 			}
+
+			if (!DocServiceImpl.validateMacAddressFromAuthFile()) {
+				System.out.println("[ERROR] This machine has NOT been authorized!");
+				return null;
+			}
+
 			int size = data.length;
 			String rid = RcUtil.genRid(appid, fileName, size);
 			String uuid = RcUtil.getUuidByRid(rid);

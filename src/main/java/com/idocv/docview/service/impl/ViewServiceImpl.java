@@ -83,6 +83,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	String pdfSign;
 
 	private static final String encodingString = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=([^\"^>]+?)\"?>.*";
+	private static final String encodingStringUtf8 = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=[^>]*?utf([^\"^>]+?)\"?>.*";
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -103,6 +104,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String contentWhole = FileUtils.readFileToString(htmlFile, "GBK");
 				if (!contentWhole.matches(encodingString)) {
 					contentWhole = FileUtils.readFileToString(htmlFile, "unicode");
+				}
+				if (contentWhole.matches(encodingStringUtf8)) {
+					contentWhole = FileUtils.readFileToString(htmlFile, "utf-8");
 				}
 				String styleString = contentWhole.replaceFirst("(?s)(?i).*?(<style>)(.*?)</style>.*", "$2");
 				bodyRaw = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
