@@ -133,7 +133,7 @@ public class ClusterServiceImpl implements ClusterService {
 
 			// 3. get fileName md5
 			long md5Start = System.currentTimeMillis();
-			String md5FileName = DigestUtils.md5Hex(data);
+			String md5 = DigestUtils.md5Hex(data);
 			long md5End = System.currentTimeMillis();
 			long md5Elapse = md5End - md5Start;
 			logger.info("[CLUSTER] " + uuid + " - get md5 elapse: " + md5Elapse + " miliseconds.");
@@ -143,7 +143,7 @@ public class ClusterServiceImpl implements ClusterService {
 			if (!rcUtil.isSupportUpload(ext)) {
 				throw new DocServiceException("不支持上传" + ext + "文件，详情请联系管理员！");
 			}
-			String url = "dfs:///" + appid + "/" + md5FileName + "." + ext;
+			String url = "dfs:///" + appid + "/" + md5 + "." + ext;
 
 			// check existence
 			if (isUniqueUpload) {
@@ -176,7 +176,7 @@ public class ClusterServiceImpl implements ClusterService {
 			doc.setMetas(metas);
 			doc.setUrl(url);
 			// save info
-			docDao.add(appid, uid, rid, uuid, fileName, size, ext, 1, null, metas, url);
+			docDao.add(appid, uid, rid, uuid, md5, fileName, size, ext, 1, null, metas, url);
 			// docDao.updateUrl(uuid, url);
 
 			// Asynchronously convert document
@@ -345,14 +345,14 @@ public class ClusterServiceImpl implements ClusterService {
 	}
 
 	@Override
-	public DocVo addUrl(String appId, String fileMd5, String ext) throws DocServiceException {
+	public DocVo addUrl(String appId, String md5, String ext) throws DocServiceException {
 		try {
 			// check file type
 			if (!rcUtil.isSupportView(ext)) {
 				throw new DocServiceException("暂不支持" + ext + "文件预览！");
 			}
 			
-			String urlSuffix = appId + "/" + fileMd5 + "." + ext;
+			String urlSuffix = appId + "/" + md5 + "." + ext;
 			String dbUrl = "dfs:///" + urlSuffix;
 			DocVo vo = DocServiceImpl.convertPo2Vo(docDao.getUrl(dbUrl, false));
 			if (null != vo) {
@@ -387,13 +387,13 @@ public class ClusterServiceImpl implements ClusterService {
 			// save data to local
 			byte[] data = urlResponse.bodyAsBytes();
 			int size = data.length;
-			String fileName = fileMd5 + "." + ext;
+			String fileName = md5 + "." + ext;
 			String rid = RcUtil.genRid(appId, fileName, size);
 			DocPo doc = new DocPo();
 			String uuid = RcUtil.getUuidByRid(rid);
 			doc.setRid(rid);
 			doc.setUuid(uuid);
-			doc.setName(fileMd5 + "." + ext);
+			doc.setName(md5 + "." + ext);
 			doc.setSize(size);
 			doc.setCtime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			doc.setStatus(1);
@@ -409,13 +409,13 @@ public class ClusterServiceImpl implements ClusterService {
 			// save info
 			Map<String, Object> metas = new HashMap<String, Object>();
 			metas.put("remote", "1");
-			docDao.add(appId, null, rid, uuid, fileName, size, ext, 1, null, metas, url);
+			docDao.add(appId, null, rid, uuid, md5, fileName, size, ext, 1, null, metas, url);
 			
 			// Asynchronously convert document
 			convertService.convert(rid);
 			return DocServiceImpl.convertPo2Vo(doc);
 		} catch (Exception e) {
-			logger.error("[CLUSTER] add remote file(" + appId + "/" + fileMd5 + "." + ext + ") to local error: " + e.getMessage());
+			logger.error("[CLUSTER] add remote file(" + appId + "/" + md5 + "." + ext + ") to local error: " + e.getMessage());
 			throw new DocServiceException(e.getMessage());
 		}
 	}

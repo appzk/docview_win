@@ -76,7 +76,7 @@ public interface DocDao {
 	 *            文件其它元数据
 	 * @throws DBException
 	 */
-	void add(String app, String uid, String rid, String uuid, String name, int size, String ext, int status, String labelId, Map<String, Object> metas, String url) throws DBException;
+	void add(String app, String uid, String rid, String uuid, String md5, String name, int size, String ext, int status, String labelId, Map<String, Object> metas, String url) throws DBException;
 
 	/**
 	 * Delete a document.
@@ -156,6 +156,15 @@ public interface DocDao {
 	 * @return
 	 */
 	DocPo getByUuid(String uuid, boolean includeDeleted) throws DBException;
+	
+	/**
+	 * get Doc by MD5.
+	 * 
+	 * @param getByMd5
+	 * @param whether include deleted doc
+	 * @return
+	 */
+	DocPo getByMd5(String md5, boolean includeDeleted) throws DBException;
 	
 	/**
 	 * get Doc by URL.

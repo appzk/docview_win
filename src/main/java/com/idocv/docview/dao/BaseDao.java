@@ -13,6 +13,7 @@ public interface BaseDao {
 	static final String _ID = "_id";
 	static final String RID = "rid";
 	static final String UUID = "uuid";
+	static final String MD5 = "md5";
 	static final String APP = "app";
 	static final String NAME = "name";
 	static final String VALUE = "value";

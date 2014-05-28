@@ -15,6 +15,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -75,6 +76,9 @@ public class DocServiceImpl implements DocService {
 	@Resource
 	private ConvertService convertService;
 	
+	@Value("${thd.upload.unique}")
+	private boolean isUniqueUpload;
+
 	@Value("${upload.max.size}")
 	private Long uploadMaxSize;
 
@@ -100,7 +104,7 @@ public class DocServiceImpl implements DocService {
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
-	private static final String expireDateString = "2014-05-25 00:00:00";
+	private static final String expireDateString = "2014-06-18 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
@@ -263,11 +267,21 @@ public class DocServiceImpl implements DocService {
 				throw new DocServiceException("不支持上传" + ext + "文件，详情请联系管理员！");
 			}
 			
+			String md5 = DigestUtils.md5Hex(data);
+			
+			// check existence
+			if (isUniqueUpload) {
+				DocVo vo = DocServiceImpl.convertPo2Vo(docDao.getByMd5(md5, false));
+				if (null != vo) {
+					return vo;
+				}
+			}
+			
 			// save file meta and file
 			FileUtils.writeByteArrayToFile(new File(rcUtil.getPath(rid)), data);
 
 			// save info
-			docDao.add(app, uid, rid, uuid, name, size, ext, mode, labelId, null, null);
+			docDao.add(app, uid, rid, uuid, md5, name, size, ext, mode, labelId, null, null);
 
 			// Asynchronously convert document
 			convertService.convert(rid);
@@ -446,6 +460,7 @@ public class DocServiceImpl implements DocService {
 		DocVo vo = new DocVo();
 		vo.setRid(po.getRid());
 		vo.setUuid(po.getUuid());
+		vo.setMd5(po.getMd5());
 		vo.setApp(po.getApp());
 		vo.setUid(po.getUid());
 		vo.setName(po.getName());

@@ -45,8 +45,9 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 
 	@Override
 	public void add(String app, String uid, String rid, String uuid,
-			String name, int size, String ext, int status, String labelId,
-			Map<String, Object> metas, String url) throws DBException {
+			String md5, String name, int size, String ext, int status,
+			String labelId, Map<String, Object> metas, String url)
+			throws DBException {
 		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		if (StringUtils.isBlank(app)) {
 			throw new DBException("应用为空！");
@@ -56,6 +57,9 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		}
 		if (StringUtils.isBlank(uuid)) {
 			throw new DBException("文档uuid为空！");
+		}
+		if (StringUtils.isBlank(md5)) {
+			throw new DBException("文档md5为空！");
 		}
 		if (StringUtils.isBlank(name)) {
 			throw new DBException("文档名称为空！");
@@ -67,9 +71,10 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 			throw new DBException("文档没有扩展名！");
 		}
 		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
-				.append(_ID, rid).append(UUID, uuid).append(APP, app)
-				.append(NAME, name).append(SIZE, size).append(EXT, ext)
-				.append(CTIME, time).append(UTIME, time).append(STATUS, status);
+				.append(_ID, rid).append(UUID, uuid).append(MD5, md5)
+				.append(APP, app).append(NAME, name).append(SIZE, size)
+				.append(EXT, ext).append(CTIME, time).append(UTIME, time)
+				.append(STATUS, status);
 		if (StringUtils.isNotBlank(labelId)) {
 			builder.append(LABELS, new String[] { labelId });
 		}
@@ -236,6 +241,21 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	public DocPo getByUuid(String uuid, boolean includeDeleted) throws DBException {
 		try {
 			QueryBuilder query = QueryBuilder.start(UUID).is(uuid);
+			if (!includeDeleted) {
+				query.and(STATUS).notEquals(-1);
+			}
+			DBCollection coll = db.getCollection(COLL_DOC);
+			DBObject obj = coll.findOne(query.get());
+			return convertDBObject2Po(obj);
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+
+	@Override
+	public DocPo getByMd5(String md5, boolean includeDeleted) throws DBException {
+		try {
+			QueryBuilder query = QueryBuilder.start(MD5).is(md5);
 			if (!includeDeleted) {
 				query.and(STATUS).notEquals(-1);
 			}
@@ -530,6 +550,9 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		}
 		if (obj.containsField(UUID) && null != obj.get(UUID)) {
 			po.setUuid(obj.get(UUID).toString());
+		}
+		if (obj.containsField(MD5) && null != obj.get(MD5)) {
+			po.setMd5(obj.get(MD5).toString());
 		}
 		if (obj.containsField(NAME) && null != obj.get(NAME)) {
 			po.setName(obj.get(NAME).toString());

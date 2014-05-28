@@ -14,6 +14,7 @@ public class PageVo<T> implements Serializable {
 	private String name;
 	private String rid;
 	private String uuid;
+	private String md5;
 	private String url;
 	private int totalSize;
 	private int curPage = 1;
@@ -89,6 +90,14 @@ public class PageVo<T> implements Serializable {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	public String getMd5() {
+		return md5;
+	}
+
+	public void setMd5(String md5) {
+		this.md5 = md5;
 	}
 
 	public String getUrl() {

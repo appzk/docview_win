@@ -276,6 +276,7 @@ public class ViewController {
 			page.setName(docVo.getName());
 			page.setRid(docVo.getRid());
 			page.setUuid(docVo.getUuid());
+			page.setMd5(docVo.getMd5());
 			docService.logView(uuid);
 		} catch (Exception e) {
 			logger.error("view id.json(" + id + ") error: " + e.getMessage());
