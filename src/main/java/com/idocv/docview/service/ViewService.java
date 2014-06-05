@@ -1,8 +1,5 @@
 package com.idocv.docview.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.vo.ExcelVo;
 import com.idocv.docview.vo.PPTVo;
@@ -26,8 +23,6 @@ public interface ViewService {
 	static final String IMG_WIDTH_1024 = "1024";
 	// static final String IMG_WIDTH_1280 = "1280";
 	static final String PDF_TO_IMAGE_TYPE = "png";
-
-	static List<String> convertingRids = new ArrayList<String>();
 
 	/**
 	 * Convert document(rid) to HTML.

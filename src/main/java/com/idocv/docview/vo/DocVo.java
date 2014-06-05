@@ -53,6 +53,11 @@ public class DocVo implements Serializable {
 	private int status;
 
 	/**
+	 * 转换状态，-2：不支持；-1：转换失败；0|空：初始；1：转换成功；2：转换中
+	 */
+	private int convert;
+
+	/**
 	 * 创建时间
 	 */
 	private String ctime;
@@ -149,6 +154,14 @@ public class DocVo implements Serializable {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public int getConvert() {
+		return convert;
+	}
+
+	public void setConvert(int convert) {
+		this.convert = convert;
 	}
 
 	public String getCtime() {

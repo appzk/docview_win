@@ -466,6 +466,7 @@ public class DocServiceImpl implements DocService {
 		vo.setName(po.getName());
 		vo.setSize(po.getSize());
 		vo.setStatus(po.getStatus());
+		vo.setConvert(po.getConvert());
 		vo.setCtime(po.getCtime());
 		vo.setUtime(po.getUtime());
 		vo.setExt(po.getExt());

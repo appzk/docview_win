@@ -28,10 +28,11 @@ public interface BaseDao {
 	static final String DTIME = "dtime";
 	static final String STATUS = "status";
 	static final String STATUS_CONVERT = "convert";
+	static final int STATUS_CONVERT_NOT_SUPPORT = -2;
+	static final int STATUS_CONVERT_FAIL = -1;
 	static final int STATUS_CONVERT_INIT = 0;
 	static final int STATUS_CONVERT_SUCCESS = 1;
-	static final int STATUS_CONVERT_FAIL = -1;
-	static final int STATUS_CONVERT_NOT_SUPPORT = -2;
+	static final int STATUS_CONVERT_CONVERTING = 2;
 
 	static final String LABELS = "labels";
 

@@ -563,6 +563,9 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		if (obj.containsField(STATUS) && null != obj.get(STATUS)) {
 			po.setStatus(Integer.valueOf(obj.get(STATUS).toString()));
 		}
+		if (obj.containsField(STATUS_CONVERT) && null != obj.get(STATUS_CONVERT)) {
+			po.setConvert(Integer.valueOf(obj.get(STATUS_CONVERT).toString()));
+		}
 		if (obj.containsField(CTIME) && null != obj.get(CTIME)) {
 			po.setCtime(obj.get(CTIME).toString());
 		}
