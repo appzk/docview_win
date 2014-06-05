@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -33,7 +35,9 @@ import org.springframework.util.CollectionUtils;
 
 import com.idocv.docview.dao.BaseDao;
 import com.idocv.docview.dao.DocDao;
+import com.idocv.docview.exception.DBException;
 import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.CmdUtil;
 import com.idocv.docview.util.RcUtil;
@@ -49,6 +53,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 
 	private static Logger logger = LoggerFactory.getLogger(ViewServiceImpl.class);
 	
+	private static DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 	@Resource
 	private RcUtil rcUtil;
 	
@@ -682,6 +688,45 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	}
 
 	public boolean convert(String rid) throws DocServiceException {
+		DocPo docPo;
+		try {
+			docPo = docDao.get(rid, false);
+			if (null == docPo) {
+				logger.error("获取文档元数据失败(" + rid + ")");
+				throw new DocServiceException("获取文档元数据失败(" + rid + ")");
+			}
+			String uuid = docPo.getUuid();
+			int convertStatus = docPo.getConvert();
+			if (convertStatus < 0) {
+				logger.error("对不起，该文档" + rid + "暂无法预览，请查看其它文档！");
+				throw new DocServiceException("对不起，该文档" + uuid
+						+ "暂无法预览，请查看其它文档！");
+			}
+			if (1 == convertStatus) {
+				return true;
+			}
+			if (2 == convertStatus) {
+				String utimeString = docPo.getUtime();
+				Date utime = df.parse(utimeString);
+				Date nowBefore3Min = DateUtils.addMinutes(new Date(), -3);
+				if (utime.before(nowBefore3Min)) {
+					docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_FAIL);
+					logger.error("对不起，该文档（" + rid
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开并重新上传！");
+					throw new DocServiceException("对不起，该文档（" + docPo.getUuid()
+							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开并重新上传！");
+				} else {
+					logger.error("您的文档" + rid + "正在处理中，请稍后再试……");
+					throw new DocServiceException("您的文档" + uuid
+							+ "正在处理中，请稍后再试……");
+				}
+			}
+		} catch (Exception e) {
+			logger.error("转换文档失败(" + rid + "):" + e.getMessage());
+			throw new DocServiceException("转换文档失败(" + rid + "):"
+					+ e.getMessage());
+		}
+
 		String ext = RcUtil.getExt(rid);
 		if (!rcUtil.isSupportView(ext)) {
 			try {
@@ -693,64 +738,15 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 		}
 		long startConvert = System.currentTimeMillis();
 		try {
-			convert(rid, 0);
-		} catch (Exception e) {
-			try {
-				docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_FAIL);
-			} catch (Exception eu) {
-				logger.error("update field of " + rid + " error: " + eu.getMessage());
-				throw new DocServiceException(e.getMessage());
+			String src = rcUtil.getPath(rid);
+			File srcFile = new File(src);
+			String dest = rcUtil.getParsePathOfHtml(rid);
+			File destFile = new File(dest);
+			if (!srcFile.isFile()) {
+				logger.error("文件未找到, rid=" + rid);
+				throw new DocServiceException(404, "文件未找到");
 			}
-			throw new DocServiceException(e.getMessage());
-		}
-		long endConvert = System.currentTimeMillis();
-		long size = RcUtil.getSizeByRid(rid);
-		long elapse = endConvert - startConvert;
-		elapse = elapse <= 0 ? 1 : elapse;
-		double rate = (double) size / elapse;
-		rate = new BigDecimal(rate).setScale(2, RoundingMode.HALF_UP).doubleValue();
-		logger.info("[CONVERT SUCCESS] " + rid + " of size " + size + " within " + (endConvert - startConvert) + " milisecond(s), convert rate: " + rate + " k/s");
-		try {
-			docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_SUCCESS);
-		} catch (Exception e) {
-			logger.error(rid + " - update " + BaseDao.STATUS_CONVERT + " error: " + e.getMessage());
-		}
-		return true;
-	}
-
-	private boolean convert(String rid, int tryCount) throws DocServiceException {
-		RcUtil.validateRid(rid);
-		String src = rcUtil.getPath(rid);
-		File srcFile = new File(src);
-		String dest = rcUtil.getParsePathOfHtml(rid);
-		File destFile = new File(dest);
-		if (!srcFile.isFile()) {
-			logger.error("文件未找到, rid=" + rid);
-			throw new DocServiceException(404, "文件未找到");
-		}
-		String ext = RcUtil.getExt(rid);
-		long size = RcUtil.getSizeByRid(rid);
-		if (convertingRids.contains(rid)) {
-			if (tryCount < 10) {
-				try {
-					Thread.sleep(6000);
-				} catch (InterruptedException e) {
-					logger.error("等待转换(" + rid + ")出错：" + e.getMessage());
-				}
-				convert(rid, ++tryCount);
-			} else {
-				if (size > 1000000) {
-					logger.info("您的文档较大，正在努力处理中，请稍后再试！");
-					throw new DocServiceException("您的文档较大，正在努力处理中，请稍后再试！");
-				} else {
-					logger.info("您的文档正在处理中，请稍后再试！");
-					throw new DocServiceException("您的文档正在处理中，请稍后再试！");
-				}
-			}
-		} else {
-			convertingRids.add(rid);
-		}
-		try {
+			docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_CONVERTING);
 			String convertResult = "";
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
 				if (!destFile.isFile()) {
@@ -815,13 +811,29 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				throw new DocServiceException("目前不支持（" + ext + "）格式！");
 			}
 			logger.debug("[CONVERT DEBUG] " + rid + " - " + convertResult);
-			return true;
+			try {
+				docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_SUCCESS);
+			} catch (DBException e) {
+				logger.error("update field of " + rid + " error: " + e.getMessage());
+			}
 		} catch (Exception e) {
 			logger.error("[CONVERT ERROR] " + rid + " - " + e.getMessage());
-			throw new DocServiceException(e.getMessage(), e);
-		} finally {
-			convertingRids.remove(rid);
+			try {
+				docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_FAIL);
+			} catch (Exception eu) {
+				logger.error("update field of " + rid + " error: " + eu.getMessage());
+				throw new DocServiceException(e.getMessage());
+			}
+			throw new DocServiceException(e.getMessage());
 		}
+		long endConvert = System.currentTimeMillis();
+		long size = RcUtil.getSizeByRid(rid);
+		long elapse = endConvert - startConvert;
+		elapse = elapse <= 0 ? 1 : elapse;
+		double rate = (double) size / elapse;
+		rate = new BigDecimal(rate).setScale(2, RoundingMode.HALF_UP).doubleValue();
+		logger.info("[CONVERT SUCCESS] " + rid + " of size " + size + " within " + (endConvert - startConvert) + " milisecond(s), convert rate: " + rate + " k/s");
+		return true;
 	}
 
 	/**
