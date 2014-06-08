@@ -105,7 +105,7 @@
 
     <!-- Le javascript
     ================================================== -->
-    <script src="/static/jquery/js/jquery-1.10.1.min.js"></script>
+    <script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
     <script src="/static/bootstrap/js/bootstrap.js"></script>
     <script src="/static/urlparser/js/purl.js"></script>
     <script src="/static/jquerycookie/js/jquery.cookie.js"></script>

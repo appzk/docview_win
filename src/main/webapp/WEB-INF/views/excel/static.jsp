@@ -87,7 +87,7 @@
 
     <!-- Le javascript
     ================================================== -->
-	<script src="/static/jquery/js/jquery-1.10.1.min.js"></script>
+	<script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
 	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>

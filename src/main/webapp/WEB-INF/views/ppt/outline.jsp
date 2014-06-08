@@ -102,7 +102,7 @@
 
     <!-- JavaSript
     ================================================== -->
-    <script src="/static/jquery/js/jquery-1.10.1.min.js"></script>
+    <script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
     <script src="/static/contextMenu/js/jquery.contextMenu.js"></script>
     <script src="/static/contextMenu/js/jquery.ui.position.js"></script>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
