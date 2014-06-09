@@ -99,33 +99,22 @@
 
     <!-- JavaScript
     ================================================== -->
-	<script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
-	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
-	<script src="/static/idocv/js/custom.js"></script>
-	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-	<script src="/static/idocv/js/progress.js"></script>
-	<script src="/static/scrollspy/js/jquery-scrollspy.js"></script>
-	<script src="/static/urlparser/js/purl.js"></script>
-	<!-- 
-	<script src="/static/qrcode/js/jquery.qrcode.min.js"></script>
-	 -->
-	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-	<!-- <script src="/static/idocv/js/user.js"></script> -->
-	<script src="/static/infinite-scroll/js/debug.js"></script>
-	<script src="/static/infinite-scroll/js/jquery.infinitescroll.js"></script>
-	<script src="/static/idocv/js/txt.js"></script>
-	<script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
-	<script src="/static/idocv/js/stat.js"></script>
-	
-	<!-- Baidu Share BEGIN -->
-	<!-- 
-	<script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=6&amp;pos=right&amp;uid=6693451" ></script>
-	<script type="text/javascript" id="bdshell_js"></script>
-	<script type="text/javascript">
-	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
-	</script>
-	 -->
-	<!-- Baidu Share END -->
-
+    <script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/idocv/js/custom.js"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
+    <script src="/static/idocv/js/progress.js"></script>
+    <script src="/static/scrollspy/js/jquery-scrollspy.js"></script>
+    <script src="/static/urlparser/js/purl.js"></script>
+    <!-- 
+    <script src="/static/qrcode/js/jquery.qrcode.min.js"></script>
+     -->
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+    <!-- <script src="/static/idocv/js/user.js"></script> -->
+    <script src="/static/infinite-scroll/js/debug.js"></script>
+    <script src="/static/infinite-scroll/js/jquery.infinitescroll.js"></script>
+    <script src="/static/idocv/js/txt.js"></script>
+    <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
+    <script src="/static/idocv/js/stat.js"></script>
   </body>
 </html>
