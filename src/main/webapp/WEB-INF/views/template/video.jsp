@@ -60,8 +60,7 @@
 
     <!-- JavaSript
     ================================================== -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.10.1.min.js"><\/script>')</script>
+    <script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
     <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
     <script src="/static/urlparser/js/purl.js"></script>
