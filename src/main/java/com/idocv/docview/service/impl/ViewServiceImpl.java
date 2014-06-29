@@ -688,6 +688,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	}
 
 	public boolean convert(String rid) throws DocServiceException {
+		String uuid = RcUtil.getUuidByRid(rid);
 		DocPo docPo;
 		try {
 			docPo = docDao.get(rid, false);
@@ -695,7 +696,6 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				logger.error("获取文档元数据失败(" + rid + ")");
 				throw new DocServiceException("获取文档元数据失败(" + rid + ")");
 			}
-			String uuid = docPo.getUuid();
 			int convertStatus = docPo.getConvert();
 			if (convertStatus < 0) {
 				logger.error("对不起，该文档" + rid + "暂无法预览，请查看其它文档！");
@@ -713,17 +713,16 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_FAIL);
 					logger.error("对不起，该文档（" + rid
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开并重新上传！");
-					throw new DocServiceException("对不起，该文档（" + docPo.getUuid()
+					throw new DocServiceException("对不起，该文档（" + uuid
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开并重新上传！");
 				} else {
-					logger.error("您的文档" + rid + "正在处理中，请稍后再试……");
-					throw new DocServiceException("您的文档" + uuid
-							+ "正在处理中，请稍后再试……");
+					Thread.sleep(5000);
+					return convert(rid);
 				}
 			}
 		} catch (Exception e) {
 			logger.error("转换文档失败(" + rid + "):" + e.getMessage());
-			throw new DocServiceException("转换文档失败(" + rid + "):"
+			throw new DocServiceException("转换文档失败(" + uuid + "):"
 					+ e.getMessage());
 		}
 
