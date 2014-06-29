@@ -716,7 +716,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					throw new DocServiceException("对不起，该文档（" + uuid
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开并重新上传！");
 				} else {
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 					return convert(rid);
 				}
 			}
