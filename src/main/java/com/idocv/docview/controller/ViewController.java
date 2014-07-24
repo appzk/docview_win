@@ -115,6 +115,9 @@ public class ViewController {
 
 			if (uuid.endsWith("w")) {
 				model.setViewName("word/index");
+				if ("test".equals(style)) {
+					model.setViewName("word/test");
+				}
 				return model;
 			} else if (uuid.endsWith("x")) {
 				model.setViewName("excel/index");
@@ -396,8 +399,8 @@ public class ViewController {
 				mode = 0;
 			}
 			url = URLDecoder.decode(url, "UTF-8");
-			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/[^/]+\\.[^/]+")) {
-				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
+			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/([^/]+\\.\\w{1,6})")) {
+				name = url.replaceFirst(".*/([^/]+\\.\\w{1,6})", "$1");
 			}
 			if (StringUtils.isBlank(token)) {
 				throw new DocServiceException("URL上传错误，请提供token参数！");

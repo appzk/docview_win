@@ -104,7 +104,7 @@ public class DocServiceImpl implements DocService {
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
-	private static final String expireDateString = "2014-07-15 23:59:59";
+	private static final String expireDateString = "2014-08-31 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
@@ -156,8 +156,8 @@ public class DocServiceImpl implements DocService {
 				return vo;
 			}
 			
-			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/[^/]+\\.[^/]+")) {
-				name = url.replaceFirst(".*/([^/]+\\.[^/]+)", "$1");
+			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/([^/]+\\.\\w{1,6})")) {
+				name = url.replaceFirst(".*/([^/]+\\.\\w{1,6})", "$1");
 			}
 			
 			byte[] data = null;
@@ -194,6 +194,13 @@ public class DocServiceImpl implements DocService {
 				} catch (Exception e) {
 					logger.error("无法访问资源（" + url + "）：" + e.getMessage());
 					throw new DocServiceException("无法访问资源（" + url + "）");
+				}
+				String disposition = urlResponse.header("Content-Disposition");
+				if (StringUtils.isNotBlank(disposition)) {
+					disposition = new String(disposition.getBytes("ISO-8859-1"), "UTF-8");
+				}
+				if (StringUtils.isBlank(name) && StringUtils.isNotBlank(disposition) && disposition.matches(".*?filename=\"(.*?)\".*")) {
+					name = disposition.replaceFirst(".*?filename=\"(.*?)\".*", "$1");
 				}
 				data = urlResponse.bodyAsBytes();
 			}
