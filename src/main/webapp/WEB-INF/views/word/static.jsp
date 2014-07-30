@@ -53,7 +53,7 @@
       <div class="row-fluid">
         <div class="span12">
           <!-- WORD PAGES HERE -->
-          <!-- <div class="word-page"><div class="word-content">WORD CENTENT HERE</div></div> -->
+          <!-- <div class="word-page"><div class="word-content">WORD CONTENT HERE</div></div> -->
           <div class="word-page">
             <div class="word-content">
               <!-- WORD CENTENT HERE -->
