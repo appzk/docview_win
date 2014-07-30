@@ -26,10 +26,11 @@ public class DocDaoTest {
 			String id = "doc_20130101_0101011abc_doc";
 			String appId = "doc";
 			String uuid = "abcdw";
+			String md5 = "";
 			String name = "test.doc";
 			int size = 1;
 			String ext = "doc";
-			docDao.add(appId, null, id, uuid, name, size, ext, 1, null, null, null);
+			docDao.add(appId, null, id, uuid, md5, name, size, ext, 1, null, null, null);
 		} catch (DBException e) {
 			e.printStackTrace();
 		}
