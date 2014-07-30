@@ -1,5 +1,4 @@
 <%@ page contentType="text/html; charset=utf-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,22 +10,36 @@
     <meta name="copyright" content="I Doc View 2014">
     <meta name="author" content="godwin668@gmail.com">
 
-    <!-- Le styles -->
-    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- styles -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
-    <link href="${page.styleUrl}" rel="stylesheet"/>
+    <style type="text/css">
+      table, tbody, tfoot, thead, tr, th, td {
+        border: 1px solid #dddddd !important;
+      }
+    </style>
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="/static/bootstrap/js/html5shiv.js"></script>
     <![endif]-->
-
-    <!-- Fav and touch icons -->
-    <!-- to be done -->
   </head>
 
   <body>
+  
+    <div class="loading-mask" style="display: none;">
+      <div class="loading-zone">
+        <div class="text">正在载入...0%</div>
+        <div class="progress progress-striped active">
+          <div class="bar" style="width: 0%;"></div>
+        </div>
+      </div>
+      <div class="brand">
+        <footer>
+          Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+        </footer>
+      </div>
+    </div>
 
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
@@ -37,20 +50,9 @@
             <span class="icon-bar"></span>
           </button>
           <!-- FILE NAME HERE -->
-          <a class="brand" style="text-decoration: none;" href="/doc/download/${page.uuid}">${page.name}</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
               <!-- EXCEL TAB TITLE(s) HERE -->
-              <c:forEach var="pg" items="${page.data}" varStatus="rowCounter">
-          		<c:choose>
-					<c:when test="${rowCounter.index == 0}">
-						<li class="active"><a href="#tab${rowCounter.index + 1}" data-toggle="tab">${pg.title}</a></li>
-					</c:when>
-					<c:otherwise>
-						<li><a href="#tab${rowCounter.index + 1}" data-toggle="tab">${pg.title}</a></li>
-					</c:otherwise>
-				</c:choose>
-        	  </c:forEach>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -63,16 +65,6 @@
           <!-- Excel tab content start -->
           <div class="tab-content">
           	<!-- EXCEL CONENT HERE -->
-          	<c:forEach var="pg" items="${page.data}" varStatus="rowCounter">
-          		<c:choose>
-					<c:when test="${rowCounter.index == 0}">
-						<div class="tab-pane fade in active" id="tab${rowCounter.index + 1}">${pg.content}</div>
-					</c:when>
-					<c:otherwise>
-						<div class="tab-pane fade in" id="tab${rowCounter.index + 1}">${pg.content}</div>
-					</c:otherwise>
-				</c:choose>
-        	</c:forEach>
           </div><!-- Excel tab content end -->
         </div><!--/span-->
       </div><!--/row-->
@@ -80,31 +72,23 @@
       <hr>
 
       <footer>
-			Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+        Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
       </footer>
 
     </div><!--/.fluid-container-->
 
-    <!-- Le javascript
+    <!-- JavaScript
     ================================================== -->
-	<script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
+    <script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-	<!-- <script src="/static/idocv/js/user.js"></script> -->
-	<script src="/static/loading/js/simpleLoadingModal.min.js"></script>
-	<script src="/static/urlparser/js/purl.js"></script>
-	<script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
-	<script src="/static/idocv/js/custom.js"></script>
-	<script src="/static/idocv/js/stat.js"></script>
-	
-	<!-- Baidu Share BEGIN -->
-	<script type="text/javascript" id="bdshare_js" data="type=slide&amp;img=6&amp;pos=right&amp;uid=6693451" ></script>
-	<script type="text/javascript" id="bdshell_js"></script>
-	<script type="text/javascript">
-	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
-	</script>
-	<!-- Baidu Share END -->
-
+    <script src="/static/idocv/js/custom.js"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
+    <script src="/static/idocv/js/progress.js"></script>
+    <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+    <!-- <script src="/static/idocv/js/user.js"></script> -->
+    <script src="/static/idocv/js/excel-sync.js"></script>
+    <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
+    <script src="/static/idocv/js/stat.js"></script>
   </body>
 </html>

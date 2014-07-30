@@ -94,12 +94,12 @@
     <script src="/static/idocv/js/progress.js"></script>
     <script src="/static/scrollspy/js/jquery-scrollspy.js"></script>
     <script src="/static/urlparser/js/purl.js"></script>
-    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
+<!--     <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script> -->
 <!--     <script src="/static/idocv/js/user.js"></script> -->
 <!--     <script src="/static/infinite-scroll/js/debug.js"></script> -->
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js"></script>
-    <script src="/static/idocv/js/word-sync.js"></script>
-    <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
-    <script src="/static/idocv/js/stat.js"></script>
+    <script src="/static/idocv/js/word-test.js"></script>
+<!--     <script src="/static/smart/js/jquery.easing-1.3.min.js"></script> -->
+<!--     <script src="/static/idocv/js/stat.js"></script> -->
   </body>
 </html>

@@ -7,7 +7,13 @@ var uuid = $.url().segment(2);
 var sessionId = $.url().param('session');
 $(document).ready(function() {
 	
-	$.get('/view/' + uuid + '.json?start=1&size=5', {session:sessionId}, function(data, status) {
+	$.ajax({
+		type: "GET",
+		url: '/view/' + uuid + '.json?start=1&size=0',
+		data: {session:sessionId},
+		async: false,
+		dataType: "json",
+	}).done(function( data ) {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;

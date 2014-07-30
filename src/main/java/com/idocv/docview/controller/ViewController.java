@@ -139,11 +139,11 @@ public class ViewController {
 					model.setViewName("ppt/sync-audience");
 					return model;
 				} else {
-					model.setViewName("ppt/outline");
+					model.setViewName("ppt/index");
 					return model;
 				}
 			} else if (uuid.endsWith("f")) {
-				model.setViewName("pdf/png");
+				model.setViewName("pdf/index");
 				return model;
 			} else if (uuid.endsWith("t")) {
 				model.setViewName("txt/index");
@@ -206,6 +206,9 @@ public class ViewController {
 		String rid = null;
 		String session = null;
 		try {
+			if (StringUtils.isNotBlank(id) && id.endsWith(".html")) {
+				id = id.substring(0, id.lastIndexOf(".html"));
+			}
 			if (id.matches("\\w{24}")) {
 				// session id
 				SessionVo sessionVo = sessionService.get(id);
@@ -331,9 +334,9 @@ public class ViewController {
 					throw new DocServiceException("会话已过期，请重新获取一个新的会话！");
 				}
 				if (!uuid.equals(sessionVo.getUuid())) {
-					logger.error("该会话与稳定UUID不一致！" + ", session=" + session
+					logger.error("该会话与文档UUID不一致！" + ", session=" + session
 							+ ", uuid=" + uuid);
-					throw new DocServiceException("该会话与稳定UUID不一致！");
+					throw new DocServiceException("该会话与文档UUID不一致！");
 				}
 			}
 			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
@@ -347,10 +350,10 @@ public class ViewController {
 					|| "pptx".equalsIgnoreCase(ext)
 					|| "odp".equalsIgnoreCase(ext)) {
 				page = viewService.convertPPT2Img(rid, start, size);
+			} else if ("pdf".equalsIgnoreCase(ext)) {
+				page = viewService.convertPdf2Img(rid, 1, 0);
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				page = viewService.convertTxt2Html(rid, start, size);
-			} else if ("pdf".equalsIgnoreCase(ext)) {
-				page = viewService.convertPdf2Html(rid, 1, 0);
 			} else {
 				page = new PageVo<OfficeBaseVo>(null, 0);
 				page.setCode(0);
@@ -375,6 +378,8 @@ public class ViewController {
 			model.setViewName("excel/static");
 		} else if (uuid.endsWith("p")) {
 			model.setViewName("ppt/static");
+		} else if (uuid.endsWith("f")) {
+			model.setViewName("pdf/static");
 		} else if (uuid.endsWith("t")) {
 			model.setViewName("txt/static");
 		} else {

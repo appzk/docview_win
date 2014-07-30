@@ -96,7 +96,7 @@
     <script src="/static/urlparser/js/purl.js"></script>
     <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js"></script>
-    <script src="/static/idocv/js/pdf-png.js"></script>
+    <script src="/static/idocv/js/pdf-sync.js"></script>
     <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
     <script src="/static/idocv/js/stat.js"></script>
   </body>

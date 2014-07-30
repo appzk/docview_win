@@ -8,6 +8,16 @@ var uuid = $.url().segment(2);
 var sessionId = $.url().param('session');
 $(document).ready(function() {
 	
+	/*
+	if ($.browser.msie && $.browser.version <= 8) {
+		// IE 8 or lower
+	} else {
+		if(top !== window) {
+			top.location.href = window.location.href;
+		}
+	}
+	*/
+	
 	$.get('/view/' + uuid + '.json?start=1&size=5', {session:sessionId}, function(data, status) {
 		var code = data.code;
 		if (1 == code) {
@@ -22,12 +32,12 @@ $(document).ready(function() {
 			
 			// title
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
-	
-			// clear progress bar
-			clearProgress();
 			
 			// pages
 			// $('.span12').append('<div class="word-page"><div class="word-content"></div></div>');
+			
+			// clear progress bar
+			clearProgress();
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
 				$('.span12 .word-page .word-content').append(page.content);
@@ -53,10 +63,16 @@ $(document).ready(function() {
 			
 			// NEXT page link
 			$('.span12').parent().append('<a id="next" href="/view/' + uuid + '.json?start=2&size=5"></a>');
+			
+			if (document.createStyleSheet){
+				document.createStyleSheet('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />');
+			} else {
+				$("head").append($('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />'));
+			}
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}
-
+		
 		// clear progress bar
 		clearProgress();
 		
@@ -98,6 +114,7 @@ $(document).ready(function() {
 				$theCntr.append(item);
 				//newItems.push(item.attr('id'));
 			}
+			alert("theCntr: " + $theCntr);
 			bindBottomPagingProgress();
 			//_addMasonryItem(newItems);
 		});
