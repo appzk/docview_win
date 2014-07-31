@@ -162,7 +162,7 @@ public class RcUtil {
 	 */
 	public String getParseDir(String rid) {
 		String nameWithoutExt = RcUtil.getFileNameWithoutExt(rid);
-		String dir = dataDir + RcUtil.getDirectoryWithoutRootByRid(rid) + nameWithoutExt + File.separator;
+		String dir = getRootDataDir() + RcUtil.getDirectoryWithoutRootByRid(rid) + nameWithoutExt + File.separator;
 		if (!new File(dir).isDirectory()) {
 			new File(dir).mkdirs();
 		}
@@ -186,11 +186,11 @@ public class RcUtil {
 
 	public String getDirectoryByRid(String rid) throws IllegalArgumentException {
 		validateRid(rid);
-		File dir = new File(dataDir + getDirectoryWithoutRootByRid(rid));
+		File dir = new File(getRootDataDir() + getDirectoryWithoutRootByRid(rid));
 		if (!dir.isDirectory()) {
 			dir.mkdirs();
 		}
-		return dataDir + getDirectoryWithoutRootByRid(rid);
+		return getRootDataDir() + getDirectoryWithoutRootByRid(rid);
 	}
 	
 	public static String getDirectoryWithoutRootByRid(String rid) throws IllegalArgumentException {
@@ -257,5 +257,20 @@ public class RcUtil {
 
 	public void setDataDir(String dataDir) {
 		this.dataDir = dataDir;
+	}
+
+	/**
+	 * Get root data DIR.
+	 * if dataDir is /idocv/ then rootDataDir would be d:/idocv/
+	 * 
+	 * @return
+	 */
+	public String getRootDataDir() {
+		String prefix = "";
+		if (StringUtils.isNotBlank(dataDir) && (dataDir.startsWith("/") || dataDir.startsWith("\\"))) {
+			prefix = new File("/").getAbsolutePath();
+			prefix = prefix.endsWith("\\") ? prefix.substring(0, prefix.length() - 1) : prefix;
+		}
+		return prefix + dataDir;
 	}
 }
