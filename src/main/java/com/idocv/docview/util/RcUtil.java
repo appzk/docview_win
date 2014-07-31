@@ -266,11 +266,6 @@ public class RcUtil {
 	 * @return
 	 */
 	public String getRootDataDir() {
-		String prefix = "";
-		if (StringUtils.isNotBlank(dataDir) && (dataDir.startsWith("/") || dataDir.startsWith("\\"))) {
-			prefix = new File("/").getAbsolutePath();
-			prefix = prefix.endsWith("\\") ? prefix.substring(0, prefix.length() - 1) : prefix;
-		}
-		return prefix + dataDir;
+		return new File(dataDir).getAbsolutePath() + File.separator;
 	}
 }
