@@ -51,7 +51,7 @@
           </button>
           <!-- FILE NAME HERE -->
           <div class="nav-collapse collapse">
-            <ul class="nav">
+            <ul class="nav excel-tab-title">
               <!-- EXCEL TAB TITLE(s) HERE -->
             </ul>
           </div><!--/.nav-collapse -->

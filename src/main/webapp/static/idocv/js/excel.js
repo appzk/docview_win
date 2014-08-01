@@ -30,18 +30,24 @@ $(document).ready(function() {
 				'<!-- DROP DOWN EXCEL TAB TITLE(s) HERE -->' +
 				'</ul>' +
 				'</li>';
-				$('.navbar-inner .container-fluid .nav-collapse:first .nav').append(dropDownMenu);
+				$('.excel-tab-title').append(dropDownMenu);
 			}
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
 				// tab navigation & tab content
 				if (0 == i) {
-					$('.navbar-inner .container-fluid .nav-collapse:first .nav' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li class="active"><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
+					$('.excel-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li class="active"><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
 					$('.tab-content').append('<div class="tab-pane fade in active" id="tab' + (i + 1) + '">' + page.content + '</div>');
 				} else {
-					$('.navbar-inner .container-fluid .nav-collapse:first .nav' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
+					$('.excel-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
 					$('.tab-content').append('<div class="tab-pane fade in" id="tab' + (i + 1) + '">' + page.content + '</div>');
 				}
+			}
+			var dropDownMenuHeight = $('.excel-tab-title .dropdown-menu').height();
+			var windowHeight = $(window).height();
+			if (dropDownMenuHeight > (windowHeight - 80)) {
+				$('.excel-tab-title .dropdown-menu').height(windowHeight - 80);
+				$('.excel-tab-title .dropdown-menu').addClass('pre-scrollable');
 			}
 			
 			if (document.createStyleSheet){
