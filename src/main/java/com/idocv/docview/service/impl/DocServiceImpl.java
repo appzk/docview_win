@@ -151,9 +151,14 @@ public class DocServiceImpl implements DocService {
 			throw new DocServiceException(0, "请提供必要参数！");
 		}
 		try {
-			DocVo vo = convertPo2Vo(docDao.getUrl(url, false));
-			if (null != vo) {
-				return vo;
+			DocVo vo = null;
+			if (isUniqueUpload) {
+				/*
+				vo = convertPo2Vo(docDao.getUrl(url, false));
+				if (null != vo) {
+					return vo;
+				}
+				*/
 			}
 			
 			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/([^/]+\\.\\w{1,6})")) {
@@ -263,6 +268,7 @@ public class DocServiceImpl implements DocService {
 			doc.setUuid(uuid);
 			doc.setName(name);
 			doc.setSize(size);
+			doc.setExt(ext);
 			doc.setCtime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			if (0 == mode) {
 				doc.setStatus(0);
@@ -275,10 +281,11 @@ public class DocServiceImpl implements DocService {
 			}
 			
 			String md5 = DigestUtils.md5Hex(data);
+			doc.setMd5(md5);
 			
 			// check existence
 			if (isUniqueUpload) {
-				DocVo vo = DocServiceImpl.convertPo2Vo(docDao.getByMd5(md5, false));
+				DocVo vo = convertPo2Vo(docDao.getByMd5(md5, false));
 				if (null != vo) {
 					return vo;
 				}

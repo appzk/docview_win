@@ -84,7 +84,8 @@ public class DocController {
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "token", required = false) String token,
 			@RequestParam(value = "mode", defaultValue = "public") String modeString,
-			@RequestParam(value = "label", defaultValue = "") String label) {
+			@RequestParam(value = "label", defaultValue = "") String label,
+			@RequestParam(value = "meta", required = false) String meta) {
 		Map<String, String> result = new HashMap<String, String>();
 		try {
 			// Two ways to upload: App token upload & user Sid upload
@@ -153,6 +154,13 @@ public class DocController {
 			}
 			logger.info("--> " + ip + " at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " ADD " + vo.getUuid());
 			result.put("uuid", vo.getUuid());
+			if ("true".equalsIgnoreCase(meta) || "1".equals(meta)) {
+				result.put("md5", vo.getMd5());
+				result.put("ext", vo.getExt());
+				result.put("name", vo.getName());
+				result.put("size", "" + vo.getSize());
+				result.put("rid", vo.getRid());
+			}
 		} catch (Exception e) {
 			logger.error("upload error <controller>: " + e.getMessage());
 			result.put("error", e.getMessage());
