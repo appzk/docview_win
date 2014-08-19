@@ -3,6 +3,7 @@ package com.idocv.docview.service.impl;
 
 import java.io.File;
 import java.net.NetworkInterface;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,6 +86,12 @@ public class DocServiceImpl implements DocService {
 	@Value("${upload.max.msg}")
 	private String uploadMaxMsg;
 
+	@Value("${url.view.allow.domains}")
+	private String urlViewAllowDomains;
+
+	@Value("${url.view.allow.domains.msg}")
+	private String urlViewAllowDomainsMsg;
+
 	private static Set<String> docTypes = new HashSet<String>();
 
 	static {
@@ -161,6 +168,23 @@ public class DocServiceImpl implements DocService {
 				*/
 			}
 			
+			// check domain
+			if (!"*".equalsIgnoreCase(urlViewAllowDomains)) {
+				String host = new URL(url).getHost();
+				String[] domains = urlViewAllowDomains.split(",");
+				boolean isValid = false;
+				for (String domain : domains) {
+					if (host.contains(domain)) {
+						isValid = true;
+						break;
+					}
+				}
+				if (!isValid) {
+					logger.info(urlViewAllowDomainsMsg);
+					throw new DocServiceException(urlViewAllowDomainsMsg);
+				}
+			}
+
 			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/([^/]+\\.\\w{1,6})")) {
 				name = url.replaceFirst(".*/([^/]+\\.\\w{1,6})", "$1");
 			}
