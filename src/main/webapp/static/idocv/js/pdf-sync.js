@@ -12,7 +12,7 @@ $(document).ready(function() {
 		url: '/view/' + uuid + '.json?start=1&size=0',
 		data: {session:sessionId},
 		async: false,
-		dataType: "json",
+		dataType: "json"
 	}).done(function( data ) {
 		var code = data.code;
 		if (1 == code) {

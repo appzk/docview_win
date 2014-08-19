@@ -14,7 +14,7 @@ $.ajax({
 	type: "GET",
 	url: '/user/checkLogin',
 	async: false,
-	dataType: "json",
+	dataType: "json"
 }).done(function( data ) {
 	username = data.username;
 	uid = data.uid;
