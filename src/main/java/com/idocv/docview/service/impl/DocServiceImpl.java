@@ -4,6 +4,7 @@ package com.idocv.docview.service.impl;
 import java.io.File;
 import java.net.NetworkInterface;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -107,7 +108,9 @@ public class DocServiceImpl implements DocService {
 
 	private static String authUrl = "http://www.idocv.com/auth.json";
 	private static final ObjectMapper om = new ObjectMapper();
-	public static final String macAddress = "D4-3D-7E-0C-4F-EE";
+	private static final DateFormat dateFormatYMD = new SimpleDateFormat("yyyy-MM-dd");
+	private static final DateFormat dateFormatYMDHMS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public static final String macAddress = "00-0C-29-49-D6-DA";
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = true;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
@@ -116,7 +119,7 @@ public class DocServiceImpl implements DocService {
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
 	private static boolean lastCheckingStatus = true;
-	private static File macAuthFile = new File("d:/idocv/auth.txt");
+	private static File macAuthFile = new File("/idocv/idocv.auth");
 
 	@Override
 	public DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException {
@@ -293,7 +296,7 @@ public class DocServiceImpl implements DocService {
 			doc.setName(name);
 			doc.setSize(size);
 			doc.setExt(ext);
-			doc.setCtime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+			doc.setCtime(dateFormatYMDHMS.format(new Date()));
 			if (0 == mode) {
 				doc.setStatus(0);
 			} else if (1 == mode) {
@@ -523,7 +526,7 @@ public class DocServiceImpl implements DocService {
 		if (!isCheckExpireDate) {
 			return true;
 		}
-		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		String currentDate = dateFormatYMD.format(new Date());
 		if (lastCheckingDate.equals(currentDate)) {
 			return lastCheckingStatus;
 		}
@@ -531,7 +534,7 @@ public class DocServiceImpl implements DocService {
 		
 		if (StringUtils.isNotBlank(expireDateString)) {
 			try {
-				Date expireDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(expireDateString);
+				Date expireDate = dateFormatYMDHMS.parse(expireDateString);
 				if (expireDate.after(new Date())) {
 					lastCheckingStatus = true;
 					return true;
@@ -564,7 +567,7 @@ public class DocServiceImpl implements DocService {
 				String expire = auth.get("expire");
 				String valid = auth.get("valid");
 				if (macAddress.equalsIgnoreCase(mac)) {
-					Date expireDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(expire);
+					Date expireDate = dateFormatYMDHMS.parse(expire);
 					if (expireDate.after(new Date()) && "1".equals(valid)) {
 						lastCheckingStatus = true;
 						return true;
@@ -582,16 +585,26 @@ public class DocServiceImpl implements DocService {
 		return false;
 	}
 	
+	/**
+	 * Check MAC address from file. If auth file NOT found,
+	 * 
+	 * @return
+	 */
 	public static boolean validateMacAddressFromAuthFile() {
 		if (!isCheckMacAddress) {
 			return true;
 		}
-		
-		String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+		String currentDate = dateFormatYMD.format(new Date());
 		if (lastCheckingDate.equals(currentDate)) {
 			return lastCheckingStatus;
 		}
 		lastCheckingDate = currentDate;
+
+		if (!macAuthFile.isFile()) {
+			return validateMacAddress(macAddress);
+		}
+
 		try {
 			String authString = FileUtils.readFileToString(macAuthFile, "utf-8");
 			System.out.println("Auth String: " + authString);
@@ -620,7 +633,7 @@ public class DocServiceImpl implements DocService {
 			lastCheckingStatus = false;
 			return false;
 		}
-		System.out.println("[ERROR] Machine NOT authorized!");
+		System.out.println("[ERROR] This machine has NOT been authorized!");
 		lastCheckingStatus = false;
 		return false;
 	}
