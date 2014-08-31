@@ -89,13 +89,16 @@ $(document).ready(function() {
 		var memRate = info.memRate;
 		var uploadAvg = info.uploadAvg;
 		
+		var osMemTotal = info.osMemTotal;
+		var osMemUsed = info.osMemUsed;
+		
 		if (memRate >= 0.8) {
 			chart_heap_minute.options.title.fontColor = 'red';
 		} else {
 			chart_heap_minute.options.title.fontColor = 'black';
 		}
 		
-		var realText = '堆内存使用率（分钟）  实时：' + Math.floor((memUsed / 1000)) + 'k / ' + Math.floor((memMax / 1000)) + 'k';
+		var realText = '内存使用率(堆|系统)：' + Math.floor((memUsed / 1024)) + 'k / ' + Math.floor((memMax / 1024)) + 'k | ' + Math.floor((osMemUsed / 1024)) + 'k / ' + Math.floor((osMemTotal / 1024)) + 'k';
 		chart_heap_minute.options.title.text = realText;
 
 		for (var i = 0; i < dps_heap_second.length; i++) {

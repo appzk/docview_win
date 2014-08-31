@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,7 @@ public class ProcessUtil {
 	 * @throws Exception
 	 */
 	public static Map<Integer, String> getAllProcessesWithPid() throws Exception {
-		Map<Integer, String> processMap = new HashMap<Integer, String>();
+		Map<Integer, String> processMap = new TreeMap<Integer, String>();
 		String procRegex = "(\\S+)(\\s+)(\\d+)(\\s+)(.*)";
 		String cmds[] = { "cmd", "/c", "tasklist" };
 		Process proc = Runtime.getRuntime().exec(cmds);
@@ -61,6 +62,7 @@ public class ProcessUtil {
 		String line;
 		while ((line = bufferedreader.readLine()) != null) {
 			String curPid = line.replaceFirst(procRegex, "$3");
+			curPid = (null != curPid && curPid.matches("\\d+")) ? curPid : "-1";
 			processMap.put(Integer.valueOf(curPid), line);
 		}
 		bufferedreader.close();

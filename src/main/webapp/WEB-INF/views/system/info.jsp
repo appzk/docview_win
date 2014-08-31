@@ -54,9 +54,13 @@
           <div class="row-fluid">
             <div class="span12">
               <div class="hero-unit">
+                >操作系统：<div class="system-info-os"></div>
                 >CPU核数：<div class="system-info-cpu-cuont"></div>
                 >转换队列文档数：<div class="system-info-queue-size"></div>
                 >当前机器负载：<div class="system-info-high-load"></div>
+                >系统内存总大小：<div class="system-info-os-mem-total"></div>
+                >系统内存已用：<div class="system-info-os-mem-used"></div>
+                >系统内存空闲：<div class="system-info-os-mem-free"></div>
                 >内存初始大小（堆内存）：<div class="system-info-mem-init"></div>
                 >已使用内存（堆内存）：<div class="system-info-mem-used"></div>
                 >最大分配内存（堆内存）：<div class="system-info-mem-max"></div>

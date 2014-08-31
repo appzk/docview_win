@@ -32,7 +32,6 @@ public class ProcessServiceImpl {
 			// 2. Get current processes
 			Map<Integer, String> curRunningProcessMap = ProcessUtil.getProcessByNameList(ProcessUtil.serviceNameList);
 			if (null != curRunningProcessMap && !curRunningProcessMap.isEmpty()) {
-				System.out.println("curRunningProcessMap: " + curRunningProcessMap);
 				lastRunningProcessMap.putAll(curRunningProcessMap);
 			}
 		} catch (Exception e) {

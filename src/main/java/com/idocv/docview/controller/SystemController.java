@@ -1,20 +1,28 @@
 package com.idocv.docview.controller;
 
+import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.idocv.docview.service.impl.ConvertServiceImpl;
+import com.idocv.docview.util.ProcessUtil;
+import com.sun.management.OperatingSystemMXBean;
 
 @Controller
 @RequestMapping("system")
 public class SystemController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SystemController.class);
 
 	@ResponseBody
 	@RequestMapping("info.json")
@@ -23,6 +31,8 @@ public class SystemController {
 		params.put("cpuCount", ConvertServiceImpl.cpuCount);
 		params.put("queueSize", ConvertServiceImpl.convertQueue.size());
 		params.put("highLoad", ConvertServiceImpl.SYSTEM_LOAD_HIGH);
+
+		// JVM
 		MemoryUsage memoryUsage = ConvertServiceImpl.memoryMXBean.getHeapMemoryUsage();
 		long memoryInit = memoryUsage.getInit();
 		long memoryUsed = memoryUsage.getUsed();
@@ -34,7 +44,36 @@ public class SystemController {
 		memoryRate = new BigDecimal(memoryRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
 		params.put("memRate", memoryRate);
 		params.put("uploadAvg", ConvertServiceImpl.uploadRate);
+		
+		// Operating system
+		String os = System.getProperty("os.name");
+		OperatingSystemMXBean osmxb = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+		long physicalFree = osmxb.getFreePhysicalMemorySize();
+		long physicalTotal = osmxb.getTotalPhysicalMemorySize();
+		long physicalUse = physicalTotal - physicalFree;
+		params.put("os", os);
+		params.put("osMemTotal", physicalTotal);
+		params.put("osMemUsed", physicalUse);
+		params.put("osMemFree", physicalFree);
 		return params;
+	}
+	
+	@ResponseBody
+	@RequestMapping("process.json")
+	public Map<Integer, String> process(
+			@RequestParam(value = "filter", required = false) String filter) {
+		try {
+			if ("idocv".equals(filter)) {
+				return ProcessUtil.getProcessByNameList(ProcessUtil.serviceNameList);
+			} else {
+				return ProcessUtil.getAllProcessesWithPid();
+			}
+		} catch (Exception e) {
+			logger.error("Get system process error: " + e.getMessage());
+			Map<Integer, String> map = new HashMap<Integer, String>();
+			map.put(-1, e.getMessage());
+			return map;
+		}
 	}
 
 	@RequestMapping("info")
