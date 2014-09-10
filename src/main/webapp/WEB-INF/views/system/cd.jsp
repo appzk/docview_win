@@ -52,7 +52,7 @@
     </div>
 
     <div class="container">
-      <div class="row starter-template">
+      <div class="row starter-template hidden">
         <div class="col-lg-12">
           <div class="input-group">
             <input type="text" class="form-control">
@@ -64,7 +64,7 @@
       </div><!-- /.row -->
       
       <div class="row cmd-result">
-        <h3>Result:</h3>
+        <h3>RES ULT:</h3>
         <pre>
         </pre>
       </div>

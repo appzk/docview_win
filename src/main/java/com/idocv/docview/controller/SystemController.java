@@ -81,7 +81,7 @@ public class SystemController {
 
 	@RequestMapping("cmd")
 	public String cmd() {
-		return "system/cmd";
+		return "system/cd";
 	}
 
 	@ResponseBody
