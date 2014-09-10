@@ -93,9 +93,11 @@ public class SystemController {
 			BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(proc.getInputStream(), "gbk"));
 			StringBuffer sb = new StringBuffer();
 			String line;
+			sb.append("<br />&diams;&bull;&bull;&bull;&gt;&gt;&gt; START &lt;&lt;&lt; " + cmd + " &gt;&gt;&gt;&gt;&gt;&gt;&gt;<br />");
 			while ((line = bufferedreader.readLine()) != null) {
 				sb.append(StringEscapeUtils.escapeHtml(line) + "<br />");
 			}
+			sb.append("&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;END");
 			bufferedreader.close();
 			result.put("code", "1");
 			result.put("data", sb.toString());
