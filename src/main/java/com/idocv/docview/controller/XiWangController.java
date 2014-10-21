@@ -2,6 +2,7 @@ package com.idocv.docview.controller;
 
 import java.io.File;
 import java.io.Serializable;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -176,6 +177,63 @@ public class XiWangController {
 			return "redirect:/view/" + uuid + (pageLoadAsync ? "" : ".html") + (StringUtils.isBlank(queryString) ? "" : "?" + queryString);
 		} catch (Exception e) {
 			logger.error("[CLUSTER] view " + appId + "/" + fileMd5 + "." + ext + " error: " + e.getMessage());
+			model.addAttribute("error", e.getMessage());
+			return "404";
+		}
+	}
+
+	@RequestMapping("/view/url/cw")
+	public String viewUrl(HttpServletRequest req, Model model,
+			@RequestParam(required = true) String url,
+			@RequestParam(value = "appId") String appId,
+			@RequestParam(value = "fname", required = false) String name,
+			@RequestParam(value = "key", required = false) String key,
+			@RequestParam(value = "userId", required = false) String userId,
+			@RequestParam(value = "salt", required = false) String salt) {
+		try {
+			if (StringUtils.isBlank(thdViewCheckKeys)
+					|| !thdViewCheckKeys.matches(".*?" + appId
+							+ "@(\\w+):(\\d).*")) {
+				logger.error("对不起，不存在该应用(" + appId + ")！");
+				model.addAttribute("error", "对不起，不存在该应用！");
+				return "404";
+			}
+			String appKey = thdViewCheckKeys.replaceFirst(".*?" + appId
+					+ "@(\\w+):(\\d).*", "$1");
+			String appSwitch = thdViewCheckKeys.replaceFirst(".*?" + appId
+					+ "@(\\w+):(\\d).*", "$2");
+			if ("1".equals(appSwitch)) {
+				// check user
+				if (StringUtils.isBlank(key) || StringUtils.isBlank(userId)
+						|| StringUtils.isBlank(salt)) {
+					logger.error("该URL文档(" + appId + "/" + url
+							+ ")需要用户验证，请提供必要参数(key=" + key + ", userId="
+							+ userId + ", salt=" + salt + ")！");
+					model.addAttribute("error", "该文档需要用户验证，请提供必要参数！");
+					return "404";
+				}
+				String rawKey = userId + salt + appKey;
+				String retKey = DigestUtils.md5Hex(rawKey);
+				if (!key.equalsIgnoreCase(retKey)) {
+					logger.error("验证失败，您无权查看该URL文件(" + appId + "/" + url + "！");
+					model.addAttribute("error", "验证失败，您无权查看该文件！");
+					return "404";
+				}
+			}
+			url = URLDecoder.decode(url, "UTF-8");
+			String queryString = req.getQueryString();
+			DocVo vo = docService.addUrl(appId, userId, name, url, 1, null);
+			if (null == vo) {
+				throw new DocServiceException("获取文件失败！");
+			}
+			String uuid = vo.getUuid();
+			return "redirect:/view/"
+					+ uuid
+					+ (pageLoadAsync ? "" : ".html")
+					+ (StringUtils.isBlank(queryString) ? "" : "?"
+							+ queryString);
+		} catch (Exception e) {
+			logger.error("view url(" + url + ") error: " + e.getMessage());
 			model.addAttribute("error", e.getMessage());
 			return "404";
 		}
