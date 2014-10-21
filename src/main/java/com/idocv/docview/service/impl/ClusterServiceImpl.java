@@ -81,7 +81,7 @@ public class ClusterServiceImpl implements ClusterService {
 	private String uploadMaxMsg;
 
 	@Value("${thd.upload.unique}")
-	private boolean isUniqueUpload;
+	private String isUniqueUpload;
 
 	@Value("${thd.upload.check.switch}")
 	private boolean thdUploadCheckSwitch = false;
@@ -146,8 +146,9 @@ public class ClusterServiceImpl implements ClusterService {
 			String url = "dfs:///" + appid + "/" + md5 + "." + ext;
 
 			// check existence
-			if (isUniqueUpload) {
-				DocVo vo = DocServiceImpl.convertPo2Vo(docDao.getUrl(url, false));
+			if (isUniqueUpload.contains("true") || isUniqueUpload.contains("url") || isUniqueUpload.contains("md5")) {
+				DocPo docPo = isUniqueUpload.contains("url") ? docDao.getUrl(url, false) : docDao.getByMd5(md5, false);
+				DocVo vo = DocServiceImpl.convertPo2Vo(docPo);
 				if (null != vo) {
 					// remove just created file
 					try {

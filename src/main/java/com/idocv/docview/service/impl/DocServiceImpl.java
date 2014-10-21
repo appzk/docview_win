@@ -79,7 +79,7 @@ public class DocServiceImpl implements DocService {
 	private ConvertService convertService;
 	
 	@Value("${thd.upload.unique}")
-	private boolean isUniqueUpload;
+	private String isUniqueUpload;
 
 	@Value("${upload.max.size}")
 	private Long uploadMaxSize;
@@ -110,11 +110,11 @@ public class DocServiceImpl implements DocService {
 	private static final ObjectMapper om = new ObjectMapper();
 	private static final DateFormat dateFormatYMD = new SimpleDateFormat("yyyy-MM-dd");
 	private static final DateFormat dateFormatYMDHMS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	public static final String macAddress = "00-0C-29-49-D6-DA";
+	public static final String macAddress = "00-15-5D-42-9C-81";
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = true;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
-	private static final String expireDateString = "2014-10-31 23:59:59";
+	private static final String expireDateString = "2014-11-30 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
@@ -162,13 +162,11 @@ public class DocServiceImpl implements DocService {
 		}
 		try {
 			DocVo vo = null;
-			if (isUniqueUpload) {
-				/*
+			if (isUniqueUpload.contains("true") || isUniqueUpload.contains("url")) {
 				vo = convertPo2Vo(docDao.getUrl(url, false));
 				if (null != vo) {
 					return vo;
 				}
-				*/
 			}
 			
 			// check domain
@@ -245,7 +243,7 @@ public class DocServiceImpl implements DocService {
 				throw new DocServiceException(uploadMaxMsg);
 			}
 
-			vo = add(app, null, name, data, mode, null);
+			vo = add(app, uid, name, data, mode, labelName);
 			if (null == vo || StringUtils.isBlank(vo.getUuid())) {
 				logger.error("save url doc error: 无法保存文件" + "app=" + app
 						+ ", url=" + url + ", name=" + name + ", mode=" + mode);
@@ -311,7 +309,7 @@ public class DocServiceImpl implements DocService {
 			doc.setMd5(md5);
 			
 			// check existence
-			if (isUniqueUpload) {
+			if (isUniqueUpload.contains("true") || isUniqueUpload.contains("md5")) {
 				DocVo vo = convertPo2Vo(docDao.getByMd5(md5, false));
 				if (null != vo) {
 					return vo;
