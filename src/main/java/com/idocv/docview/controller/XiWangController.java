@@ -74,14 +74,15 @@ public class XiWangController {
 			@RequestParam(value = "uid") String uid,
 			@RequestParam(value = "tid") String tid,
 			@RequestParam(value = "sid") String sid,
-			@RequestParam(value = "mode") int mode) {
+			@RequestParam(value = "mode") int mode,
+			@RequestParam(value = "node", required = false) String node) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		try {
 			byte[] data = file.getBytes();
 			String fileName = file.getOriginalFilename();
 			long start = System.currentTimeMillis();
-			DocVo vo = clusterService.add(fileName, data, appid, uid, tid, sid, mode);
+			DocVo vo = clusterService.add(fileName, data, appid, uid, tid, sid, mode, node);
 			long end = System.currentTimeMillis();
 			if (null == vo) {
 				throw new Exception("上传失败！");
@@ -133,7 +134,8 @@ public class XiWangController {
 			@RequestParam(value = "fname", required = false) String name,
 			@RequestParam(value = "key", required = false) String key,
 			@RequestParam(value = "userId", required = false) String userId,
-			@RequestParam(value = "salt", required = false) String salt) {
+			@RequestParam(value = "salt", required = false) String salt,
+			@RequestParam(value = "node", required = false) String node) {
 		try {
 			if (StringUtils.isBlank(thdViewCheckKeys) || !thdViewCheckKeys.matches(".*?" + appId + "@(\\w+):(\\d).*")) {
 				logger.error("对不起，不存在该应用(" + appId + ")！");
@@ -161,7 +163,7 @@ public class XiWangController {
 			}
 
 			String queryString = req.getQueryString();
-			DocVo vo = clusterService.addUrl(appId, fileMd5, ext);
+			DocVo vo = clusterService.addUrl(appId, fileMd5, ext, node);
 			if (null == vo) {
 				throw new DocServiceException("获取文件失败！");
 			}
@@ -260,12 +262,13 @@ public class XiWangController {
 			@RequestParam(value = "userId", required = false) String userId,
 			@RequestParam(value = "salt", required = false) String salt,
 			@RequestParam(defaultValue = "1") int start,
-			@RequestParam(defaultValue = "5") int size) {
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(value = "node", required = false) String node) {
 		PageVo<? extends Serializable> page = null;
 		String rid = null;
 		String uuid = null;
 		try {
-			DocVo vo = clusterService.addUrl(appId, fileMd5, ext);
+			DocVo vo = clusterService.addUrl(appId, fileMd5, ext, node);
 			if (null == vo) {
 				throw new DocServiceException("获取文件失败！");
 			}
@@ -342,12 +345,13 @@ public class XiWangController {
 			@RequestParam(value = "salt", required = false) String salt,
 			@RequestParam(defaultValue = "1") int start,
 			@RequestParam(defaultValue = "5") int size,
-			@RequestParam(required = true) String callback) {
+			@RequestParam(required = true) String callback,
+			@RequestParam(value = "node", required = false) String node) {
 		PageVo<? extends Serializable> page = null;
 		String rid = null;
 		String uuid = null;
 		try {
-			DocVo vo = clusterService.addUrl(appId, fileMd5, ext);
+			DocVo vo = clusterService.addUrl(appId, fileMd5, ext, node);
 			if (null == vo) {
 				throw new DocServiceException("获取文件失败！");
 			}

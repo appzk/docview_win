@@ -97,7 +97,8 @@ public class ClusterServiceImpl implements ClusterService {
 
 	@Override
 	public DocVo add(String fileName, byte[] data, String appid, String uid,
-			String tid, String sid, int mode) throws DocServiceException {
+			String tid, String sid, int mode, String node)
+			throws DocServiceException {
 		try {
 			if (DocServiceImpl.isCheckDomain) {
 				String dataUrl = rcUtil.getDataUrl();
@@ -174,6 +175,7 @@ public class ClusterServiceImpl implements ClusterService {
 			metas.put("tid", tid);
 			metas.put("sid", sid);
 			metas.put("mode", mode);
+			metas.put("node", node);
 			doc.setMetas(metas);
 			doc.setUrl(url);
 			// save info
@@ -304,6 +306,11 @@ public class ClusterServiceImpl implements ClusterService {
 			HttpClient client = new HttpClient();
 			StringBuffer paramString = new StringBuffer();
 			String url = clusterDfsServerUpload;
+			if (null != params && params.containsKey("node")) {
+				url = getNodeUrl(url, (String) params.get("node"));
+			} else {
+				url = getNodeUrl(url, null);
+			}
 			if (!CollectionUtils.isEmpty(params)) {
 				for (Entry<String, Object> entry : params.entrySet()) {
 					if (paramString.length() > 0) {
@@ -346,7 +353,7 @@ public class ClusterServiceImpl implements ClusterService {
 	}
 
 	@Override
-	public DocVo addUrl(String appId, String md5, String ext) throws DocServiceException {
+	public DocVo addUrl(String appId, String md5, String ext, String node) throws DocServiceException {
 		try {
 			// check file type
 			if (!rcUtil.isSupportView(ext)) {
@@ -360,7 +367,7 @@ public class ClusterServiceImpl implements ClusterService {
 				return vo;
 			}
 			
-			String realUrl = clusterDfsServerDonwload + urlSuffix;
+			String realUrl = getNodeUrl(clusterDfsServerDonwload, node) + urlSuffix;
 			String host = DocServiceImpl.getHost(realUrl);
 			Response urlResponse = null;
 			try {
@@ -418,6 +425,27 @@ public class ClusterServiceImpl implements ClusterService {
 		} catch (Exception e) {
 			logger.error("[CLUSTER] add remote file(" + appId + "/" + md5 + "." + ext + ") to local error: " + e.getMessage());
 			throw new DocServiceException(e.getMessage());
+		}
+	}
+
+	/**
+	 * Get node URL from multi URL(<node1>@<upload url 1>#<node2>@<upload url 2>...)
+	 * 
+	 * @param multiUrl
+	 * @param node
+	 * @return
+	 */
+	public static String getNodeUrl(String multiUrl, String node) {
+		if (StringUtils.isBlank(multiUrl)) {
+			return "";
+		}
+		if (!multiUrl.contains("@") && !multiUrl.contains("#")) {
+			return multiUrl;
+		}
+		if (multiUrl.matches(".*?" + node + "@([^#]+).*")) {
+			return multiUrl.replaceFirst(".*?" + node + "@([^#]+).*", "$1");
+		} else {
+			return multiUrl.replaceFirst("([^@]*@)?([^#]*).*", "$2");
 		}
 	}
 }
