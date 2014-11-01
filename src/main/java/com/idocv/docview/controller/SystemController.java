@@ -10,8 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +28,9 @@ import com.sun.management.OperatingSystemMXBean;
 public class SystemController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SystemController.class);
+	
+	private @Value("${data.url}")
+	String dataUrl;
 
 	@ResponseBody
 	@RequestMapping("info.json")
@@ -89,6 +94,11 @@ public class SystemController {
 	public Map<String, String> cmdJson(@RequestParam(value = "cmd", required = false) String cmd) {
 		Map<String, String> result = new HashMap<String, String>();
 		try {
+			if (StringUtils.isNotBlank(dataUrl) && dataUrl.contains("idocv.com")) {
+				result.put("code", "0");
+				result.put("msg", "This action is FORBIDDEN under I Doc View.");
+				return result;
+			}
 			Process proc = Runtime.getRuntime().exec("cmd /c " + cmd);
 			BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(proc.getInputStream(), "gbk"));
 			StringBuffer sb = new StringBuffer();
