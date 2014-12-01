@@ -259,8 +259,10 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 			if (!includeDeleted) {
 				query.and(STATUS).notEquals(-1);
 			}
+			DBObject fields = BasicDBObjectBuilder.start().get();
+			DBObject order = BasicDBObjectBuilder.start(CTIME, -1).get();
 			DBCollection coll = db.getCollection(COLL_DOC);
-			DBObject obj = coll.findOne(query.get());
+			DBObject obj = coll.findOne(query.get(), fields, order);
 			return convertDBObject2Po(obj);
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());
@@ -274,8 +276,10 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 			if (!includeDeleted) {
 				query.and(STATUS).notEquals(-1);
 			}
+			DBObject fields = BasicDBObjectBuilder.start().get();
+			DBObject order = BasicDBObjectBuilder.start(CTIME, -1).get();
 			DBCollection coll = db.getCollection(COLL_DOC);
-			DBObject obj = coll.findOne(query.get());
+			DBObject obj = coll.findOne(query.get(), fields, order);
 			return convertDBObject2Po(obj);
 		} catch (MongoException e) {
 			throw new DBException(e.getMessage());
