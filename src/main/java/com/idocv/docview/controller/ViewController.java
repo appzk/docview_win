@@ -1,7 +1,6 @@
 package com.idocv.docview.controller;
 
 import java.io.Serializable;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -117,6 +116,8 @@ public class ViewController {
 				model.setViewName("word/index");
 				if ("test".equals(style)) {
 					model.setViewName("word/test");
+				} else if ("watermark".equals(style)) {
+					model.setViewName("word/test_wartermark");
 				}
 				return model;
 			} else if (uuid.endsWith("x")) {
@@ -403,7 +404,7 @@ public class ViewController {
 			if ("private".equalsIgnoreCase(modeString)) {
 				mode = 0;
 			}
-			url = URLDecoder.decode(url, "UTF-8");
+			// url = URLDecoder.decode(url, "UTF-8");
 			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/([^/]+\\.\\w{1,6})")) {
 				name = url.replaceFirst(".*/([^/]+\\.\\w{1,6})", "$1");
 			}
