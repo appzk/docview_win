@@ -68,6 +68,8 @@ public interface DocService {
 	 * 2. sid不存在（未登录）等有app名称 列出对应app公开文档
 	 */
 	Paging<DocVo> list(String app, String sid, int start, int length, String search, String label, QueryOrder queryOrder) throws DocServiceException;
+	
+	Paging<DocVo> listShare(String app, int start, int length, String search, String label, QueryOrder queryOrder) throws DocServiceException;
 
 	long count(boolean includeDeleted) throws DocServiceException;
 }

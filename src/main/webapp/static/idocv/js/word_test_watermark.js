@@ -122,6 +122,7 @@ $(document).ready(function() {
 			
 			// set watermark
 			setWatermark();
+			
 			//_addMasonryItem(newItems);
 		});
 	});
@@ -129,7 +130,9 @@ $(document).ready(function() {
 
 function setWatermark() {
 	$('.word-content').css("min-height", "600px");
-	var watermarkDiv = '<div class="watermark-container" style="opacity: 0.6; position: absolute; width: 100%; text-align: center; margin-top: 200px;"></div>';
+	var watermarkDiv = '<div class="watermark-container" style="opacity: 0.5; position: absolute; width: 100%; text-align: center; margin-top: 100px; background-position: center; background-repeat: repeat-y;"></div>';
+	$('.word-content .watermark-container').remove();
+	$('.word-content').prepend(watermarkDiv);
 	var watermarkOpt = $.url().param('wm');
 	var watermarkImg = "http://data.idocv.com/idocv_logo.png";
 	if ('up' == watermarkOpt) {
@@ -137,7 +140,7 @@ function setWatermark() {
 	} else if ('down' == watermarkOpt) {
 		watermarkImg = "http://data.idocv.com/idocv_logo_lean_down.png";
 	}
-	$('.word-content .scroll-page .watermark-container').remove();
-	$('.word-content .scroll-page').prepend(watermarkDiv);
-	$('.word-content .scroll-page .watermark-container').append('<img src="' + watermarkImg + '" />');
+	$('.word-content .watermark-container').css("background-image", 'url("' + watermarkImg + '")');
+	var contentHeight = $('.word-content').height();
+	$('.word-content .watermark-container').height(contentHeight - 200);
 }

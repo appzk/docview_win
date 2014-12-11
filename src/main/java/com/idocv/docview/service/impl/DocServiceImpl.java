@@ -466,6 +466,20 @@ public class DocServiceImpl implements DocService {
 			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
+	
+	@Override
+	public Paging<DocVo> listShare(String app, int start, int length, String label, String search, QueryOrder queryOrder) throws DocServiceException {
+		try {
+			String labelId = "all";
+
+			List<DocPo> docList = docDao.listAppDocs(app, start, length, labelId, search, queryOrder, 0);
+			int count = docDao.countAppDocs(app, labelId, search, 0, 0, 0);
+			return new Paging<DocVo>(convertPo2Vo(docList), count);
+		} catch (DBException e) {
+			logger.error("list doc error: " + e.getMessage());
+			throw new DocServiceException(e.getMessage(), e);
+		}
+	}
 
 	@Override
 	public long count(boolean includeDeleted) throws DocServiceException {

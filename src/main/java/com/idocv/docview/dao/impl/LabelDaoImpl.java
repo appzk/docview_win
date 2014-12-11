@@ -101,8 +101,13 @@ public class LabelDaoImpl extends BaseDaoImpl implements LabelDao, InitializingB
 	@Override
 	public LabelPo get(String uid, String labelName) throws DBException {
 		try {
-			QueryBuilder query = QueryBuilder.start(UID).is(uid).and(NAME)
-					.is(labelName).and(STATUS).notEquals(-1);
+			QueryBuilder query = QueryBuilder.start(STATUS).notEquals(-1);
+			if (StringUtils.isNotBlank(uid)) {
+				query.and(UID).is(uid);
+			}
+			if (StringUtils.isNotBlank(NAME)) {
+				query.and(NAME).is(labelName);
+			}
 			DBCollection coll = db.getCollection(COLL_LABEL);
 			DBObject obj = coll.findOne(query.get());
 			return convertDBObject2Po(obj);

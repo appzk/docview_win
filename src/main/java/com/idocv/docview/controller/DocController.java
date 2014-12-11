@@ -246,6 +246,34 @@ public class DocController {
 			return new Paging<DocVo>(new ArrayList<DocVo>(), 0);
 		}
 	}
+	
+	/**
+	 * 文档列表 1. sid存在（已登录） a. 普通用户：列出对应用户文档（包括私有文档） b. 应用管理员用户：列出对应应用文档（包括私有文档）
+	 * 2. sid不存在（未登录）等有app名称 列出对应app公开文档
+	 * 
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("listshare.json")
+	public Paging<DocVo> listShare(
+			HttpServletRequest req,
+			@RequestParam(value = "app", defaultValue = "test") String app,
+			@RequestParam(value = "iDisplayStart", defaultValue = "0") Integer start,
+			@RequestParam(value = "iDisplayLength", defaultValue = "10") Integer length,
+			@RequestParam(value = "sSearch", required = false) String sSearch,
+			@RequestParam(value = "iSortCol_0", defaultValue = "0") String sortIndex,
+			@RequestParam(value = "sSortDir_0", defaultValue = "desc") String sortDirection,
+			@RequestParam(value = "label", required = false) String label) {
+		try {
+			String sortName = req.getParameter("mDataProp_" + sortIndex);
+			QueryOrder queryOrder = QueryOrder.getQueryOrder(sortName, sortDirection);
+			Paging<DocVo> list = docService.listShare(app, start, length, label, sSearch, queryOrder);
+			return list;
+		} catch (DocServiceException e) {
+			logger.error("doc list error: " + e.getMessage());
+			return new Paging<DocVo>(new ArrayList<DocVo>(), 0);
+		}
+	}
 
 	/**
 	 * Load the page of label document list page.
