@@ -254,7 +254,7 @@ public class DocController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("listshare.json")
+	// @RequestMapping("listshare.json")
 	public Paging<DocVo> listShare(
 			HttpServletRequest req,
 			@RequestParam(value = "app", defaultValue = "test") String app,
