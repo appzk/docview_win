@@ -4,7 +4,6 @@ package com.idocv.docview.controller;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.etherpad_lite_client.EPLiteClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -47,13 +46,13 @@ public class EditController {
 
 			// Load editor
 			String htmlBody = editService.getHtmlBody(uuid);
-			EPLiteClient client = new EPLiteClient("http://edit.idocv.com", "BVuGNrqJxvBZOS4F3VQ2WQXNT2ntRiTy");
+//			EPLiteClient client = new EPLiteClient("http://edit.idocv.com", "BVuGNrqJxvBZOS4F3VQ2WQXNT2ntRiTy");
 			try {
 				// Create pad and set text
-				client.createPad(uuid);
+//				client.createPad(uuid);
 				htmlBody = "<div>" + htmlBody + "</div>";
 				htmlBody = StringEscapeUtils.unescapeHtml(htmlBody);
-				client.setHTML(uuid, htmlBody);
+//				client.setHTML(uuid, htmlBody);
 			} catch (Exception e) {
 				logger.info("Etherpad(" + uuid + ") already exist.");
 			}
