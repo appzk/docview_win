@@ -391,7 +391,7 @@ public class ViewController {
 	}
 	
 	@RequestMapping("url")
-	public String viewUrl(
+	public String url(
 			HttpServletRequest req,
 			Model model,
 			@RequestParam(required = true) String url,
