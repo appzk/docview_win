@@ -220,7 +220,7 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-					<scanIntervalSeconds>10</scanIntervalSeconds>
+					<scanIntervalSeconds>0</scanIntervalSeconds>
 					<useFileMappedBuffer>false</useFileMappedBuffer>
 					<connectors>
 						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
