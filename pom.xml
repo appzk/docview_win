@@ -309,9 +309,9 @@
 			</properties>
 		</profile>
 		
-		<!-- Consumer -->
+		<!-- user. run with: clean install -Puser -->
 		<profile>
-			<id>consumer</id>
+			<id>user</id>
 			<properties>
 				<!-- Data -->
 				<pom.data.url>http://127.0.0.1/data/</pom.data.url>
