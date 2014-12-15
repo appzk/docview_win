@@ -6,7 +6,7 @@
 $(document).ready(function() {
 	
 	var oTable;
-	var label = $.url().segment(3);
+	var label = $.url().segment(2);
 	
 	/* ---------------------------------------------------------------------- */
 	/*	File Upload
@@ -56,6 +56,21 @@ $(document).ready(function() {
 	            };
 	        }
 	    });
+	});
+	
+	/* ---------------------------------------------------------------------- */
+	/*	Sidebar list
+	/* ---------------------------------------------------------------------- */
+	$(function () {
+		// get append labels
+		$.get('/label/111111111111111111111111.json', function(data, status) {
+			var list = $('.sidebar-nav .nav-list');
+			list.append('<li class="nav-header"><i class="icon-user"></i> 共享文档</li>');
+			list.append('<li ' + (('all' == label) ? ' class="active"' : '') + '><a href="/share/all">全部</a></li>')
+			for (var i = 0; i < data.length; i++) {
+				list.append('<li ' + ((data[i].name == label) ? ' class="active"' : '') + '><a href="/share/' + data[i].name + '">' + data[i].value + '</a></li>');
+			}
+		});
 	});
 	
 	/* ---------------------------------------------------------------------- */

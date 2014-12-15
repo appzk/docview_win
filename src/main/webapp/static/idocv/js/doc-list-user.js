@@ -75,7 +75,7 @@ $(document).ready(function() {
 			}
 			/*
 			list.append('<li><a href="#">+</a></li>');
-			list.append('<li class="divider"></li>');
+			list.append('<li class="divider"></li>');label
 			list.append('<li class="nav-header"><i class="icon-share-alt"></i> 其他文档</li>');
 			list.append('<li ' + (('shared' == label) ? ' class="active"' : '') + '><a href="/' + username + '/shared">好友分享</a></li>');
 			list.append('<li ' + (('recommend' == label) ? ' class="active"' : '') + '><a href="/' + username + '/recommend">推荐文档</a></li>');

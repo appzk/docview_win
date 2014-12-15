@@ -40,7 +40,25 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span12">
+        <div class="span2">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <!-- SIDEBAR LIST HERE -->
+              <!-- 
+              <li class="nav-header"><i class="icon-user"></i> 我的文档</li>
+              <li class="active"><a href="/doc/list/all">全部</a></li>
+              <li><a href="/doc/list/personal">个人</a></li>
+              <li><a href="/doc/list/work">工作</a></li>
+              <li><a href="#">+</a></li>
+              <li class="divider"></li>
+              <li class="nav-header"><i class="icon-share-alt"></i> 其他文档</li>
+              <li><a href="#">好友分享</a></li>
+              <li><a href="#">推荐文档</a></li>
+               -->
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span10">
           <div class="row-fluid">
             <div class="span12">
               <!-- CONTENT HERE -->

@@ -470,7 +470,14 @@ public class DocServiceImpl implements DocService {
 	@Override
 	public Paging<DocVo> listShare(String app, int start, int length, String label, String search, QueryOrder queryOrder) throws DocServiceException {
 		try {
+			// get label id
 			String labelId = "all";
+			if (StringUtils.isNotBlank(label) && !"all".equalsIgnoreCase(label)) {
+				LabelPo labelPo = labelDao.get(null, label);
+				if (null != labelPo) {
+					labelId = labelPo.getId();
+				}
+			}
 
 			List<DocPo> docList = docDao.listAppDocs(app, start, length, labelId, search, queryOrder, 0);
 			int count = docDao.countAppDocs(app, labelId, search, 0, 0, 0);
