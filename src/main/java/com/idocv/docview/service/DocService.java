@@ -56,6 +56,14 @@ public interface DocService {
 	DocVo getByUuid(String uuid) throws DocServiceException;
 
 	/**
+	 * Get DocPo by MD5 from local database.
+	 * 
+	 * @param md5
+	 * @return
+	 */
+	DocVo getByMd5(String md5) throws DocServiceException;
+
+	/**
 	 * Get DocPo from local database by URL.
 	 * 
 	 * @param url

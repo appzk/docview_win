@@ -30,6 +30,7 @@
 
 	<root level="info">
 		<appender-ref ref="file" />
+		<appender-ref ref="STDOUT" />
 	</root>
 	
 	<logger name="com.idocv" level="info"/>

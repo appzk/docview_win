@@ -22,7 +22,8 @@ $.ajax({
 	
 	// Already logged in user, redirect to his(her) own document list.
 	var label = $.url().segment(3);
-	if (uid !== undefined) {
+	if (uid === undefined) {
+		window.location = '/user/login';
 		// window.location = '/user/' + username + '/all';
 	}
 	if (username !== undefined) {

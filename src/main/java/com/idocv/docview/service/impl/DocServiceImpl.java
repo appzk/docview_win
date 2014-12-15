@@ -406,6 +406,16 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
+	public DocVo getByMd5(String md5) throws DocServiceException {
+		try {
+			return convertPo2Vo(docDao.getByMd5(md5, false));
+		} catch (DBException e) {
+			logger.error("doc getByMd5 error: " + e.getMessage());
+			throw new DocServiceException("get doc error: ", e);
+		}
+	}
+
+	@Override
 	public DocVo getUrl(String url) throws DocServiceException {
 		try {
 			return convertPo2Vo(docDao.getUrl(url, false));
