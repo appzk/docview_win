@@ -55,7 +55,7 @@
           <div class="input-group">
             <input type="text" class="form-control">
             <span class="input-group-btn">
-              <button class="btn btn-default btn-cmd-commit" type="button">Go!</button>
+              <button class="btn btn-default btn-cmd-commit" type="button">Directory DOCs upload</button>
             </span>
           </div><!-- /input-group -->
         </div><!-- /.col-lg-6 -->
