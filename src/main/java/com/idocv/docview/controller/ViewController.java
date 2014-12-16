@@ -395,6 +395,7 @@ public class ViewController {
 			HttpServletRequest req,
 			Model model,
 			@RequestParam(required = true) String url,
+			@RequestParam(value = "md5", required = false) String md5,
 			@RequestParam(value = "token", defaultValue = "testtoken") String token,
 			@RequestParam(required = false) String name,
 			@RequestParam(value = "mode", defaultValue = "public") String modeString,
@@ -404,6 +405,16 @@ public class ViewController {
 			if ("private".equalsIgnoreCase(modeString)) {
 				mode = 0;
 			}
+
+			// md5 view
+			if (StringUtils.isNotBlank(md5)) {
+				DocVo vo = docService.getByMd5(md5);
+				if (null != vo && StringUtils.isNotBlank(vo.getUuid())) {
+					String uuid = vo.getUuid();
+					return "redirect:" + uuid + (pageLoadAsync ? "" : ".html");
+				}
+			}
+
 			// url = URLDecoder.decode(url, "UTF-8");
 			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/([^/]+\\.\\w{1,6})")) {
 				name = url.replaceFirst(".*/([^/]+\\.\\w{1,6})", "$1");
