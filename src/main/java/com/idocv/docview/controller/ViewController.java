@@ -394,7 +394,7 @@ public class ViewController {
 	public String url(
 			HttpServletRequest req,
 			Model model,
-			@RequestParam(required = true) String url,
+			@RequestParam(required = false) String url,
 			@RequestParam(value = "md5", required = false) String md5,
 			@RequestParam(value = "token", defaultValue = "testtoken") String token,
 			@RequestParam(required = false) String name,
@@ -413,6 +413,10 @@ public class ViewController {
 					String uuid = vo.getUuid();
 					return "redirect:" + uuid + (pageLoadAsync ? "" : ".html");
 				}
+			}
+
+			if (StringUtils.isBlank(url)) {
+				throw new DocServiceException("URL上传错误，请提供URL参数！");
 			}
 
 			// url = URLDecoder.decode(url, "UTF-8");
