@@ -285,6 +285,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			convert(rid);
 			File rawFilesDir = new File(rcUtil.getParseDir(rid) + "index.files");
 			if (!rawFilesDir.isDirectory()) {
+				rawFilesDir = new File(rcUtil.getParseDir(rid) + "index_files");
+			}
+			if (!rawFilesDir.isDirectory()) {
 				logger.error("未找到解析目录(" + rid + ")！");
 				throw new DocServiceException("未找到解析目录！");
 			}
