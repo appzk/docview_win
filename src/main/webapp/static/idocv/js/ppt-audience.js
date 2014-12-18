@@ -15,7 +15,7 @@ $(document).ready(function() {
 			var pages = data.data;
 			
 			// title
-			$('.container-fluid .btn:first').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
+			$('.container-fluid .btn:first').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
 			
 			// pages
 			for (i = 0; i < pages.length; i++) {
@@ -30,6 +30,8 @@ $(document).ready(function() {
 				);
 			}
 			initDraw();
+			
+			afterLoad();
 		} else {
 			$('.slides').append('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}

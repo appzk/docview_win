@@ -15,12 +15,14 @@ $(document).ready(function() {
 			var pages = data.data;
 			
 			// title
-			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
+			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 			
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
 				$('.span12').append('<div class="pdf-page"><div class="pdf-content"><img alt="第' + (i + 1) + '页" src="' + page.url + '"></div></div>');
 			}
+			
+			afterLoad();
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}

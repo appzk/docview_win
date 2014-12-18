@@ -21,7 +21,7 @@ $(document).ready(function() {
 			var pages = data.data;
 			
 			// title
-			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
+			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand lnk-file-title" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 			
 			// pages
 			// Dropdown tabs
@@ -61,6 +61,8 @@ $(document).ready(function() {
 			} else {
 				$("head").append($('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />'));
 			}
+			
+			afterLoad();
 		} else {
 			$('.span12').append('<div class="alert alert-error">' + data.desc + '</div>');
 		}

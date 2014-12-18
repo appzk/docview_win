@@ -19,7 +19,7 @@ $(document).ready(function() {
 			var pages = data.data;
 			
 			// title
-			$('.container-fluid .btn').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
+			$('.container-fluid .btn').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
 			// $(".qrcode").qrcode(address);
 			
 			// pages
@@ -62,6 +62,8 @@ $(document).ready(function() {
 			$('.carousel-inner img').swiperight(function() { preSlide(); });
 			
 			// $('.slider-img').html('<img src="' + pages[0].url + '" class="img-polaroid" style="max-height: 100%;">');
+			
+			afterLoad();
 		} else {
 			$('.container-fluid .row-fluid').html('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}

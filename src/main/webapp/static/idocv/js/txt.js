@@ -21,7 +21,7 @@ $(document).ready(function() {
 			}
 			
 			// title
-			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
+			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 	
 			// clear progress bar
 			clearProgress();
@@ -53,6 +53,8 @@ $(document).ready(function() {
 			
 			// NEXT page link
 			$('.span12').parent().append('<a id="next" href="/view/' + uuid + '.json?start=2&size=5"></a>');
+			
+			afterLoad();
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}

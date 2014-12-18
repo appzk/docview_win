@@ -19,7 +19,7 @@ $(document).ready(function() {
 			var pages = data.data;
 			
 			// title
-			$('.container-fluid:first .btn:first').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
+			$('.container-fluid:first .btn:first').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 			
 			// set ratio
 			ratio = pages[0].ratio;
@@ -46,6 +46,8 @@ $(document).ready(function() {
 				var page_num = $(this).attr('page');
 				gotoSlide(page_num);
 			});
+			
+			afterLoad();
 		} else {
 			$('.container-fluid .row-fluid').html('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}

@@ -27,7 +27,7 @@ $(document).ready(function() {
 			}
 			
 			// title
-			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
+			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 			
 			// pages
 			// $('.span12').append('<div class="word-page"><div class="word-content"></div></div>');
@@ -65,6 +65,8 @@ $(document).ready(function() {
 			} else {
 				$("head").append($('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />'));
 			}
+			
+			afterLoad();
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}

@@ -15,7 +15,7 @@ $(document).ready(function() {
 			var pages = data.data;
 			
 			// title
-			$('.container-fluid:first .btn:first').after('<a class="brand" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
+			$('.container-fluid:first .btn:first').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
 			
 			// pages
 			for (i = 0; i < pages.length; i++) {
@@ -35,6 +35,8 @@ $(document).ready(function() {
 			}
 			
 			initDraw();
+			
+			afterLoad();
 		} else {
 			$('.span12').append('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}

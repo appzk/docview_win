@@ -106,36 +106,48 @@ function bindBottomPagingProgress() {
 	});
 }
 
-	/* ---------------------------------------------------------------------- */
-	/*	Load All pages of WORD || TXT
-	/* ---------------------------------------------------------------------- */
-	function loadAllPage() {
-		$('.word-content').infinitescroll('destroy');
-		$.ajax({
-			type: "GET",
-			url: '/view/' + uuid + '.json?start=1&size=0',
-			data: { session: sessionId },
-			async: false,
-			dataType: "json"
-		}).done(function( data ) {
-			var code = data.code;
-			if (1 == code) {
-				var rid = data.rid;
-				var pages = data.data;
-				
-				// pages
-				// $('.span12 .word-page .word-content').html();
-				for (i = 0; i < pages.length; i++) {
-					var page = pages[i];
-					if (i == 0) {
-						$('.span12 .word-page .word-content').html(page.content);
-					} else {
-						$('.span12 .word-page .word-content').append(page.content);
-					}
+/* ---------------------------------------------------------------------- */
+/*	Load All pages of WORD || TXT
+/* ---------------------------------------------------------------------- */
+function loadAllPage() {
+	$('.word-content').infinitescroll('destroy');
+	$.ajax({
+		type: "GET",
+		url: '/view/' + uuid + '.json?start=1&size=0',
+		data: { session: sessionId },
+		async: false,
+		dataType: "json"
+	}).done(function( data ) {
+		var code = data.code;
+		if (1 == code) {
+			var rid = data.rid;
+			var pages = data.data;
+			
+			// pages
+			// $('.span12 .word-page .word-content').html();
+			for (i = 0; i < pages.length; i++) {
+				var page = pages[i];
+				if (i == 0) {
+					$('.span12 .word-page .word-content').html(page.content);
+				} else {
+					$('.span12 .word-page .word-content').append(page.content);
 				}
-				bindBottomPagingProgress();
-			} else {
-				$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 			}
-		});
-	}
+			bindBottomPagingProgress();
+		} else {
+			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
+		}
+	});
+}
+
+/* ---------------------------------------------------------------------- */
+/*	Customized settings
+/* ---------------------------------------------------------------------- */
+function afterLoad() {
+	$('body').css('-webkit-user-select', 'none');
+	$('body').css('-moz-user-select', 'none');
+	$('body').css('-ms-user-select', 'none');
+	var ref = $('.lnk-file-title').attr('href');
+	console.log("ref: " + ref);
+	$('.lnk-file-title').removeAttr('href');
+}
