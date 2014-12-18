@@ -144,10 +144,12 @@ function loadAllPage() {
 /*	Customized settings
 /* ---------------------------------------------------------------------- */
 function afterLoad() {
+	/*
 	$('body').css('-webkit-user-select', 'none');
 	$('body').css('-moz-user-select', 'none');
 	$('body').css('-ms-user-select', 'none');
 	var ref = $('.lnk-file-title').attr('href');
 	console.log("ref: " + ref);
 	$('.lnk-file-title').removeAttr('href');
+	*/
 }
