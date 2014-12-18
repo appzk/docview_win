@@ -864,7 +864,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	 * @return
 	 */
 	public String processImageUrl(String prefix, String content) throws DocServiceException {
-		return content.replaceAll("(?s)(?i)(<img[^>]+?src=\"?)([^>]*index.files[/\\\\])?([^>]+?>)(?-i)", "$1" + prefix + "index.files/" + "$3");
+		String regex = "(?s)(?i)(<img[^>]+?src=\"?)([^>]*?)((index.files[/\\\\])?)([^>]+?>)(?-i)";
+		return content.replaceAll(regex, "$1" + prefix + "$3$5");
 	}
 	
 	public String processImageUrlOfPdf(String prefix, String content) throws DocServiceException {
