@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,6 +67,9 @@ public class DocController {
 
 	@Resource
 	private RcUtil rcUtil;
+
+	@Value("${view.page.share}")
+	private boolean viewPageShare;
 
 	/**
 	 * 上传
@@ -265,6 +269,9 @@ public class DocController {
 			@RequestParam(value = "sSortDir_0", defaultValue = "desc") String sortDirection,
 			@RequestParam(value = "label", required = false) String label) {
 		try {
+			if (!viewPageShare) {
+				throw new DocServiceException("未设置公开文档列表");
+			}
 			String sortName = req.getParameter("mDataProp_" + sortIndex);
 			QueryOrder queryOrder = QueryOrder.getQueryOrder(sortName, sortDirection);
 			Paging<DocVo> list = docService.listShare(app, start, length, label, sSearch, queryOrder);
