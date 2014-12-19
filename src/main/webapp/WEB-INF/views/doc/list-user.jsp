@@ -56,7 +56,9 @@
               <li><a href="#">推荐文档</a></li>
                -->
               <li><a href="/system/info">系统信息</a></li>
+              <!-- 
               <li><a href="/dir/load">批量上传文档</a></li>
+               -->
               <li class="divider"></li>
             </ul>
           </div><!--/.well -->
