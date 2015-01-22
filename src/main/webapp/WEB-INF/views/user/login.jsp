@@ -69,7 +69,7 @@
                       <p><label class="string optional" for="user_remember_me">记住我</label></p>
                       <p><input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="登录" /></p>
                       <p><span id="qqLoginBtn"></span></p>
-                      <p>没有账号？点击<a href="/signup">注册</a></p>
+                      <p>没有账号？点击<a href="/user/signup">注册</a></p>
                     </form>
                   </div>
                 </div>

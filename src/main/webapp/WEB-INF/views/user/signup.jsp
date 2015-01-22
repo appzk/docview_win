@@ -98,7 +98,7 @@
 			    <div class="control-group">
 			      <!-- Button -->
 			      <div class="controls">
-					已有账号？ 请直接<a href="/login">登录</a>
+					已有账号？ 请直接<a href="/user/login">登录</a>
 			      </div>
 			    </div>
 			  </fieldset>
