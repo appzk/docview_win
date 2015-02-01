@@ -141,5 +141,6 @@ public enum ViewType {
 	public static void main(String[] args) {
 		String ext = "jpeg";
 		System.out.println("ext symbol: " + ViewType.getViewType(ext));
+		System.out.println(ViewType.WORD == ViewType.getViewType("pdf"));
 	}
 }

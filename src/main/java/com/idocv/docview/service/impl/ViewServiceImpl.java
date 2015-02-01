@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.idocv.docview.common.ViewType;
 import com.idocv.docview.dao.BaseDao;
 import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.exception.DBException;
@@ -82,8 +83,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${converter.pdf2html}")
 	String pdf2html;
 
-	// private @Value("${converter.pdftk}")
-	// String pdftk;
+	private @Value("${converter.img2jpg}")
+	String img2jpg;
 
 	private @Value("${converter.pdfsign}")
 	String pdfSign;
@@ -750,7 +751,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			}
 			docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_CONVERTING);
 			String convertResult = "";
-			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
+			if (ViewType.WORD == ViewType.getViewType(ext)) {
 				if (!destFile.isFile()) {
 					convertResult = CmdUtil.runWindows(word2Html, src, dest);
 				}
@@ -760,7 +761,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 							+ RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
-			} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
+			} else if (ViewType.EXCEL == ViewType.getViewType(ext)) {
 				if (!destFile.isFile()) {
 					convertResult = CmdUtil.runWindows(excel2Html, src, dest);
 				}
@@ -770,7 +771,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 							+ RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
-			} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
+			} else if (ViewType.PPT == ViewType.getViewType(ext)) {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles())) {
@@ -785,7 +786,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 							+ RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
-			} else if ("pdf".equalsIgnoreCase(ext)) {
+			} else if (ViewType.PDF == ViewType.getViewType(ext)) {
 				String destDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
 				String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
 				if (!new File(destFirstPage).isFile()) {
@@ -806,8 +807,20 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					logger.info("Convert info: \n" + convertInfo);
 				}
 				*/
-			} else if ("txt".equalsIgnoreCase(ext)) {
+			} else if (ViewType.TXT == ViewType.getViewType(ext)) {
 				// do nothing.
+			} else if (ViewType.IMG == ViewType.getViewType(ext)) {
+				dest = rcUtil.getParseDir(rid);
+				destFile = new File(dest + "index.jpg");
+				if (!destFile.isFile()) {
+					convertResult = CmdUtil.runWindows(img2jpg, src, dest);
+				}
+				if (!destFile.isFile()) {
+					logger.error("[CONVERT ERROR] " + rid + " - "
+							+ convertResult);
+					throw new DocServiceException("对不起，该图片文件（"
+							+ RcUtil.getUuidByRid(rid) + "）暂无法预览，请确认能正常打开！");
+				}
 			} else {
 				logger.error("目前不支持（" + ext + "）格式！");
 				throw new DocServiceException("目前不支持（" + ext + "）格式！");
