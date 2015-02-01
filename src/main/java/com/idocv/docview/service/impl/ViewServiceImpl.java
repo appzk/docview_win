@@ -811,9 +811,16 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				// do nothing.
 			} else if (ViewType.IMG == ViewType.getViewType(ext)) {
 				dest = rcUtil.getParseDir(rid);
-				destFile = new File(dest + "index.jpg");
+				if ("png".equalsIgnoreCase(ext)) {
+					dest += "index.png";
+				} else if ("gif".equalsIgnoreCase(ext)) {
+					dest += "index.gif";
+				} else {
+					dest += "index.jpg";
+				}
+				destFile = new File(dest);
 				if (!destFile.isFile()) {
-					convertResult = CmdUtil.runWindows(img2jpg, src, dest);
+					convertResult = CmdUtil.runWindows(img2jpg, "convert", "-resize", "1000x", src, dest);
 				}
 				if (!destFile.isFile()) {
 					logger.error("[CONVERT ERROR] " + rid + " - "
