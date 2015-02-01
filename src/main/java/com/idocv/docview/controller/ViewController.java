@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.idocv.docview.common.ViewType;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.AppService;
 import com.idocv.docview.service.DocService;
@@ -112,7 +113,7 @@ public class ViewController {
 						+ ")！");
 			}
 
-			if (uuid.endsWith("w")) {
+			if (uuid.endsWith(ViewType.WORD.getSymbol())) {
 				model.setViewName("word/index");
 				if ("test".equals(style)) {
 					model.setViewName("word/test");
@@ -120,10 +121,10 @@ public class ViewController {
 					model.setViewName("word/test_wartermark");
 				}
 				return model;
-			} else if (uuid.endsWith("x")) {
+			} else if (uuid.endsWith(ViewType.EXCEL.getSymbol())) {
 				model.setViewName("excel/index");
 				return model;
-			} else if (uuid.endsWith("p")) {
+			} else if (uuid.endsWith(ViewType.PPT.getSymbol())) {
 				if ("3d".equalsIgnoreCase(style)) {
 					model.setViewName("ppt/index");
 					return model;
@@ -143,10 +144,10 @@ public class ViewController {
 					model.setViewName("ppt/index");
 					return model;
 				}
-			} else if (uuid.endsWith("f")) {
+			} else if (uuid.endsWith(ViewType.PDF.getSymbol())) {
 				model.setViewName("pdf/index");
 				return model;
-			} else if (uuid.endsWith("t")) {
+			} else if (uuid.endsWith(ViewType.TXT.getSymbol())) {
 				model.setViewName("txt/index");
 				return model;
 			}
@@ -373,15 +374,15 @@ public class ViewController {
 			page.setUuid(uuid);
 		}
 		model.addObject("page", page);
-		if (uuid.endsWith("w")) {
+		if (uuid.endsWith(ViewType.WORD.getSymbol())) {
 			model.setViewName("word/static");
-		} else if (uuid.endsWith("x")) {
+		} else if (uuid.endsWith(ViewType.EXCEL.getSymbol())) {
 			model.setViewName("excel/static");
-		} else if (uuid.endsWith("p")) {
+		} else if (uuid.endsWith(ViewType.PPT.getSymbol())) {
 			model.setViewName("ppt/static");
-		} else if (uuid.endsWith("f")) {
+		} else if (uuid.endsWith(ViewType.PDF.getSymbol())) {
 			model.setViewName("pdf/static");
-		} else if (uuid.endsWith("t")) {
+		} else if (uuid.endsWith(ViewType.TXT.getSymbol())) {
 			model.setViewName("txt/static");
 		} else {
 			logger.error("view uuid.html(" + uuid + ") error: 未知文件格式！");

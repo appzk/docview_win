@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.idocv.docview.common.ViewType;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.ViewService;
 
@@ -30,17 +31,6 @@ public class RcUtil {
 	String viewTypes;
 
 	private static final String SPLIT = "_";
-
-	// abbreviations
-	private static final String ABBR_WORD = "w";
-	private static final String ABBR_EXCEL = "x";
-	private static final String ABBR_PPT = "p";
-	private static final String ABBR_PDF = "f";
-	private static final String ABBR_TXT = "t";
-	private static final String ABBR_IMG = "i";
-	private static final String ABBR_AUDIO = "a";
-	private static final String ABBR_VIDEO = "v";
-	private static final String ABBR_OTHER = "o";
 
 	/**
 	 * 生成rid，格式：(appId)_(yyyyMMdd)_(HHmmss)_(size)_(uuid)_ext
@@ -64,27 +54,27 @@ public class RcUtil {
 		String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 		String uuid = RandomStringUtils.randomAlphabetic(6);
 		if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
-			uuid += ABBR_WORD;
+			uuid += ViewType.WORD.getSymbol();
 		} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
-			uuid += ABBR_EXCEL;
+			uuid += ViewType.EXCEL.getSymbol();
 		} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
-			uuid += ABBR_PPT;
+			uuid += ViewType.PPT.getSymbol();
 		} else if ("pdf".equalsIgnoreCase(ext)) {
-			uuid += ABBR_PDF;
+			uuid += ViewType.PDF.getSymbol();
 		} else if ("txt".equalsIgnoreCase(ext)) {
-			uuid += ABBR_TXT;
+			uuid += ViewType.TXT.getSymbol();
 		} else if ("jpg".equalsIgnoreCase(ext) || "jpeg".equalsIgnoreCase(ext)
 				|| "png".equalsIgnoreCase(ext) || "bmp".equalsIgnoreCase(ext)) {
-			uuid += ABBR_IMG;
+			uuid += ViewType.IMG.getSymbol();
 		} else if ("wma".equalsIgnoreCase(ext) || "mp3".equalsIgnoreCase(ext)
 				|| "midi".equalsIgnoreCase(ext)) {
-			uuid += ABBR_AUDIO;
+			uuid += ViewType.AUDIO.getSymbol();
 		} else if ("avi".equalsIgnoreCase(ext) || "rm".equalsIgnoreCase(ext)
 				|| "rmvb".equalsIgnoreCase(ext) || "mpeg".equalsIgnoreCase(ext)
 				|| "dat".equalsIgnoreCase(ext) || "mov".equalsIgnoreCase(ext)) {
-			uuid += ABBR_VIDEO;
+			uuid += ViewType.VIDEO.getSymbol();
 		} else {
-			uuid += ABBR_OTHER;
+			uuid += ViewType.OTHER.getSymbol();
 		}
 		String dateString = new SimpleDateFormat("yyyyMMdd").format(date);
 		String timeString = new SimpleDateFormat("HHmmss").format(date);

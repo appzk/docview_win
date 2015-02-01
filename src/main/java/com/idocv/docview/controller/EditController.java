@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.idocv.docview.common.ViewType;
 import com.idocv.docview.service.EditService;
 import com.idocv.docview.service.ViewService;
 
@@ -37,7 +38,7 @@ public class EditController {
 	public String loadEditor(@PathVariable(value = "uuid") String uuid) {
 		try {
 			// Check doc type
-			if (!uuid.endsWith("w")) {
+			if (!uuid.endsWith(ViewType.WORD.getSymbol())) {
 				throw new Exception("暂时只支持word文档协作编辑！");
 			}
 

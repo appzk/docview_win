@@ -5,14 +5,11 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
+import com.idocv.docview.common.ViewType;
+
 public class DeleteDirectory {
 
-	private static final String TYPE_WORD = "w";
-	private static final String TYPE_EXCEL = "x";
-	private static final String TYPE_PPT = "p";
-	private static final String TYPE_PDF = "f";
-
-	private static final String DELETE_TYPE = TYPE_PPT;// delete type.
+	private static final ViewType DELETE_TYPE = ViewType.WORD;// delete type.
 
 	public static void main(String[] args) {
 		File dir = new File("D:/idocv/data/test/2013");
@@ -26,7 +23,7 @@ public class DeleteDirectory {
 			return;
 		}
 		if (file.isDirectory()) {
-			if (file.getName().matches("\\d{6}_\\d+?_\\w{5,}?" + DELETE_TYPE)) {
+			if (file.getName().matches("\\d{6}_\\d+?_\\w{5,}?" + DELETE_TYPE.getSymbol())) {
 				System.out.println("Deleteing " + file.getAbsolutePath());
 				try {
 					FileUtils.deleteDirectory(file);
