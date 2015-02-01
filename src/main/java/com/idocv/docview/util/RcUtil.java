@@ -53,29 +53,7 @@ public class RcUtil {
 		Date date = new Date();
 		String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 		String uuid = RandomStringUtils.randomAlphabetic(6);
-		if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
-			uuid += ViewType.WORD.getSymbol();
-		} else if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
-			uuid += ViewType.EXCEL.getSymbol();
-		} else if ("ppt".equalsIgnoreCase(ext) || "pptx".equalsIgnoreCase(ext)) {
-			uuid += ViewType.PPT.getSymbol();
-		} else if ("pdf".equalsIgnoreCase(ext)) {
-			uuid += ViewType.PDF.getSymbol();
-		} else if ("txt".equalsIgnoreCase(ext)) {
-			uuid += ViewType.TXT.getSymbol();
-		} else if ("jpg".equalsIgnoreCase(ext) || "jpeg".equalsIgnoreCase(ext)
-				|| "png".equalsIgnoreCase(ext) || "bmp".equalsIgnoreCase(ext)) {
-			uuid += ViewType.IMG.getSymbol();
-		} else if ("wma".equalsIgnoreCase(ext) || "mp3".equalsIgnoreCase(ext)
-				|| "midi".equalsIgnoreCase(ext)) {
-			uuid += ViewType.AUDIO.getSymbol();
-		} else if ("avi".equalsIgnoreCase(ext) || "rm".equalsIgnoreCase(ext)
-				|| "rmvb".equalsIgnoreCase(ext) || "mpeg".equalsIgnoreCase(ext)
-				|| "dat".equalsIgnoreCase(ext) || "mov".equalsIgnoreCase(ext)) {
-			uuid += ViewType.VIDEO.getSymbol();
-		} else {
-			uuid += ViewType.OTHER.getSymbol();
-		}
+		uuid += ViewType.getViewType(ext).getSymbol();
 		String dateString = new SimpleDateFormat("yyyyMMdd").format(date);
 		String timeString = new SimpleDateFormat("HHmmss").format(date);
 		return appId + SPLIT + dateString + SPLIT + timeString + SPLIT + size + SPLIT + uuid + SPLIT + ext;
