@@ -2,6 +2,7 @@ package com.idocv.docview.service;
 
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.vo.ExcelVo;
+import com.idocv.docview.vo.ImgVo;
 import com.idocv.docview.vo.PPTVo;
 import com.idocv.docview.vo.PageVo;
 import com.idocv.docview.vo.PdfVo;
@@ -95,19 +96,15 @@ public interface ViewService {
 	 * @return
 	 */
 	PageVo<PdfVo> convertPdf2Html(String rid, int start, int limit) throws DocServiceException;
-	
+
 	/**
-	 * Stamp PDf
+	 * Convert Image to Jpg file.
 	 * 
 	 * @param rid
-	 * @param stamp
-	 * @param x
-	 * @param y
 	 * @return
-	 * @throws DocServiceException
 	 */
-	PageVo<PdfVo> pdfStamp(String rid, String stamp, float x, float y) throws DocServiceException;
-
+	PageVo<ImgVo> convertImage2Jpg(String rid) throws DocServiceException;
+	
 	/**
 	 * Validate client IP
 	 * 

@@ -1,5 +1,5 @@
 package com.idocv.docview.vo;
 
-public class WordVo extends OfficeBaseVo {
+public class WordVo extends ViewBaseVo {
 
 }

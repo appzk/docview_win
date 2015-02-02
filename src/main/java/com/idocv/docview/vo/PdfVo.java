@@ -1,6 +1,6 @@
 package com.idocv.docview.vo;
 
-public class PdfVo extends OfficeBaseVo {
+public class PdfVo extends ViewBaseVo {
 
 	private String background;
 

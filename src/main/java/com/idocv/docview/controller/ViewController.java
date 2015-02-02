@@ -33,9 +33,9 @@ import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.AppVo;
 import com.idocv.docview.vo.DocVo;
-import com.idocv.docview.vo.OfficeBaseVo;
 import com.idocv.docview.vo.PageVo;
 import com.idocv.docview.vo.SessionVo;
+import com.idocv.docview.vo.ViewBaseVo;
 
 @Controller
 @RequestMapping("view")
@@ -254,26 +254,23 @@ public class ViewController {
 					throw new DocServiceException("该会话和文档不一致，无法预览！");
 				}
 			}
-			if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)
-					|| "odt".equalsIgnoreCase(ext)) {
+			if (ViewType.WORD == ViewType.getViewType(ext)) {
 				start = (start - 1) * size + 1;
 				page = viewService.convertWord2Html(rid, start, size);
-			} else if ("xls".equalsIgnoreCase(ext)
-					|| "xlsx".equalsIgnoreCase(ext)
-					|| "ods".equalsIgnoreCase(ext)) {
+			} else if (ViewType.EXCEL == ViewType.getViewType(ext)) {
 				page = viewService.convertExcel2Html(rid, start, size);
-			} else if ("ppt".equalsIgnoreCase(ext)
-					|| "pptx".equalsIgnoreCase(ext)
-					|| "odp".equalsIgnoreCase(ext)) {
+			} else if (ViewType.PPT == ViewType.getViewType(ext)) {
 				page = viewService.convertPPT2Img(rid, start, size);
-			} else if ("txt".equalsIgnoreCase(ext)) {
+			} else if (ViewType.TXT == ViewType.getViewType(ext)) {
 				start = (start - 1) * size + 1;
 				page = viewService.convertTxt2Html(rid, start, size);
-			} else if ("pdf".equalsIgnoreCase(ext)) {
+			} else if (ViewType.PDF == ViewType.getViewType(ext)) {
 				// page = previewService.convertPdf2Html(rid, 1, 0);
 				page = viewService.convertPdf2Img(rid, 1, 0);
+			} else if (ViewType.IMG == ViewType.getViewType(ext)) {
+				page = viewService.convertImage2Jpg(rid);
 			} else {
-				page = new PageVo<OfficeBaseVo>(null, 0);
+				page = new PageVo<ViewBaseVo>(null, 0);
 				page.setCode(0);
 				page.setDesc("不是一个文档！");
 			}
@@ -288,7 +285,7 @@ public class ViewController {
 			docService.logView(uuid);
 		} catch (Exception e) {
 			logger.error("view id.json(" + id + ") error: " + e.getMessage());
-			page = new PageVo<OfficeBaseVo>(null, 0);
+			page = new PageVo<ViewBaseVo>(null, 0);
 			page.setCode(0);
 			page.setDesc(e.getMessage());
 			page.setUuid(uuid);
@@ -357,7 +354,7 @@ public class ViewController {
 			} else if ("txt".equalsIgnoreCase(ext)) {
 				page = viewService.convertTxt2Html(rid, start, size);
 			} else {
-				page = new PageVo<OfficeBaseVo>(null, 0);
+				page = new PageVo<ViewBaseVo>(null, 0);
 				page.setCode(0);
 				logger.error("暂不支持该文件类型（" + ext + "）的预览！");
 				page.setDesc("暂不支持该文件类型（" + ext + "）的预览！");
@@ -368,7 +365,7 @@ public class ViewController {
 			docService.logView(uuid);
 		} catch (Exception e) {
 			logger.error("jsonUuid error(" + uuid + "): ", e);
-			page = new PageVo<OfficeBaseVo>(null, 0);
+			page = new PageVo<ViewBaseVo>(null, 0);
 			page.setCode(0);
 			page.setDesc(e.getMessage());
 			page.setUuid(uuid);

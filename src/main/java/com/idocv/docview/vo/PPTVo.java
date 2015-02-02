@@ -1,6 +1,6 @@
 package com.idocv.docview.vo;
 
-public class PPTVo extends OfficeBaseVo {
+public class PPTVo extends ViewBaseVo {
 
 	private String thumbUrl;
 	private String largeUrl;

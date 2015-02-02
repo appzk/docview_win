@@ -3,7 +3,7 @@ package com.idocv.docview.vo;
 import java.io.File;
 import java.io.Serializable;
 
-public class OfficeBaseVo implements Serializable {
+public class ViewBaseVo implements Serializable {
 
 	protected String title;
 	protected String content;

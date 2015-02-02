@@ -1,5 +1,5 @@
 package com.idocv.docview.vo;
 
-public class ExcelVo extends OfficeBaseVo {
+public class ExcelVo extends ViewBaseVo {
 
 }

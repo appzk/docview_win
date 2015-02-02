@@ -36,7 +36,7 @@ import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
-import com.idocv.docview.vo.OfficeBaseVo;
+import com.idocv.docview.vo.ViewBaseVo;
 import com.idocv.docview.vo.PageVo;
 
 @Controller
@@ -301,7 +301,7 @@ public class XiWangController {
 				// page = previewService.convertPdf2Html(rid, 1, 0);
 				page = viewService.convertPdf2Img(rid, 1, 0);
 			} else {
-				page = new PageVo<OfficeBaseVo>(null, 0);
+				page = new PageVo<ViewBaseVo>(null, 0);
 				page.setCode(0);
 				page.setDesc("不是一个文档！");
 			}
@@ -315,7 +315,7 @@ public class XiWangController {
 			docService.logView(uuid);
 		} catch (Exception e) {
 			logger.error("view json(" + uuid + ") error: " + e.getMessage());
-			page = new PageVo<OfficeBaseVo>(null, 0);
+			page = new PageVo<ViewBaseVo>(null, 0);
 			page.setCode(0);
 			page.setDesc(e.getMessage());
 			page.setUuid(uuid);
@@ -384,7 +384,7 @@ public class XiWangController {
 				// page = previewService.convertPdf2Html(rid, 1, 0);
 				page = viewService.convertPdf2Img(rid, 1, 0);
 			} else {
-				page = new PageVo<OfficeBaseVo>(null, 0);
+				page = new PageVo<ViewBaseVo>(null, 0);
 				page.setCode(0);
 				page.setDesc("不是一个文档！");
 			}
@@ -398,7 +398,7 @@ public class XiWangController {
 			docService.logView(uuid);
 		} catch (Exception e) {
 			logger.error("view json(" + uuid + ") error: " + e.getMessage());
-			page = new PageVo<OfficeBaseVo>(null, 0);
+			page = new PageVo<ViewBaseVo>(null, 0);
 			page.setCode(0);
 			page.setDesc(e.getMessage());
 			page.setUuid(uuid);

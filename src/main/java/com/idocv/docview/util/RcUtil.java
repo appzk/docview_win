@@ -77,7 +77,7 @@ public class RcUtil {
 	}
 
 	/**
-	 * 根据rid获取绝对路径，e.g. /appName/yyyy/MMdd/HHmmss_(size)_(uuid).doc
+	 * 根据rid获取文件绝对路径，e.g. /appName/yyyy/MMdd/HHmmss_(size)_(uuid).doc
 	 * 
 	 * @param rid
 	 * @return
@@ -94,6 +94,12 @@ public class RcUtil {
 		return splits[splits.length - 4] + SPLIT + splits[splits.length - 3] + SPLIT + splits[splits.length - 2] + "." + splits[splits.length - 1];
 	}
 	
+	/**
+	 * 验证rid
+	 * 
+	 * @param rid
+	 * @throws IllegalArgumentException
+	 */
 	public static void validateRid(String rid) throws IllegalArgumentException {
 		if (StringUtils.isBlank(rid) || !rid.matches("\\w{1,}_\\d{8}_\\d{6}.*")) {
 			throw new IllegalArgumentException("Invalid rid.");
@@ -152,6 +158,13 @@ public class RcUtil {
 		return pdf2ImgDir;
 	}
 
+	/**
+	 * 根据rid获取绝对目录
+	 * 
+	 * @param rid
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
 	public String getDirectoryByRid(String rid) throws IllegalArgumentException {
 		validateRid(rid);
 		File dir = new File(getRootDataDir() + getDirectoryWithoutRootByRid(rid));
@@ -161,6 +174,13 @@ public class RcUtil {
 		return getRootDataDir() + getDirectoryWithoutRootByRid(rid);
 	}
 	
+	/**
+	 * 根据rid获取相对目录
+	 * 
+	 * @param rid
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
 	public static String getDirectoryWithoutRootByRid(String rid) throws IllegalArgumentException {
 		validateRid(rid);
 		String[] splits = rid.split(SPLIT);
@@ -169,6 +189,13 @@ public class RcUtil {
 		return splits[0] + File.separator + yyyy + File.separator + mmdd + File.separator;
 	}
 
+	/**
+	 * 根据rid获取文件后缀
+	 * 
+	 * @param rid
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
 	public static String getExt(String rid) throws IllegalArgumentException {
 		validateRid(rid);
 		String[] splits = rid.split(SPLIT);
