@@ -634,7 +634,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 
 			File curPageFile = new File(rcUtil.getParseDir(rid) + viewName);
 			if (!curPageFile.isFile()) {
-				return new PageVo<ImgVo>(null, 0);
+				logger.error("convertImage2Jpg error: 预览图片" + rid + "失败，未生成预览图");
+				throw new DocServiceException("预览图片失败！");
 			}
 
 			List<ImgVo> data = new ArrayList<ImgVo>();

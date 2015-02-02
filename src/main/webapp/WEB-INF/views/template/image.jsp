@@ -64,6 +64,7 @@
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
     <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
     <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/idocv/js/image.js"></script>
     <script src="/static/idocv/js/stat.js"></script>
   </body>
 </html>
