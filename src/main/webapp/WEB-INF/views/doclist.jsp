@@ -1,4 +1,3 @@
-<%@page import="com.idocv.docview.Version"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -67,7 +66,6 @@
 	
 	<center>
 	<br /><br /><br />
-	<% out.println("All rights reserved, version: " + Version.getVersion()); %>
 	<br /><br />
 	</center>
 	<!-- Le javascript
