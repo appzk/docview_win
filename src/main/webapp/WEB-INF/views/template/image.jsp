@@ -37,8 +37,9 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span12">
+        <div class="span12" style="text-align: center;">
           <!-- CONTENT HERE -->
+          <!-- 
           <h1>File Information - Image Template</h1>
           <h3>url: ${url}</h3>
           <h3>app: ${app}</h3>
@@ -48,6 +49,7 @@
           <h3>name: ${name}</h3>
           <h3>size: ${size}</h3>
           <h3>md5: ${md5}</h3>
+           -->
         </div><!--/span-->
       </div><!--/row-->
 

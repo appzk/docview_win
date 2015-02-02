@@ -639,6 +639,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			}
 
 			List<ImgVo> data = new ArrayList<ImgVo>();
+			data.add(new ImgVo());
 			PageVo<ImgVo> page = new PageVo<ImgVo>(data, 1);
 			page.setUrl(rcUtil.getParseUrlDir(rid) + viewName);
 			return page;
