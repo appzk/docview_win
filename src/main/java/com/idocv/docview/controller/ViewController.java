@@ -74,7 +74,30 @@ public class ViewController {
 		// return "redirect:http://www.idocv.com";
 	}
 
-	@RequestMapping("{id}")
+	@RequestMapping("{md5:\\w{32}}")
+	public String md5(ModelAndView model, @PathVariable String md5) {
+		// md5 view
+		String uuid = null;
+		if (StringUtils.isNotBlank(md5) && (32 == md5.length())) {
+			try {
+				DocVo vo = docService.getByMd5(md5);
+				if (null != vo && StringUtils.isNotBlank(vo.getUuid())) {
+					uuid = vo.getUuid();
+				}
+			} catch (DocServiceException e) {
+				logger.error("无法使用MD5方式预览文件" + md5);
+			}
+		}
+		if (StringUtils.isNotBlank(uuid)) {
+			return "redirect:" + uuid + (pageLoadAsync ? "" : ".html");
+		} else {
+			logger.error("view md5(" + md5 + ") error: 未找到相关文档");
+			model.addObject("error", "未找到相关文档");
+			return "404";
+		}
+	}
+
+	@RequestMapping("{id:\\w{1,31}}")
 	public ModelAndView page(ModelAndView model,
 			@RequestParam(defaultValue = "default") String style,
 			@PathVariable String id,
