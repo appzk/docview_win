@@ -38,6 +38,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idocv.docview.common.Paging;
 import com.idocv.docview.dao.AppDao;
+import com.idocv.docview.dao.BaseDao;
 import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.dao.DocDao.QueryOrder;
 import com.idocv.docview.dao.LabelDao;
@@ -110,11 +111,11 @@ public class DocServiceImpl implements DocService {
 	private static final ObjectMapper om = new ObjectMapper();
 	private static final DateFormat dateFormatYMD = new SimpleDateFormat("yyyy-MM-dd");
 	private static final DateFormat dateFormatYMDHMS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	public static final String macAddress = "00-15-5D-42-9C-81";
+	public static final String macAddress = "00-16-3E-00-00-7E";
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = true;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
-	private static final String expireDateString = "2015-01-31 23:59:59";
+	private static final String expireDateString = "2015-03-31 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
@@ -382,6 +383,20 @@ public class DocServiceImpl implements DocService {
 		} catch (DBException e) {
 			logger.error("doc updateMode error: " + e.getMessage());
 			throw new DocServiceException("updateMode error: ", e);
+		}
+	}
+
+	@Override
+	public void resetConvert(String token, String uuid) throws DocServiceException {
+		try {
+			DocVo docVo = getByUuid(uuid);
+			if (null == docVo) {
+				throw new DocServiceException("Document NOT found!");
+			}
+			docDao.updateFieldByUuid(uuid, BaseDao.STATUS_CONVERT, null);
+		} catch (DBException e) {
+			logger.error("doc resetConvert error: " + e.getMessage());
+			throw new DocServiceException("resetConvert error: ", e);
 		}
 	}
 
