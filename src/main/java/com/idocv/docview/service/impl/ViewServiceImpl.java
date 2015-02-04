@@ -632,15 +632,34 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				viewName = "index.gif";
 			}
 
-			File curPageFile = new File(rcUtil.getParseDir(rid) + viewName);
-			if (!curPageFile.isFile()) {
-				logger.error("convertImage2Jpg error: 预览图片" + rid + "失败，未生成预览图");
-				throw new DocServiceException("预览图片失败！");
+			// get page count
+			File[] destFiles = new File(rcUtil.getParseDir(rid)).listFiles();
+			if (ArrayUtils.isEmpty(destFiles)) {
+				convert(rid);
+				destFiles = new File(rcUtil.getParseDir(rid)).listFiles();
+			}
+			if (ArrayUtils.isEmpty(destFiles)) {
+				throw new DocServiceException("预览失败，未找到目标文件！");
 			}
 
+			List<File> destFilesList = new ArrayList<File>();
+			for (File pngFile : destFiles) {
+				destFilesList.add(pngFile);
+			}
+
+			// sort file
+			Collections.sort(destFilesList, new FileComparator());
+
 			List<ImgVo> data = new ArrayList<ImgVo>();
-			data.add(new ImgVo());
-			PageVo<ImgVo> page = new PageVo<ImgVo>(data, 1);
+			if (!CollectionUtils.isEmpty(destFilesList)) {
+				for (int i = 0; i < destFilesList.size(); i++) {
+					ImgVo imgVo = new ImgVo();
+					String url = rcUtil.getParseUrlDir(rid) + destFilesList.get(i).getName();
+					imgVo.setUrl(url);
+					data.add(imgVo);
+				}
+			}
+			PageVo<ImgVo> page = new PageVo<ImgVo>(data, destFilesList.size());
 			page.setUrl(rcUtil.getParseUrlDir(rid) + viewName);
 			return page;
 		} catch (Exception e) {
@@ -769,18 +788,18 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				// do nothing.
 			} else if (ViewType.IMG == ViewType.getViewType(ext)) {
 				dest = rcUtil.getParseDir(rid);
+				String destName = "index.jpg";
 				if ("png".equalsIgnoreCase(ext)) {
-					dest += "index.png";
+					destName = "index.png";
 				} else if ("gif".equalsIgnoreCase(ext)) {
-					dest += "index.gif";
-				} else {
-					dest += "index.jpg";
+					destName = "index.gif";
 				}
-				destFile = new File(dest);
-				if (!destFile.isFile()) {
-					convertResult = CmdUtil.runWindows(img2jpg, "convert", "-resize", "1000x", src, dest);
+				String destPath = dest + destName;
+				File destDir = new File(dest);
+				if (ArrayUtils.isEmpty(destDir.listFiles())) {
+					convertResult = CmdUtil.runWindows(img2jpg, "-resize", "1000x", src, destPath);
 				}
-				if (!destFile.isFile()) {
+				if (ArrayUtils.isEmpty(destDir.listFiles())) {
 					logger.error("[CONVERT ERROR] " + rid + " - "
 							+ convertResult);
 					throw new DocServiceException("对不起，该图片文件（"

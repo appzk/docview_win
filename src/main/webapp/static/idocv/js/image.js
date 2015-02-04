@@ -18,7 +18,12 @@ $(document).ready(function() {
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 			
 			// pages
-			$('.span12').html('<img src="' + data.url + '" alt="' + data.name + '" />');
+			for (i = 0; i < pages.length; i++) {
+				var page = pages[i];
+				$('.span12').append('<p><img src="' + page.url + '" alt="' + data.name + '" /></p>');
+			}
+			
+			afterLoad();
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}
