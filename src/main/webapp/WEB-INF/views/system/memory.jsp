@@ -12,7 +12,7 @@
 
     <!-- styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/idocv/css/style.css" rel="stylesheet">
+    <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
     <style type="text/css">
       .container {
@@ -76,13 +76,13 @@
 
     <!-- JavaSript
     ================================================== -->
-    <script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
-    <script src="/static/bootstrap/js/bootstrap.js"></script>
-    <script src="/static/urlparser/js/purl.js"></script>
-    <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-    <script src="/static/idocv/js/user.js"></script>
-    <script src="/static/canvasjs/js/canvasjs.min.js"></script>
-    <script src="/static/idocv/js/system-info-memory.js"></script>
+    <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
+    <script src="/static/bootstrap/js/bootstrap.js?v=${version}"></script>
+    <script src="/static/urlparser/js/purl.js?v=${version}"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js?v=${version}"></script>
+    <script src="/static/idocv/js/user.js?v=${version}"></script>
+    <script src="/static/canvasjs/js/canvasjs.min.js?v=${version}"></script>
+    <script src="/static/idocv/js/system-info-memory.js?v=${version}"></script>
   </body>
 </html>

@@ -12,7 +12,7 @@
 
     <!-- styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/idocv/css/style.css" rel="stylesheet">
+    <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
@@ -99,22 +99,22 @@
 
     <!-- JavaScript
     ================================================== -->
-    <script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
-    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/static/idocv/js/custom.js"></script>
-    <script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-    <script src="/static/idocv/js/progress.js"></script>
-    <script src="/static/scrollspy/js/jquery-scrollspy.js"></script>
-    <script src="/static/urlparser/js/purl.js"></script>
+    <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js?v=${version}"></script>
+    <script src="/static/idocv/js/custom.js?v=${version}"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
+    <script src="/static/idocv/js/progress.js?v=${version}"></script>
+    <script src="/static/scrollspy/js/jquery-scrollspy.js?v=${version}"></script>
+    <script src="/static/urlparser/js/purl.js?v=${version}"></script>
     <!-- 
-    <script src="/static/qrcode/js/jquery.qrcode.min.js"></script>
+    <script src="/static/qrcode/js/jquery.qrcode.min.js?v=${version}"></script>
      -->
-    <script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-    <!-- <script src="/static/idocv/js/user.js"></script> -->
-    <script src="/static/infinite-scroll/js/debug.js"></script>
-    <script src="/static/infinite-scroll/js/jquery.infinitescroll.js"></script>
-    <script src="/static/idocv/js/txt.js"></script>
-    <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
-    <script src="/static/idocv/js/stat.js"></script>
+    <script src="/static/formvalidator/js/jquery.formvalidator.min.js?v=${version}"></script>
+    <!-- <script src="/static/idocv/js/user.js?v=${version}"></script> -->
+    <script src="/static/infinite-scroll/js/debug.js?v=${version}"></script>
+    <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
+    <script src="/static/idocv/js/txt.js?v=${version}"></script>
+    <script src="/static/smart/js/jquery.easing-1.3.min.js?v=${version}"></script>
+    <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
 </html>

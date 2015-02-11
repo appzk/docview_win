@@ -73,9 +73,9 @@
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
-    <script src="/static/bootstrap3/js/bootstrap.js"></script>
-<!-- 	<script src="/static/idocv/js/user.js"></script> -->
-	<script src="/static/idocv/js/system-cmd.js"></script>
+    <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
+    <script src="/static/bootstrap3/js/bootstrap.js?v=${version}"></script>
+<!-- 	<script src="/static/idocv/js/user.js?v=${version}"></script> -->
+	<script src="/static/idocv/js/system-cmd.js?v=${version}"></script>
   </body>
 </html>

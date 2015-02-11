@@ -13,7 +13,7 @@
     <!-- Le styles -->
     <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="/static/datatable/css/DT_bootstrap.css" rel="stylesheet">
-    <link href="/static/idocv/css/style.css" rel="stylesheet">
+    <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -67,16 +67,16 @@
 
     <!-- Le javascript
     ================================================== -->
-    <script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
-    <script src="/static/bootstrap/js/bootstrap.js"></script>
-	<script src="/static/jquerycookie/js/jquery.cookie.js"></script>
-	<script src="/static/formvalidator/js/jquery.formvalidator.min.js"></script>
-	<script src="/static/datatable/js/jquery.dataTables.js"></script>
-	<script src="/static/datatable/js/DT_bootstrap.js"></script>
-	<script src="/static/js/upload/jquery.ui.widget.js"></script>
-	<script src="/static/js/upload/jquery.iframe-transport.js"></script>
-	<script src="/static/js/upload/jquery.fileupload.js"></script>
-	<script src="/static/idocv/js/app-list.js"></script>
+    <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
+    <script src="/static/bootstrap/js/bootstrap.js?v=${version}"></script>
+	<script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
+	<script src="/static/formvalidator/js/jquery.formvalidator.min.js?v=${version}"></script>
+	<script src="/static/datatable/js/jquery.dataTables.js?v=${version}"></script>
+	<script src="/static/datatable/js/DT_bootstrap.js?v=${version}"></script>
+	<script src="/static/js/upload/jquery.ui.widget.js?v=${version}"></script>
+	<script src="/static/js/upload/jquery.iframe-transport.js?v=${version}"></script>
+	<script src="/static/js/upload/jquery.fileupload.js?v=${version}"></script>
+	<script src="/static/idocv/js/app-list.js?v=${version}"></script>
 
   </body>
 </html>

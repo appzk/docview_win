@@ -13,7 +13,7 @@
     <!-- BOOTSTRAP STYLE start -->
     <!-- Le styles -->
     <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <link href="/static/idocv/css/style.css" rel="stylesheet">
+    <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet">
     <link href="/static/contextMenu/css/jquery.contextMenu.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
     <!-- BOOTSTRAP STYLE end -->
@@ -102,16 +102,16 @@
 
     <!-- JavaSript
     ================================================== -->
-    <script src="/static/jquery/js/jquery-1.11.1.min.js"></script>
-    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/static/idocv/js/custom.js"></script>
-    <script src="/static/contextMenu/js/jquery.contextMenu.js"></script>
-    <script src="/static/contextMenu/js/jquery.ui.position.js"></script>
-    <script src="/static/jquery/js/jquery.mobile-events.min.js"></script>
-    <script src="/static/idocv/js/progress.js"></script>
-    <script src="/static/urlparser/js/purl.js"></script>
-    <script src="/static/fullscreen/js/jquery.fullscreen-min.js"></script>
-    <script src="/static/idocv/js/ppt.js"></script>
-    <script src="/static/idocv/js/stat.js"></script>
+    <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js?v=${version}"></script>
+    <script src="/static/idocv/js/custom.js?v=${version}"></script>
+    <script src="/static/contextMenu/js/jquery.contextMenu.js?v=${version}"></script>
+    <script src="/static/contextMenu/js/jquery.ui.position.js?v=${version}"></script>
+    <script src="/static/jquery/js/jquery.mobile-events.min.js?v=${version}"></script>
+    <script src="/static/idocv/js/progress.js?v=${version}"></script>
+    <script src="/static/urlparser/js/purl.js?v=${version}"></script>
+    <script src="/static/fullscreen/js/jquery.fullscreen-min.js?v=${version}"></script>
+    <script src="/static/idocv/js/ppt.js?v=${version}"></script>
+    <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
 </html>

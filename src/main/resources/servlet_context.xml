@@ -14,10 +14,12 @@
         http://www.springframework.org/schema/task/spring-task-3.0.xsd">
     
     <context:property-placeholder location="classpath:conf.properties" />
-    
-    <context:annotation-config />
-	<task:annotation-driven />
 	<context:component-scan base-package="com.idocv.docview" />
+	<task:annotation-driven />
+	
+	<mvc:interceptors>
+		<bean class="com.idocv.docview.interceptor.VersionInterceptor" />
+	</mvc:interceptors>
     
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="webBindingInitializer">
