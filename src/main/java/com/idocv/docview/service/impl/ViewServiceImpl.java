@@ -109,13 +109,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			File styleFile = new File(rcUtil.getParseDir(rid) + "style.css");
 			String bodyRaw;
 			if (!bodyFile.isFile()) {
-				String contentWhole = FileUtils.readFileToString(htmlFile, "GBK");
-				if (!contentWhole.matches(encodingString)) {
-					contentWhole = FileUtils.readFileToString(htmlFile, "unicode");
-				}
-				if (contentWhole.matches(encodingStringUtf8)) {
-					contentWhole = FileUtils.readFileToString(htmlFile, "utf-8");
-				}
+				String contentWhole = FileUtils.readFileToString(htmlFile, "UTF-8");
 				String styleString = contentWhole.replaceFirst("(?s)(?i).*?(<style>)(.*?)</style>.*", "$2");
 				bodyRaw = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
 				FileUtils.writeStringToFile(styleFile, styleString, "UTF-8");
@@ -874,6 +868,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	}
 
 	public static String getEncoding(File file) {
+		if (!file.isFile()) {
+			return "UTF-8";
+		}
 		String charset = "GBK";
 		byte[] first3Bytes = new byte[3];
 		BufferedInputStream bis = null;
