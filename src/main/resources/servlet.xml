@@ -1,93 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:task="http://www.springframework.org/schema/task"
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="
-        http://www.springframework.org/schema/beans 
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd
-        http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-        http://www.springframework.org/schema/task
-        http://www.springframework.org/schema/task/spring-task-3.0.xsd">
-    
-    <context:property-placeholder location="classpath:conf.properties" />
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task.xsd ">
+
+	<context:property-placeholder location="classpath:conf.properties" />
 	<context:component-scan base-package="com.idocv.docview" />
-	<task:annotation-driven />
 	
+	<task:annotation-driven />
+	<mvc:annotation-driven />
+
 	<mvc:interceptors>
 		<bean class="com.idocv.docview.interceptor.VersionInterceptor" />
 	</mvc:interceptors>
-    
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-		<property name="webBindingInitializer">
-			<bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
-				<property name="conversionService">
-					<bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
-				</property>
-			</bean>
-		</property>
-		<property name="messageConverters">
-			<list>
-				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" >
-					<property name="supportedMediaTypes">
-						<list>
-							<bean class="org.springframework.http.MediaType">
-								<constructor-arg index="0" value="application" />
-								<constructor-arg index="1" value="json" />
-								<constructor-arg index="2" value="UTF-8" />
-							</bean>
-							<bean class="org.springframework.http.MediaType">
-								<constructor-arg index="0" value="text" />
-								<constructor-arg index="1" value="*" />
-								<constructor-arg index="2" value="UTF-8" />
-							</bean>
-						</list>
-			        </property>
-				</bean>
-				<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
-				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
-					<property name="writeAcceptCharset" value="false"/>
-					<constructor-arg name="defaultCharset" value="UTF-8" />
-				</bean>
-				<bean class="org.springframework.http.converter.ResourceHttpMessageConverter" />
-				<bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
-				<bean class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter" />
-				<bean class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter" />
-			</list>
-		</property>
-	</bean>
-	
-	<bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-		<property name="order" value="0"/>
-	</bean>
-	
-	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" >
-		<property name="cookieMaxAge" value="100000"/>
-	</bean>
 
-	<!-- Application Message Bundle -->
-	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-		<property name="basename" value="/WEB-INF/messages/messages" />
-		<property name="cacheSeconds" value="0" />
-	</bean>
-	
-	<mvc:view-controller path="/" view-name="index"/>
-	<mvc:view-controller path="/doclist" view-name="doclist"/>
+	<mvc:view-controller path="/" view-name="index" />
+	<mvc:view-controller path="/doclist" view-name="doclist" />
 	<mvc:view-controller path="/test" view-name="/test" />
 	<mvc:resources location="/static/" mapping="/static/**" />
 	<mvc:resources location="/*.html" mapping="/**" />
-	
-	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/views/"/>
-		<property name="suffix" value=".jsp"/>
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
 	</bean>
 
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<property name="maxInMemorySize" value="1000000"/>
-		<property name="maxUploadSize" value="50000000"/>
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxInMemorySize" value="1000000" />
+		<property name="maxUploadSize" value="50000000" />
 	</bean>
-	
+
 </beans>

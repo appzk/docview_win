@@ -17,7 +17,10 @@ public class VersionInterceptor extends HandlerInterceptorAdapter {
 			HttpServletResponse response, Object handler,
 			ModelAndView model) throws Exception {
 		if (null != model) {
-			model.addObject("version", version);
+			request.setAttribute("version", version);
+
+			// Do NOT use this way, or it will be exposed as URL parameter.
+			// model.addObject("version", version);
 		}
 	}
 
