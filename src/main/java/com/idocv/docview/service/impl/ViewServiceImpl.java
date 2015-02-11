@@ -308,7 +308,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			
 			// get TITLE(s) and CONTENT(s)
 			List<ExcelVo> VoList = new ArrayList<ExcelVo>();
-			String titleFileContent = FileUtils.readFileToString(tabstripFile, "GBK");
+			String titleFileContent = FileUtils.readFileToString(tabstripFile, "UTF-8");
 			for (int i = 0; i < sheetFiles.size(); i++) {
 				ExcelVo vo = new ExcelVo();
 
@@ -318,7 +318,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				// titleList.add(title);
 
 				// get content
-				String sheetFileContent = FileUtils.readFileToString(sheetFiles.get(i), "GBK");
+				String sheetFileContent = FileUtils.readFileToString(sheetFiles.get(i), "UTF-8");
 				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+)(>.*</table>).*(?-i)", "$1" + " class=\"table table-condensed table-bordered\"" + "$2");
 				sheetContent = sheetContent.replaceFirst("table-layout:fixed;", "");
 				sheetContent = processImageUrl(rcUtil.getParseUrlDir(rid), sheetContent);
@@ -331,7 +331,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			}
 			PageVo<ExcelVo> page = new PageVo<ExcelVo>(VoList, sheetFiles.size());
 			if (null != sheetStyleFile) {
-				String styleString = FileUtils.readFileToString(sheetStyleFile, "GBK");
+				String styleString = FileUtils.readFileToString(sheetStyleFile, "UTF-8");
 				File destStylePath = new File(rcUtil.getParseDir(rid) + "style.css");
 				FileUtils.writeStringToFile(destStylePath, styleString, "UTF-8");
 				page.setStyleUrl(rcUtil.getParseUrlDir(rid) + "style.css");
