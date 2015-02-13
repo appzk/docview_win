@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idocv.docview.common.DocResponse;
@@ -83,7 +85,7 @@ public class DocController {
 	public Map<String, String> upload(
 			HttpServletRequest req,
 			HttpServletResponse resp,
-			@RequestParam(value = "file", required = false) MultipartFile file,
+			// @RequestParam(value = "file", required = false) MultipartFile file,
 			@RequestParam(value = "url", required = false) String url,
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "token", required = false) String token,
@@ -139,13 +141,18 @@ public class DocController {
 
 			// upload data
 			DocVo vo = null;
-			if (null != file) {
-				// upload by multipart/form-data
-				byte[] data = file.getBytes();
-				if (StringUtils.isBlank(name)) {
-					name = file.getOriginalFilename();
+			if (req instanceof MultipartHttpServletRequest && !CollectionUtils.isEmpty(((MultipartHttpServletRequest) req).getFileMap())) {
+				Map<String, MultipartFile> fileMap = ((MultipartHttpServletRequest) req).getFileMap();
+				for (Entry<String, MultipartFile> entry : fileMap.entrySet()) {
+					// System.out.println("uploading file name: " + entry.getKey() + ", value: " + entry.getValue());
+					MultipartFile file = entry.getValue();
+					// upload by multipart/form-data
+					byte[] data = file.getBytes();
+					if (StringUtils.isBlank(name)) {
+						name = file.getOriginalFilename();
+					}
+					vo = docService.add(app, uid, name, data, mode, label);
 				}
-				vo = docService.add(app, uid, name, data, mode, label);
 			} else if (StringUtils.isNotBlank(url)) {
 				// upload by URL
 				vo = docService.addUrl(app, uid, name, url, mode, label);
