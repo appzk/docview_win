@@ -20,6 +20,7 @@ public class PageVo<T> implements Serializable {
 	private int curPage = 1;
 	private int totalPage;
 	private int pageSize = 10;
+	private List<String> titles;
 	private List<T> data;
 	private String styleUrl;
 
@@ -138,6 +139,14 @@ public class PageVo<T> implements Serializable {
 
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
+	}
+
+	public List<String> getTitles() {
+		return titles;
+	}
+
+	public void setTitles(List<String> titles) {
+		this.titles = titles;
 	}
 
 	public List<T> getData() {

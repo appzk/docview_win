@@ -126,6 +126,25 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			// split all pages
 			if (!firstPageFile.isFile()) {
 				List<String> pages = new ArrayList<String>();
+				
+				// get titles
+				List<String> titles = new ArrayList<String>();
+				String titleString = bodyString;
+				String titleRegex = "(?s)(?i)(.*?)(<(h(\\d+))[^>]*?>(.*?)</\\3>)(.*)(?-i)";
+				while (titleString.matches(titleRegex)) {
+					Integer titleLevel = Integer.valueOf(titleString.replaceFirst(titleRegex, "$4"));
+					String title = titleString.replaceFirst(titleRegex, "$5").replaceAll("<[^>]+>", "");
+					titleString = titleString.replaceFirst(titleRegex, "$6");
+					for (int li = 1; li < titleLevel; li++) {
+						title = "->" + title;
+					}
+					titles.add(title);
+				}
+				// save titles
+				File titlesFile = new File(rcUtil.getParseDir(rid) + "titles.txt");
+				FileUtils.writeLines(titlesFile, "UTF-8", titles, "\n");
+				
+				// get pages
 				String pageRegex = "(?s)(?i)(.+?)(<span[^>]+?>[\\s]*<br[^>]*?style=[\"|\'][^>]*page-break-before[^>]+>[\\s]*</span>)(.*)(?-i)";
 				while (bodyString.matches(pageRegex)) {
 					String page = bodyString.replaceFirst(pageRegex, "$1");
@@ -214,6 +233,13 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			}
 			PageVo<WordVo> page = new PageVo<WordVo>(data, totalPageCount);
 			page.setStyleUrl(rcUtil.getParseUrlDir(rid) + "style.css");
+			
+			try {
+				List<String> titles = FileUtils.readLines(new File(rcUtil.getParseDir(rid) + "titles.txt"), "UTF-8");
+				page.setTitles(titles);
+			} catch (Exception e) {
+				logger.warn("获取标题失败：" + e.getMessage());
+			}
 			return page;
 		} catch (Exception e) {
 			logger.error("convertWord2Html error: " + e.getMessage());
