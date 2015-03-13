@@ -44,6 +44,11 @@
             <span class="icon-bar"></span>
           </button>
           <!-- FILE NAME HERE -->
+          <div class="nav-collapse collapse">
+            <ul class="nav word-tab-title">
+              <!-- WORD TAB TITLE(s) HERE -->
+            </ul>
+          </div><!--/.nav-collapse -->
           <!-- SIGN UP & SIGN IN -->
         </div>
       </div>

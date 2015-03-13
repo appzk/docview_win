@@ -131,15 +131,24 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				List<String> titles = new ArrayList<String>();
 				String titleString = bodyString;
 				String titleRegex = "(?s)(?i)(.*?)(<(h(\\d+))[^>]*?>(.*?)</\\3>)(.*)(?-i)";
+				StringBuffer anchorContent = new StringBuffer();
+				int titleCount = 0;
 				while (titleString.matches(titleRegex)) {
 					Integer titleLevel = Integer.valueOf(titleString.replaceFirst(titleRegex, "$4"));
 					String title = titleString.replaceFirst(titleRegex, "$5").replaceAll("<[^>]+>", "");
+					anchorContent.append(titleString.replaceFirst(titleRegex, "$1" + "<a id=\"nav-title-" + titleCount + "\"></a>" + "$2"));
+					titleCount++;
 					titleString = titleString.replaceFirst(titleRegex, "$6");
 					for (int li = 1; li < titleLevel; li++) {
 						title = "->" + title;
 					}
 					titles.add(title);
 				}
+				if (anchorContent.length() > 0) {
+					anchorContent.append(titleString);
+					bodyString = anchorContent.toString();
+				}
+
 				// save titles
 				File titlesFile = new File(rcUtil.getParseDir(rid) + "titles.txt");
 				FileUtils.writeLines(titlesFile, "UTF-8", titles, "\n");
