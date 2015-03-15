@@ -142,6 +142,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					for (int li = 1; li < titleLevel; li++) {
 						title = "->" + title;
 					}
+					
+					// 格式标题，注意正则中间的空格，第一个是160，第二个是32
+					title = StringEscapeUtils.unescapeHtml(title).replaceAll("[\\s \r\n]+", " ").trim();
 					titles.add(title);
 				}
 				if (anchorContent.length() > 0) {
