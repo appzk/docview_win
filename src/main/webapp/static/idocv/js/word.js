@@ -35,7 +35,7 @@ $(document).ready(function() {
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 			
 			// titles - navigation
-			if (titles.length > 3) {
+			if (!!titles && titles.length > 3) {
 				// Dropdown tabs
 				var isDropDown = titles.length > 5;
 				if (isDropDown) {
@@ -68,7 +68,6 @@ $(document).ready(function() {
 				
 				$('.word-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '') + ' a').click(function(){
 					var id = $(this).attr('href');
-					console.log('my id: ' + id);
 					if (! $(id).length) {
 						// page NOT exist, load all page.
 						loadAllPage();
