@@ -16,6 +16,12 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
@@ -113,9 +119,9 @@ public class DocServiceImpl implements DocService {
 	private static final DateFormat dateFormatYMDHMS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public static final String macAddress = "00-16-3E-00-00-7E";
 	private static final boolean isCheckMacAddress = false;
-	private static final boolean isCheckExpireDate = true;
+	private static final boolean isCheckExpireDate = false;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
-	private static final String expireDateString = "2015-03-31 23:59:59";
+	private static final String expireDateString = "2015-04-30 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
@@ -210,6 +216,9 @@ public class DocServiceImpl implements DocService {
 					String encodedUrl = UrlUtil.encodeUrl(url);
 					encodedUrl = encodedUrl.replaceAll(" ", "%20");
 					encodedUrl = encodedUrl.contains("://") ? encodedUrl : ("http://" + encodedUrl);
+					if (encodedUrl.contains("https://")) {
+						setTrustAllCerts();
+					}
 					// urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
 					urlResponse = Jsoup.connect(encodedUrl).maxBodySize(uploadMaxSize.intValue() + 1000).referrer(host).timeout(60000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
 					if (urlResponse.statusCode() == 307) {
@@ -732,6 +741,45 @@ public class DocServiceImpl implements DocService {
 			return macAddresses;
 		} catch (Exception e) {
 			return macAddresses;
+		}
+	}
+
+	/**
+	 * 设置信任证书，解决https文件获取问题，在建立连接前调用
+	 * 
+	 * @throws Exception
+	 */
+	public static void setTrustAllCerts() throws Exception {
+		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
+
+			public void checkClientTrusted(
+					java.security.cert.X509Certificate[] certs, String authType) {
+			}
+
+			public void checkServerTrusted(
+					java.security.cert.X509Certificate[] certs, String authType) {
+			}
+		} };
+
+		// Install the all-trusting trust manager
+		try {
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection
+					.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			HttpsURLConnection
+					.setDefaultHostnameVerifier(new HostnameVerifier() {
+						public boolean verify(String urlHostName,
+								SSLSession session) {
+							return true;
+						}
+					});
+		} catch (Exception e) {
+			// We can not recover from this exception.
+			logger.warn("set cert failed(View by URL): " + e.getMessage());
 		}
 	}
 }
