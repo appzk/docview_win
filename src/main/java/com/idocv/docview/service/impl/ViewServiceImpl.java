@@ -90,6 +90,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${converter.pdfsign}")
 	String pdfSign;
 
+	private @Value("${view.page.word.style}")
+	String pageWordStyle;
+	
 	private static final String encodingString = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=([^\"^>]+?)\"?>.*";
 	private static final String encodingStringUtf8 = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=[^>]*?utf([^\"^>]+?)\"?>.*";
 
@@ -240,7 +243,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			// construct vo
 			for (int i = 0; i < pages.size(); i++) {
 				WordVo word = new WordVo();
-				word.setContent("<div id=\"" + (start + i) + "\" class=\"scroll-page\">" + pages.get(i) + "</div>");
+				word.setContent("<div id=\"" + (start + i) + "\" class=\"scroll-page\" contenteditable=\"true\">" + pages.get(i) + "</div>");
 				data.add(word);
 			}
 			PageVo<WordVo> page = new PageVo<WordVo>(data, totalPageCount);
@@ -259,6 +262,45 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 		}
 	}
 	
+	@Override
+	public PageVo<WordVo> convertWord2Img(String rid, int start, int limit) throws DocServiceException {
+		try {
+			// get page count
+			File[] pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
+			if (ArrayUtils.isEmpty(pngFiles)) {
+				convert(rid);
+				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
+			}
+			if (ArrayUtils.isEmpty(pngFiles)) {
+				logger.error("convertWord2Img(" + rid + ") error: 预览失败，该word文档无法生成目标PNG文件或该文件已损坏！");
+				throw new DocServiceException("预览失败，该word文档无法生成目标PNG文件或该文件已损坏！");
+			}
+			
+			List<File> pdfPageFiles = new ArrayList<File>();
+			for (File pngFile : pngFiles) {
+				pdfPageFiles.add(pngFile);
+			}
+
+			// sort file
+			Collections.sort(pdfPageFiles, new FileComparator());
+
+			List<WordVo> data = new ArrayList<WordVo>();
+			if (!CollectionUtils.isEmpty(pdfPageFiles)) {
+				for (int i = 0; i < pdfPageFiles.size(); i++) {
+					WordVo pdf = new WordVo();
+					String url = rcUtil.getParseUrlDir(rid) + PDF_TO_IMAGE_TYPE + "/" + pdfPageFiles.get(i).getName();
+					pdf.setUrl(url);
+					data.add(pdf);
+				}
+			}
+			PageVo<WordVo> page = new PageVo<WordVo>(data, pdfPageFiles.size());
+			return page;
+		} catch (Exception e) {
+			logger.error("convertPPT2Html(" + rid + ") error: ", e.fillInStackTrace());
+			throw new DocServiceException(e.getMessage(), e);
+		}
+	}
+
 	@Override
 	public PageVo<PdfVo> convertWord2PdfStamp(String rid, String stamp, float xPercent, float yPercent) throws DocServiceException {
 		try {
@@ -761,14 +803,46 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_CONVERTING);
 			String convertResult = "";
 			if (ViewType.WORD == ViewType.getViewType(ext)) {
-				if (!destFile.isFile()) {
-					convertResult = CmdUtil.runWindows(word2Html, src, dest);
-				}
-				if (!destFile.isFile()) {
-					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
-					throw new DocServiceException("对不起，该文档（"
-							+ RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+				if ("pdf".equalsIgnoreCase(pageWordStyle)) {
+					dest = rcUtil.getDirectoryByRid(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
+					destFile = new File(dest);
+					
+					// two steps to convert WORD to PNG
+					// step 1. convert WORD to PDF
+					convertResult = CmdUtil.runWindows(word2Pdf, "-src", src, "-dest", dest);
+					if (!destFile.isFile()) {
+						convertResult += CmdUtil.runWindows(word2Pdf, "-src", src, "-dest", dest);
+						if (!destFile.isFile()) {
+							logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+							throw new DocServiceException("对不起，该文档（"
+									+ RcUtil.getUuidByRid(uuid)
+									+ "）暂无法预览，详情请联系管理员！");
+						}
+					}
+					
+					// step 2. convert PDF to PNG pictures
+					String pngDestDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
+					String pngDestFirstPage = pngDestDir + "1." + PDF_TO_IMAGE_TYPE;
+					if (!new File(pngDestFirstPage).isFile()) {
+						// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
+						convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a2", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", dest);
+					}
+					if (!new File(pngDestFirstPage).isFile()) {
+						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+						throw new DocServiceException("对不起，该文档（"
+								+ RcUtil.getUuidByRid(rid)
+								+ "）暂无法预览，详情请联系管理员！");
+					}
+				} else {
+					if (!destFile.isFile()) {
+						convertResult = CmdUtil.runWindows(word2Html, src, dest);
+					}
+					if (!destFile.isFile()) {
+						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+						throw new DocServiceException("对不起，该文档（"
+								+ RcUtil.getUuidByRid(rid)
+								+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					}
 				}
 			} else if (ViewType.EXCEL == ViewType.getViewType(ext)) {
 				if (!destFile.isFile()) {

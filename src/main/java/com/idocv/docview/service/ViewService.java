@@ -45,6 +45,16 @@ public interface ViewService {
 	PageVo<WordVo> convertWord2Html(String rid, int start, int limit) throws DocServiceException;
 	
 	/**
+	 * Word view (word -> pdf -> png).
+	 * 
+	 * @param rid
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	PageVo<WordVo> convertWord2Img(String rid, int start, int limit) throws DocServiceException;
+	
+	/**
 	 * Word page.
 	 * 
 	 * @param rid

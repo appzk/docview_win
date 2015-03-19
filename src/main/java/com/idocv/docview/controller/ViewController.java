@@ -60,6 +60,9 @@ public class ViewController {
 
 	private @Value("${view.page.load.async}")
 	boolean pageLoadAsync;
+	
+	private @Value("${view.page.word.style}")
+	String pageWordStyle;
 
 	@Resource
 	private RcUtil rcUtil;
@@ -137,7 +140,11 @@ public class ViewController {
 			}
 
 			if (uuid.endsWith(ViewType.WORD.getSymbol())) {
-				model.setViewName("word/index");
+				if ("pdf".equalsIgnoreCase(pageWordStyle)) {
+					model.setViewName("word/pdf");
+				} else {
+					model.setViewName("word/index");
+				}
 				if ("test".equals(style)) {
 					model.setViewName("word/test");
 				} else if ("watermark".equals(style)) {
@@ -279,7 +286,11 @@ public class ViewController {
 			}
 			if (ViewType.WORD == ViewType.getViewType(ext)) {
 				start = (start - 1) * size + 1;
-				page = viewService.convertWord2Html(rid, start, size);
+				if ("pdf".equalsIgnoreCase(pageWordStyle)) {
+					page = viewService.convertWord2Img(rid, 1, 0);
+				} else {
+					page = viewService.convertWord2Html(rid, start, size);
+				}
 			} else if (ViewType.EXCEL == ViewType.getViewType(ext)) {
 				page = viewService.convertExcel2Html(rid, start, size);
 			} else if (ViewType.PPT == ViewType.getViewType(ext)) {
