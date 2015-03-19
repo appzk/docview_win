@@ -29,7 +29,7 @@ public class CacheDaoImpl extends BaseDaoImpl implements CacheDao, InitializingB
 		if (null != db) {
 			DBCollection coll;
 			coll = db.getCollection(COLL_CACHE);
-			coll.ensureIndex(BasicDBObjectBuilder.start().add(_ID, 1).get());
+			coll.createIndex(BasicDBObjectBuilder.start().add(_ID, 1).get());
 		}
 	}
 

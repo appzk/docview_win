@@ -35,11 +35,11 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		if (null != db) {
 			DBCollection coll;
 			coll = db.getCollection(COLL_DOC);
-			coll.ensureIndex(BasicDBObjectBuilder.start().add(_ID, 1).get());
-			coll.ensureIndex(BasicDBObjectBuilder.start().add(UUID, 1).get());
-			coll.ensureIndex(BasicDBObjectBuilder.start().add(CTIME, 1).get());
-			coll.ensureIndex(BasicDBObjectBuilder.start().add(STATUS, 1).get());
-			coll.ensureIndex(BasicDBObjectBuilder.start().add(STATUS_CONVERT, 1).get());
+			coll.createIndex(BasicDBObjectBuilder.start().add(_ID, 1).get());
+			coll.createIndex(BasicDBObjectBuilder.start().add(UUID, 1).get());
+			coll.createIndex(BasicDBObjectBuilder.start().add(CTIME, 1).get());
+			coll.createIndex(BasicDBObjectBuilder.start().add(STATUS, 1).get());
+			coll.createIndex(BasicDBObjectBuilder.start().add(STATUS_CONVERT, 1).get());
 		}
 	}
 
@@ -538,6 +538,7 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
 	private DocPo convertDBObject2Po(DBObject obj) {
 		if (null == obj) {
 			return null;

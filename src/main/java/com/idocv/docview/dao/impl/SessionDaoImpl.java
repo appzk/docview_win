@@ -28,7 +28,7 @@ public class SessionDaoImpl extends BaseDaoImpl implements SessionDao, Initializ
 		if (null != db) {
 			DBCollection coll;
 			coll = db.getCollection(COLL_SESSION);
-			coll.ensureIndex(BasicDBObjectBuilder.start().add(_ID, 1).get());
+			coll.createIndex(BasicDBObjectBuilder.start().add(_ID, 1).get());
 		}
 	}
 

@@ -168,6 +168,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao, InitializingBea
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private UserPo convertDBObject2Po(DBObject obj) {
 		if (null == obj) {
 			return null;

@@ -188,6 +188,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private static String getActivationKey(String uid) {
-		return DigestUtils.shaHex(uid);
+		return DigestUtils.sha1Hex(uid);
 	}
 }

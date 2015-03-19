@@ -5,24 +5,24 @@ import java.net.UnknownHostException;
 import org.springframework.beans.factory.DisposableBean;
 
 import com.mongodb.DB;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoException;
-import com.mongodb.MongoOptions;
 
 public class AppMongoConn implements DisposableBean{
 	private String host;
 	private int port;
 
-	Mongo mongo;
+	private MongoClient mongo;
 
 	public AppMongoConn(String host, int port) throws UnknownHostException, MongoException {
 		this.host = host;
 		this.port = port;
-		mongo = new Mongo(host, port);
-		MongoOptions mongoOptions = mongo.getMongoOptions();
-		mongoOptions.setAutoConnectRetry(true);
-		mongoOptions.setConnectionsPerHost(300);
-		mongoOptions.setThreadsAllowedToBlockForConnectionMultiplier(8000);
+		mongo = new MongoClient(host, port);
+		MongoClientOptions mongoOptions = MongoClientOptions.builder()
+				.connectionsPerHost(300)
+				.threadsAllowedToBlockForConnectionMultiplier(8000)
+				.connectTimeout(30000).build();
 		int options = mongo.getOptions();
 		System.err.println("##[MONGO INFO] mongoOptions: " + options + " - " + mongoOptions);
 	}
