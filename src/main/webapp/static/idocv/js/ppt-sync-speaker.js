@@ -42,7 +42,7 @@ $(document).ready(function() {
 	uuid = $.url().segment(2);
 	// var uuid = $.url().segment(2);
 	var sessionId = $.url().param('session');
-	﻿var address = 'http://api.idocv.com/view/' + uuid;
+	// ﻿var address = 'http://api.idocv.com/view/' + uuid;
 	
 	$.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
 		var code = data.code;
