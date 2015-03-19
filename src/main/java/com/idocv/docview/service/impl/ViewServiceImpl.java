@@ -804,7 +804,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			String convertResult = "";
 			if (ViewType.WORD == ViewType.getViewType(ext)) {
 				if ("pdf".equalsIgnoreCase(pageWordStyle)) {
-					dest = rcUtil.getDirectoryByRid(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
+					dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
 					destFile = new File(dest);
 					
 					// two steps to convert WORD to PNG
