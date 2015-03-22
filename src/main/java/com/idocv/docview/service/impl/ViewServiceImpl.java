@@ -116,21 +116,20 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			// check body
 			File bodyFile = new File(rcUtil.getParseDir(rid) + "body.html");
 			File styleFile = new File(rcUtil.getParseDir(rid) + "style.css");
-			String bodyRaw;
+			String bodyString;
 			if (!bodyFile.isFile()) {
 				String contentWhole = FileUtils.readFileToString(htmlFile, "UTF-8");
 				String styleString = contentWhole.replaceFirst("(?s)(?i).*?(<style>)(.*?)</style>.*", "$2");
-				bodyRaw = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
+				bodyString = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
+				bodyString = processStyle(bodyString);
 				FileUtils.writeStringToFile(styleFile, styleString, "UTF-8");
-				FileUtils.writeStringToFile(bodyFile, bodyRaw, "UTF-8");
+				FileUtils.writeStringToFile(bodyFile, bodyString, "UTF-8");
 			} else {
-				bodyRaw = FileUtils.readFileToString(bodyFile, "UTF-8");
+				bodyString = FileUtils.readFileToString(bodyFile, "UTF-8");
 			}
 
 			// check first page existence
 			File firstPageFile = new File(rcUtil.getParseDir(rid) + "1.html");
-			String bodyString = bodyRaw;
-			bodyString = processStyle(bodyString);
 
 			// split all pages
 			if (!firstPageFile.isFile()) {
