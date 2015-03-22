@@ -106,6 +106,42 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		// TODO
 	}
+	
+	@Override
+	public PageVo<WordVo> convertWord2HtmlAll(String rid) throws DocServiceException{
+		try {
+			convert(rid);
+			File htmlFile = new File(rcUtil.getParsePathOfHtml(rid));
+			
+			// check body
+			File bodyFile = new File(rcUtil.getParseDir(rid) + "body.html");
+			File styleFile = new File(rcUtil.getParseDir(rid) + "style.css");
+			String bodyString;
+			if (!bodyFile.isFile()) {
+				String contentWhole = FileUtils.readFileToString(htmlFile, "UTF-8");
+				String styleString = contentWhole.replaceFirst("(?s)(?i).*?(<style>)(.*?)</style>.*", "$2");
+				bodyString = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
+				bodyString = processStyle(bodyString);
+				FileUtils.writeStringToFile(styleFile, styleString, "UTF-8");
+				FileUtils.writeStringToFile(bodyFile, bodyString, "UTF-8");
+			} else {
+				bodyString = FileUtils.readFileToString(bodyFile, "UTF-8");
+			}
+
+			bodyString = processImageUrl(rcUtil.getParseUrlDir(rid), bodyString);
+			
+			List<WordVo> data = new ArrayList<WordVo>();
+			WordVo word = new WordVo();
+			word.setContent(bodyString);
+			data.add(word);
+			PageVo<WordVo> page = new PageVo<WordVo>(data, 1);
+			page.setStyleUrl(rcUtil.getParseUrlDir(rid) + "style.css");
+			return page;
+		} catch (Exception e) {
+			logger.error("convertWord2Html error: " + e.getMessage());
+			throw new DocServiceException(e.getMessage(), e);
+		}
+	}
 
 	@Override
 	public PageVo<WordVo> convertWord2Html(String rid, int start, int limit) throws DocServiceException{
@@ -248,7 +284,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			// construct vo
 			for (int i = 0; i < pages.size(); i++) {
 				WordVo word = new WordVo();
-				word.setContent("<div id=\"" + (start + i) + "\" class=\"scroll-page\" contenteditable=\"true\">" + pages.get(i) + "</div>");
+				word.setContent("<div id=\"" + (start + i) + "\" class=\"scroll-page\" >" + pages.get(i) + "</div>");
 				data.add(word);
 			}
 			PageVo<WordVo> page = new PageVo<WordVo>(data, totalPageCount);

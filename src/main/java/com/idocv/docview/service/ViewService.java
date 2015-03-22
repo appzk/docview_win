@@ -38,6 +38,14 @@ public interface ViewService {
 	 * Word page.
 	 * 
 	 * @param rid
+	 * @return
+	 */
+	PageVo<WordVo> convertWord2HtmlAll(String rid) throws DocServiceException;
+	
+	/**
+	 * Word page.
+	 * 
+	 * @param rid
 	 * @param start
 	 * @param limit
 	 * @return

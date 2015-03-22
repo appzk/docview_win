@@ -1,18 +1,28 @@
 package com.idocv.docview.controller;
 
 
+import java.io.Serializable;
+
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.idocv.docview.common.ViewType;
+import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.EditService;
 import com.idocv.docview.service.ViewService;
+import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.vo.DocVo;
+import com.idocv.docview.vo.PageVo;
+import com.idocv.docview.vo.ViewBaseVo;
 
 
 @Controller
@@ -22,20 +32,25 @@ public class EditController {
 	private static final Logger logger = LoggerFactory.getLogger(EditController.class);
 
 	@Resource
-	private ViewService previewService;
+	private DocService docService;
+
+	@Resource
+	private ViewService viewService;
 	
 	@Resource
 	private EditService editService;
 
+	// TODO
+	// Etherpad ref: https://github.com/ether/etherpad-lite
+
 	/**
-	 * 加载Etherpad编辑器
-	 * ref: https://github.com/ether/etherpad-lite
+	 * 加载编辑页面
 	 * 
 	 * @param uuid
 	 * @return
 	 */
 	@RequestMapping("{uuid}")
-	public String loadEditor(@PathVariable(value = "uuid") String uuid) {
+	public String load(@PathVariable(value = "uuid") String uuid) {
 		try {
 			// Check doc type
 			if (!uuid.endsWith(ViewType.WORD.getSymbol())) {
@@ -45,23 +60,57 @@ public class EditController {
 			// Check user
 			// TODO
 
-			// Load editor
-			String htmlBody = editService.getHtmlBody(uuid);
-//			EPLiteClient client = new EPLiteClient("http://edit.idocv.com", "BVuGNrqJxvBZOS4F3VQ2WQXNT2ntRiTy");
-			try {
-				// Create pad and set text
-//				client.createPad(uuid);
-				htmlBody = "<div>" + htmlBody + "</div>";
-				htmlBody = StringEscapeUtils.unescapeHtml(htmlBody);
-//				client.setHTML(uuid, htmlBody);
-			} catch (Exception e) {
-				logger.info("Etherpad(" + uuid + ") already exist.");
-			}
-			return "redirect:http://edit.idocv.com/p/" + uuid;
+			return "word/edit";
 		} catch (Exception e) {
 			logger.error("Load editor error: ", e);
 			return "{\"error\":" + e.getMessage() + "}";
 		}
+	}
+
+	/**
+	 * 加载数据
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("{uuid}.json")
+	public PageVo<? extends Serializable> loadJson(@PathVariable(value = "uuid") String uuid) {
+		PageVo<? extends Serializable> page = null;
+		String rid = null;
+		try {
+			DocVo docVo = docService.getByUuid(uuid);
+			if (null == docVo || StringUtils.isBlank(docVo.getRid())) {
+				throw new DocServiceException("文档(" + uuid + ")不存在！");
+			}
+			rid = docVo.getRid();
+			String ext = RcUtil.getExt(rid);
+			int accessMode = docVo.getStatus();
+			if (ViewType.WORD == ViewType.getViewType(ext)) {
+				page = viewService.convertWord2HtmlAll(rid);
+			} else {
+				page = new PageVo<ViewBaseVo>(null, 0);
+				page.setCode(0);
+				page.setDesc("该文件不支持在线编辑！");
+			}
+			if (CollectionUtils.isEmpty(page.getData())) {
+				page.setCode(0);
+				page.setDesc("没有可显示的内容！");
+			}
+			page.setName(docVo.getName());
+			page.setRid(docVo.getRid());
+			page.setUuid(docVo.getUuid());
+			page.setMd5(docVo.getMd5());
+			docService.logView(uuid);
+		} catch (Exception e) {
+			logger.error("view id.json(" + uuid + ") error: " + e.getMessage());
+			page = new PageVo<ViewBaseVo>(null, 0);
+			page.setCode(0);
+			page.setDesc(e.getMessage());
+			page.setUuid(uuid);
+			page.setRid(rid);
+		}
+		return page;
 	}
 
 }
