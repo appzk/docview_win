@@ -74,6 +74,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 
 	private @Value("${converter.excel2html}")
 	String excel2Html;
+	
+	private @Value("${converter.excel2pdf}")
+	String excel2Pdf;
 
 	private @Value("${converter.ppt2jpg}")
 	String ppt2Jpg;
@@ -92,6 +95,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 
 	private @Value("${view.page.word.style}")
 	String pageWordStyle;
+	
+	private @Value("${view.page.excel.style}")
+	String pageExcelStyle;
 	
 	private static final String encodingString = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=([^\"^>]+?)\"?>.*";
 	private static final String encodingStringUtf8 = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=[^>]*?utf([^\"^>]+?)\"?>.*";
@@ -420,6 +426,45 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 		} catch (Exception e) {
 			logger.error("convertExcel2Html(" + rid + ") error: ", e.fillInStackTrace());
 			throw new DocServiceException(e.getMessage());
+		}
+	}
+	
+	@Override
+	public PageVo<ExcelVo> convertExcel2Img(String rid, int start, int limit) throws DocServiceException {
+		try {
+			// get page count
+			File[] pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
+			if (ArrayUtils.isEmpty(pngFiles)) {
+				convert(rid);
+				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
+			}
+			if (ArrayUtils.isEmpty(pngFiles)) {
+				logger.error("convertExcel2Img(" + rid + ") error: 预览失败，该excel文档无法生成目标PNG文件或该文件已损坏！");
+				throw new DocServiceException("预览失败，该excel文档无法生成目标PNG文件或该文件已损坏！");
+			}
+			
+			List<File> pdfPageFiles = new ArrayList<File>();
+			for (File pngFile : pngFiles) {
+				pdfPageFiles.add(pngFile);
+			}
+
+			// sort file
+			Collections.sort(pdfPageFiles, new FileComparator());
+
+			List<ExcelVo> data = new ArrayList<ExcelVo>();
+			if (!CollectionUtils.isEmpty(pdfPageFiles)) {
+				for (int i = 0; i < pdfPageFiles.size(); i++) {
+					ExcelVo pdf = new ExcelVo();
+					String url = rcUtil.getParseUrlDir(rid) + PDF_TO_IMAGE_TYPE + "/" + pdfPageFiles.get(i).getName();
+					pdf.setUrl(url);
+					data.add(pdf);
+				}
+			}
+			PageVo<ExcelVo> page = new PageVo<ExcelVo>(data, pdfPageFiles.size());
+			return page;
+		} catch (Exception e) {
+			logger.error("convertExcel2Img(" + rid + ") error: ", e.fillInStackTrace());
+			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
 
@@ -845,14 +890,46 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					}
 				}
 			} else if (ViewType.EXCEL == ViewType.getViewType(ext)) {
-				if (!destFile.isFile()) {
-					convertResult = CmdUtil.runWindows(excel2Html, src, dest);
-				}
-				if (!destFile.isFile()) {
-					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
-					throw new DocServiceException("对不起，该文档（"
-							+ RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+				if ("pdf".equalsIgnoreCase(pageExcelStyle)) {
+					dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
+					destFile = new File(dest);
+					
+					// two steps to convert EXCEL to PNG
+					// step 1. convert EXCEL to PDF
+					convertResult = CmdUtil.runWindows(excel2Pdf, src, dest);
+					if (!destFile.isFile()) {
+						convertResult += CmdUtil.runWindows(excel2Pdf, src, dest);
+						if (!destFile.isFile()) {
+							logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+							throw new DocServiceException("对不起，该文档（"
+									+ RcUtil.getUuidByRid(uuid)
+									+ "）暂无法预览，详情请联系管理员！");
+						}
+					}
+					
+					// step 2. convert PDF to PNG pictures
+					String pngDestDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
+					String pngDestFirstPage = pngDestDir + "1." + PDF_TO_IMAGE_TYPE;
+					if (!new File(pngDestFirstPage).isFile()) {
+						// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
+						convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a2", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", dest);
+					}
+					if (!new File(pngDestFirstPage).isFile()) {
+						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+						throw new DocServiceException("对不起，该文档（"
+								+ RcUtil.getUuidByRid(rid)
+								+ "）暂无法预览，详情请联系管理员！");
+					}
+				} else {
+					if (!destFile.isFile()) {
+						convertResult = CmdUtil.runWindows(excel2Html, src, dest);
+					}
+					if (!destFile.isFile()) {
+						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+						throw new DocServiceException("对不起，该文档（"
+								+ RcUtil.getUuidByRid(rid)
+								+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					}
 				}
 			} else if (ViewType.PPT == ViewType.getViewType(ext)) {
 				dest = rcUtil.getParseDir(rid);

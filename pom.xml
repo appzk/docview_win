@@ -285,6 +285,7 @@
 				<pom.converter.word2html>/idocv/converter/word2html.exe</pom.converter.word2html>
 				<pom.converter.word2pdf>/idocv/converter/word2pdf.exe</pom.converter.word2pdf>
 				<pom.converter.excel2html>/idocv/converter/excel2html.exe</pom.converter.excel2html>
+				<pom.converter.excel2pdf>/idocv/converter/excel2pdf.exe</pom.converter.excel2pdf>
 				<pom.converter.ppt2jpg>/idocv/converter/ppt2jpg.exe</pom.converter.ppt2jpg>
 				<pom.converter.pdf2img>/idocv/converter/pdf2img/gswin64c.exe</pom.converter.pdf2img>
 				<pom.converter.pdf2html>/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.converter.pdf2html>
@@ -313,6 +314,7 @@
 				<pom.converter.word2html>/idocv/converter/word2html.exe</pom.converter.word2html>
 				<pom.converter.word2pdf>/idocv/converter/word2pdf.exe</pom.converter.word2pdf>
 				<pom.converter.excel2html>/idocv/converter/excel2html.exe</pom.converter.excel2html>
+				<pom.converter.excel2pdf>/idocv/converter/excel2pdf.exe</pom.converter.excel2pdf>
 				<pom.converter.ppt2jpg>/idocv/converter/ppt2jpg.exe</pom.converter.ppt2jpg>
 				<pom.converter.pdf2img>/idocv/converter/pdf2img/gswin64c.exe</pom.converter.pdf2img>
 				<pom.converter.pdf2html>/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.converter.pdf2html>
@@ -341,6 +343,7 @@
 				<pom.converter.word2html>/idocv/converter/word2html.exe</pom.converter.word2html>
 				<pom.converter.word2pdf>/idocv/converter/word2pdf.exe</pom.converter.word2pdf>
 				<pom.converter.excel2html>/idocv/converter/excel2html.exe</pom.converter.excel2html>
+				<pom.converter.excel2pdf>/idocv/converter/excel2pdf.exe</pom.converter.excel2pdf>
 				<pom.converter.ppt2jpg>/idocv/converter/ppt2jpg.exe</pom.converter.ppt2jpg>
 				<pom.converter.pdf2img>/idocv/converter/pdf2img/gswin64c.exe</pom.converter.pdf2img>
 				<pom.converter.pdf2html>/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.converter.pdf2html>
@@ -368,6 +371,7 @@
 				<pom.converter.word2html>/idocv/converter/word2html.exe</pom.converter.word2html>
 				<pom.converter.word2pdf>/idocv/converter/word2pdf.exe</pom.converter.word2pdf>
 				<pom.converter.excel2html>/idocv/converter/excel2html.exe</pom.converter.excel2html>
+				<pom.converter.excel2pdf>/idocv/converter/excel2pdf.exe</pom.converter.excel2pdf>
 				<pom.converter.ppt2jpg>/idocv/converter/ppt2jpg.exe</pom.converter.ppt2jpg>
 				<pom.converter.pdf2img>/idocv/converter/pdf2img/gswin64c.exe</pom.converter.pdf2img>
 				<pom.converter.pdf2html>/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.converter.pdf2html>

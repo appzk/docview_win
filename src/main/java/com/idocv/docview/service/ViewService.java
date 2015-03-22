@@ -73,6 +73,16 @@ public interface ViewService {
 	 * @return
 	 */
 	PageVo<ExcelVo> convertExcel2Html(String rid, int start, int limit) throws DocServiceException;
+	
+	/**
+	 * Excel view (excel -> pdf -> png).
+	 * 
+	 * @param rid
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	PageVo<ExcelVo> convertExcel2Img(String rid, int start, int limit) throws DocServiceException;
 
 	/**
 	 * A PPTVo is one PPT slide.

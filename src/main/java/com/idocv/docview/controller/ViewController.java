@@ -63,6 +63,9 @@ public class ViewController {
 	
 	private @Value("${view.page.word.style}")
 	String pageWordStyle;
+	
+	private @Value("${view.page.excel.style}")
+	String pageExcelStyle;
 
 	@Resource
 	private RcUtil rcUtil;
@@ -152,7 +155,11 @@ public class ViewController {
 				}
 				return model;
 			} else if (uuid.endsWith(ViewType.EXCEL.getSymbol())) {
-				model.setViewName("excel/index");
+				if ("pdf".equalsIgnoreCase(pageExcelStyle)) {
+					model.setViewName("excel/pdf");
+				} else {
+					model.setViewName("excel/index");
+				}
 				return model;
 			} else if (uuid.endsWith(ViewType.PPT.getSymbol())) {
 				if ("3d".equalsIgnoreCase(style)) {
@@ -292,7 +299,11 @@ public class ViewController {
 					page = viewService.convertWord2Html(rid, start, size);
 				}
 			} else if (ViewType.EXCEL == ViewType.getViewType(ext)) {
-				page = viewService.convertExcel2Html(rid, start, size);
+				if ("pdf".equalsIgnoreCase(pageExcelStyle)) {
+					page = viewService.convertExcel2Img(rid, 1, 0);
+				} else {
+					page = viewService.convertExcel2Html(rid, start, size);
+				}
 			} else if (ViewType.PPT == ViewType.getViewType(ext)) {
 				page = viewService.convertPPT2Img(rid, start, size);
 			} else if (ViewType.TXT == ViewType.getViewType(ext)) {
