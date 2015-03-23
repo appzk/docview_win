@@ -2,6 +2,8 @@ package com.idocv.docview.controller;
 
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.idocv.docview.common.ViewType;
@@ -42,6 +45,40 @@ public class EditController {
 
 	// TODO
 	// Etherpad ref: https://github.com/ether/etherpad-lite
+
+	/**
+	 * 保存版本
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("{uuid}/save")
+	public Map<String, String> save(@PathVariable(value = "uuid") String uuid,
+			@RequestParam(value = "body") String body) {
+		Map<String, String> result = new HashMap<String, String>();
+		try {
+			// Check doc type
+			if (!uuid.endsWith(ViewType.WORD.getSymbol())) {
+				throw new Exception("暂时只支持word文档协作编辑！");
+			}
+
+			// Check user
+			// TODO
+
+			// TODO
+			// save the content.
+			editService.save(uuid, body);
+
+			result.put("code", "1");
+			result.put("msg", "success");
+		} catch (Exception e) {
+			logger.error("Load editor error: ", e);
+			result.put("code", "0");
+			result.put("msg", e.getMessage());
+		}
+		return result;
+	}
 
 	/**
 	 * 加载编辑页面
@@ -112,5 +149,4 @@ public class EditController {
 		}
 		return page;
 	}
-
 }

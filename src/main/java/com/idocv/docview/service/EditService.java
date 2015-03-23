@@ -12,6 +12,8 @@ import com.idocv.docview.exception.DocServiceException;
  */
 public interface EditService {
 
+	void save(String uuid, String body) throws DocServiceException;
+
 	/**
 	 * Get the HTML body of a document
 	 * 

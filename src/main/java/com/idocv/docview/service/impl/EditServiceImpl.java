@@ -1,10 +1,13 @@
 package com.idocv.docview.service.impl;
 
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -17,6 +20,7 @@ import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.EditService;
 import com.idocv.docview.service.ViewService;
+import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.PageVo;
 import com.idocv.docview.vo.WordVo;
@@ -28,10 +32,64 @@ public class EditServiceImpl implements EditService {
 	private static final Logger logger = LoggerFactory.getLogger(EditServiceImpl.class);
 
 	@Resource
+	private RcUtil rcUtil;
+
+	@Resource
 	private DocService docService;
 
 	@Resource
-	private ViewService previewService;
+	private ViewService viewService;
+
+	@Override
+	public void save(String uuid, String body) throws DocServiceException {
+		try {
+			int lastVersion = getLatestVersion(uuid);
+			// file NOT exist
+			if (lastVersion < 0) {
+				return;
+			}
+			
+			DocVo vo = docService.getByUuid(uuid);
+			String rid = vo.getRid();
+			File curVerDir = new File(rcUtil.getParseDir(rid) + "v" + (lastVersion + 1));
+			if (!curVerDir.isDirectory()) {
+				curVerDir.mkdirs();
+			}
+			FileUtils.writeStringToFile(new File(curVerDir, "body.html"), body, "UTF-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Get latest version number
+	 * 
+	 * @param uuid
+	 * @return -1: file NOT eixt. 0: exist but NOT have a version. >0: real version number
+	 * @throws DocServiceException
+	 */
+	public int getLatestVersion(String uuid) throws DocServiceException {
+		if (StringUtils.isBlank(uuid)) {
+			return -1;
+		}
+		DocVo vo = docService.getByUuid(uuid);
+		if (null == vo) {
+			return -1;
+		}
+		String rid = vo.getRid();
+		String versionRootDir = rcUtil.getParseDir(rid);
+		String[] fs = new File(versionRootDir).list(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return (null != name && name.matches("v\\d+")) ? true : false;
+			}
+		});
+		if (null == fs || fs.length < 1) {
+			return 0;
+		}
+		return fs.length;
+	}
 
 	@Override
 	public String getHtmlBody(String uuid) throws DocServiceException {
@@ -42,7 +100,7 @@ public class EditServiceImpl implements EditService {
 			throw new DocServiceException("Document(" + uuid + ") NOT found!");
 		}
 		String rid = docVo.getRid();
-		PageVo<WordVo> wordPage = previewService.convertWord2Html(rid, 1, 0);
+		PageVo<WordVo> wordPage = viewService.convertWord2Html(rid, 1, 0);
 		List<WordVo> pageData = wordPage.getData();
 		if (CollectionUtils.isEmpty(pageData)) {
 			logger.error("Document(" + uuid + ") content is empty!");
