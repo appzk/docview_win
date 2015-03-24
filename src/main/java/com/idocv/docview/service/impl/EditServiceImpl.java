@@ -92,6 +92,35 @@ public class EditServiceImpl implements EditService {
 	}
 
 	@Override
+	public String getBody(String uuid, int version) throws DocServiceException {
+		int latestVersion = getLatestVersion(uuid);
+		// file NOT exist
+		if (latestVersion < 0) {
+			return "";
+		}
+		DocVo vo = docService.getByUuid(uuid);
+		String rid = vo.getRid();
+		if (latestVersion == 0) {
+			PageVo<WordVo> pageVo = viewService.convertWord2HtmlAll(rid);
+			if (null != pageVo && org.apache.commons.collections.CollectionUtils.isNotEmpty(pageVo.getData())) {
+				return pageVo.getData().get(0).getContent();
+			}
+		}
+		File latestVerDir = new File(rcUtil.getParseDir(rid) + "v" + latestVersion);
+		File versionFie = new File(latestVerDir + File.separator + "body.html");
+		if (!versionFie.isFile()) {
+			return "";
+		}
+		try {
+			String content = FileUtils.readFileToString(versionFie, "UTF-8");
+			return content;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	@Override
 	public String getHtmlBody(String uuid) throws DocServiceException {
 		// 1. get docVo by uuid
 		DocVo docVo = docService.getByUuid(uuid);

@@ -14,6 +14,8 @@ public interface EditService {
 
 	void save(String uuid, String body) throws DocServiceException;
 
+	String getBody(String uuid, int version) throws DocServiceException;
+
 	/**
 	 * Get the HTML body of a document
 	 * 

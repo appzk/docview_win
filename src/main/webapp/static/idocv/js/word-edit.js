@@ -73,7 +73,19 @@ $(document).ready(function() {
 			
 			// editor
 			$('.span12 .word-page .word-content').attr("contenteditable", true);
-			$('.span12 .word-page .word-content').ckeditor();
+			var editor = $('.span12 .word-page .word-content').ckeditor().editor;
+			// console.log("content: " + editor.getData());
+			/*
+			editor.on('change', function( e ) {
+				console.log('The editor named ' + e.editor.name + ' and the content is: ' + e.editor.getData());
+			});
+			*/
+			editor.on('change', function( e ) {
+				console.log('The editor named ' + e.editor.name + ' and the content is: ' + e.editor.getData());
+				$.post('/edit/' + uuid + '/save', { body: e.editor.getData() }, function( data ) {
+					console.log("return back...");
+				}, "json");
+			});
 			
 			afterLoad();
 		} else {

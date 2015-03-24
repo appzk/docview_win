@@ -1,7 +1,6 @@
 package com.idocv.docview.controller;
 
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +24,7 @@ import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.PageVo;
-import com.idocv.docview.vo.ViewBaseVo;
+import com.idocv.docview.vo.WordVo;
 
 
 @Controller
@@ -112,8 +111,8 @@ public class EditController {
 	 */
 	@ResponseBody
 	@RequestMapping("{uuid}.json")
-	public PageVo<? extends Serializable> loadJson(@PathVariable(value = "uuid") String uuid) {
-		PageVo<? extends Serializable> page = null;
+	public PageVo<WordVo> loadJson(@PathVariable(value = "uuid") String uuid) {
+		PageVo<WordVo> page = null;
 		String rid = null;
 		try {
 			DocVo docVo = docService.getByUuid(uuid);
@@ -125,8 +124,11 @@ public class EditController {
 			int accessMode = docVo.getStatus();
 			if (ViewType.WORD == ViewType.getViewType(ext)) {
 				page = viewService.convertWord2HtmlAll(rid);
+				String content = editService.getBody(uuid, 0);
+				page.getData().get(0).setContent(content);
+				System.out.println("content:\n" + content);
 			} else {
-				page = new PageVo<ViewBaseVo>(null, 0);
+				page = new PageVo<WordVo>(null, 0);
 				page.setCode(0);
 				page.setDesc("该文件不支持在线编辑！");
 			}
@@ -141,7 +143,7 @@ public class EditController {
 			docService.logView(uuid);
 		} catch (Exception e) {
 			logger.error("view id.json(" + uuid + ") error: " + e.getMessage());
-			page = new PageVo<ViewBaseVo>(null, 0);
+			page = new PageVo<WordVo>(null, 0);
 			page.setCode(0);
 			page.setDesc(e.getMessage());
 			page.setUuid(uuid);
