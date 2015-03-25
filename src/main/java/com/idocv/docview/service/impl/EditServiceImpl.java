@@ -69,6 +69,7 @@ public class EditServiceImpl implements EditService {
 	 * @return -1: file NOT eixt. 0: exist but NOT have a version. >0: real version number
 	 * @throws DocServiceException
 	 */
+	@Override
 	public int getLatestVersion(String uuid) throws DocServiceException {
 		if (StringUtils.isBlank(uuid)) {
 			return -1;
@@ -100,13 +101,17 @@ public class EditServiceImpl implements EditService {
 		}
 		DocVo vo = docService.getByUuid(uuid);
 		String rid = vo.getRid();
-		if (latestVersion == 0) {
+
+		version = (version > latestVersion) ? latestVersion : version;
+		version = (version < 0) ? latestVersion : version;
+		if (version == 0) { // original doc
 			PageVo<WordVo> pageVo = viewService.convertWord2HtmlAll(rid);
 			if (null != pageVo && org.apache.commons.collections.CollectionUtils.isNotEmpty(pageVo.getData())) {
 				return pageVo.getData().get(0).getContent();
 			}
 		}
-		File latestVerDir = new File(rcUtil.getParseDir(rid) + "v" + latestVersion);
+
+		File latestVerDir = new File(rcUtil.getParseDir(rid) + "v" + version);
 		File versionFie = new File(latestVerDir + File.separator + "body.html");
 		if (!versionFie.isFile()) {
 			return "";

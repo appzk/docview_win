@@ -14,6 +14,23 @@ public interface EditService {
 
 	void save(String uuid, String body) throws DocServiceException;
 
+	/**
+	 * Get latest version number
+	 * 
+	 * @param uuid
+	 * @return
+	 * @throws DocServiceException
+	 */
+	int getLatestVersion(String uuid) throws DocServiceException;
+
+	/**
+	 * Get BODY string by version
+	 * 
+	 * @param uuid
+	 * @param version -1: latest version, 0: original doc, 1-n: version n
+	 * @return
+	 * @throws DocServiceException
+	 */
 	String getBody(String uuid, int version) throws DocServiceException;
 
 	/**

@@ -111,7 +111,8 @@ public class EditController {
 	 */
 	@ResponseBody
 	@RequestMapping("{uuid}.json")
-	public PageVo<WordVo> loadJson(@PathVariable(value = "uuid") String uuid) {
+	public PageVo<WordVo> loadJson(@PathVariable(value = "uuid") String uuid,
+			@RequestParam(value = "v", defaultValue = "-1") Integer version) {
 		PageVo<WordVo> page = null;
 		String rid = null;
 		try {
@@ -124,7 +125,7 @@ public class EditController {
 			int accessMode = docVo.getStatus();
 			if (ViewType.WORD == ViewType.getViewType(ext)) {
 				page = viewService.convertWord2HtmlAll(rid);
-				String content = editService.getBody(uuid, 0);
+				String content = editService.getBody(uuid, version);
 				page.getData().get(0).setContent(content);
 				System.out.println("content:\n" + content);
 			} else {
@@ -136,10 +137,12 @@ public class EditController {
 				page.setCode(0);
 				page.setDesc("没有可显示的内容！");
 			}
+			int versionCount = editService.getLatestVersion(uuid);
 			page.setName(docVo.getName());
 			page.setRid(docVo.getRid());
 			page.setUuid(docVo.getUuid());
 			page.setMd5(docVo.getMd5());
+			page.setVersionCount(versionCount);
 			docService.logView(uuid);
 		} catch (Exception e) {
 			logger.error("view id.json(" + uuid + ") error: " + e.getMessage());
@@ -150,5 +153,28 @@ public class EditController {
 			page.setRid(rid);
 		}
 		return page;
+	}
+	
+	/**
+	 * 获取文档版本数
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("{uuid}/vcount.json")
+	public Map<String, String> versionCount(@PathVariable(value = "uuid") String uuid) {
+		Map<String, String> result = new HashMap<String, String>();
+		try {
+			int versionCount = editService.getLatestVersion(uuid);
+			result.put("msg", "success");
+			result.put("code", "1");
+			result.put("vercount", "" + versionCount);
+			return result;
+		} catch (DocServiceException e) {
+			result.put("msg", e.getMessage());
+			result.put("code", "0");
+			return result;
+		}
 	}
 }

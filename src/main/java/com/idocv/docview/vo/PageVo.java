@@ -23,6 +23,7 @@ public class PageVo<T> implements Serializable {
 	private List<String> titles;
 	private List<T> data;
 	private String styleUrl;
+	private int versionCount;
 
 	private PageVo() {
 		
@@ -163,6 +164,14 @@ public class PageVo<T> implements Serializable {
 
 	public void setStyleUrl(String styleUrl) {
 		this.styleUrl = styleUrl;
+	}
+
+	public int getVersionCount() {
+		return versionCount;
+	}
+
+	public void setVersionCount(int versionCount) {
+		this.versionCount = versionCount;
 	}
 
 	public static PageVo getErrorPageVo(String message) {
