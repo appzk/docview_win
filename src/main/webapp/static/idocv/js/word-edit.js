@@ -86,10 +86,15 @@ $(document).ready(function() {
 			});
 			*/
 			editor.on('change', function( e ) {
+				$('.save-btn-container').show('slow');
 				console.log('The editor named ' + e.editor.name + ' and the content is: ' + e.editor.getData());
-				$.post('/edit/' + uuid + '/save', { body: e.editor.getData() }, function( data ) {
+			});
+			// save button
+			$('.save-btn-container .btn-save').click(function() {
+				$.post('/edit/' + uuid + '/save', { body: editor.getData() }, function( data ) {
 					console.log("return back...");
 				}, "json");
+				$('.save-btn-container').hide('slow');
 			});
 			
 			// version number

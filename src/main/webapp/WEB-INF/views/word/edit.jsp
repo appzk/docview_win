@@ -66,6 +66,11 @@
           </div>
         </div><!--/span-->
       </div><!--/row-->
+      
+      <!-- SAVE BUTTON HERE -->
+      <div class="save-btn-container" style="position: fixed; text-align: center; bottom: 20px; left: 0px; right: 0px; display: none;">
+        <button class="btn btn-large btn-success btn-save" type="button">&nbsp;&nbsp;保&nbsp;存&nbsp;&nbsp;</button>
+      </div>
 
       <hr>
 
