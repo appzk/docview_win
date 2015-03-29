@@ -29,7 +29,6 @@ $(document).ready(function() {
 			var pages = data.data;
 			var titles = data.titles;
 			var versionCount = data.versionCount;
-			console.log("version count:" + versionCount);
 			totalSize = data.totalSize;
 			if (totalSize < 3) {
 				$('.bottom-paging-progress').hide();
@@ -87,12 +86,12 @@ $(document).ready(function() {
 			*/
 			editor.on('change', function( e ) {
 				$('.save-btn-container').show('slow');
-				console.log('The editor named ' + e.editor.name + ' and the content is: ' + e.editor.getData());
+				// console.log('The editor named ' + e.editor.name + ' and the content is: ' + e.editor.getData());
 			});
 			// save button
 			$('.save-btn-container .btn-save').click(function() {
 				$.post('/edit/' + uuid + '/save', { body: editor.getData() }, function( data ) {
-					console.log("return back...");
+					// save data done!
 				}, "json");
 				$('.save-btn-container').hide('slow');
 			});
