@@ -462,10 +462,8 @@ public class ViewController {
 				throw new DocServiceException("URL上传错误，请提供URL参数！");
 			}
 
-			// url = URLDecoder.decode(url, "UTF-8");
-			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/([^/]+\\.\\w{1,6})")) {
-				name = url.replaceFirst(".*/([^/]+\\.\\w{1,6})", "$1");
-			}
+			// url = URLDecoder.decode(url, "UTF-8");	// 已经decode，无需再次decode
+			
 			if (StringUtils.isBlank(token)) {
 				throw new DocServiceException("URL上传错误，请提供token参数！");
 			}

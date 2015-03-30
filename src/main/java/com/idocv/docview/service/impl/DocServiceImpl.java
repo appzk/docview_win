@@ -193,10 +193,6 @@ public class DocServiceImpl implements DocService {
 				}
 			}
 
-			if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/([^/]+\\.\\w{1,6})")) {
-				name = url.replaceFirst(".*/([^/]+\\.\\w{1,6})", "$1");
-			}
-			
 			byte[] data = null;
 			if (StringUtils.isNotBlank(url) && url.matches("file:/{2,3}(.*)")) {
 				// Local File
@@ -235,13 +231,19 @@ public class DocServiceImpl implements DocService {
 					logger.error("无法访问资源（" + url + "）：" + e.getMessage());
 					throw new DocServiceException("无法访问资源（" + url + "）");
 				}
+				
+				// 获取文件名，优先级：1. 获取直接传入的name参数；2. 获取header里的filename参数；3. 根据url获取文件名
 				String disposition = urlResponse.header("Content-Disposition");
-				if (StringUtils.isNotBlank(disposition)) {
+				if (StringUtils.isBlank(name) && StringUtils.isNotBlank(disposition)) {
 					disposition = new String(disposition.getBytes("ISO-8859-1"), "UTF-8");
+					if (disposition.matches(".*?filename=\"(.*?)\".*")) {
+						name = disposition.replaceFirst(".*?filename=\"(.*?)\".*", "$1");
+					}
 				}
-				if (StringUtils.isBlank(name) && StringUtils.isNotBlank(disposition) && disposition.matches(".*?filename=\"(.*?)\".*")) {
-					name = disposition.replaceFirst(".*?filename=\"(.*?)\".*", "$1");
+				if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/([^/]+\\.\\w{1,6})")) {
+					name = url.replaceFirst(".*/([^/]+\\.\\w{1,6})", "$1");
 				}
+				
 				data = urlResponse.bodyAsBytes();
 			}
 			
