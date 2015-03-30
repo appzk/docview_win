@@ -127,7 +127,6 @@ public class EditController {
 				page = viewService.convertWord2HtmlAll(rid);
 				String content = editService.getBody(uuid, version);
 				page.getData().get(0).setContent(content);
-				System.out.println("content:\n" + content);
 			} else {
 				page = new PageVo<WordVo>(null, 0);
 				page.setCode(0);
