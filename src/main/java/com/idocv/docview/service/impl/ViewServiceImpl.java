@@ -400,9 +400,11 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	public PageVo<ExcelVo> convertExcel2Html(String rid, int start, int limit) throws DocServiceException {
 		try {
 			convert(rid);
-			File rawFilesDir = new File(rcUtil.getParseDir(rid) + "index.files");
+			String subDirName = "index.files";
+			File rawFilesDir = new File(rcUtil.getParseDir(rid) + subDirName);
 			if (!rawFilesDir.isDirectory()) {
-				rawFilesDir = new File(rcUtil.getParseDir(rid) + "index_files");
+				subDirName = "index_files";
+				rawFilesDir = new File(rcUtil.getParseDir(rid) + subDirName);
 			}
 			if (!rawFilesDir.isDirectory()) {
 				logger.error("未找到解析目录(" + rid + ")！");
@@ -442,7 +444,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String sheetFileContent = FileUtils.readFileToString(sheetFiles.get(i), "UTF-8");
 				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+)(>.*</table>).*(?-i)", "$1" + " class=\"table table-condensed table-bordered\"" + "$2");
 				sheetContent = sheetContent.replaceFirst("table-layout:fixed;", "");
-				sheetContent = processImageUrl(rcUtil.getParseUrlDir(rid), sheetContent);
+				sheetContent = processImageUrl(rcUtil.getParseUrlDir(rid) + subDirName + "/", sheetContent);
 				sheetContent = processStyle(sheetContent);
 				// contentList.add(sheetContent);
 
@@ -1073,14 +1075,14 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	 * 			e.g.
 	 * 			<ul>
 	 * 				<li>Word file, use: rcUtil.getParseUrlDir(rid)</li>
-	 * 				<li>Excel sheet file, use: rcUtil.getParseUrlDir(rid) + "index.files/"</li>
+	 * 				<li>Excel sheet file, use: rcUtil.getParseUrlDir(rid) + "index.files/" or "index_files/"</li>
 	 * 			</ul>
 	 * @param content
 	 * @return
 	 */
 	public String processImageUrl(String prefix, String content) throws DocServiceException {
 		String regex = "(?s)(?i)(<img[^>]+?src=\"?)([^>]*?)((index.files[/\\\\])?)([^>]+?>)(?-i)";
-		return content.replaceAll(regex, "$1" + prefix + "$3$5");
+		return content.replaceAll(regex, "$1" + prefix + "$5");
 	}
 	
 	public String processImageUrlOfPdf(String prefix, String content) throws DocServiceException {
