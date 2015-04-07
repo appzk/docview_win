@@ -2,6 +2,7 @@ package com.idocv.docview.service;
 
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.vo.ExcelVo;
+import com.idocv.docview.vo.PPTVo;
 import com.idocv.docview.vo.PageVo;
 import com.idocv.docview.vo.WordVo;
 
@@ -34,4 +35,14 @@ public interface TextService {
 	 * @return
 	 */
 	PageVo<ExcelVo> getExcelText(String rid, int start, int limit) throws DocServiceException;
+	
+	/**
+	 * PPT page.
+	 * 
+	 * @param rid
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	PageVo<PPTVo> getPPTText(String rid, int start, int limit) throws DocServiceException;
 }

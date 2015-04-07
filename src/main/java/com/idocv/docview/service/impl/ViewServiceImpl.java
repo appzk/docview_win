@@ -188,7 +188,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					}
 					
 					// 格式标题，注意正则中间的空格，第一个是160，第二个是32
-					title = StringEscapeUtils.unescapeHtml(title).replaceAll("[\\s \r\n]+", " ").trim();
+					title = StringEscapeUtils.unescapeHtml(title)
+							.replaceAll("[\\s \r\n]+", " ").trim();
 					titles.add(title);
 				}
 				if (anchorContent.length() > 0) {
@@ -313,7 +314,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
 			}
 			if (ArrayUtils.isEmpty(pngFiles)) {
-				logger.error("convertWord2Img(" + rid + ") error: 预览失败，该word文档无法生成目标PNG文件或该文件已损坏！");
+				logger.error("convertWord2Img(" + rid
+						+ ") error: 预览失败，该word文档无法生成目标PNG文件或该文件已损坏！");
 				throw new DocServiceException("预览失败，该word文档无法生成目标PNG文件或该文件已损坏！");
 			}
 			
@@ -476,8 +478,10 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
 			}
 			if (ArrayUtils.isEmpty(pngFiles)) {
-				logger.error("convertExcel2Img(" + rid + ") error: 预览失败，该excel文档无法生成目标PNG文件或该文件已损坏！");
-				throw new DocServiceException("预览失败，该excel文档无法生成目标PNG文件或该文件已损坏！");
+				logger.error("convertExcel2Img(" + rid
+						+ ") error: 预览失败，该excel文档无法生成目标PNG文件或该文件已损坏！");
+				throw new DocServiceException(
+						"预览失败，该excel文档无法生成目标PNG文件或该文件已损坏！");
 			}
 			
 			List<File> pdfPageFiles = new ArrayList<File>();
@@ -532,6 +536,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			
 			Map<String, String> titles = new HashMap<String, String>();
 			Map<String, String> notes = new HashMap<String, String>();
+			Map<String, String> texts = new HashMap<String, String>();
 			for (File slideFile : slide200Files) {
 				if (slideFile.getName().toLowerCase().endsWith("jpg")) {
 					slideImgThumbFiles.add(slideFile);
@@ -541,6 +546,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				} else if (slideFile.getName().toLowerCase().endsWith("title")) {
 					String title = FileUtils.readFileToString(slideFile, "utf-8");
 					titles.put(slideFile.getName(), title);
+				} else if (slideFile.getName().toLowerCase().endsWith("text")) {
+					String text = FileUtils.readFileToString(slideFile, "utf-8");
+					texts.put(slideFile.getName(), text);
 				}
 			}
 			for (File slideFile : slide1024Files) {
@@ -554,10 +562,11 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			Collections.sort(slideImgFiles, new FileComparator());
 
 			List<PPTVo> data = new ArrayList<PPTVo>();
-			if (!CollectionUtils.isEmpty(slideImgThumbFiles)
-					&& !CollectionUtils.isEmpty(slideImgFiles)) {
+			if (!CollectionUtils.isEmpty(slideImgThumbFiles) && !CollectionUtils.isEmpty(slideImgFiles)) {
 				for (int i = 0; i < slideImgThumbFiles.size() && i < slideImgFiles.size(); i++) {
 					PPTVo ppt = new PPTVo();
+
+					// title
 					String title = titles.get("slide" + (i + 1) + ".title");
 					ppt.setTitle(title);
 					String thumbUrl = rcUtil.getParseUrlDir(rid) + IMG_WIDTH_200 + "/" + slideImgThumbFiles.get(i).getName();
@@ -565,8 +574,15 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					ppt.setThumbUrl(thumbUrl);
 					ppt.setUrl(url);
 					ppt.setRatio(ratio);
+
+					// note
 					String note = notes.get("slide" + (i + 1) + ".note");
 					ppt.setNote(note);
+
+					// text
+					String text = texts.get("slide" + (i + 1) + ".text");
+					ppt.setText(text);
+
 					data.add(ppt);
 				}
 			}
@@ -913,7 +929,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
 						throw new DocServiceException("对不起，该文档（"
 								+ RcUtil.getUuidByRid(rid)
-								+ "）暂无法预览，详情请联系管理员！");
+ + "）暂无法预览，详情请联系管理员！");
 					}
 				} else {
 					if (!destFile.isFile()) {
@@ -955,7 +971,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
 						throw new DocServiceException("对不起，该文档（"
 								+ RcUtil.getUuidByRid(rid)
-								+ "）暂无法预览，详情请联系管理员！");
+ + "）暂无法预览，详情请联系管理员！");
 					}
 				} else {
 					if (!destFile.isFile()) {
@@ -972,7 +988,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles())) {
-					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "false", IMG_WIDTH_200);
+					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "true", IMG_WIDTH_200);
 				}
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_1024).listFiles())) {
 					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "false", IMG_WIDTH_1024);

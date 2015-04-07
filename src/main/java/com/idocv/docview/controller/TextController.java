@@ -136,7 +136,7 @@ public class TextController {
 			} else if (ViewType.EXCEL == ViewType.getViewType(ext)) {
 				page = textService.getExcelText(rid, start, size);
 			} else if (ViewType.PPT == ViewType.getViewType(ext)) {
-				page = viewService.convertPPT2Img(rid, start, size);
+				page = textService.getPPTText(rid, start, size);
 			} else if (ViewType.TXT == ViewType.getViewType(ext)) {
 				start = (start - 1) * size + 1;
 				page = viewService.convertTxt2Html(rid, start, size);

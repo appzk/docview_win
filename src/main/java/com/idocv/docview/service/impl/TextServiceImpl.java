@@ -1,13 +1,18 @@
 package com.idocv.docview.service.impl;
 
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -25,6 +30,7 @@ import com.idocv.docview.service.TextService;
 import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.ExcelVo;
+import com.idocv.docview.vo.PPTVo;
 import com.idocv.docview.vo.PageVo;
 import com.idocv.docview.vo.WordVo;
 
@@ -166,6 +172,16 @@ public class TextServiceImpl implements TextService {
 			return page;
 		} catch (Exception e) {
 			logger.error("getExcelText error: " + e.getMessage());
+			throw new DocServiceException(e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public PageVo<PPTVo> getPPTText(String rid, int start, int limit) throws DocServiceException {
+		try {
+			return viewService.convertPPT2Img(rid, 0, 1);
+		} catch (Exception e) {
+			logger.error("getPPTText(" + rid + ") error: ", e.fillInStackTrace());
 			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
