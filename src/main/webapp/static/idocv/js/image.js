@@ -22,8 +22,6 @@ $(document).ready(function() {
 				var page = pages[i];
 				$('.span12').append('<p><img src="' + page.url + '" alt="' + data.name + '" /></p>');
 			}
-			
-			afterLoad();
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}
