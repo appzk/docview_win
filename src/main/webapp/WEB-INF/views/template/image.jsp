@@ -21,6 +21,20 @@
   </head>
 
   <body>
+    <div class="loading-mask" style="display: none;">
+      <div class="loading-zone">
+        <div class="text">正在载入...0%</div>
+        <div class="progress progress-striped active">
+          <div class="bar" style="width: 0%;"></div>
+        </div>
+      </div>
+      <div class="brand">
+        <footer>
+          Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+        </footer>
+      </div>
+    </div>
+    
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -65,6 +79,7 @@
     <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
     <script src="/static/bootstrap/js/bootstrap.min.js?v=${version}"></script>
     <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
+    <script src="/static/idocv/js/progress.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
     <script src="/static/idocv/js/image.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>

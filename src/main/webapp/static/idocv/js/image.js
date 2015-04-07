@@ -22,6 +22,9 @@ $(document).ready(function() {
 				var page = pages[i];
 				$('.span12').append('<p><img src="' + page.url + '" alt="' + data.name + '" /></p>');
 			}
+			
+			// clear progress bar
+			clearProgress();
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}
