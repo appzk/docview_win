@@ -907,7 +907,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					String pngDestFirstPage = pngDestDir + "1." + PDF_TO_IMAGE_TYPE;
 					if (!new File(pngDestFirstPage).isFile()) {
 						// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
-						convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a2", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", dest);
+						convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", dest);
 					}
 					if (!new File(pngDestFirstPage).isFile()) {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
@@ -949,7 +949,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					String pngDestFirstPage = pngDestDir + "1." + PDF_TO_IMAGE_TYPE;
 					if (!new File(pngDestFirstPage).isFile()) {
 						// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
-						convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a2", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", dest);
+						convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", dest);
 					}
 					if (!new File(pngDestFirstPage).isFile()) {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
@@ -988,7 +988,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
 				if (!new File(destFirstPage).isFile()) {
 					// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
-					convertResult = CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a2", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+					convertResult = CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
 				}
 				if (!new File(destFirstPage).isFile()) {
 					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
