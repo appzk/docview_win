@@ -134,11 +134,7 @@ public class TextController {
 				start = (start - 1) * size + 1;
 				page = textService.getWordText(rid, start, size);
 			} else if (ViewType.EXCEL == ViewType.getViewType(ext)) {
-				if ("pdf".equalsIgnoreCase(pageExcelStyle)) {
-					page = viewService.convertExcel2Img(rid, 1, 0);
-				} else {
-					page = viewService.convertExcel2Html(rid, start, size);
-				}
+				page = textService.getExcelText(rid, start, size);
 			} else if (ViewType.PPT == ViewType.getViewType(ext)) {
 				page = viewService.convertPPT2Img(rid, start, size);
 			} else if (ViewType.TXT == ViewType.getViewType(ext)) {
