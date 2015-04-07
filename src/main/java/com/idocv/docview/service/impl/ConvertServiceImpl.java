@@ -58,7 +58,7 @@ public class ConvertServiceImpl implements ConvertService {
 	private CacheDao cacheDao;
 
 	@Resource
-	private ViewService previewService;
+	private ViewService viewService;
 
 	private String rid;
 	
@@ -106,7 +106,7 @@ public class ConvertServiceImpl implements ConvertService {
 					try {
 						String rid = convertQueue.take();
 						logger.info("[CONVERT] start converting(" + rid + ") from convert queue(" + (convertQueue.size() + 1) + ")");
-						ConvertService convertService = new ConvertServiceImpl(previewService, rid);
+						ConvertService convertService = new ConvertServiceImpl(viewService, rid);
 						es.submit(convertService);
 					} catch (Exception e) {
 						logger.error("[CONVERT] take RID from convert queue error: " + e.getMessage());
@@ -117,14 +117,14 @@ public class ConvertServiceImpl implements ConvertService {
 	}
 
 	public ConvertServiceImpl(ViewService previewService, String rid) {
-		this.previewService = previewService;
+		this.viewService = previewService;
 		this.rid = rid;
 	}
 
 	@Override
 	public Boolean call() throws Exception {
 		try {
-			previewService.convert(rid);
+			viewService.convert(rid);
 		} catch (Exception e) {
 			logger.warn("[CONVERT] convert(" + rid + ") task fail: " + e.getMessage());
 			return false;
@@ -157,7 +157,7 @@ public class ConvertServiceImpl implements ConvertService {
 			return;
 		}
 
-		ConvertService convertService = new ConvertServiceImpl(previewService, rid);
+		ConvertService convertService = new ConvertServiceImpl(viewService, rid);
 		es.submit(convertService);
 		return;
 	}

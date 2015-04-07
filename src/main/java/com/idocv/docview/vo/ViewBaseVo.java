@@ -7,6 +7,11 @@ public class ViewBaseVo implements Serializable {
 
 	protected String title;
 	protected String content;
+	
+	/**
+	 * content without style tag(s), for index
+	 */
+	protected String text;
 	protected String url;
 	protected File destFile;
 	protected int viewCount;
@@ -26,6 +31,14 @@ public class ViewBaseVo implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	public String getUrl() {
