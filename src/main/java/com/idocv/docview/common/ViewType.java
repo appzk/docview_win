@@ -112,7 +112,39 @@ public enum ViewType {
 		return this.symbol;
 	}
 
-	public static ViewType getViewType(String ext) {
+	/**
+	 * Get ViewType by symbol: w, x, p, f, t, i, a, v, o
+	 * 
+	 * @param symbol
+	 * @return
+	 */
+	public static ViewType getViewTypeBySymbol(String symbol) {
+		if (StringUtils.isBlank(symbol)) {
+			return ViewType.OTHER;
+		}
+		symbol = symbol.toLowerCase();
+		if (ViewType.WORD.extSet.contains(symbol)) {
+			return ViewType.WORD;
+		} else if (ViewType.EXCEL.symbol.equals(symbol)) {
+			return ViewType.EXCEL;
+		} else if (ViewType.PPT.symbol.equals(symbol)) {
+			return ViewType.PPT;
+		} else if (ViewType.PDF.symbol.equals(symbol)) {
+			return ViewType.PDF;
+		} else if (ViewType.TXT.symbol.equals(symbol)) {
+			return ViewType.TXT;
+		} else if (ViewType.IMG.symbol.equals(symbol)) {
+			return ViewType.IMG;
+		} else if (ViewType.AUDIO.symbol.equals(symbol)) {
+			return ViewType.AUDIO;
+		} else if (ViewType.VIDEO.symbol.equals(symbol)) {
+			return ViewType.VIDEO;
+		} else {
+			return ViewType.OTHER;
+		}
+	}
+
+	public static ViewType getViewTypeByExt(String ext) {
 		if (StringUtils.isBlank(ext)) {
 			return ViewType.OTHER;
 		}
@@ -140,7 +172,9 @@ public enum ViewType {
 
 	public static void main(String[] args) {
 		String ext = "jpeg";
-		System.out.println("ext symbol: " + ViewType.getViewType(ext));
-		System.out.println(ViewType.WORD == ViewType.getViewType("pdf"));
+		System.out.println("ext symbol: " + ViewType.getViewTypeByExt(ext));
+		System.out.println(ViewType.WORD == ViewType.getViewTypeByExt("pdf"));
+
+		System.out.println(ViewType.getViewTypeBySymbol("a"));
 	}
 }

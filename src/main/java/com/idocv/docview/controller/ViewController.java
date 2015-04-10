@@ -291,28 +291,28 @@ public class ViewController {
 					throw new DocServiceException("该会话和文档不一致，无法预览！");
 				}
 			}
-			if (ViewType.WORD == ViewType.getViewType(ext)) {
+			if (ViewType.WORD == ViewType.getViewTypeByExt(ext)) {
 				start = (start - 1) * size + 1;
 				if ("pdf".equalsIgnoreCase(pageWordStyle)) {
 					page = viewService.convertWord2Img(rid, 1, 0);
 				} else {
 					page = viewService.convertWord2Html(rid, start, size);
 				}
-			} else if (ViewType.EXCEL == ViewType.getViewType(ext)) {
+			} else if (ViewType.EXCEL == ViewType.getViewTypeByExt(ext)) {
 				if ("pdf".equalsIgnoreCase(pageExcelStyle)) {
 					page = viewService.convertExcel2Img(rid, 1, 0);
 				} else {
 					page = viewService.convertExcel2Html(rid, start, size);
 				}
-			} else if (ViewType.PPT == ViewType.getViewType(ext)) {
+			} else if (ViewType.PPT == ViewType.getViewTypeByExt(ext)) {
 				page = viewService.convertPPT2Img(rid, start, size);
-			} else if (ViewType.TXT == ViewType.getViewType(ext)) {
+			} else if (ViewType.TXT == ViewType.getViewTypeByExt(ext)) {
 				start = (start - 1) * size + 1;
 				page = viewService.convertTxt2Html(rid, start, size);
-			} else if (ViewType.PDF == ViewType.getViewType(ext)) {
+			} else if (ViewType.PDF == ViewType.getViewTypeByExt(ext)) {
 				// page = previewService.convertPdf2Html(rid, 1, 0);
 				page = viewService.convertPdf2Img(rid, 1, 0);
-			} else if (ViewType.IMG == ViewType.getViewType(ext)) {
+			} else if (ViewType.IMG == ViewType.getViewTypeByExt(ext)) {
 				page = viewService.convertImage2Jpg(rid);
 			} else {
 				page = new PageVo<ViewBaseVo>(null, 0);

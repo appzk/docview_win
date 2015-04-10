@@ -53,7 +53,7 @@ public class RcUtil {
 		Date date = new Date();
 		String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 		String uuid = RandomStringUtils.randomAlphabetic(6);
-		uuid += ViewType.getViewType(ext).getSymbol();
+		uuid += ViewType.getViewTypeByExt(ext).getSymbol();
 		String dateString = new SimpleDateFormat("yyyyMMdd").format(date);
 		String timeString = new SimpleDateFormat("HHmmss").format(date);
 		return appId + SPLIT + dateString + SPLIT + timeString + SPLIT + size + SPLIT + uuid + SPLIT + ext;
