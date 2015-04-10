@@ -144,6 +144,12 @@ public enum ViewType {
 		}
 	}
 
+	/**
+	 * Get ViewType by file extension: doc, docx...
+	 * 
+	 * @param ext
+	 * @return
+	 */
 	public static ViewType getViewTypeByExt(String ext) {
 		if (StringUtils.isBlank(ext)) {
 			return ViewType.OTHER;
