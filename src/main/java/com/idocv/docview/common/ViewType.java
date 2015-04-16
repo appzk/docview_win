@@ -84,6 +84,7 @@ public enum ViewType {
 		IMG.extSet.add("tif");
 
 		AUDIO.extSet.add("mp3");
+		AUDIO.extSet.add("m4a");
 		AUDIO.extSet.add("midi");
 		AUDIO.extSet.add("wma");
 

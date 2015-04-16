@@ -1,6 +1,7 @@
 package com.idocv.docview.service;
 
 import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.vo.AudioVo;
 import com.idocv.docview.vo.ExcelVo;
 import com.idocv.docview.vo.ImgVo;
 import com.idocv.docview.vo.PPTVo;
@@ -133,6 +134,14 @@ public interface ViewService {
 	 */
 	PageVo<ImgVo> convertImage2Jpg(String rid) throws DocServiceException;
 	
+	/**
+	 * Convert Audio to MP3 file.
+	 * 
+	 * @param rid
+	 * @return
+	 */
+	PageVo<AudioVo> convertAudio2Mp3(String rid) throws DocServiceException;
+
 	/**
 	 * Validate client IP
 	 * 

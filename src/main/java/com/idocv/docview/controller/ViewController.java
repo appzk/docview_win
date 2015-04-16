@@ -187,6 +187,9 @@ public class ViewController {
 			} else if (uuid.endsWith(ViewType.TXT.getSymbol())) {
 				model.setViewName("txt/index");
 				return model;
+			} else if (uuid.endsWith(ViewType.AUDIO.getSymbol())) {
+				model.setViewName("audio/index");
+				return model;
 			}
 			if (StringUtils.isNotBlank(thdViewTemplate) && thdViewTemplate.contains(ext)) {
 				// jpg,gif,png,bmp@image#mp3,midi@audio#avi,rmvb,mp4,mkv@video
@@ -314,6 +317,8 @@ public class ViewController {
 				page = viewService.convertPdf2Img(rid, 1, 0);
 			} else if (ViewType.IMG == ViewType.getViewTypeByExt(ext)) {
 				page = viewService.convertImage2Jpg(rid);
+			} else if (ViewType.AUDIO == ViewType.getViewTypeByExt(ext)) {
+				page = viewService.convertAudio2Mp3(rid);
 			} else {
 				page = new PageVo<ViewBaseVo>(null, 0);
 				page.setCode(0);
@@ -462,7 +467,7 @@ public class ViewController {
 				throw new DocServiceException("URL上传错误，请提供URL参数！");
 			}
 
-			// url = URLDecoder.decode(url, "UTF-8");	// 已经decode，无需再次decode
+			// url = URLDecoder.decode(url, "UTF-8"); // 已经decode，无需再次decode
 			
 			if (StringUtils.isBlank(token)) {
 				throw new DocServiceException("URL上传错误，请提供token参数！");
