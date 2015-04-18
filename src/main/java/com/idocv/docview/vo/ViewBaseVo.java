@@ -16,6 +16,10 @@ public class ViewBaseVo implements Serializable {
 	protected File destFile;
 	protected int viewCount;
 	protected int downloadCount;
+	/**
+	 * 创建时间
+	 */
+	private String ctime;
 
 	public String getTitle() {
 		return title;
@@ -71,5 +75,13 @@ public class ViewBaseVo implements Serializable {
 
 	public void setDownloadCount(int downloadCount) {
 		this.downloadCount = downloadCount;
+	}
+
+	public String getCtime() {
+		return ctime;
+	}
+
+	public void setCtime(String ctime) {
+		this.ctime = ctime;
 	}
 }
