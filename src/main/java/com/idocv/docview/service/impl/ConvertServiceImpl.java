@@ -2,9 +2,6 @@ package com.idocv.docview.service.impl;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,7 +28,8 @@ import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.ConvertService;
 import com.idocv.docview.service.ViewService;
-import com.sun.management.OperatingSystemMXBean;
+import com.idocv.docview.util.MemoryUtil;
+import com.idocv.docview.vo.MemoryVo;
 
 @Service
 public class ConvertServiceImpl implements ConvertService {
@@ -85,7 +83,7 @@ public class ConvertServiceImpl implements ConvertService {
 				while (true) {
 					if (convertQueue.isEmpty()) {
 						emptyCheckCount++;
-						logger.info("[CONVERT] convert queue is EMPTY, triggering batch convert...");
+						// logger.info("[CONVERT] convert queue is EMPTY, triggering batch convert...");
 						startBatchConvert();
 						try {
 							Thread.sleep(convertBatchInterval + (2000 * emptyCheckCount));
@@ -185,28 +183,13 @@ public class ConvertServiceImpl implements ConvertService {
 		
 		// check memory usage
 		try {
-			// Heap memory
-			MemoryUsage memoryUsage = memoryMXBean.getHeapMemoryUsage();
-			long init = memoryUsage.getInit();
-			long used = memoryUsage.getUsed();
-			long max = memoryUsage.getMax();
-			double memoryRate = (double) used / max;
-			memoryRate = new BigDecimal(memoryRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
-			
-			// System memory
-			String os = System.getProperty("os.name");
-			OperatingSystemMXBean osmxb = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-			long physicalFree = osmxb.getFreePhysicalMemorySize();
-			long physicalTotal = osmxb.getTotalPhysicalMemorySize();
-			long physicalUse = physicalTotal - physicalFree;
-			double memoryRateSystem = (double) physicalUse / physicalTotal;
-			memoryRateSystem = new BigDecimal(memoryRateSystem).setScale(2, RoundingMode.HALF_UP).doubleValue();
-			
-			if (memoryRate < convertSwitchThresholdMemoryUsage) {
-				logger.info("[SYSTEM LOAD] memory info - HEAP(init|used|max): " + memoryRate + "(" + init + "|" + used + "|" + max + ") - SYSTEM(used|free|total): " + memoryRateSystem + "(" + physicalUse + "|" + physicalFree + "|" + physicalTotal + ")");
+			MemoryVo heapVo = MemoryUtil.getHeapMemoryInfo();
+			MemoryVo systemVo = MemoryUtil.getSystemMemoryInfo();
+			if (heapVo.getRate() < convertSwitchThresholdMemoryUsage) {
+				logger.info("[SYSTEM LOAD] memory info - HEAP(init|used|max): " + heapVo.getRate() + "(" + heapVo.getMin() + "|" + heapVo.getUsed() + "|" + heapVo.getMax() + ") - SYSTEM(used|free|total): " + systemVo.getRate() + "(" + systemVo.getUsed() + "|" + systemVo.getFree() + "|" + systemVo.getMax() + ")");
 			} else {
 				isHighLoad = true;
-				logger.warn("[SYSTEM LOAD] memory info - HEAP(init|used|max): " + memoryRate + "(" + init + "|" + used + "|" + max + ") - SYSTEM(used|free|total): " + memoryRateSystem + "(" + physicalUse + "|" + physicalFree + "|" + physicalTotal + ")");
+				logger.warn("[SYSTEM LOAD] memory info - HEAP(init|used|max): " + heapVo.getRate() + "(" + heapVo.getMin() + "|" + heapVo.getUsed() + "|" + heapVo.getMax() + ") - SYSTEM(used|free|total): " + systemVo.getRate() + "(" + systemVo.getUsed() + "|" + systemVo.getFree() + "|" + systemVo.getMax() + ")");
 			}
 		} catch (Exception e) {
 			logger.error("[SYSTEM LOAD] check memeory usage error: " + e.getMessage());
