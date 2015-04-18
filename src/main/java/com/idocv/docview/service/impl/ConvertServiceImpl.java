@@ -83,7 +83,7 @@ public class ConvertServiceImpl implements ConvertService {
 				while (true) {
 					if (convertQueue.isEmpty()) {
 						emptyCheckCount++;
-						// logger.info("[CONVERT] convert queue is EMPTY, triggering batch convert...");
+						logger.debug("[CONVERT] convert queue is EMPTY, triggering batch convert...");
 						startBatchConvert();
 						try {
 							Thread.sleep(convertBatchInterval + (2000 * emptyCheckCount));
