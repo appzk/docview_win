@@ -31,6 +31,7 @@ import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.ConvertService;
 import com.idocv.docview.service.ViewService;
+import com.sun.management.OperatingSystemMXBean;
 
 @Service
 public class ConvertServiceImpl implements ConvertService {
@@ -172,7 +173,7 @@ public class ConvertServiceImpl implements ConvertService {
 			int countOfFiveMinutes = docDao.countAppDocs(null, null, null, 0, fiveMinutesBack, now);
 			uploadRate = countOfFiveMinutes / 5;
 			if (uploadRate < convertSwitchThresholdUploadFrequency) {
-				logger.info("[SYSTEM LOAD] upload rate: " + uploadRate + "(" + countOfFiveMinutes + "/" + "5)/m");
+				// logger.info("[SYSTEM LOAD] upload rate: " + uploadRate + "(" + countOfFiveMinutes + "/" + "5)/m");
 			} else {
 				isHighLoad = true;
 				logger.warn("[SYSTEM LOAD] upload rate: " + uploadRate + "(" + countOfFiveMinutes + "/" + "5)/m");
@@ -184,17 +185,28 @@ public class ConvertServiceImpl implements ConvertService {
 		
 		// check memory usage
 		try {
+			// Heap memory
 			MemoryUsage memoryUsage = memoryMXBean.getHeapMemoryUsage();
 			long init = memoryUsage.getInit();
 			long used = memoryUsage.getUsed();
 			long max = memoryUsage.getMax();
 			double memoryRate = (double) used / max;
 			memoryRate = new BigDecimal(memoryRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
+			
+			// System memory
+			String os = System.getProperty("os.name");
+			OperatingSystemMXBean osmxb = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+			long physicalFree = osmxb.getFreePhysicalMemorySize();
+			long physicalTotal = osmxb.getTotalPhysicalMemorySize();
+			long physicalUse = physicalTotal - physicalFree;
+			double memoryRateSystem = (double) physicalUse / physicalTotal;
+			memoryRateSystem = new BigDecimal(memoryRateSystem).setScale(2, RoundingMode.HALF_UP).doubleValue();
+			
 			if (memoryRate < convertSwitchThresholdMemoryUsage) {
-				logger.info("[SYSTEM LOAD] memory rate: " + memoryRate + "(" + init + "|" + used + "|" + max + ")");
+				logger.info("[SYSTEM LOAD] memory info - HEAP(init|used|max): " + memoryRate + "(" + init + "|" + used + "|" + max + ") - SYSTEM(used|free|total): " + memoryRateSystem + "(" + physicalUse + "|" + physicalFree + "|" + physicalTotal + ")");
 			} else {
 				isHighLoad = true;
-				logger.warn("[SYSTEM LOAD] memory rate: " + memoryRate + "(" + init + "|" + used + "|" + max + ")");
+				logger.warn("[SYSTEM LOAD] memory info - HEAP(init|used|max): " + memoryRate + "(" + init + "|" + used + "|" + max + ") - SYSTEM(used|free|total): " + memoryRateSystem + "(" + physicalUse + "|" + physicalFree + "|" + physicalTotal + ")");
 			}
 		} catch (Exception e) {
 			logger.error("[SYSTEM LOAD] check memeory usage error: " + e.getMessage());
