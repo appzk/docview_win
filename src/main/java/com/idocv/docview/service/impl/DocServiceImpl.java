@@ -2,8 +2,10 @@ package com.idocv.docview.service.impl;
 
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.NetworkInterface;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -121,7 +123,7 @@ public class DocServiceImpl implements DocService {
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
-	private static final String expireDateString = "2015-04-30 23:59:59";
+	private static final String expireDateString = "2015-07-31 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
@@ -236,8 +238,13 @@ public class DocServiceImpl implements DocService {
 				String disposition = urlResponse.header("Content-Disposition");
 				if (StringUtils.isBlank(name) && StringUtils.isNotBlank(disposition)) {
 					disposition = new String(disposition.getBytes("ISO-8859-1"), "UTF-8");
-					if (disposition.matches(".*?filename=\"(.*?)\".*")) {
-						name = disposition.replaceFirst(".*?filename=\"(.*?)\".*", "$1");
+					if (disposition.matches(".*?filename(\\*)?=(\"|.{1,15}?'')([^\"]*).*")) {
+						name = disposition.replaceFirst(".*?filename(\\*)?=(\"|.{1,15}?'')([^\"]*).*", "$3");
+						try {
+							name = URLDecoder.decode(name, "UTF-8");
+						} catch (UnsupportedEncodingException e) {
+							logger.warn("Decode filename error: " + e.getMessage());
+						}
 					}
 				}
 				if (StringUtils.isBlank(name) && url.contains(".") && url.matches(".*/([^/]+\\.\\w{1,6})")) {
