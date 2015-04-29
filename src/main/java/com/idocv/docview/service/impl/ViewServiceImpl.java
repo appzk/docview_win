@@ -42,6 +42,7 @@ import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.CmdUtil;
 import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.vo.AudioVo;
 import com.idocv.docview.vo.ExcelVo;
 import com.idocv.docview.vo.ImgVo;
 import com.idocv.docview.vo.PPTVo;
@@ -89,6 +90,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 
 	private @Value("${converter.img2jpg}")
 	String img2jpg;
+	
+	private @Value("${converter.audio2mp3}")
+	String audio2mp3;
 
 	private @Value("${converter.pdfsign}")
 	String pdfSign;
@@ -99,9 +103,6 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${view.page.excel.style}")
 	String pageExcelStyle;
 	
-	private static final String encodingString = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=([^\"^>]+?)\"?>.*";
-	private static final String encodingStringUtf8 = "(?s)(?i).*?<meta[^>]+?http-equiv=[^>]+?charset=[^>]*?utf([^\"^>]+?)\"?>.*";
-
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO
@@ -840,6 +841,28 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 		}
 	}
 
+	@Override
+	public PageVo<AudioVo> convertAudio2Mp3(String rid) throws DocServiceException {
+		try {
+			convert(rid);
+			String destPath = rcUtil.getParseDir(rid) + "index.mp3";
+			File destFile = new File(destPath);
+			if (!destFile.isFile()) {
+				throw new DocServiceException("预览失败，未找到目标文件！");
+			}
+
+			List<AudioVo> data = new ArrayList<AudioVo>();
+			AudioVo audioVo = new AudioVo();
+			audioVo.setUrl(rcUtil.getParseUrlDir(rid) + "index.mp3");
+			data.add(audioVo);
+			PageVo<AudioVo> page = new PageVo<AudioVo>(data, 1);
+			return page;
+		} catch (Exception e) {
+			logger.error("convertAudio2Mp3 error: " + e.getMessage());
+			throw new DocServiceException(e.getMessage(), e);
+		}
+	}
+
 	public boolean convert(String rid) throws DocServiceException {
 		String uuid = RcUtil.getUuidByRid(rid);
 		DocPo docPo;
@@ -900,7 +923,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			}
 			docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_CONVERTING);
 			String convertResult = "";
-			if (ViewType.WORD == ViewType.getViewType(ext)) {
+			if (ViewType.WORD == ViewType.getViewTypeByExt(ext)) {
 				if ("pdf".equalsIgnoreCase(pageWordStyle)) {
 					dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
 					destFile = new File(dest);
@@ -942,7 +965,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 								+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 					}
 				}
-			} else if (ViewType.EXCEL == ViewType.getViewType(ext)) {
+			} else if (ViewType.EXCEL == ViewType.getViewTypeByExt(ext)) {
 				if ("pdf".equalsIgnoreCase(pageExcelStyle)) {
 					dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
 					destFile = new File(dest);
@@ -984,7 +1007,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 								+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 					}
 				}
-			} else if (ViewType.PPT == ViewType.getViewType(ext)) {
+			} else if (ViewType.PPT == ViewType.getViewTypeByExt(ext)) {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
 				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles())) {
@@ -999,7 +1022,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 							+ RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
-			} else if (ViewType.PDF == ViewType.getViewType(ext)) {
+			} else if (ViewType.PDF == ViewType.getViewTypeByExt(ext)) {
 				String destDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
 				String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
 				if (!new File(destFirstPage).isFile()) {
@@ -1020,9 +1043,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					logger.info("Convert info: \n" + convertInfo);
 				}
 				*/
-			} else if (ViewType.TXT == ViewType.getViewType(ext)) {
+			} else if (ViewType.TXT == ViewType.getViewTypeByExt(ext)) {
 				// do nothing.
-			} else if (ViewType.IMG == ViewType.getViewType(ext)) {
+			} else if (ViewType.IMG == ViewType.getViewTypeByExt(ext)) {
 				dest = rcUtil.getParseDir(rid);
 				String destName = "index.jpg";
 				if ("png".equalsIgnoreCase(ext)) {
@@ -1040,6 +1063,25 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 							+ convertResult);
 					throw new DocServiceException("对不起，该图片文件（"
 							+ RcUtil.getUuidByRid(rid) + "）暂无法预览，请确认能正常打开！");
+				}
+			} else if (ViewType.AUDIO == ViewType.getViewTypeByExt(ext)) {
+				dest = rcUtil.getParseDir(rid);
+				String destName = "index.mp3";
+				if ("mp3".equalsIgnoreCase(ext)) {
+					FileUtils.copyFile(srcFile, new File(dest, destName));
+				} else {
+					// Convert audio using FFMPEG
+					String destPath = dest + destName;
+					destFile = new File(destPath);
+					if (!destFile.isFile()) {
+						convertResult = CmdUtil.runWindows(audio2mp3, "-i", src, destPath);
+					}
+					if (!destFile.isFile()) {
+						logger.error("[CONVERT ERROR] " + rid + " - "
+								+ convertResult);
+						throw new DocServiceException("对不起，该音频文件（"
+								+ RcUtil.getUuidByRid(rid) + "）暂无法预览，请确认能正常打开！");
+					}
 				}
 			} else {
 				logger.error("目前不支持（" + ext + "）格式！");

@@ -2,9 +2,6 @@ package com.idocv.docview.service.impl;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,6 +28,8 @@ import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.ConvertService;
 import com.idocv.docview.service.ViewService;
+import com.idocv.docview.util.MemoryUtil;
+import com.idocv.docview.vo.MemoryVo;
 
 @Service
 public class ConvertServiceImpl implements ConvertService {
@@ -84,7 +83,7 @@ public class ConvertServiceImpl implements ConvertService {
 				while (true) {
 					if (convertQueue.isEmpty()) {
 						emptyCheckCount++;
-						logger.info("[CONVERT] convert queue is EMPTY, triggering batch convert...");
+						logger.debug("[CONVERT] convert queue is EMPTY, triggering batch convert...");
 						startBatchConvert();
 						try {
 							Thread.sleep(convertBatchInterval + (2000 * emptyCheckCount));
@@ -172,7 +171,7 @@ public class ConvertServiceImpl implements ConvertService {
 			int countOfFiveMinutes = docDao.countAppDocs(null, null, null, 0, fiveMinutesBack, now);
 			uploadRate = countOfFiveMinutes / 5;
 			if (uploadRate < convertSwitchThresholdUploadFrequency) {
-				logger.info("[SYSTEM LOAD] upload rate: " + uploadRate + "(" + countOfFiveMinutes + "/" + "5)/m");
+				// logger.info("[SYSTEM LOAD] upload rate: " + uploadRate + "(" + countOfFiveMinutes + "/" + "5)/m");
 			} else {
 				isHighLoad = true;
 				logger.warn("[SYSTEM LOAD] upload rate: " + uploadRate + "(" + countOfFiveMinutes + "/" + "5)/m");
@@ -184,17 +183,13 @@ public class ConvertServiceImpl implements ConvertService {
 		
 		// check memory usage
 		try {
-			MemoryUsage memoryUsage = memoryMXBean.getHeapMemoryUsage();
-			long init = memoryUsage.getInit();
-			long used = memoryUsage.getUsed();
-			long max = memoryUsage.getMax();
-			double memoryRate = (double) used / max;
-			memoryRate = new BigDecimal(memoryRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
-			if (memoryRate < convertSwitchThresholdMemoryUsage) {
-				logger.info("[SYSTEM LOAD] memory rate: " + memoryRate + "(" + init + "|" + used + "|" + max + ")");
+			MemoryVo heapVo = MemoryUtil.getHeapMemoryInfo();
+			MemoryVo systemVo = MemoryUtil.getSystemMemoryInfo();
+			if (heapVo.getRate() < convertSwitchThresholdMemoryUsage) {
+				logger.info("[SYSTEM LOAD] memory info - HEAP(init|used|max): " + heapVo.getRate() + "(" + heapVo.getMin() + "|" + heapVo.getUsed() + "|" + heapVo.getMax() + ") - SYSTEM(used|free|total): " + systemVo.getRate() + "(" + systemVo.getUsed() + "|" + systemVo.getFree() + "|" + systemVo.getMax() + ")");
 			} else {
 				isHighLoad = true;
-				logger.warn("[SYSTEM LOAD] memory rate: " + memoryRate + "(" + init + "|" + used + "|" + max + ")");
+				logger.warn("[SYSTEM LOAD] memory info - HEAP(init|used|max): " + heapVo.getRate() + "(" + heapVo.getMin() + "|" + heapVo.getUsed() + "|" + heapVo.getMax() + ") - SYSTEM(used|free|total): " + systemVo.getRate() + "(" + systemVo.getUsed() + "|" + systemVo.getFree() + "|" + systemVo.getMax() + ")");
 			}
 		} catch (Exception e) {
 			logger.error("[SYSTEM LOAD] check memeory usage error: " + e.getMessage());

@@ -123,7 +123,7 @@ public class EditController {
 			rid = docVo.getRid();
 			String ext = RcUtil.getExt(rid);
 			int accessMode = docVo.getStatus();
-			if (ViewType.WORD == ViewType.getViewType(ext)) {
+			if (ViewType.WORD == ViewType.getViewTypeByExt(ext)) {
 				page = viewService.convertWord2HtmlAll(rid);
 				String content = editService.getBody(uuid, version);
 				page.getData().get(0).setContent(content);

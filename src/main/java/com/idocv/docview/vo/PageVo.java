@@ -24,6 +24,10 @@ public class PageVo<T> implements Serializable {
 	private List<T> data;
 	private String styleUrl;
 	private int versionCount;
+	/**
+	 * 创建时间
+	 */
+	private String ctime;
 
 	private PageVo() {
 		
@@ -172,6 +176,14 @@ public class PageVo<T> implements Serializable {
 
 	public void setVersionCount(int versionCount) {
 		this.versionCount = versionCount;
+	}
+
+	public String getCtime() {
+		return ctime;
+	}
+
+	public void setCtime(String ctime) {
+		this.ctime = ctime;
 	}
 
 	public static PageVo getErrorPageVo(String message) {

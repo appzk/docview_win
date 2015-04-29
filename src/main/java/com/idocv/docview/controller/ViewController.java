@@ -187,6 +187,9 @@ public class ViewController {
 			} else if (uuid.endsWith(ViewType.TXT.getSymbol())) {
 				model.setViewName("txt/index");
 				return model;
+			} else if (uuid.endsWith(ViewType.AUDIO.getSymbol())) {
+				model.setViewName("audio/index");
+				return model;
 			}
 			if (StringUtils.isNotBlank(thdViewTemplate) && thdViewTemplate.contains(ext)) {
 				// jpg,gif,png,bmp@image#mp3,midi@audio#avi,rmvb,mp4,mkv@video
@@ -291,29 +294,31 @@ public class ViewController {
 					throw new DocServiceException("该会话和文档不一致，无法预览！");
 				}
 			}
-			if (ViewType.WORD == ViewType.getViewType(ext)) {
+			if (ViewType.WORD == ViewType.getViewTypeByExt(ext)) {
 				start = (start - 1) * size + 1;
 				if ("pdf".equalsIgnoreCase(pageWordStyle)) {
 					page = viewService.convertWord2Img(rid, 1, 0);
 				} else {
 					page = viewService.convertWord2Html(rid, start, size);
 				}
-			} else if (ViewType.EXCEL == ViewType.getViewType(ext)) {
+			} else if (ViewType.EXCEL == ViewType.getViewTypeByExt(ext)) {
 				if ("pdf".equalsIgnoreCase(pageExcelStyle)) {
 					page = viewService.convertExcel2Img(rid, 1, 0);
 				} else {
 					page = viewService.convertExcel2Html(rid, start, size);
 				}
-			} else if (ViewType.PPT == ViewType.getViewType(ext)) {
+			} else if (ViewType.PPT == ViewType.getViewTypeByExt(ext)) {
 				page = viewService.convertPPT2Img(rid, start, size);
-			} else if (ViewType.TXT == ViewType.getViewType(ext)) {
+			} else if (ViewType.TXT == ViewType.getViewTypeByExt(ext)) {
 				start = (start - 1) * size + 1;
 				page = viewService.convertTxt2Html(rid, start, size);
-			} else if (ViewType.PDF == ViewType.getViewType(ext)) {
+			} else if (ViewType.PDF == ViewType.getViewTypeByExt(ext)) {
 				// page = previewService.convertPdf2Html(rid, 1, 0);
 				page = viewService.convertPdf2Img(rid, 1, 0);
-			} else if (ViewType.IMG == ViewType.getViewType(ext)) {
+			} else if (ViewType.IMG == ViewType.getViewTypeByExt(ext)) {
 				page = viewService.convertImage2Jpg(rid);
+			} else if (ViewType.AUDIO == ViewType.getViewTypeByExt(ext)) {
+				page = viewService.convertAudio2Mp3(rid);
 			} else {
 				page = new PageVo<ViewBaseVo>(null, 0);
 				page.setCode(0);
@@ -327,6 +332,7 @@ public class ViewController {
 			page.setRid(docVo.getRid());
 			page.setUuid(docVo.getUuid());
 			page.setMd5(docVo.getMd5());
+			page.setCtime(docVo.getCtime());
 			docService.logView(uuid);
 		} catch (Exception e) {
 			logger.error("view id.json(" + id + ") error: " + e.getMessage());
@@ -462,7 +468,7 @@ public class ViewController {
 				throw new DocServiceException("URL上传错误，请提供URL参数！");
 			}
 
-			// url = URLDecoder.decode(url, "UTF-8");	// 已经decode，无需再次decode
+			// url = URLDecoder.decode(url, "UTF-8"); // 已经decode，无需再次decode
 			
 			if (StringUtils.isBlank(token)) {
 				throw new DocServiceException("URL上传错误，请提供token参数！");
