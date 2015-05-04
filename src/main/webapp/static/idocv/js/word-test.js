@@ -24,6 +24,7 @@ $(document).ready(function() {
 			var rid = data.rid;
 			var uuid = data.uuid;
 			var pages = data.data;
+			var titles = data.titles;
 			totalSize = data.totalSize;
 			if (totalSize < 3) {
 				$('.bottom-paging-progress').hide();
@@ -32,6 +33,48 @@ $(document).ready(function() {
 			
 			// title
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
+			
+			// titles - navigation
+			if (!!titles && titles.length > 3) {
+				// Dropdown tabs
+				var isDropDown = titles.length > 5;
+				if (isDropDown) {
+					var dropDownMenu = '<li class="dropdown">' +
+					'<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+					'导航' +
+					'<b class="caret"></b>' +
+					'</a>' +
+					'<ul class="dropdown-menu">' +
+					'<!-- DROP DOWN WORD TAB TITLE(s) HERE -->' +
+					'</ul>' +
+					'</li>';
+					$('.word-tab-title').append(dropDownMenu);
+				}
+				for (i = 0; i < titles.length; i++) {
+					var tt = titles[i];
+					// tab navigation & tab content
+					if (0 == i) {
+						$('.word-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li><a href="#nav-title-' + i + '" data-toggle="tab">' + tt + '</a></li>');
+					} else {
+						$('.word-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li><a href="#nav-title-' + i + '" data-toggle="tab">' + tt + '</a></li>');
+					}
+				}
+				var dropDownMenuHeight = $('.word-tab-title .dropdown-menu').height();
+				var windowHeight = $(window).height();
+				if (dropDownMenuHeight > (windowHeight - 80)) {
+					$('.word-tab-title .dropdown-menu').height(windowHeight - 80);
+					$('.word-tab-title .dropdown-menu').addClass('pre-scrollable');
+				}
+				
+				$('.word-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '') + ' a').click(function(){
+					var id = $(this).attr('href');
+					if (! $(id).length) {
+						// page NOT exist, load all page.
+						loadAllPage();
+					}
+					$('html, body').animate({scrollTop:($(id).position().top + 20)}, 'slow');
+				});
+			}
 			
 			// pages
 			// $('.span12').append('<div class="word-page"><div class="word-content"></div></div>');
@@ -69,7 +112,6 @@ $(document).ready(function() {
 			} else {
 				$("head").append($('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />'));
 			}
-			
 			afterLoad();
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
@@ -116,7 +158,6 @@ $(document).ready(function() {
 				$theCntr.append(item);
 				//newItems.push(item.attr('id'));
 			}
-			alert("theCntr: " + $theCntr);
 			bindBottomPagingProgress();
 			//_addMasonryItem(newItems);
 		});
