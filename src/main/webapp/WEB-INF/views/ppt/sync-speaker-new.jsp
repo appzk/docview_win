@@ -93,6 +93,16 @@
             </select>
           </div>
         </div>
+        
+        <div class="btn-ppt-sync-cmd-container span12 text-center" style="position: fixed; bottom: 10px; left: 0px; z-index: 1000;">
+          <a cmd-string="fullscreen" class="btn btn-large btn-primary btn-cmd" href="#" title="全屏"><i class="icon-fullscreen icon-white"></i></a>
+          <a cmd-string="clear" class="btn btn-large btn-primary btn-cmd" href="#" title="擦除笔迹"><i class="icon-remove icon-white"></i></a>
+          <a cmd-string="left" class="btn btn-large btn-primary btn-cmd" href="#" title="上一页"><i class="icon-chevron-left icon-white"></i></a>
+          <a cmd-string="right" class="btn btn-large btn-primary btn-cmd" href="#" title="下一页"><i class="icon-chevron-right icon-white"></i></a>
+          <select id="page-selector" class="span1" style="width: 60px; margin-top: 10px;">
+            <!-- PAGE NUMBERS HERE -->
+          </select>
+        </div>
       </div>
     </div>
     
@@ -112,7 +122,6 @@
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
     <script src="/static/fullscreen/js/jquery.fullscreen-min.js?v=${version}"></script>
     <script src="/static/draw/js/socket.io.min.js"></script>
-    <script src="/static/idocv/js/ppt.js?v=${version}"></script>
     <script src="/static/idocv/js/ppt-sync-speaker.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
