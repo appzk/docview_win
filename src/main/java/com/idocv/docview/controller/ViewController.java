@@ -177,6 +177,12 @@ public class ViewController {
 				} else if ("audience".equalsIgnoreCase(style)) {
 					model.setViewName("ppt/sync-audience");
 					return model;
+				} else if ("speakernew".equalsIgnoreCase(style)) {
+					model.setViewName("ppt/sync-speaker-new");
+					return model;
+				} else if ("audiencenew".equalsIgnoreCase(style)) {
+					model.setViewName("ppt/sync-audience-new");
+					return model;
 				} else {
 					model.setViewName("ppt/index");
 					return model;
