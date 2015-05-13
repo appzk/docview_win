@@ -1,6 +1,7 @@
 package com.idocv.docview.controller;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
@@ -8,12 +9,17 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +37,23 @@ public class SystemController {
 	
 	private @Value("${data.url}")
 	String dataUrl;
+
+	@ResponseBody
+	@RequestMapping("conf.json")
+	public Map<Object, Object> confJson() {
+		Map<Object, Object> params = new HashMap<Object, Object>();
+		try {
+			Resource resource = new ClassPathResource("/conf.properties");
+			Properties props = PropertiesLoaderUtils.loadProperties(resource);
+			for (Entry<Object, Object> entry : props.entrySet()) {
+				System.out.println("key: " + entry.getKey() + ", value: " + entry.getValue());
+				params.put(entry.getKey(), entry.getValue());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return params;
+	}
 
 	@ResponseBody
 	@RequestMapping("info.json")

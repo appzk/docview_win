@@ -20,7 +20,7 @@
 	<mvc:annotation-driven />
 
 	<mvc:interceptors>
-		<bean class="com.idocv.docview.interceptor.VersionInterceptor" />
+		<bean class="com.idocv.docview.interceptor.ConfInterceptor" />
 	</mvc:interceptors>
 
 	<mvc:view-controller path="/" view-name="index" />
