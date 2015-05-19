@@ -87,8 +87,8 @@
              -->
           </div>
           <!-- ONLY AVAILABLE ON MOBILE -->
-          <div id="btns" class="span12 visible-phone text-center" style="position: fixed; bottom: 10px; left: 0px; z-index: 1000;">
-            <select id="page-selector" class="span1" style="width: 80px; margin-top: 10px;">
+          <div class="span12 visible-phone text-center" style="position: fixed; bottom: 10px; left: 0px; z-index: 1000;">
+            <select class="select-page-selector span1" style="width: 80px; margin-top: 10px;">
               <!-- PAGE NUMBERS HERE -->
             </select>
           </div>

@@ -7,10 +7,10 @@ var slideUrls = new Array();
 var slideThumbUrls = new Array();
 var ratio = 0.75;
 var curSlide = 1;
+var uuid = $.url().segment(2);
+var sessionId = $.url().param('session');
+
 $(document).ready(function() {
-	var uuid = $.url().segment(2);
-	var sessionId = $.url().param('session');
-	
 	$.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
 		var code = data.code;
 		if (1 == code) {
@@ -31,7 +31,7 @@ $(document).ready(function() {
 				slideUrls[i] = page.url;
 				slideThumbUrls[i] = page.thumbUrl;
 				$('.row-fluid .span2').append('<div class="thumbnail" page="' + (i + 1) + '"><img src="' + page.thumbUrl + '"></div>' + (i + 1) + '/' + pages.length + '<br />');
-				$('#page-selector').append('<option>' + (i + 1) + '</option>');
+				$('.select-page-selector').append('<option>' + (i + 1) + '</option>');
 			}
 			
 			$('.slide-img').append('<img src="' + slideUrls[0] + '" class="img-polaroid" style="height: 100%;">');
@@ -39,7 +39,7 @@ $(document).ready(function() {
 			
 			var percent = Math.ceil((curSlide / slideUrls.length) * 100);
 			$('.thumbnail[page="' + curSlide + '"]').addClass('ppt-thumb-border');
-			$('#page-selector').val(curSlide);
+			$('.select-page-selector').val(curSlide);
 			$('.bottom-paging-progress .bar').width('' + percent + '%');
 
 			$('.thumbnail').click(function () {
@@ -70,8 +70,8 @@ $(document).ready(function() {
 		}
 	});
 	
-	$('#page-selector').change(function() {
-		var selectNum = $("#page-selector option:selected").text();
+	$('.select-page-selector').change(function() {
+		var selectNum = $(".select-page-selector option:selected").text();
 		gotoSlide(selectNum);
 	});
 	$('.slide-img .ppt-turn-left-mask').click(function () {
@@ -183,6 +183,6 @@ function gotoSlide(slide) {
 	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
 	$('.thumbnail').removeClass('ppt-thumb-border');
 	$('.thumbnail[page="' + slide + '"]').addClass('ppt-thumb-border');
-	$('#page-selector').val(slide);
+	$('.select-page-selector').val(slide);
 	$('.bottom-paging-progress .bar').width('' + percent + '%');
 }
