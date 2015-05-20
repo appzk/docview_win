@@ -47,32 +47,65 @@ $(document).ready(function() {
 		return false;
 	}
 
-	// receive socket event
-	// speaker does NOT need receive moving event from audience
-
-	// send flip event
-	// Send page turning command
-	$('.btn-cmd').on('click touchstart', function(e) {
-		e.preventDefault();
-		if ($(this).attr('cmd-string')) {
-			var cmdString = $(this).attr('cmd-string');
-			var pageNum = 0;
-			if ('left' == cmdString) {
-				preSlideSync();
-			} else if ('right' == cmdString) {
-				nextSlideSync();
-			} else if ('clear' == cmdString) {
-				socket.emit('clear', {
-					'uuid' : uuid,
-				});
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				// location.reload();
-			}
-			// iosocket.send($(this).attr('data-key'));
+	// receive moving event
+	socket.on('moving', function (data) {
+		var remoteUuid = data.uuid;
+		if (uuid != remoteUuid) {
+			return;
 		}
+		
+		if(! (data.id in clients)){
+			// a new user has come online. create a cursor for them
+			cursors[data.id] = $('<div class="cursor">').appendTo('#cursors');
+		}
+		
+		var absX = data.x * canvas.width;
+		var absY = data.y * canvas.height;
+
+		// Move the mouse pointer
+		cursors[data.id].css({
+			'left' : absX,
+			'top' : absY
+		});
+		
+		// Is the user drawing?
+		if(data.drawing && clients[data.id]){
+			
+			// Draw a line on the canvas. clients[data.id] holds
+			// the previous position of this user's mouse pointer
+			
+			var preAbsX = clients[data.id].x * canvas.width;
+			var preAbsY = clients[data.id].y * canvas.height;
+			drawLine(preAbsX, preAbsY, absX, absY);
+			
+			// save percent points
+			p = {x1:clients[data.id].x, y1:clients[data.id].y, x2:data.x, y2:data.y};
+			lines.push(p);
+		}
+		
+		// Saving the current client state
+		clients[data.id] = data;
+		clients[data.id].updated = $.now();
 	});
 
-	// send draw event
+	// receive flip event
+	socket.on('flip', function (data) {
+		var remoteUuid = data.uuid;
+		if (uuid != remoteUuid) {
+			return;
+		}
+		gotoSlide(data.page);
+	});
+
+	// receive clear event
+	socket.on('clear', function (data) {
+		// TODO
+		// clear canvas
+		var remoteUuid = data.uuid;
+		if (uuid == remoteUuid) {
+			location.reload();
+		}
+	});
 });
 
 // bind canvas event: start -> move -> end
