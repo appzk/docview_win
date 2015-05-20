@@ -272,6 +272,7 @@
 				<!-- Data -->
 				<pom.data.url>http://data.idocv.com/</pom.data.url>
 				<pom.data.dir>/idocv/data/</pom.data.dir>
+				<pom.view.page.ppt.draw.server>http://draw.idocv.com:8997</pom.view.page.ppt.draw.server>
 
 				<!-- Database -->
 				<pom.db.mongodb.ip>localhost</pom.db.mongodb.ip>
@@ -302,6 +303,7 @@
 				<!-- Data -->
 				<pom.data.url>http://west.idocv.com/data/</pom.data.url>
 				<pom.data.dir>/idocv/data/</pom.data.dir>
+				<pom.view.page.ppt.draw.server>http://draw.idocv.com:8997</pom.view.page.ppt.draw.server>
 
 				<!-- Database -->
 				<pom.db.mongodb.ip>localhost</pom.db.mongodb.ip>
@@ -332,6 +334,7 @@
 				<!-- Data -->
 				<pom.data.url>http://127.0.0.1/data/</pom.data.url>
 				<pom.data.dir>/idocv/data/</pom.data.dir>
+				<pom.view.page.ppt.draw.server>http://draw.idocv.com:8997</pom.view.page.ppt.draw.server>
 
 				<!-- Database -->
 				<pom.db.mongodb.ip>localhost</pom.db.mongodb.ip>
@@ -361,6 +364,7 @@
 				<!-- Data -->
 				<pom.data.url>http://data.idocv.com/</pom.data.url>
 				<pom.data.dir>/idocv/data/</pom.data.dir>
+				<pom.view.page.ppt.draw.server>http://draw.idocv.com:8997</pom.view.page.ppt.draw.server>
 
 				<!-- Database -->
 				<pom.db.mongodb.ip>localhost</pom.db.mongodb.ip>
