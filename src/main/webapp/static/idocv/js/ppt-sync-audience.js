@@ -1,143 +1,218 @@
 /**
- * Copyright 2013 I Doc View
+ * Copyright 2015 I Doc View
+ * 
  * @author Godwin <godwin668@gmail.com>
  */
 
-var slideUrls = new Array();
-var slideThumbUrls = new Array();
-var curSlide = 1;
+// predefined params in ppt.js
+// slideUrls, slideThumbUrls, ratio, curSlide, uuid, sessionId
+
+// draw server
+var drawServer = $('.server-param-container :text[key="conf-draw-server"]')
+		.val();
+
+var doc = $(document);
+var win = $(window);
+var canvas;
+var ctx;
+var img;
+
+// all screen lines
+var lines = [];
+
+// Generate an unique ID
+var id = Math.round($.now() * Math.random());
+
+// A flag for drawing activity
+var drawing = false;
+
+var clients = {};
+var cursors = {};
+
+// previous position
+var prev = {};
+// current position
+var curr = {};
+// percent position
+var perc = {};
+// points (from -> to)
+var p;
+
+var socket = io.connect(drawServer);
+
 $(document).ready(function() {
-	var uuid = $.url().segment(2);
-	var sessionId = $.url().param('session');
-	// ﻿var address = 'http://api.idocv.com/view/' + uuid;
-	
-	$.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
-		var code = data.code;
-		if (1 == code) {
-			var rid = data.rid;
-			var uuid = data.uuid;
-			var pages = data.data;
-			
-			// title
-			$('.container-fluid:first .btn:first').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '">' + data.name + '</a>');
-			// $(".qrcode").qrcode(address);
-			
-			// pages
-			for (i = 0; i < pages.length; i++) {
-				var page = pages[i];
-				slideUrls[i] = page.url;
-				slideThumbUrls[i] = page.thumbUrl;
-				$('.row-fluid .span2').append('<div class="thumbnail" page="' + (i + 1) + '"><img src="' + page.thumbUrl + '"></div>' + (i + 1) + '/' + pages.length + '<br />');
-				$('#page-selector').append('<option>' + (i + 1) + '</option>');
+	// Check whether current browser support canvas
+	if (!('getContext' in document.createElement('canvas'))) {
+		alert('Sorry, it looks like your browser does not support canvas!');
+		return false;
+	}
+
+	// receive socket event
+	// speaker does NOT need receive moving event from audience
+
+	// send flip event
+	// Send page turning command
+	$('.btn-cmd').on('click touchstart', function(e) {
+		e.preventDefault();
+		if ($(this).attr('cmd-string')) {
+			var cmdString = $(this).attr('cmd-string');
+			var pageNum = 0;
+			if ('left' == cmdString) {
+				preSlideSync();
+			} else if ('right' == cmdString) {
+				nextSlideSync();
+			} else if ('clear' == cmdString) {
+				socket.emit('clear', {
+					'uuid' : uuid,
+				});
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				// location.reload();
 			}
-			
-			$('.thumbnail').click(function () {
-				var page_num = $(this).attr('page');
-				gotoSlide(page_num);
-				/*
-				$('.slide-img img').fadeOut().attr("src", slideUrls[page_num - 1]).fadeIn();
-				var percent = Math.ceil((page_num / slideUrls.length) * 100);
-				$('.bottom-paging-progress .bar').width('' + percent + '%');
-				curSlide = page_num;
-				*/
+			// iosocket.send($(this).attr('data-key'));
+		}
+	});
+
+	// send draw event
+});
+
+// bind canvas event: start -> move -> end
+function bindCanvasEvent() {
+	// start
+	$('canvas').bind(
+			'mousedown touchstart',
+			function(e) {
+				var type = e.type;
+				var oleft = img.offset().left;
+				var otop = img.offset().top;
+				if ("mousedown" == type) {
+					curr.x = Math.round(e.pageX - oleft);
+					curr.y = Math.round(e.pageY - otop);
+				} else if ("touchstart" == type) {
+					var touch = e.originalEvent.touches[0]
+							|| e.originalEvent.changedTouches[0];
+					curr.x = Math.round(touch.pageX - oleft);
+					curr.y = Math.round(touch.pageY - otop);
+
+					// Move touchstart start position
+					perc.x = (curr.x / canvas.width).toFixed(4);
+					perc.y = (curr.y / canvas.height).toFixed(4);
+					socket.emit('mousemove', {
+						'uuid' : uuid,
+						'x' : perc.x,
+						'y' : perc.y,
+						'drawing' : false,
+						'id' : id
+					});
+				}
+				drawing = true;
+				prev.x = curr.x;
+				prev.y = curr.y;
 			});
-			
-			$('.slide-img').html('<img src="' + pages[0].url + '" class="img-polaroid" style="height: 100%;">');
-			
-			afterLoad();
-		} else {
-			$('.container-fluid .row-fluid').html('<section><div class="alert alert-error">' + data.desc + '</div></section>');
-		}
-		
-		clearProgress();
-	});
-	
-	$('.fullscreen-link').toggle($(document).fullScreen() != null);
-	$('.fullscreen-link').click(function(){
-		$('.slide-img').fullScreen(true);
-	});
-	$(document).bind("fullscreenchange", function() {
-		var isFullscreen = $(document).fullScreen() ? true : false;
-		if (isFullscreen) {
-			$('.slide-img').css('background-color', 'black');
-		} else {
-			$('.slide-img').css('background-color', '');
-		}
-	});
-	
-	$('#page-selector').change(function() {
-		var selectNum = $("#page-selector option:selected").text();
-		gotoSlide(selectNum);
-	});
-	
-	// Swipe method is NOT supported in IE6, so it should be the last one.
-	$('.slide-img').swipeleft(function() { nextSlide(); });
-	$('.slide-img').swiperight(function() { preSlide(); });
-});
 
-$(window).resize(function() {
-	resetImgSize();
-});
+	// move
+	$('canvas').bind(
+			'mousemove touchmove',
+			function(e) {
+				e.preventDefault();
+				var oleft = img.offset().left;
+				var otop = img.offset().top;
+				var type = e.type;
+				if ("mousemove" == type) {
+					curr.x = Math.round(e.pageX - oleft);
+					curr.y = Math.round(e.pageY - otop);
+				} else if ("touchmove" == type) {
+					var touch = e.originalEvent.touches[0]
+							|| e.originalEvent.changedTouches[0];
+					curr.x = Math.round(touch.pageX - oleft);
+					curr.y = Math.round(touch.pageY - otop);
+				}
 
-function resetImgSize() {
-	var leftW = $('.row-fluid .span2').width() + 20;
-	var windowW = $(window).width();
-	if (windowW < 768) {
-		leftW = -40;
-	}
-	var ww = $(window).width() - 90 - leftW;
-	var wh = $(window).height() - 90;
-	var isFullScreen = $(document).fullScreen() ? true : false;
-	if (isFullScreen) {
-		ww = ww + 90 + leftW;
-		wh = wh + 80;
-	}
-	if (ww / wh > 4 / 3) {
-		$('.slide-img').height(wh);
-		$('.slide-img').width(wh * 4 / 3);
-	} else {
-		$('.slide-img').width(ww);
-		$('.slide-img').height(ww * 3 / 4);
-	}
+				perc.x = (curr.x / canvas.width).toFixed(4);
+				perc.y = (curr.y / canvas.height).toFixed(4);
+
+				if (Math.sqrt(Math.pow(prev.x - curr.x, 2)
+						+ Math.pow(prev.y - curr.y, 2)) > 8) {
+					/*
+					 * var p = {x1:prev.x, y1:prev.y, x2:curr.x, y2:curr.y}
+					 * lines.push(p); draw(p); send(JSON.stringify(p)); prev =
+					 * curr;
+					 */
+					socket.emit('mousemove', {
+						'uuid' : uuid,
+						'x' : perc.x,
+						'y' : perc.y,
+						'drawing' : drawing,
+						'id' : id
+					});
+				}
+
+				// Draw a line for the current user's movement, as it is
+				// not received in the socket.on('moving') event above
+
+				if (drawing) {
+
+					drawLine(prev.x, prev.y, curr.x, curr.y);
+
+					// save percent points
+					var prePercX = (prev.x / canvas.width).toFixed(4);
+					var prePercY = (prev.y / canvas.height).toFixed(4);
+					p = {
+						x1 : prePercX,
+						y1 : prePercY,
+						x2 : perc.x,
+						y2 : perc.y
+					};
+					lines.push(p);
+
+					prev.x = curr.x;
+					prev.y = curr.y;
+				}
+			});
+
+	// end
+	doc.bind('mouseup mouseleave touchend touchcancel', function(e) {
+		e.preventDefault();
+		drawing = false;
+	});
 }
 
-$(document).keydown(function(event){
-	if (event.keyCode == 37 || event.keyCode == 38) {
-		preSlide();
-	} else if (event.keyCode == 39 || event.keyCode == 40 || event.keyCode == 32){
-		nextSlide();
-	} else if (event.keyCode == 13) {
-		var isFullscreen = $(document).fullScreen() ? true : false;
-		$('.slide-img').toggleFullScreen();
-	}
-});
-
-function getCurSlide() {
-	return curSlide;
-}
-
-function preSlide() {
+function preSlideSync() {
 	var preSlide = eval(Number(getCurSlide()) - 1);
-	gotoSlide(preSlide);
+	gotoSlideSync(preSlide);
 }
 
-function nextSlide() {
+function nextSlideSync() {
 	var nextSlide = eval(Number(getCurSlide()) + 1);
-	gotoSlide(nextSlide);
+	gotoSlideSync(nextSlide);
 }
 
-function gotoSlide(slide) {
+function gotoSlideSync(slide) {
+	var preSlide = curSlide;
 	var slideSum = slideUrls.length;
 	if (slide <= 0) {
 		slide = 1;
 	} else if (slideSum < slide) {
 		slide = slideSum;
 	}
+	if (preSlide == slide) {
+		return;
+	}
+
 	curSlide = slide;
-	$(".slide-img img").fadeOut(function() {
-		$(this).attr("src", slideUrls[slide - 1]).fadeIn();
-	});
+	/*
+	 * $(".slide-img img").fadeOut(function() { $(this).attr("src",
+	 * slideUrls[slide - 1]).fadeIn(); });
+	 */
+	$(".slide-img img").attr("src", slideUrls[slide - 1]);
 	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
-	$('#page-selector').val(slide);
+	$('.thumbnail').removeClass('ppt-thumb-border');
+	$('.thumbnail[page="' + slide + '"]').addClass('ppt-thumb-border');
+	$('.select-page-selector').val(slide);
 	$('.bottom-paging-progress .bar').width('' + percent + '%');
+
+	// sync flip event to audience
+	socket.emit('flip', {
+		'uuid' : uuid,
+		'page' : curSlide,
+	});
 }

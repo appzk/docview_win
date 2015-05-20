@@ -18,7 +18,6 @@ var ctx;
 var img;
 
 // all screen lines
-var slideurls = [];
 var lines = [];
 
 // Generate an unique ID
