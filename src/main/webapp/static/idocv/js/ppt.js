@@ -32,6 +32,7 @@ $(document).ready(function() {
 				slideThumbUrls[i] = page.thumbUrl;
 				$('.row-fluid .span2').append('<div class="thumbnail" page="' + (i + 1) + '"><img src="' + page.thumbUrl + '"></div>' + (i + 1) + '/' + pages.length + '<br />');
 				$('.select-page-selector').append('<option>' + (i + 1) + '</option>');
+				$('.select-page-selector-sync').append('<option>' + (i + 1) + '</option>');
 			}
 			
 			$('.slide-img').append('<img src="' + slideUrls[0] + '" class="img-polaroid" style="height: 100%;">');

@@ -101,7 +101,7 @@
           <a cmd-string="clear" class="btn btn-large btn-primary btn-cmd" href="#" title="擦除笔迹"><i class="icon-remove icon-white"></i></a>
           <a cmd-string="left" class="btn btn-large btn-primary btn-cmd" href="#" title="上一页"><i class="icon-chevron-left icon-white"></i></a>
           <a cmd-string="right" class="btn btn-large btn-primary btn-cmd" href="#" title="下一页"><i class="icon-chevron-right icon-white"></i></a>
-          <select class="select-page-selector span1" style="width: 60px; margin-top: 10px;">
+          <select class="select-page-selector-sync span1" style="width: 60px; margin-top: 10px;">
             <!-- PAGE NUMBERS HERE -->
           </select>
         </div>

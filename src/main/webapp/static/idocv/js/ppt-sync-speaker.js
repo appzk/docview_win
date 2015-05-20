@@ -71,6 +71,12 @@ $(document).ready(function() {
 			// iosocket.send($(this).attr('data-key'));
 		}
 	});
+	
+	$('.select-page-selector-sync').val(curSlide);
+	$('.select-page-selector-sync').change(function() {
+		var selectNum = $(".select-page-selector-sync option:selected").text();
+		gotoSlideSync(selectNum);
+	});
 
 	// send draw event
 });
