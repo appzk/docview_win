@@ -127,7 +127,7 @@
     <script src="/static/idocv/js/progress.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
     <script src="/static/fullscreen/js/jquery.fullscreen-min.js?v=${version}"></script>
-    <script src="/static/draw/js/socket.io-1.3.5.js"></script>
+    <script src="/static/draw/js/socket.io-1.3.5.js?v=${version}"></script>
     <script src="/static/idocv/js/ppt.js?v=${version}"></script>
     <script src="/static/idocv/js/ppt-sync-speaker.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
