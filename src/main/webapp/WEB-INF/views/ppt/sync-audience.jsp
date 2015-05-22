@@ -78,7 +78,7 @@
           -->
         </div>
         <div class="span9 offset2">
-          <div class="slide-img" style="bottom: 20px; top: 0px; right: 5px; padding-bottom: 10px; position: relative; width: 100%; text-align: center;">
+          <div class="slide-img-container" style="bottom: 20px; top: 0px; right: 5px; padding-bottom: 10px; position: relative; width: 100%; text-align: center;">
             <!-- 
             <img src="" class="img-polaroid" style="max-height: 100%;">
              -->

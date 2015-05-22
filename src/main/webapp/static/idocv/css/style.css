@@ -149,7 +149,7 @@
 	/*	PPT Style
 	/* -------------------------------------------------- */
 	
-	.slide-img {
+	.slide-img-container {
 		margin: 0 auto;
 		bottom: 20px;
 		top: 0px;
@@ -160,7 +160,7 @@
 		text-align: center;
 	}
 
-	.slide-img img {
+	.slide-img-container img {
 		-moz-border-radius: 5px;
 		border-radius: 2px;
 		-moz-box-shadow: 0 0 10px 3px #888;

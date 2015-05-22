@@ -41,6 +41,9 @@ var p;
 var socket = io.connect(drawServer);
 
 $(document).ready(function() {
+	
+	
+	
 	// Check whether current browser support canvas
 	if (!('getContext' in document.createElement('canvas'))) {
 		alert('对不起，您的浏览器不支持画笔同步，推荐您使用新版Chrome或360浏览器！');
@@ -206,10 +209,10 @@ function gotoSlideSync(slide) {
 
 	curSlide = slide;
 	/*
-	 * $(".slide-img img").fadeOut(function() { $(this).attr("src",
+	 * $(".slide-img-container img").fadeOut(function() { $(this).attr("src",
 	 * slideUrls[slide - 1]).fadeIn(); });
 	 */
-	$(".slide-img img").attr("src", slideUrls[slide - 1]);
+	$(".slide-img-container img").attr("src", slideUrls[slide - 1]);
 	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
 	$('.thumbnail').removeClass('ppt-thumb-border');
 	$('.thumbnail[page="' + slide + '"]').addClass('ppt-thumb-border');

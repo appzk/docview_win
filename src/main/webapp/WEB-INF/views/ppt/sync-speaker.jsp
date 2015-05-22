@@ -78,7 +78,7 @@
           -->
         </div>
         <div class="span9 offset2">
-          <div class="slide-img">
+          <div class="slide-img-container">
             <div class="ppt-turn-left-mask"></div>
             <div class="ppt-turn-right-mask"></div>
             <!-- 
