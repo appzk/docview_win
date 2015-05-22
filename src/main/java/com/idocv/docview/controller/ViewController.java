@@ -180,9 +180,6 @@ public class ViewController {
 				} else if ("audience".equalsIgnoreCase(type)) {
 					model.setViewName("ppt/sync-audience");
 					return model;
-				} else if ("speakernew".equalsIgnoreCase(type)) {
-					model.setViewName("ppt/sync-speaker-new");
-					return model;
 				} else if ("audiencenew".equalsIgnoreCase(type)) {
 					model.setViewName("ppt/sync-audience-new");
 					return model;
