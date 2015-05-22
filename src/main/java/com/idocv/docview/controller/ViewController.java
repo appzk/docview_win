@@ -105,7 +105,7 @@ public class ViewController {
 
 	@RequestMapping("{id:\\w{1,31}}")
 	public ModelAndView page(ModelAndView model,
-			@RequestParam(defaultValue = "default") String style,
+			@RequestParam(defaultValue = "default") String type,
 			@PathVariable String id,
 			@RequestParam(defaultValue = "1") int start,
 			@RequestParam(defaultValue = "5") int size) {
@@ -148,9 +148,9 @@ public class ViewController {
 				} else {
 					model.setViewName("word/index");
 				}
-				if ("test".equals(style)) {
+				if ("test".equals(type)) {
 					model.setViewName("word/test");
-				} else if ("watermark".equals(style)) {
+				} else if ("watermark".equals(type)) {
 					model.setViewName("word/test_wartermark");
 				}
 				return model;
@@ -162,28 +162,28 @@ public class ViewController {
 				}
 				return model;
 			} else if (uuid.endsWith(ViewType.PPT.getSymbol())) {
-				if ("3d".equalsIgnoreCase(style)) {
+				if ("3d".equalsIgnoreCase(type)) {
 					model.setViewName("ppt/index");
 					return model;
-				} else if ("carousel".equalsIgnoreCase(style)) {
+				} else if ("carousel".equalsIgnoreCase(type)) {
 					model.setViewName("ppt/carousel");
 					return model;
-				} else if ("test".equalsIgnoreCase(style)) {
+				} else if ("test".equalsIgnoreCase(type)) {
 					model.setViewName("ppt/test");
 					return model;
-				} else if ("entry".equalsIgnoreCase(style)) {
+				} else if ("entry".equalsIgnoreCase(type)) {
 					model.setViewName("ppt/sync-main");
 					return model;
-				} else if ("speaker".equalsIgnoreCase(style)) {
+				} else if ("speaker".equalsIgnoreCase(type)) {
 					model.setViewName("ppt/sync-speaker");
 					return model;
-				} else if ("audience".equalsIgnoreCase(style)) {
+				} else if ("audience".equalsIgnoreCase(type)) {
 					model.setViewName("ppt/sync-audience");
 					return model;
-				} else if ("speakernew".equalsIgnoreCase(style)) {
+				} else if ("speakernew".equalsIgnoreCase(type)) {
 					model.setViewName("ppt/sync-speaker-new");
 					return model;
-				} else if ("audiencenew".equalsIgnoreCase(style)) {
+				} else if ("audiencenew".equalsIgnoreCase(type)) {
 					model.setViewName("ppt/sync-audience-new");
 					return model;
 				} else {
