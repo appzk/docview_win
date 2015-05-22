@@ -87,7 +87,23 @@
             <div class="audience-link-container"></div>
           </div>
         </div>
+        <div class="span12">
+          <br /><br />
+          <h4>说明</h4>
+          >>> 在一个小组或一个会场进行幻灯片同步在线预览。演讲者翻页、画笔标记等都会同步展示到听众的终端浏览器页面。
+          
+          <br />
+          <h4>使用帮助</h4>
+          >>> 演讲者进入演讲视图，听众进入听众视图。演讲者或听众都可以使用手机、平板或电脑等终端设备。通过扫描二维码或直接在浏览器输入对应网址进入对应视图。
+        </div>
       </div>
+      
+      <hr>
+      
+      <footer>
+        Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+      </footer>
+      
     </div>
     
     <!-- JavaSript
