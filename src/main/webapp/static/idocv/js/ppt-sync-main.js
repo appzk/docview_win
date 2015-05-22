@@ -20,8 +20,8 @@ $(document).ready(function() {
 			
 			var host = window.location.host;
 			var pathname = window.location.pathname;
-			var speakerUrl = 'http://' + host + pathname + '?style=speaker';
-			var audienceUrl = 'http://' + host + pathname + '?style=audiencenew';
+			var speakerUrl = 'http://' + host + pathname + '?type=speaker';
+			var audienceUrl = 'http://' + host + pathname + '?type=audiencenew';
 			$('.qrcode-container-speaker').qrcode(speakerUrl);
 			$('.qrcode-container-audience').qrcode(audienceUrl);
 			$('.speaker-link-container').html('链接：' + speakerUrl + '<br />点击<a href="' + speakerUrl + '">进入</a>');
