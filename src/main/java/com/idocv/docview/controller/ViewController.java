@@ -171,6 +171,9 @@ public class ViewController {
 				} else if ("test".equalsIgnoreCase(style)) {
 					model.setViewName("ppt/test");
 					return model;
+				} else if ("entry".equalsIgnoreCase(style)) {
+					model.setViewName("ppt/sync-main");
+					return model;
 				} else if ("speaker".equalsIgnoreCase(style)) {
 					model.setViewName("ppt/sync-speaker");
 					return model;
