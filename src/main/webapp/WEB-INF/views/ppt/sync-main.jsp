@@ -71,19 +71,21 @@
     <div class="container-fluid" style="max-height: 100%;">
       <div class="row-fluid">
         <div class="span12" style="text-align: center;">
-          <h1>幻灯片同步预览</h1>
+          <h1>幻灯片同步在线预览</h1>
         </div>
-        <div class="span6" style="text-align: center;">
-          <h2>演讲者</h2>
-          <div class="qrcode-container-speaker">
+        <div class="span12">
+          <div class="span6" style="text-align: center;">
+            <h2>演讲者</h2>
+            <div class="qrcode-container-speaker">
+            </div>
+            <div class="speaker-link-container"></div>
           </div>
-          <div class="speaker-link-container"></div>
-        </div>
-        <div class="span5" style="text-align: center;">
-          <h2>听众</h2>
-          <div class="qrcode-container-audience">
+          <div class="span6" style="text-align: center;">
+            <h2>听众</h2>
+            <div class="qrcode-container-audience">
+            </div>
+            <div class="audience-link-container"></div>
           </div>
-          <div class="audience-link-container"></div>
         </div>
       </div>
     </div>
