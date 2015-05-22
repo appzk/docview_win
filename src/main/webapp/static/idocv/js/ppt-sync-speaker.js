@@ -43,7 +43,7 @@ var socket = io.connect(drawServer);
 $(document).ready(function() {
 	// Check whether current browser support canvas
 	if (!('getContext' in document.createElement('canvas'))) {
-		alert('Sorry, it looks like your browser does not support canvas!');
+		alert('对不起，您的浏览器不支持画笔同步，推荐您使用新版Chrome或360浏览器！');
 		return false;
 	}
 
