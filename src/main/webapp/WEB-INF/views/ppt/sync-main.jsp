@@ -77,11 +77,13 @@
           <h2>演讲者</h2>
           <div class="qrcode-container-speaker">
           </div>
+          <div class="speaker-link-container"></div>
         </div>
         <div class="span5" style="text-align: center;">
           <h2>听众</h2>
           <div class="qrcode-container-audience">
           </div>
+          <div class="audience-link-container"></div>
         </div>
       </div>
     </div>

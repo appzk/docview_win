@@ -20,8 +20,14 @@ $(document).ready(function() {
 			
 			var host = window.location.host;
 			var pathname = window.location.pathname;
-			$('.qrcode-container-speaker').qrcode("http://" + host + pathname + '?style=speaker');
-			$('.qrcode-container-audience').qrcode("http://" + host + pathname + '?style=audiencenew');
+			var speakerUrl = 'http://' + host + pathname + '?style=speaker';
+			var audienceUrl = 'http://' + host + pathname + '?style=audiencenew';
+			$('.qrcode-container-speaker').qrcode(speakerUrl);
+			$('.qrcode-container-audience').qrcode(audienceUrl);
+			$('.speaker-link-container').html('链接：' + speakerUrl + '<br />点击<a href="' + speakerUrl + '">进入</a>');
+			$('.audience-link-container').html('链接：' + audienceUrl + '<br />点击<a href="' + audienceUrl + '">进入</a>');
+			
+			
 		} else {
 			$('.container-fluid .row-fluid').html('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}
