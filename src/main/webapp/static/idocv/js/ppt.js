@@ -185,5 +185,6 @@ function gotoSlide(slide) {
 	$('.thumbnail').removeClass('ppt-thumb-border');
 	$('.thumbnail[page="' + slide + '"]').addClass('ppt-thumb-border');
 	$('.select-page-selector').val(slide);
+	$('.select-page-selector-sync').val(slide);
 	$('.bottom-paging-progress .bar').width('' + percent + '%');
 }
