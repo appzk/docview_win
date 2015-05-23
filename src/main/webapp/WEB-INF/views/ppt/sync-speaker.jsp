@@ -78,9 +78,11 @@
           -->
         </div>
         <div class="span9 offset2">
-          <div class="slide-img-container">
+          <div class="slide-img-container-sync">
+            <!-- remove page turning mask in speaker view.
             <div class="ppt-turn-left-mask"></div>
             <div class="ppt-turn-right-mask"></div>
+             -->
             <!-- 
             <img src="" class="img-polaroid" style="max-height: 100%;">
              -->

@@ -42,13 +42,26 @@ var socket = io.connect(drawServer);
 
 $(document).ready(function() {
 	
-	
-	
 	// Check whether current browser support canvas
 	if (!('getContext' in document.createElement('canvas'))) {
 		alert('对不起，您的浏览器不支持画笔同步，推荐您使用新版Chrome或360浏览器！');
 		return false;
 	}
+	
+	// set img & canvas
+	var imgHtml = '<img id="slide-img-0" src="' + slideUrls[0] + '" class="img-polaroid" style="height: 100%;">';
+	var canvasHtml = '<canvas id="slide-canvas-0" style="width: 100%; height: 100%; border: 1px solid orange; position: absolute; left: 1px; top: 0px; z-index: 1000;">您的浏览器不支持画布！</canvas>';
+	$('.slide-img-container-sync').html(imgHtml + canvasHtml);
+	resetImgSizeSync();
+	
+    canvas = document.getElementById('slide-canvas-0');
+	ctx = canvas.getContext("2d");
+	ctx.strokeStyle = 'red';
+    ctx.lineWidth = "2";
+    ctx.lineCap = "round";
+	img = $('#slide-img-0');
+	
+	bindCanvasEvent();
 
 	// receive socket event
 	// speaker does NOT need receive moving event from audience
@@ -185,6 +198,43 @@ function bindCanvasEvent() {
 	});
 }
 
+function drawLine(fromx, fromy, tox, toy){
+	ctx.moveTo(fromx, fromy);
+	ctx.lineTo(tox, toy);
+	/*
+	ctx.strokeStyle = 'red';
+    ctx.lineWidth = "10";
+    ctx.lineCap = "round";
+    */
+	ctx.stroke();
+}
+
+$(window).resize(function() {
+	resetImgSizeSync();
+});
+
+function resetImgSizeSync() {
+	var leftW = $('.row-fluid .span2').width() + 20;
+	var windowW = $(window).width();
+	if (windowW < 768) {
+		leftW = -40;
+	}
+	var ww = $(window).width() - 90 - leftW;
+	var wh = $(window).height() - 90;
+	var isFullScreen = $(document).fullScreen() ? true : false;
+	if (isFullScreen) {
+		ww = ww + 90 + leftW;
+		wh = wh + 80;
+	}
+	if (wh / ww < ratio) {
+		$('.slide-img-container-sync').height(wh);
+		$('.slide-img-container-sync').width(wh / ratio);
+	} else {
+		$('.slide-img-container-sync').width(ww);
+		$('.slide-img-container-sync').height(ww * ratio);
+	}
+}
+
 function preSlideSync() {
 	var preSlide = eval(Number(getCurSlide()) - 1);
 	gotoSlideSync(preSlide);
@@ -209,10 +259,10 @@ function gotoSlideSync(slide) {
 
 	curSlide = slide;
 	/*
-	 * $(".slide-img-container img").fadeOut(function() { $(this).attr("src",
+	 * $(".slide-img-container-sync img").fadeOut(function() { $(this).attr("src",
 	 * slideUrls[slide - 1]).fadeIn(); });
 	 */
-	$(".slide-img-container img").attr("src", slideUrls[slide - 1]);
+	$(".slide-img-container-sync img").attr("src", slideUrls[slide - 1]);
 	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
 	$('.thumbnail').removeClass('ppt-thumb-border');
 	$('.thumbnail[page="' + slide + '"]').addClass('ppt-thumb-border');
