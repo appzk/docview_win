@@ -43,9 +43,11 @@ var socket = io.connect(drawServer);
 $(document).ready(function() {
 	// Check whether current browser support canvas
 	if (!('getContext' in document.createElement('canvas'))) {
-		alert('Sorry, it looks like your browser does not support canvas!');
+		alert('对不起，您的浏览器不支持画笔同步，推荐您使用新版Chrome或360浏览器！');
 		return false;
 	}
+	
+	gotoSlideSync(1);
 
 	// receive moving event
 	socket.on('moving', function (data) {
@@ -94,7 +96,7 @@ $(document).ready(function() {
 		if (uuid != remoteUuid) {
 			return;
 		}
-		gotoSlide(data.page);
+		gotoSlideSync(data.page);
 	});
 
 	// receive clear event
@@ -106,4 +108,115 @@ $(document).ready(function() {
 			location.reload();
 		}
 	});
+	
+	$('.select-page-selector-sync').val(curSlide);
+	$('.select-page-selector-sync').change(function() {
+		var selectNum = $(".select-page-selector-sync option:selected").text();
+		gotoSlideSync(selectNum);
+	});
+	$('.thumbnail').click(function () {
+		var page_num = $(this).attr('page');
+		gotoSlideSync(page_num);
+	});
 });
+
+function drawLine(fromx, fromy, tox, toy){
+	ctx.moveTo(fromx, fromy);
+	ctx.lineTo(tox, toy);
+	/*
+	ctx.strokeStyle = 'red';
+    ctx.lineWidth = "10";
+    ctx.lineCap = "round";
+    */
+	ctx.stroke();
+}
+
+$(window).resize(function() {
+	resetImgSizeSync();
+});
+
+function resetImgSizeSync() {
+	var leftW = $('.row-fluid .span2').width() + 20;
+	var windowW = $(window).width();
+	if (windowW < 768) {
+		leftW = -40;
+	}
+	var ww = $(window).width() - 90 - leftW;
+	var wh = $(window).height() - 90;
+	var isFullScreen = $(document).fullScreen() ? true : false;
+	if (isFullScreen) {
+		ww = ww + 90 + leftW;
+		wh = wh + 80;
+	}
+	if (wh / ww < ratio) {
+		$('.slide-img-container-sync').width(wh / ratio);
+		$('.slide-img-container-sync').height(wh);
+	} else {
+		$('.slide-img-container-sync').width(ww);
+		$('.slide-img-container-sync').height(ww * ratio);
+	}
+	$('.slide-canvas').width($('.slide-img-container-sync').width());
+	$('.slide-canvas').height($('.slide-img-container-sync').height());
+	$('.slide-canvas')[0].width = $('.slide-img-container-sync').width();
+	$('.slide-canvas')[0].height = $('.slide-img-container-sync').height();
+	
+	resetStroke();
+}
+
+function resetStroke() {
+	if (canvas) {
+		ctx = canvas.getContext("2d");
+		ctx.strokeStyle = 'red';
+	    ctx.lineWidth = "2";
+	    ctx.lineCap = "round";
+	}
+}
+
+function preSlideSync() {
+	var preSlide = eval(Number(getCurSlide()) - 1);
+	gotoSlideSync(preSlide);
+}
+
+function nextSlideSync() {
+	var nextSlide = eval(Number(getCurSlide()) + 1);
+	gotoSlideSync(nextSlide);
+}
+
+function gotoSlideSync(slide) {
+	// slide turning
+	var preSlide = curSlide;
+	var slideSum = slideUrls.length;
+	if (slide <= 0) {
+		slide = 1;
+	} else if (slideSum < slide) {
+		slide = slideSum;
+	}
+	curSlide = slide;
+	
+	// set img & canvas
+	var imgHtml = '<img class="slide-img-' + (slide - 1) + '" src="' + slideUrls[slide - 1] + '" class="img-polaroid" style="height: 100%;">';
+	var canvasHtml = '<canvas class="slide-canvas-' + (slide - 1) + ' slide-canvas" style="width: 100%; height: 100%; border: 1px solid orange; position: absolute; left: 0px; top: 0px; z-index: 1000;">您的浏览器不支持画布！</canvas>';
+	$('.slide-img-container-sync').html(imgHtml + canvasHtml);
+	resetImgSizeSync();
+    canvas = $('.slide-canvas-' + (slide - 1))[0];
+    resetStroke();
+	img = $('.slide-img-' + (slide - 1));
+	
+	/*
+	 * $(".slide-img-container-sync img").fadeOut(function() { $(this).attr("src",
+	 * slideUrls[slide - 1]).fadeIn(); });
+	 */
+	$(".slide-img-container-sync img").attr("src", slideUrls[slide - 1]);
+	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
+	$('.thumbnail').removeClass('ppt-thumb-border');
+	$('.thumbnail[page="' + slide + '"]').addClass('ppt-thumb-border');
+	$('.select-page-selector').val(slide);
+	$('.select-page-selector-sync').val(slide);
+	$('.bottom-paging-progress .bar').width('' + percent + '%');
+
+	// sync flip event to audience
+	socket.emit('flip', {
+		'uuid' : uuid,
+		'page' : curSlide,
+	});
+}

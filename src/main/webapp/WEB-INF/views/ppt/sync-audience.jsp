@@ -78,7 +78,7 @@
           -->
         </div>
         <div class="span9 offset2">
-          <div class="slide-img-container">
+          <div class="slide-img-container-sync">
             <div class="ppt-turn-left-mask"></div>
             <div class="ppt-turn-right-mask"></div>
             <!-- 
@@ -87,7 +87,7 @@
           </div>
           <!-- ONLY AVAILABLE ON MOBILE -->
           <div class="span12 visible-phone text-center" style="position: fixed; bottom: 10px; left: 0px; z-index: 1000;">
-            <select class="select-page-selector span1" style="width: 80px; margin-top: 10px;">
+            <select class="select-page-selector-sync span1" style="width: 80px; margin-top: 10px;">
               <!-- PAGE NUMBERS HERE -->
             </select>
           </div>
