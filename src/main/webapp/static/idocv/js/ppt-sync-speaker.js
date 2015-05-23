@@ -157,27 +157,26 @@ function bindCanvasEvent() {
 						'drawing' : drawing,
 						'id' : id
 					});
-				}
+					
+					// Draw a line for the current user's movement, as it is
+					// not received in the socket.on('moving') event above
+					if (drawing) {
+						drawLine(prev.x + 1, prev.y, curr.x + 1, curr.y);
 
-				// Draw a line for the current user's movement, as it is
-				// not received in the socket.on('moving') event above
+						// save percent points
+						var prePercX = (prev.x / canvas.width).toFixed(4);
+						var prePercY = (prev.y / canvas.height).toFixed(4);
+						p = {
+							x1 : prePercX,
+							y1 : prePercY,
+							x2 : perc.x,
+							y2 : perc.y
+						};
+						lines.push(p);
 
-				if (drawing) {
-					drawLine(prev.x + 1, prev.y, curr.x + 1, curr.y);
-
-					// save percent points
-					var prePercX = (prev.x / canvas.width).toFixed(4);
-					var prePercY = (prev.y / canvas.height).toFixed(4);
-					p = {
-						x1 : prePercX,
-						y1 : prePercY,
-						x2 : perc.x,
-						y2 : perc.y
-					};
-					lines.push(p);
-
-					prev.x = curr.x;
-					prev.y = curr.y;
+						prev.x = curr.x;
+						prev.y = curr.y;
+					}
 				}
 			});
 
