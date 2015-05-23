@@ -48,20 +48,7 @@ $(document).ready(function() {
 		return false;
 	}
 	
-	// set img & canvas
-	var imgHtml = '<img id="slide-img-0" src="' + slideUrls[0] + '" class="img-polaroid" style="height: 100%;">';
-	var canvasHtml = '<canvas id="slide-canvas-0" style="width: 100%; height: 100%; border: 1px solid orange; position: absolute; left: 1px; top: 0px; z-index: 1000;">您的浏览器不支持画布！</canvas>';
-	$('.slide-img-container-sync').html(imgHtml + canvasHtml);
-	resetImgSizeSync();
-	
-    canvas = document.getElementById('slide-canvas-0');
-	ctx = canvas.getContext("2d");
-	ctx.strokeStyle = 'red';
-    ctx.lineWidth = "2";
-    ctx.lineCap = "round";
-	img = $('#slide-img-0');
-	
-	bindCanvasEvent();
+	gotoSlideSync(1);
 
 	// receive socket event
 	// speaker does NOT need receive moving event from audience
@@ -92,6 +79,10 @@ $(document).ready(function() {
 	$('.select-page-selector-sync').change(function() {
 		var selectNum = $(".select-page-selector-sync option:selected").text();
 		gotoSlideSync(selectNum);
+	});
+	$('.thumbnail').click(function () {
+		var page_num = $(this).attr('page');
+		gotoSlideSync(page_num);
 	});
 
 	// send draw event
@@ -172,8 +163,7 @@ function bindCanvasEvent() {
 				// not received in the socket.on('moving') event above
 
 				if (drawing) {
-
-					drawLine(prev.x, prev.y, curr.x, curr.y);
+					drawLine(prev.x + 1, prev.y, curr.x + 1, curr.y);
 
 					// save percent points
 					var prePercX = (prev.x / canvas.width).toFixed(4);
@@ -227,11 +217,26 @@ function resetImgSizeSync() {
 		wh = wh + 80;
 	}
 	if (wh / ww < ratio) {
-		$('.slide-img-container-sync').height(wh);
 		$('.slide-img-container-sync').width(wh / ratio);
+		$('.slide-img-container-sync').height(wh);
 	} else {
 		$('.slide-img-container-sync').width(ww);
 		$('.slide-img-container-sync').height(ww * ratio);
+	}
+	$('.slide-canvas').width($('.slide-img-container-sync').width());
+	$('.slide-canvas').height($('.slide-img-container-sync').height());
+	$('.slide-canvas')[0].width = $('.slide-img-container-sync').width();
+	$('.slide-canvas')[0].height = $('.slide-img-container-sync').height();
+	
+	resetStroke();
+}
+
+function resetStroke() {
+	if (canvas) {
+		ctx = canvas.getContext("2d");
+		ctx.strokeStyle = 'red';
+	    ctx.lineWidth = "2";
+	    ctx.lineCap = "round";
 	}
 }
 
@@ -246,6 +251,7 @@ function nextSlideSync() {
 }
 
 function gotoSlideSync(slide) {
+	// slide turning
 	var preSlide = curSlide;
 	var slideSum = slideUrls.length;
 	if (slide <= 0) {
@@ -253,11 +259,18 @@ function gotoSlideSync(slide) {
 	} else if (slideSum < slide) {
 		slide = slideSum;
 	}
-	if (preSlide == slide) {
-		return;
-	}
-
 	curSlide = slide;
+	
+	// set img & canvas
+	var imgHtml = '<img class="slide-img-' + (slide - 1) + '" src="' + slideUrls[slide - 1] + '" class="img-polaroid" style="height: 100%;">';
+	var canvasHtml = '<canvas class="slide-canvas-' + (slide - 1) + ' slide-canvas" style="width: 100%; height: 100%; border: 1px solid orange; position: absolute; left: 0px; top: 0px; z-index: 1000;">您的浏览器不支持画布！</canvas>';
+	$('.slide-img-container-sync').html(imgHtml + canvasHtml);
+	resetImgSizeSync();
+    canvas = $('.slide-canvas-' + (slide - 1))[0];
+    resetStroke();
+	img = $('.slide-img-' + (slide - 1));
+	bindCanvasEvent();
+	
 	/*
 	 * $(".slide-img-container-sync img").fadeOut(function() { $(this).attr("src",
 	 * slideUrls[slide - 1]).fadeIn(); });
