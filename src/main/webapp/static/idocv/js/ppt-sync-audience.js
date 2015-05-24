@@ -272,10 +272,4 @@ function gotoSlideSync(slide) {
 	$('.select-page-selector').val(slide);
 	$('.select-page-selector-sync').val(slide);
 	$('.bottom-paging-progress .bar').width('' + percent + '%');
-
-	// sync flip event to audience
-	socket.emit('flip', {
-		'uuid' : uuid,
-		'page' : curSlide,
-	});
 }
