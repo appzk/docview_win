@@ -75,6 +75,22 @@ $(document).ready(function() {
 		}
 	});
 	
+	// fullscreen
+	$('.fullscreen-link').click(function(){
+		$('.slide-img-container-sync').fullScreen(true);
+	});
+	$(document).bind("fullscreenchange", function() {
+		var isFullscreen = $(document).fullScreen() ? true : false;
+		if (isFullscreen) {
+			$('.slide-img-container-sync').css('background-color', 'black');
+			$('.slide-img-container-sync').contextMenu(true);
+		} else {
+			$('.slide-img-container-sync').css('background-color', '');
+			$('.slide-img-container-sync').contextMenu(false);
+		}
+	});
+	
+	// page selector
 	$('.select-page-selector-sync').val(curSlide);
 	$('.select-page-selector-sync').change(function() {
 		var selectNum = $(".select-page-selector-sync option:selected").text();
@@ -86,6 +102,18 @@ $(document).ready(function() {
 	});
 
 	// send draw event
+	
+	// keyboard
+	$(document).keydown(function(event){
+		if (event.keyCode == 37 || event.keyCode == 38) {
+			preSlideSync();
+		} else if (event.keyCode == 39 || event.keyCode == 40 || event.keyCode == 32){
+			nextSlideSync();
+		} else if (event.keyCode == 13) {
+			var isFullscreen = $(document).fullScreen() ? true : false;
+			$('.slide-img-container-sync').toggleFullScreen();
+		}
+	});
 });
 
 // bind canvas event: start -> move -> end
@@ -228,6 +256,7 @@ function resetImgSizeSync() {
 	$('.slide-canvas')[0].height = $('.slide-img-container-sync').height();
 	
 	resetStroke();
+	resetContextMemu();
 }
 
 function resetStroke() {
@@ -236,7 +265,38 @@ function resetStroke() {
 		ctx.strokeStyle = 'red';
 	    ctx.lineWidth = "2";
 	    ctx.lineCap = "round";
+	} else {
+		alert('Please set canvas first!');
 	}
+}
+
+function resetContextMemu() {
+	// Right click (NOT supported in SOUGOU browser)
+	$.contextMenu({
+        selector: '.slide-img-container-sync',
+        items: {
+        	"next": {
+                name: "下一张",
+                callback: function(key, options) {
+                	nextSlideSync();
+                }
+            },
+            "previous": {
+                name: "上一张",
+                callback: function(key, options) {
+                	preSlideSync();
+                }
+            },
+            "sep1": "---------",
+            "exit": {
+                name: "结束放映",
+                callback: function(key, options) {
+                	$('.slide-img-container-sync').fullScreen(false);
+                }
+            },
+        }
+    });
+	$('.slide-img-container-sync').contextMenu(true);
 }
 
 function preSlideSync() {
@@ -262,11 +322,10 @@ function gotoSlideSync(slide) {
 	
 	// set img & canvas
 	var imgHtml = '<img class="slide-img-' + (slide - 1) + '" src="' + slideUrls[slide - 1] + '" class="img-polaroid" style="height: 100%;">';
-	var canvasHtml = '<canvas class="slide-canvas-' + (slide - 1) + ' slide-canvas" style="width: 100%; height: 100%; border: 1px solid orange; position: absolute; left: 0px; top: 0px; z-index: 1000;">您的浏览器不支持画布！</canvas>';
+	var canvasHtml = '<canvas class="slide-canvas-' + (slide - 1) + ' slide-canvas" style="width: 100%; height: 100%; border: 1px solid orange; position: absolute; left: 0px; top: 0px;">您的浏览器不支持画布！</canvas>';
 	$('.slide-img-container-sync').html(imgHtml + canvasHtml);
+	canvas = $('.slide-canvas-' + (slide - 1))[0];
 	resetImgSizeSync();
-    canvas = $('.slide-canvas-' + (slide - 1))[0];
-    resetStroke();
 	img = $('.slide-img-' + (slide - 1));
 	bindCanvasEvent();
 	
