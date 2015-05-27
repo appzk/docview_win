@@ -39,6 +39,7 @@ import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.UserService;
 import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.IpUtil;
+import com.idocv.docview.util.MimeUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.AppVo;
 import com.idocv.docview.vo.DocVo;
@@ -328,12 +329,21 @@ public class DocController {
 	 */
 	@RequestMapping("download/{uuid}")
 	public void downloadByUuid(HttpServletRequest req,
-			HttpServletResponse resp, @PathVariable(value = "uuid") String uuid) {
+			HttpServletResponse resp,
+			@PathVariable(value = "uuid") String uuid,
+			@RequestParam(value = "type", required = false) String type) {
 		try {
 			DocVo vo = docService.getByUuid(uuid);
 			String rid = vo.getRid();
 			String path = rcUtil.getPath(rid);
-			DocResponse.setResponseHeaders(req, resp, vo.getName());
+			String ext = vo.getExt();
+			String contentType = MimeUtil.getContentType(ext);
+			if (StringUtils.isNotBlank(contentType)) {
+				resp.setContentType(contentType);
+			}
+			if (!"stream".equalsIgnoreCase(type)) {
+				DocResponse.setResponseHeaders(req, resp, vo.getName());
+			}
 			IOUtils.write(FileUtils.readFileToByteArray(new File(path)), resp.getOutputStream());
 			docService.logDownload(uuid);
 		} catch (Exception e) {
