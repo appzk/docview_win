@@ -492,6 +492,29 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 			throw new DBException(e.getMessage());
 		}
 	}
+	
+	@Override
+	public List<String> listDocIdsConvertError(String startTime, int size) throws DBException {
+		List<String> idList = new ArrayList<String>();
+		try {
+			QueryBuilder query = QueryBuilder.start(STATUS_CONVERT).is(STATUS_CONVERT_FAIL).and(STATUS).notEquals(-1);
+			if (StringUtils.isNotBlank(startTime) && startTime.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")) {
+				query.and(CTIME).greaterThan(startTime);
+			}
+			DBObject orderBy = BasicDBObjectBuilder.start().add(CTIME, 1).get();
+			DBCollection coll = db.getCollection(COLL_DOC);
+			DBCursor cur = coll.find(query.get(), new BasicDBObject(_ID, 1)).sort(orderBy).limit(size);
+			while (cur.hasNext()) {
+				DBObject obj = cur.next();
+				if (obj.containsField(_ID) && null != obj.get(_ID)) {
+					idList.add(obj.get(_ID).toString());
+				}
+			}
+			return idList;
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
 
 	@Override
 	public long count(boolean includeDeleted) throws DBException {

@@ -234,7 +234,8 @@ public class DocServiceImpl implements DocService {
 					throw new DocServiceException("无法访问资源（" + url + "）");
 				}
 				
-				// 获取文件名，优先级：1. 获取直接传入的name参数；2. 获取header里的filename参数；3. 根据url获取文件名
+				// 获取文件名，优先级：1. 获取直接传入的name参数；2. 获取header里的filename参数；3.
+				// 根据url获取文件名
 				String disposition = urlResponse.header("Content-Disposition");
 				if (StringUtils.isBlank(name) && StringUtils.isNotBlank(disposition)) {
 					disposition = new String(disposition.getBytes("ISO-8859-1"), "UTF-8");
@@ -366,12 +367,8 @@ public class DocServiceImpl implements DocService {
 	}
 	
 	@Override
-	public boolean delete(String token, String uuid, boolean isPhysical) throws DocServiceException {
+	public boolean delete(String uuid, boolean isPhysical) throws DocServiceException {
 		try {
-			AppPo appPo = appDao.getByToken(token);
-			if (null == appPo) {
-				throw new DocServiceException("App NOT found!");
-			}
 			DocPo docPo = docDao.getByUuid(uuid, true);
 			if (null == docPo) {
 				return true;
@@ -379,8 +376,15 @@ public class DocServiceImpl implements DocService {
 			String rid = docPo.getRid();
 			docDao.delete(uuid);
 			if (isPhysical) {
+				String path = rcUtil.getPath(rid);
 				String docDir = rcUtil.getDirectoryByRid(rid);
-				FileUtils.deleteQuietly(new File(docDir));
+				String nameWithoutExt = RcUtil.getFileNameWithoutExt(rid);
+				FileUtils.deleteQuietly(new File(path));
+				FileUtils.deleteQuietly(new File(docDir, nameWithoutExt));
+				File[] remainFiles = new File(docDir).listFiles();
+				if (null == remainFiles || remainFiles.length < 1) {
+					FileUtils.deleteQuietly(new File(docDir));
+				}
 			}
 			return true;
 		} catch (DBException e) {

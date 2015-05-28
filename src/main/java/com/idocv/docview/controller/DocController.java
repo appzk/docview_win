@@ -197,7 +197,7 @@ public class DocController {
 			@RequestParam(value = "type", defaultValue = "logical") String type,
 			@RequestParam(value = "token") String token) {
 		try {
-			boolean result = docService.delete(token, uuid, "physical".equalsIgnoreCase(type));
+			boolean result = docService.delete(uuid, "physical".equalsIgnoreCase(type));
 			return DocResponse.getSuccessResponseMap();
 		} catch (Exception e) {
 			logger.error("delete error <controller>: " + e.getMessage());

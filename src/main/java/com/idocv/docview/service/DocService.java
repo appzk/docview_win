@@ -51,7 +51,7 @@ public interface DocService {
 	 * @return
 	 * @throws DocServiceException
 	 */
-	boolean delete(String token, String uuid, boolean isPhysical) throws DocServiceException;
+	boolean delete(String uuid, boolean isPhysical) throws DocServiceException;
 
 	public void logView(String uuid) throws DocServiceException;
 

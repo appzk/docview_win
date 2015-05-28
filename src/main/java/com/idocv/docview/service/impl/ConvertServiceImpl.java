@@ -27,8 +27,10 @@ import com.idocv.docview.dao.DocDao;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.ConvertService;
+import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.MemoryUtil;
+import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.MemoryVo;
 
 @Service
@@ -55,6 +57,9 @@ public class ConvertServiceImpl implements ConvertService {
 
 	@Resource
 	private CacheDao cacheDao;
+
+	@Resource
+	private DocService docService;
 
 	@Resource
 	private ViewService viewService;
@@ -208,6 +213,20 @@ public class ConvertServiceImpl implements ConvertService {
 		// check converting queue
 		if (!convertQueue.isEmpty()) {
 			return;
+		}
+
+		// delete error files
+		try {
+			List<String> convertErrorIds = docDao.listDocIdsConvertError(null, 100);
+			if (!CollectionUtils.isEmpty(convertErrorIds)) {
+				logger.warn("[DELETING CONVERT ERROR DOCS] " + convertErrorIds);
+				for (String convertErrorId : convertErrorIds) {
+					String uuid = RcUtil.getUuidByRid(convertErrorId);
+					docService.delete(uuid, false);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("delete error converted docs error: " + e.getMessage());
 		}
 
 		startBatchConvert();
