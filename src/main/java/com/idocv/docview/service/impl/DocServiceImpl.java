@@ -352,9 +352,37 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public boolean delete(String uuid) throws DocServiceException {
+	public boolean delete(String token, String uuid) throws DocServiceException {
 		try {
+			AppPo appPo = appDao.getByToken(token);
+			if (null == appPo) {
+				throw new DocServiceException("App NOT found!");
+			}
 			return docDao.delete(uuid);
+		} catch (DBException e) {
+			logger.error("doc delete error: " + e.getMessage());
+			throw new DocServiceException("delete doc error: ", e);
+		}
+	}
+	
+	@Override
+	public boolean delete(String token, String uuid, boolean isPhysical) throws DocServiceException {
+		try {
+			AppPo appPo = appDao.getByToken(token);
+			if (null == appPo) {
+				throw new DocServiceException("App NOT found!");
+			}
+			DocPo docPo = docDao.getByUuid(uuid, true);
+			if (null == docPo) {
+				return true;
+			}
+			String rid = docPo.getRid();
+			docDao.delete(uuid);
+			if (isPhysical) {
+				String docDir = rcUtil.getDirectoryByRid(rid);
+				FileUtils.deleteQuietly(new File(docDir));
+			}
+			return true;
 		} catch (DBException e) {
 			logger.error("doc delete error: " + e.getMessage());
 			throw new DocServiceException("delete doc error: ", e);
