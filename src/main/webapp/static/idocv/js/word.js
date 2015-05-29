@@ -137,7 +137,7 @@ $(document).ready(function() {
 		        msg: null,
 		        msgText: "<em>正在加载...</em>"
             },
-			debug		 	: true,
+			debug		 	: false,
 			dataType	 	: 'json',
 			// behavior		: 'twitter',
 			appendCallback	: false // USE FOR PREPENDING
