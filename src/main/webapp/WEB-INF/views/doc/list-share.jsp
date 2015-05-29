@@ -40,6 +40,7 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
+        <!-- 
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
@@ -54,11 +55,11 @@
               <li class="nav-header"><i class="icon-share-alt"></i> 其他文档</li>
               <li><a href="#">好友分享</a></li>
               <li><a href="#">推荐文档</a></li>
-               -->
             </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
-        <div class="span10">
+          </div>
+        </div>
+         -->
+        <div class="span12">
           <div class="row-fluid">
             <div class="span12">
               <!-- CONTENT HERE -->
