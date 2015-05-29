@@ -47,7 +47,7 @@ public interface DocService {
 	 * @param token
 	 * @param uuid
 	 * @param isPhysical
-	 *            whether delete physical files.
+	 *            whether delete physical files
 	 * @return
 	 * @throws DocServiceException
 	 */

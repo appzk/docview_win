@@ -25,6 +25,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.QueryBuilder;
+import com.mongodb.WriteConcern;
 
 
 @Repository
@@ -98,8 +99,21 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
-	public boolean delete(String uuid) throws DBException {
-		updateStatus(uuid, -1);
+	public boolean delete(String uuid, boolean isDeleteRecord) throws DBException {
+		if (isDeleteRecord) {
+			if (StringUtils.isEmpty(uuid)) {
+				throw new DBException("UUID is empty!");
+			}
+			DBObject query = QueryBuilder.start(UUID).is(uuid).get();
+			try {
+				DBCollection coll = db.getCollection(COLL_DOC);
+				coll.remove(query, WriteConcern.UNACKNOWLEDGED);
+			} catch (MongoException e) {
+				throw new DBException(e.getMessage());
+			}
+		} else {
+			updateStatus(uuid, -1);
+		}
 		return true;
 	}
 

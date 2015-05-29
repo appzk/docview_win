@@ -359,7 +359,7 @@ public class DocServiceImpl implements DocService {
 			if (null == appPo) {
 				throw new DocServiceException("App NOT found!");
 			}
-			return docDao.delete(uuid);
+			return docDao.delete(uuid, false);
 		} catch (DBException e) {
 			logger.error("doc delete error: " + e.getMessage());
 			throw new DocServiceException("delete doc error: ", e);
@@ -374,7 +374,7 @@ public class DocServiceImpl implements DocService {
 				return true;
 			}
 			String rid = docPo.getRid();
-			docDao.delete(uuid);
+			docDao.delete(uuid, false);
 			if (isPhysical) {
 				String path = rcUtil.getPath(rid);
 				String docDir = rcUtil.getDirectoryByRid(rid);

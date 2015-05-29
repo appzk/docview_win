@@ -80,8 +80,14 @@ public interface DocDao {
 
 	/**
 	 * Delete a document.
+	 * 
+	 * @param uuid
+	 * @param isDeleteRecord
+	 *            whether delete the record from collection
+	 * @return
+	 * @throws DBException
 	 */
-	boolean delete(String uuid) throws DBException;
+	boolean delete(String uuid, boolean isDeleteRecord) throws DBException;
 	
 	/**
 	 * update field
