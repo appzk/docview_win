@@ -1,6 +1,8 @@
 package com.idocv.docview.common;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,15 +39,39 @@ public class DocResponse<T> {
 
 	public DocResponse getSuccessResponse(T data) {
 		this.setCode(1);
-		this.setDesc("Success!");
+		this.setDesc("success");
 		this.setData(data);
 		return this;
+	}
+
+	public static Map<String, Object> getSuccessResponseMap() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", "1");
+		map.put("desc", "success");
+		return map;
+	}
+
+	public static Map<String, Object> getSuccessResponseMap(Object data) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", "1");
+		map.put("desc", "success");
+		if (null != data) {
+			map.put("data", data);
+		}
+		return map;
 	}
 
 	public DocResponse getFailResponse(int code, String desc) {
 		this.setCode(code);
 		this.setDesc(desc);
 		return this;
+	}
+
+	public static Map<String, Object> getErrorResponseMap(String desc) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", "0");
+		map.put("desc", desc);
+		return map;
 	}
 
 	/**

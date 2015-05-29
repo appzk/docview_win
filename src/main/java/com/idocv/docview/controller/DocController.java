@@ -5,7 +5,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -39,6 +38,7 @@ import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.UserService;
 import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.IpUtil;
+import com.idocv.docview.util.MimeUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.AppVo;
 import com.idocv.docview.vo.DocVo;
@@ -82,7 +82,7 @@ public class DocController {
 	 */
 	@ResponseBody
 	@RequestMapping("upload")
-	public Map<String, String> upload(
+	public Map<String, Object> upload(
 			HttpServletRequest req,
 			HttpServletResponse resp,
 			// @RequestParam(value = "file", required = false) MultipartFile file,
@@ -92,7 +92,7 @@ public class DocController {
 			@RequestParam(value = "mode", defaultValue = "public") String modeString,
 			@RequestParam(value = "label", defaultValue = "") String label,
 			@RequestParam(value = "meta", required = false) String meta) {
-		Map<String, String> result = new HashMap<String, String>();
+		Map<String, Object> result = null;
 		try {
 			// Two ways to upload: App token upload & user Sid upload
 			String ip = IpUtil.getIpAddr(req);
@@ -164,6 +164,8 @@ public class DocController {
 				throw new Exception("上传失败！");
 			}
 			logger.info("--> " + ip + " at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + " ADD " + vo.getUuid());
+			
+			result = DocResponse.getSuccessResponseMap();
 			result.put("uuid", vo.getUuid());
 			if ("true".equalsIgnoreCase(meta) || "1".equals(meta)) {
 				result.put("md5", vo.getMd5());
@@ -174,7 +176,7 @@ public class DocController {
 			}
 		} catch (Exception e) {
 			logger.error("upload error <controller>: " + e.getMessage());
-			result.put("error", e.getMessage());
+			result = DocResponse.getErrorResponseMap(e.getMessage());
 		}
 		return result;
 	}
@@ -182,18 +184,24 @@ public class DocController {
 	/**
 	 * 删除
 	 * 
-	 * @param id
+	 * @param uuid
+	 * @param type
+	 *            logical or physical
+	 * @param token
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("delete/{uuid}")
-	public String delete(@PathVariable(value = "uuid") String uuid) {
+	public Map<String, Object> delete(
+			@PathVariable(value = "uuid") String uuid,
+			@RequestParam(value = "type", defaultValue = "logical") String type,
+			@RequestParam(value = "token") String token) {
 		try {
-			boolean result = docService.delete(uuid);
-			return "true";
+			boolean result = docService.delete(uuid, "physical".equalsIgnoreCase(type));
+			return DocResponse.getSuccessResponseMap();
 		} catch (Exception e) {
 			logger.error("delete error <controller>: " + e.getMessage());
-			return "{\"error\":" + e.getMessage() + "}";
+			return DocResponse.getErrorResponseMap(e.getMessage());
 		}
 	}
 
@@ -205,7 +213,7 @@ public class DocController {
 	 */
 	@ResponseBody
 	@RequestMapping("mode/{uuid}/{mode}")
-	public String mode(@PathVariable(value = "uuid") String uuid,
+	public Map<String, Object> mode(@PathVariable(value = "uuid") String uuid,
 			@PathVariable(value = "mode") String modeString,
 			@RequestParam(value = "token") String token) {
 		try {
@@ -222,10 +230,10 @@ public class DocController {
 				throw new DocServiceException("Document NOT found!");
 			}
 			docService.updateMode(token, uuid, mode);
-			return "true";
+			return DocResponse.getSuccessResponseMap();
 		} catch (Exception e) {
 			logger.error("delete error <controller>: " + e.getMessage());
-			return "{\"error\":" + e.getMessage() + "}";
+			return DocResponse.getErrorResponseMap(e.getMessage());
 		}
 	}
 
@@ -236,18 +244,33 @@ public class DocController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("{uuid}/reset")
-	public String reset(@PathVariable(value = "uuid") String uuid) {
+	@RequestMapping("reset/{uuid}")
+	public Map<String, Object> reset(@PathVariable(value = "uuid") String uuid) {
 		try {
 			DocVo docVo = docService.getByUuid(uuid);
 			if (null == docVo) {
 				throw new DocServiceException("Document NOT found!");
 			}
 			docService.resetConvert(null, uuid);
-			return "true";
+			return DocResponse.getSuccessResponseMap();
 		} catch (Exception e) {
 			logger.error("delete error <controller>: " + e.getMessage());
-			return "{\"error\":" + e.getMessage() + "}";
+			return DocResponse.getErrorResponseMap(e.getMessage());
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping("meta/{uuid}")
+	public Map<String, Object> meta(@PathVariable(value = "uuid") String uuid) {
+		try {
+			DocVo docVo = docService.getByUuid(uuid);
+			if (null == docVo) {
+				throw new DocServiceException("Document NOT found!");
+			}
+			return DocResponse.getSuccessResponseMap(docVo);
+		} catch (Exception e) {
+			logger.error("meta error <controller>: " + e.getMessage());
+			return DocResponse.getErrorResponseMap(e.getMessage());
 		}
 	}
 
@@ -328,12 +351,21 @@ public class DocController {
 	 */
 	@RequestMapping("download/{uuid}")
 	public void downloadByUuid(HttpServletRequest req,
-			HttpServletResponse resp, @PathVariable(value = "uuid") String uuid) {
+			HttpServletResponse resp,
+			@PathVariable(value = "uuid") String uuid,
+			@RequestParam(value = "type", required = false) String type) {
 		try {
 			DocVo vo = docService.getByUuid(uuid);
 			String rid = vo.getRid();
 			String path = rcUtil.getPath(rid);
-			DocResponse.setResponseHeaders(req, resp, vo.getName());
+			String ext = vo.getExt();
+			String contentType = MimeUtil.getContentType(ext);
+			if (StringUtils.isNotBlank(contentType)) {
+				resp.setContentType(contentType);
+			}
+			if (!"stream".equalsIgnoreCase(type)) {
+				DocResponse.setResponseHeaders(req, resp, vo.getName());
+			}
 			IOUtils.write(FileUtils.readFileToByteArray(new File(path)), resp.getOutputStream());
 			docService.logDownload(uuid);
 		} catch (Exception e) {

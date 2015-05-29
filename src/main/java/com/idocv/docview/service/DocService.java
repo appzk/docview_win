@@ -31,7 +31,27 @@ public interface DocService {
 	
 	DocVo addUrl(String app, String uid, String name, String url, int mode, String labelName) throws DocServiceException;
 
-	boolean delete(String uuid) throws DocServiceException;
+	/**
+	 * Delete file logically
+	 * 
+	 * @param token
+	 * @param uuid
+	 * @return
+	 * @throws DocServiceException
+	 */
+	boolean delete(String token, String uuid) throws DocServiceException;
+
+	/**
+	 * Delete file
+	 * 
+	 * @param token
+	 * @param uuid
+	 * @param isPhysical
+	 *            whether delete physical files
+	 * @return
+	 * @throws DocServiceException
+	 */
+	boolean delete(String uuid, boolean isPhysical) throws DocServiceException;
 
 	public void logView(String uuid) throws DocServiceException;
 

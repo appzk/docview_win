@@ -80,8 +80,14 @@ public interface DocDao {
 
 	/**
 	 * Delete a document.
+	 * 
+	 * @param uuid
+	 * @param isDeleteRecord
+	 *            whether delete the record from collection
+	 * @return
+	 * @throws DBException
 	 */
-	boolean delete(String uuid) throws DBException;
+	boolean delete(String uuid, boolean isDeleteRecord) throws DBException;
 	
 	/**
 	 * update field
@@ -240,6 +246,16 @@ public interface DocDao {
 	 * @throws DBException
 	 */
 	List<String> listDocIdsNotConverted(String startTime, int size) throws DBException;
+	
+	/**
+	 * list docs that convert error
+	 * 
+	 * @param startTime
+	 * @param size
+	 * @return
+	 * @throws DBException
+	 */
+	public List<String> listDocIdsConvertError(String startTime, int size) throws DBException;
 
 	/**
 	 * Get document count.

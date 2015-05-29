@@ -40,7 +40,7 @@ public class DocDaoTest {
 	public void testDelete() {
 		try {
 			String id = "doc_20130101_0101011_doc";
-			docDao.delete(id);
+			docDao.delete(id, false);
 		} catch (DBException e) {
 			e.printStackTrace();
 		}

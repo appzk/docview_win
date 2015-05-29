@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.idocv</groupId>
 	<artifactId>docview_win</artifactId>
-	<version>5.4.3_20150525</version>
+	<version>5.5.1_20150529</version>
 	<packaging>war</packaging>
 	<name>docview</name>
 	<description>document online viewer</description>
@@ -270,9 +270,9 @@
 			</activation>
 			<properties>
 				<!-- Data -->
-				<pom.data.url>http://data.idocv.com/</pom.data.url>
+				<pom.data.url>http://127.0.0.1/data/</pom.data.url>
 				<pom.data.dir>/idocv/data/</pom.data.dir>
-				<pom.view.page.ppt.draw.server>http://draw.idocv.com:8997</pom.view.page.ppt.draw.server>
+				<pom.view.page.ppt.draw.server>http://127.0.0.1:8997</pom.view.page.ppt.draw.server>
 
 				<!-- Database -->
 				<pom.db.mongodb.ip>localhost</pom.db.mongodb.ip>

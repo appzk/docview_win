@@ -1,6 +1,8 @@
 package com.idocv.docview.controller;
 
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.idocv.docview.common.DocResponse;
 import com.idocv.docview.service.SessionService;
 
 
@@ -28,15 +31,18 @@ public class SessionController {
 	 */
 	@ResponseBody
 	@RequestMapping("{uuid}")
-	public String get(
+	public Map<String, Object> get(
 			@PathVariable(value = "uuid") String uuid,
 			@RequestParam(value = "token") String token) {
+		Map<String, Object> result = null;
 		try {
 			String sessionId = sessionService.add(token, uuid);
-			return "{\"session\":\"" + sessionId + "\"}";
+			result = DocResponse.getSuccessResponseMap();
+			result.put("session", sessionId);
 		} catch (Exception e) {
 			logger.error("get session error: ", e);
-			return "{\"error\":\"" + e.getMessage() + "\"}";
+			result = DocResponse.getErrorResponseMap(e.getMessage());
 		}
+		return result;
 	}
 }

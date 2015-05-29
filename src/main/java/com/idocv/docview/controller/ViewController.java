@@ -66,6 +66,9 @@ public class ViewController {
 	
 	private @Value("${view.page.excel.style}")
 	String pageExcelStyle;
+	
+	private @Value("${view.page.private.session.duraion}")
+	int viewPagePrivateSessionDuraion;
 
 	@Resource
 	private RcUtil rcUtil;
@@ -292,7 +295,7 @@ public class ViewController {
 				String sessionCtimeString = sessionVo.getCtime();
 				long sessionCtime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sessionCtimeString).getTime();
 				long currentTime = System.currentTimeMillis();
-				if (currentTime - sessionCtime > 3600000) {
+				if (currentTime - sessionCtime > (viewPagePrivateSessionDuraion * 60 * 1000)) {
 					throw new DocServiceException("会话已过期，请重新获取一个会话！");
 				}
 				if (!uuid.equals(sessionVo.getUuid())) {

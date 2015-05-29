@@ -31,7 +31,7 @@ $(document).ready(function() {
 	        		$("#upload-result").html('<div class="alert alert-success" style="margin-bottom: 0px;">上传成功！</div>');
 	        		oTable.fnDraw();
 	        	} else {
-	        		$("#upload-result").html('<div class="alert alert-error" style="margin-bottom: 0px;">上传失败：' + result.error + '</div>');
+	        		$("#upload-result").html('<div class="alert alert-error" style="margin-bottom: 0px;">上传失败：' + result.desc + '</div>');
 	        	}
 	        	setTimeout(function() {
 	      			$('#upload-result').fadeOut();
