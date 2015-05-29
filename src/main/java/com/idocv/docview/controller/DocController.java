@@ -194,8 +194,7 @@ public class DocController {
 	@RequestMapping("delete/{uuid}")
 	public Map<String, Object> delete(
 			@PathVariable(value = "uuid") String uuid,
-			@RequestParam(value = "type", defaultValue = "logical") String type,
-			@RequestParam(value = "token") String token) {
+			@RequestParam(value = "type", defaultValue = "logical") String type) {
 		try {
 			boolean result = docService.delete(uuid, "physical".equalsIgnoreCase(type));
 			return DocResponse.getSuccessResponseMap();
