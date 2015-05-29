@@ -93,6 +93,11 @@ $(document).ready(function() {
 			"oLanguage": {
 				"sLengthMenu": "_MENU_ 条记录 / 页",
 				"sSearch": "搜索:",
+				"sInfo": "共 _TOTAL_ 个文件",
+				"oPaginate": {
+					"sPrevious": "上一页",
+					"sNext": "下一页"
+				},
 				"sEmptyTable": "没有可显示的数据！"
 			},
 			"iDisplayLength": 10,
