@@ -81,7 +81,8 @@ $(document).ready(function() {
 			// "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
 			"sPaginationType": "bootstrap",
 			"oLanguage": {
-				"sLengthMenu": "_MENU_ records per page",
+				"sLengthMenu": "_MENU_ 条记录 / 页",
+				"sSearch": "搜索:",
 				"sEmptyTable": "没有可显示的数据！"
 			},
 			"iDisplayLength": 10,
@@ -90,16 +91,14 @@ $(document).ready(function() {
 			"aoColumns": [
 				{ "mData": "name", "sClass": "center " },
 				{ "mData": "ctime", "sClass": "center" },
-				{ "mData": "size", "sClass": "center" },
-				{ "mData": "uuid", "sClass": "center" },
-				{ "mData": "viewCount", "sClass": "center", "bSortable": false }
+				{ "mData": "size", "sClass": "center" }
 			],
 			"aaSorting": [[1,'desc']],
 			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 				var uuid = aData.uuid;
 				$('td:eq(0)', nRow).html( '<a href="/view/'+aData.uuid+'" target="_blank">'+aData.name+'</a>' );
 				// $('td:eq(3)', nRow).html( '<a href="http://wev.cc/'+aData.uuid+'" target="_blank">wev.cc/' + aData.uuid + '</a>' );
-				$('td:eq(4)', nRow).html( '' + aData.viewCount + '/' + aData.downloadCount + '' );
+				// $('td:eq(4)', nRow).html( '' + aData.viewCount + '/' + aData.downloadCount + '' );
 				/*
 				if (uuid.charAt(uuid.length-1) == "w") {
 					$('td:eq(5)', nRow).html( '<a href="/doc/download/'+aData.uuid+'">下载</a> | <a href="/edit/'+aData.uuid+'" target="_blank" >协作编辑</a> | <a href="/doc/delete/'+aData.uuid+'" onclick="return confirm(\'确定要删除吗？\');" >删除</a>' );
@@ -113,7 +112,7 @@ $(document).ready(function() {
 				} else {
 				}
 				 */
-				$('td:eq(5)', nRow).html( '<button class="btn btn-small btn-primary btn-doc-list-download" uuid="' + aData.uuid + '" type="button">下载</button>&nbsp;<button class="btn btn-small btn-danger btn-doc-list-delete" uuid="' + aData.uuid + '" type="button">删除</button>' );
+				// $('td:eq(5)', nRow).html( '<button class="btn btn-small btn-primary btn-doc-list-download" uuid="' + aData.uuid + '" type="button">下载</button>&nbsp;<button class="btn btn-small btn-danger btn-doc-list-delete" uuid="' + aData.uuid + '" type="button">删除</button>' );
 			},
 			"fnDrawCallback": function(oSettings, json) {
 				/*

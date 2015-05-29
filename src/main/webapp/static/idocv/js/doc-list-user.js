@@ -91,7 +91,8 @@ $(document).ready(function() {
 			// "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
 			"sPaginationType": "bootstrap",
 			"oLanguage": {
-				"sLengthMenu": "_MENU_ records per page",
+				"sLengthMenu": "_MENU_ 条记录 / 页",
+				"sSearch": "搜索:",
 				"sEmptyTable": "没有可显示的数据！"
 			},
 			"iDisplayLength": 10,
