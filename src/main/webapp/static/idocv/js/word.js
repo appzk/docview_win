@@ -37,9 +37,7 @@ $(document).ready(function() {
 			// titles - navigation
 			if (!!titles && titles.length > 3) {
 				// Dropdown tabs
-				var isDropDown = titles.length > 5;
-				if (isDropDown) {
-					var dropDownMenu = '<li class="dropdown">' +
+				var dropDownMenu = '<li class="dropdown">' +
 					'<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
 					'导航' +
 					'<b class="caret"></b>' +
@@ -48,15 +46,14 @@ $(document).ready(function() {
 					'<!-- DROP DOWN WORD TAB TITLE(s) HERE -->' +
 					'</ul>' +
 					'</li>';
-					$('.word-tab-title').append(dropDownMenu);
-				}
+				$('.word-tab-title').append(dropDownMenu);
 				for (i = 0; i < titles.length; i++) {
 					var tt = titles[i];
 					// tab navigation & tab content
 					if (0 == i) {
-						$('.word-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li><a href="#nav-title-' + i + '" data-toggle="tab">' + tt + '</a></li>');
+						$('.word-tab-title .dropdown .dropdown-menu').append('<li><a href="#nav-title-' + i + '" data-toggle="tab">' + tt + '</a></li>');
 					} else {
-						$('.word-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li><a href="#nav-title-' + i + '" data-toggle="tab">' + tt + '</a></li>');
+						$('.word-tab-title .dropdown .dropdown-menu').append('<li><a href="#nav-title-' + i + '" data-toggle="tab">' + tt + '</a></li>');
 					}
 				}
 				var dropDownMenuHeight = $('.word-tab-title .dropdown-menu').height();
@@ -66,7 +63,7 @@ $(document).ready(function() {
 					$('.word-tab-title .dropdown-menu').addClass('pre-scrollable');
 				}
 				
-				$('.word-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '') + ' a').click(function(){
+				$('.word-tab-title .dropdown .dropdown-menu a').click(function(){
 					var id = $(this).attr('href');
 					if (! $(id).length) {
 						// page NOT exist, load all page.
