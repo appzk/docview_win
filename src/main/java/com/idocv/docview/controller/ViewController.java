@@ -157,6 +157,15 @@ public class ViewController {
 					model.setViewName("word/test");
 				} else if ("watermark".equals(type)) {
 					model.setViewName("word/test_wartermark");
+				} else if ("entry".equalsIgnoreCase(type)) {
+					model.setViewName("word/sync-main");
+					return model;
+				} else if ("speaker".equalsIgnoreCase(type)) {
+					model.setViewName("word/sync-speaker");
+					return model;
+				} else if ("audience".equalsIgnoreCase(type)) {
+					model.setViewName("word/sync-audience");
+					return model;
 				}
 				return model;
 			} else if (uuid.endsWith(ViewType.EXCEL.getSymbol())) {
