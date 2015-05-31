@@ -314,6 +314,39 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				convert(rid);
 				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
 			}
+			
+			// double check & convert word->pdf-png
+			if (ArrayUtils.isEmpty(pngFiles)) {
+				String src = rcUtil.getPath(rid);
+				String tmpPdfPath = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
+				File tmpPdfFile = new File(tmpPdfPath);
+				
+				// two steps to convert WORD to PNG
+				// step 1. convert WORD to PDF
+				String convertResult = "";
+				if (!tmpPdfFile.isFile()) {
+					convertResult += CmdUtil.runWindows(word2Pdf, "-src", src, "-dest", tmpPdfPath);
+					if (!tmpPdfFile.isFile()) {
+						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+						throw new DocServiceException("对不起，该文档（"
+								+ RcUtil.getUuidByRid(rid)
+ + "）暂无法预览，详情请联系管理员！");
+					}
+				}
+				
+				// step 2. convert PDF to PNG pictures
+				String pngDestDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
+				String pngDestFirstPage = pngDestDir + "1." + PDF_TO_IMAGE_TYPE;
+				if (!new File(pngDestFirstPage).isFile()) {
+					convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", tmpPdfPath);
+				}
+				if (!new File(pngDestFirstPage).isFile()) {
+					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid) + "）暂无法预览，详情请联系管理员！");
+				}
+				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
+			}
 			if (ArrayUtils.isEmpty(pngFiles)) {
 				logger.error("convertWord2Img(" + rid
 						+ ") error: 预览失败，该word文档无法生成目标PNG文件或该文件已损坏！");
@@ -936,7 +969,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 						if (!destFile.isFile()) {
 							logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
 							throw new DocServiceException("对不起，该文档（"
-									+ RcUtil.getUuidByRid(uuid)
+									+ RcUtil.getUuidByRid(rid)
 									+ "）暂无法预览，详情请联系管理员！");
 						}
 					}
