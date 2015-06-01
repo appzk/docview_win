@@ -36,7 +36,7 @@ $(document).ready(function() {
 				$('.select-page-selector-sync').append('<option>' + (i + 1) + '</option>');
 			}
 			
-			$('.container-fluid .span12').html('<div class="pdf-page"><div class="pdf-content"><img alt="第1页" src="' + slideUrls[0] + '"></div></div>');
+			$('.container-fluid .span12').html('<div class="pdf-page"><div class="pdf-content img-container-sync"><img class="slide-img-0" alt="第1页" src="' + slideUrls[0] + '"></div></div>');
 			// resetImgSize();
 			
 			var percent = Math.ceil((curSlide / slideUrls.length) * 100);
