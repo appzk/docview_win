@@ -14,7 +14,7 @@ $(document).ready(function() {
 	// $.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
 	$.ajax({
 		type: "GET",
-		url: '/view/' + uuid + '.json',
+		url: '/view/' + uuid + '.json?type=pdf',
 		async: false,
 		dataType: "json",
 		data: { session:sessionId },

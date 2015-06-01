@@ -259,7 +259,8 @@ public class ViewController {
 			@RequestParam(defaultValue = "default") String template,
 			@PathVariable String id,
 			@RequestParam(defaultValue = "1") int start,
-			@RequestParam(defaultValue = "5") int size) {
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(value = "type", required = false) String type) {
 		PageVo<? extends Serializable> page = null;
 		String uuid = null;
 		String rid = null;
@@ -313,7 +314,10 @@ public class ViewController {
 			}
 			if (ViewType.WORD == ViewType.getViewTypeByExt(ext)) {
 				start = (start - 1) * size + 1;
-				if ("pdf".equalsIgnoreCase(pageWordStyle)) {
+				if ("pdf".equalsIgnoreCase(pageWordStyle)
+						|| "speaker".equalsIgnoreCase(type)
+						|| "audience".equalsIgnoreCase(type)
+						|| "pdf".equalsIgnoreCase(type)) {
 					page = viewService.convertWord2Img(rid, 1, 0);
 				} else {
 					page = viewService.convertWord2Html(rid, start, size);
