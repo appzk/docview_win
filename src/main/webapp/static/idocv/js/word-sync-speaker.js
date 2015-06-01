@@ -84,13 +84,6 @@ $(document).ready(function() {
 		gotoSlideSync(selectNum);
 	});
 	
-	$('.btn-cmd-previous-sync').click(function () {
-		preSlideSync();
-	});
-	$('.btn-cmd-next-sync').click(function () {
-		nextSlideSync();
-	});
-
 	// send draw event
 	
 	// keyboard
