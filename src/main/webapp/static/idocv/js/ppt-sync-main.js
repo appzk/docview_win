@@ -24,8 +24,8 @@ $(document).ready(function() {
 			var audienceUrl = 'http://' + host + pathname + '?type=audience';
 			$('.qrcode-container-speaker').qrcode(speakerUrl);
 			$('.qrcode-container-audience').qrcode(audienceUrl);
-			$('.speaker-link-container').html('链接：' + speakerUrl + '<br />点击<a href="' + speakerUrl + '">进入</a>');
-			$('.audience-link-container').html('链接：' + audienceUrl + '<br />点击<a href="' + audienceUrl + '">进入</a>');
+			$('.speaker-link-container').html('链接：' + speakerUrl + '<br />点击<a href="' + speakerUrl + '" target="_blank">进入</a>');
+			$('.audience-link-container').html('链接：' + audienceUrl + '<br />点击<a href="' + audienceUrl + '" target="_blank">进入</a>');
 			
 			
 		} else {
