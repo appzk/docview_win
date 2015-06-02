@@ -77,14 +77,14 @@
       </div>
     </div><!--/.fluid-container-->
     
-    <div class="btn-word-sync-cmd-container text-center" style="position: fixed; bottom: 10px; left: 0px; right: 0px; z-index: 1000;">
-      <a cmd-string="left" class="btn btn-primary btn-cmd btn-cmd-previous-sync" href="#" title="上一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-left icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+    <div class="btn-word-sync-cmd-container text-center" style="position: fixed; bottom: 10px; left: 0px; right: 0px; text-align: center; z-index: 1000;">
+      <a cmd-string="left" class="btn btn-primary btn-cmd btn-cmd-previous-sync" style="display: inline-block;" href="#" title="上一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-left icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
       &nbsp;
-      <select class="select-page-selector-sync span1" style="width: 60px; margin-top: 10px;">
+      <select class="select-page-selector-sync span1" style="width: 60px; margin-top: 10px; display: inline-block;">
         <!-- PAGE NUMBERS HERE -->
       </select>
       &nbsp;
-      <a cmd-string="right" class="btn btn-primary btn-cmd btn-cmd-next-sync" href="#" title="下一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-right icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+      <a cmd-string="right" class="btn btn-primary btn-cmd btn-cmd-next-sync" style="display: inline-block;" href="#" title="下一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-right icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
     </div>
     
     <div class="server-param-container" style="display: none;">
