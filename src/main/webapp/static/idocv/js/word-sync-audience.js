@@ -267,9 +267,13 @@ function resetImgSizeSync() {
 		$('.slide-canvas').height($('.img-container-sync').height());
 		$('.slide-canvas')[0].width = $('.img-container-sync').width();
 		$('.slide-canvas')[0].height = $('.img-container-sync').height();
-		
 		resetStroke();
 	});
+	$('.slide-canvas').width($('.img-container-sync').width());
+	$('.slide-canvas').height($('.img-container-sync').height());
+	$('.slide-canvas')[0].width = $('.img-container-sync').width();
+	$('.slide-canvas')[0].height = $('.img-container-sync').height();
+	resetStroke();
 }
 
 function resetStroke() {
