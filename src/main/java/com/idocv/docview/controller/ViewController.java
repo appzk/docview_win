@@ -67,6 +67,8 @@ public class ViewController {
 	private @Value("${view.page.excel.style}")
 	String pageExcelStyle;
 	
+	private @Value("${view.page.pdf.style}") String viewPagePdfStyle;
+
 	private @Value("${view.page.private.session.duraion}")
 	int viewPagePrivateSessionDuraion;
 

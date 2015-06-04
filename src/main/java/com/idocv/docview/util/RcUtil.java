@@ -144,6 +144,21 @@ public class RcUtil {
 	}
 
 	/**
+	 * 获取PDF解析文档的本地目录(HTML)
+	 * 
+	 * @param rid
+	 * @return
+	 */
+	public String getParseDirOfPdf2Html(String rid) {
+		String parseDir = getParseDir(rid);
+		String pdf2HtmlDir = parseDir + ViewService.PDF_TO_HTML_TYPE + File.separator;
+		if (!new File(pdf2HtmlDir).isDirectory()) {
+			new File(pdf2HtmlDir).mkdirs();
+		}
+		return pdf2HtmlDir;
+	}
+	
+	/**
 	 * 获取PDF解析文档的本地目录(PNG)
 	 * 
 	 * @param rid

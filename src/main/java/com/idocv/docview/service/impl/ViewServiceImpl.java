@@ -103,6 +103,12 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${view.page.excel.style}")
 	String pageExcelStyle;
 	
+	private @Value("${convert.filetype.word}") String convertFiletypeWord;
+
+	private @Value("${convert.filetype.excel}") String convertFiletypeExcel;
+
+	private @Value("${convert.filetype.pdf}") String convertFiletypePdf;
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO
@@ -957,8 +963,23 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_CONVERTING);
 			String convertResult = "";
 			if (ViewType.WORD == ViewType.getViewTypeByExt(ext)) {
-				if ("img".equalsIgnoreCase(pageWordStyle)
-						|| "pdf".equalsIgnoreCase(pageWordStyle)) {
+				// view type 1: view by HTML
+				if (convertFiletypeWord.contains("html")) {
+					if (!destFile.isFile()) {
+						convertResult = CmdUtil
+								.runWindows(word2Html, src, dest);
+					}
+					if (!destFile.isFile()) {
+						logger.error("[CONVERT ERROR] " + rid + " - "
+								+ convertResult);
+						throw new DocServiceException("对不起，该文档（"
+								+ RcUtil.getUuidByRid(rid)
+								+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					}
+				}
+				// view type 1: view by image
+				if (convertFiletypeWord.contains("img")
+						|| convertFiletypeWord.contains("pdf")) {
 					dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
 					destFile = new File(dest);
 					
@@ -985,22 +1006,27 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					if (!new File(pngDestFirstPage).isFile()) {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
 						throw new DocServiceException("对不起，该文档（"
-								+ RcUtil.getUuidByRid(rid)
- + "）暂无法预览，详情请联系管理员！");
+								+ RcUtil.getUuidByRid(rid) + "）暂无法预览，详情请联系管理员！");
 					}
-				} else {
+				}
+			} else if (ViewType.EXCEL == ViewType.getViewTypeByExt(ext)) {
+				// view type 1: view by HTML
+				if (convertFiletypeExcel.contains("html")) {
 					if (!destFile.isFile()) {
-						convertResult = CmdUtil.runWindows(word2Html, src, dest);
+						convertResult = CmdUtil.runWindows(excel2Html, src,
+								dest);
 					}
 					if (!destFile.isFile()) {
-						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+						logger.error("[CONVERT ERROR] " + rid + " - "
+								+ convertResult);
 						throw new DocServiceException("对不起，该文档（"
 								+ RcUtil.getUuidByRid(rid)
 								+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 					}
 				}
-			} else if (ViewType.EXCEL == ViewType.getViewTypeByExt(ext)) {
-				if ("pdf".equalsIgnoreCase(pageExcelStyle)) {
+				// view type 2: view by image
+				if (convertFiletypeExcel.contains("img")
+						|| convertFiletypeExcel.contains("pdf")) {
 					dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
 					destFile = new File(dest);
 					
@@ -1027,18 +1053,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					if (!new File(pngDestFirstPage).isFile()) {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
 						throw new DocServiceException("对不起，该文档（"
-								+ RcUtil.getUuidByRid(rid)
- + "）暂无法预览，详情请联系管理员！");
-					}
-				} else {
-					if (!destFile.isFile()) {
-						convertResult = CmdUtil.runWindows(excel2Html, src, dest);
-					}
-					if (!destFile.isFile()) {
-						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
-						throw new DocServiceException("对不起，该文档（"
-								+ RcUtil.getUuidByRid(rid)
-								+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+								+ RcUtil.getUuidByRid(rid) + "）暂无法预览，详情请联系管理员！");
 					}
 				}
 			} else if (ViewType.PPT == ViewType.getViewTypeByExt(ext)) {
@@ -1057,26 +1072,33 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
 				}
 			} else if (ViewType.PDF == ViewType.getViewTypeByExt(ext)) {
-				String destDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
-				String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
-				if (!new File(destFirstPage).isFile()) {
-					// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
-					convertResult = CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+				// view type 1: view by HTML
+				if (convertFiletypePdf.contains("html")) {
+					// pdf2htmlEx
+					String destDir = rcUtil.getParseDirOfPdf2Html(rid);
+					String destIndex = destDir + "index.html";
+					File destIndexFile = new File(destIndex);
+					if (!destIndexFile.isFile()) {
+						convertResult += CmdUtil.runWindows(pdf2html, "--embed", "cfijo", "--fallback", "1", "--dest-dir", destDir.replaceAll("/", "\\\\"), src.replaceAll("\\\\", "/"), "index.html");
+					}
 				}
-				if (!new File(destFirstPage).isFile()) {
-					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
-					throw new DocServiceException("对不起，该文档（"
-							+ RcUtil.getUuidByRid(rid)
-							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+				
+				// view type 2: view by image
+				if (convertFiletypePdf.contains("img")
+						|| convertFiletypePdf.contains("pdf")) {
+					String destDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
+					String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
+					if (!new File(destFirstPage).isFile()) {
+						// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
+						convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+					}
+					if (!new File(destFirstPage).isFile()) {
+						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+						throw new DocServiceException("对不起，该文档（"
+								+ RcUtil.getUuidByRid(rid)
+								+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开！");
+					}
 				}
-				/* pdf2htmlEx
-				if (!destFile.isFile()) {
-					destDir = destDir.replaceAll("/", "\\\\");
-					destDir = destDir.substring(0, destDir.length() - 1);
-					String convertInfo = CmdUtil.runWindows(pdf2html, "--dest-dir", destDir.replaceAll("/", "\\\\"), "--embed", "cfijo", "--fallback", "1", src.replaceAll("\\\\", "/"), "index.html");
-					logger.info("Convert info: \n" + convertInfo);
-				}
-				*/
 			} else if (ViewType.TXT == ViewType.getViewTypeByExt(ext)) {
 				// do nothing.
 			} else if (ViewType.IMG == ViewType.getViewTypeByExt(ext)) {

@@ -24,6 +24,7 @@ public interface ViewService {
 	// static final String IMG_WIDTH_960 = "960";
 	static final String IMG_WIDTH_1024 = "1024";
 	// static final String IMG_WIDTH_1280 = "1280";
+	static final String PDF_TO_HTML_TYPE = "html";
 	static final String PDF_TO_IMAGE_TYPE = "png";
 
 	/**
