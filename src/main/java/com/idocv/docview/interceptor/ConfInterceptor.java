@@ -12,7 +12,7 @@ public class ConfInterceptor extends HandlerInterceptorAdapter {
 	@Value("${docview.version}")
 	private String version;
 
-	@Value("${view.page.ppt.draw.server}")
+	@Value("${view.page.draw.server}")
 	private String confDrawServer;
 
 	@Override
