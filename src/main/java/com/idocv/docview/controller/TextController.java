@@ -57,9 +57,6 @@ public class TextController {
 	private @Value("${view.page.load.async}")
 	boolean pageLoadAsync;
 	
-	private @Value("${view.page.word.style}")
-	String pageWordStyle;
-	
 	private @Value("${view.page.excel.style}")
 	String pageExcelStyle;
 

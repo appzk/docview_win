@@ -1,18 +1,13 @@
 package com.idocv.docview.service.impl;
 
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -76,9 +71,6 @@ public class TextServiceImpl implements TextService {
 
 	private @Value("${converter.pdfsign}")
 	String pdfSign;
-
-	private @Value("${view.page.word.style}")
-	String pageWordStyle;
 	
 	private @Value("${view.page.excel.style}")
 	String pageExcelStyle;

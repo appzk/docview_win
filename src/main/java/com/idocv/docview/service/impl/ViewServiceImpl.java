@@ -957,7 +957,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_CONVERTING);
 			String convertResult = "";
 			if (ViewType.WORD == ViewType.getViewTypeByExt(ext)) {
-				if ("pdf".equalsIgnoreCase(pageWordStyle)) {
+				if ("img".equalsIgnoreCase(pageWordStyle)
+						|| "pdf".equalsIgnoreCase(pageWordStyle)) {
 					dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
 					destFile = new File(dest);
 					

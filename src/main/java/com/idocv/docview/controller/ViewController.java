@@ -146,7 +146,8 @@ public class ViewController {
 			}
 
 			if (uuid.endsWith(ViewType.WORD.getSymbol())) {
-				if ("pdf".equalsIgnoreCase(pageWordStyle)) {
+				if ("img".equalsIgnoreCase(pageWordStyle)
+						|| "pdf".equalsIgnoreCase(pageWordStyle)) {
 					model.setViewName("word/pdf");
 				} else if ("bookmark".equalsIgnoreCase(pageWordStyle)) {
 					model.setViewName("word/bookmark");
