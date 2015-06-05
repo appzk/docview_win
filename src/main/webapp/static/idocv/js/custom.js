@@ -114,7 +114,7 @@ function loadAllPage() {
 	$.ajax({
 		type: "GET",
 		url: '/view/' + uuid + '.json?start=1&size=0',
-		data: { session: sessionId },
+		data: {},
 		async: false,
 		dataType: "json"
 	}).done(function( data ) {

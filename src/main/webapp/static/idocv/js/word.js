@@ -5,6 +5,7 @@
 
 var totalSize = 1;
 var id = $.url().segment(2);
+var uuid = id;
 
 $(document).ready(function() {
 	
@@ -22,7 +23,7 @@ $(document).ready(function() {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;
-			var uuid = data.uuid;
+			uuid = data.uuid;
 			var pages = data.data;
 			var titles = data.titles;
 			totalSize = data.totalSize;
