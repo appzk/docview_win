@@ -728,6 +728,17 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				convert(rid);
 				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
 			}
+			
+			// double check & convert pdf->png
+			if (ArrayUtils.isEmpty(pngFiles)) {
+				String destDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
+				String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
+				if (!new File(destFirstPage).isFile()) {
+					String src = rcUtil.getPath(rid);
+					CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+				}
+			}
+			
 			if (ArrayUtils.isEmpty(pngFiles)) {
 				throw new DocServiceException("预览失败，不是一个PDF文件或该文件已损坏！");
 			}
@@ -1076,10 +1087,17 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				if (convertFiletypePdf.contains("html")) {
 					// pdf2htmlEx
 					String destDir = rcUtil.getParseDirOfPdf2Html(rid);
+					destDir = destDir.replaceAll("/", "\\\\");
+					destDir = destDir.endsWith("\\") ? destDir.substring(0, destDir.length() - 1) : destDir;
 					String destIndex = destDir + "index.html";
 					File destIndexFile = new File(destIndex);
 					if (!destIndexFile.isFile()) {
-						convertResult += CmdUtil.runWindows(pdf2html, "--embed", "cfijo", "--fallback", "1", "--dest-dir", destDir.replaceAll("/", "\\\\"), src.replaceAll("\\\\", "/"), "index.html");
+						convertResult += CmdUtil.runWindows(pdf2html,
+								"--embed", "cfijo", "--fallback", "1",
+								"--split-pages", "1", "--page-filename",
+								"p%d.page", "--zoom", "1.5", "--dest-dir",
+								destDir, src.replaceAll("\\\\", "/"),
+								"index.html");
 					}
 				}
 				

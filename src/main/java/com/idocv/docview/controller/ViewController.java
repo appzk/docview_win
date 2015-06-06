@@ -67,7 +67,7 @@ public class ViewController {
 	private @Value("${view.page.excel.style}")
 	String pageExcelStyle;
 	
-	private @Value("${view.page.pdf.style}") String viewPagePdfStyle;
+	private @Value("${view.page.pdf.style}") String pagePdfStyle;
 
 	private @Value("${view.page.private.session.duraion}")
 	int viewPagePrivateSessionDuraion;
@@ -110,10 +110,10 @@ public class ViewController {
 
 	@RequestMapping("{id:\\w{1,31}}")
 	public ModelAndView page(ModelAndView model,
-			@RequestParam(defaultValue = "default") String type,
 			@PathVariable String id,
 			@RequestParam(defaultValue = "1") int start,
-			@RequestParam(defaultValue = "5") int size) {
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(value = "type", required = false) String type) {
 		String uuid = null;
 		String sessionId = null;
 		try {
@@ -170,11 +170,26 @@ public class ViewController {
 					model.setViewName("word/sync-audience");
 					return model;
 				}
+
+				// if type is set, use it.
+				if ("img".equalsIgnoreCase(type)) {
+					model.setViewName("word/pdf");
+				} else if ("html".equalsIgnoreCase(type)) {
+					model.setViewName("word/index");
+				}
 				return model;
 			} else if (uuid.endsWith(ViewType.EXCEL.getSymbol())) {
-				if ("pdf".equalsIgnoreCase(pageExcelStyle)) {
+				if ("img".equalsIgnoreCase(pageWordStyle)
+						|| "pdf".equalsIgnoreCase(pageExcelStyle)) {
 					model.setViewName("excel/pdf");
 				} else {
+					model.setViewName("excel/index");
+				}
+
+				// if type is set, use it.
+				if ("img".equalsIgnoreCase(type)) {
+					model.setViewName("excel/pdf");
+				} else if ("html".equalsIgnoreCase(type)) {
 					model.setViewName("excel/index");
 				}
 				return model;
@@ -202,7 +217,19 @@ public class ViewController {
 					return model;
 				}
 			} else if (uuid.endsWith(ViewType.PDF.getSymbol())) {
-				model.setViewName("pdf/index");
+				if ("img".equalsIgnoreCase(pagePdfStyle)
+						|| "pdf".equalsIgnoreCase(pagePdfStyle)) {
+					model.setViewName("pdf/img");
+				} else {
+					model.setViewName("pdf/index");
+				}
+
+				// if type is set, use it.
+				if ("img".equalsIgnoreCase(type)) {
+					model.setViewName("pdf/img");
+				} else if ("html".equalsIgnoreCase(type)) {
+					model.setViewName("pdf/index");
+				}
 				return model;
 			} else if (uuid.endsWith(ViewType.TXT.getSymbol())) {
 				model.setViewName("txt/index");
@@ -319,16 +346,30 @@ public class ViewController {
 				start = (start - 1) * size + 1;
 				if ("pdf".equalsIgnoreCase(pageWordStyle)
 						|| "speaker".equalsIgnoreCase(type)
-						|| "audience".equalsIgnoreCase(type)
-						|| "pdf".equalsIgnoreCase(type)) {
+						|| "audience".equalsIgnoreCase(type)) {
 					page = viewService.convertWord2Img(rid, 1, 0);
 				} else {
 					page = viewService.convertWord2Html(rid, start, size);
 				}
+
+				// if type is set, use it.
+				if ("img".equalsIgnoreCase(type)) {
+					page = viewService.convertWord2Img(rid, 1, 0);
+				} else if ("html".equalsIgnoreCase(type)) {
+					page = viewService.convertWord2Html(rid, start, size);
+				}
 			} else if (ViewType.EXCEL == ViewType.getViewTypeByExt(ext)) {
-				if ("pdf".equalsIgnoreCase(pageExcelStyle)) {
+				if ("img".equalsIgnoreCase(pageExcelStyle)
+						|| "pdf".equalsIgnoreCase(pageExcelStyle)) {
 					page = viewService.convertExcel2Img(rid, 1, 0);
 				} else {
+					page = viewService.convertExcel2Html(rid, start, size);
+				}
+
+				// if type is set, use it.
+				if ("img".equalsIgnoreCase(type)) {
+					page = viewService.convertExcel2Img(rid, 1, 0);
+				} else if ("html".equalsIgnoreCase(type)) {
 					page = viewService.convertExcel2Html(rid, start, size);
 				}
 			} else if (ViewType.PPT == ViewType.getViewTypeByExt(ext)) {
@@ -338,7 +379,19 @@ public class ViewController {
 				page = viewService.convertTxt2Html(rid, start, size);
 			} else if (ViewType.PDF == ViewType.getViewTypeByExt(ext)) {
 				// page = previewService.convertPdf2Html(rid, 1, 0);
-				page = viewService.convertPdf2Img(rid, 1, 0);
+				if ("img".equalsIgnoreCase(pagePdfStyle)
+						|| "pdf".equalsIgnoreCase(pagePdfStyle)) {
+					page = viewService.convertPdf2Img(rid, 1, 0);
+				} else {
+					page = viewService.convertPdf2Html(rid, 1, 0);
+				}
+
+				// if type is set, use it.
+				if ("img".equalsIgnoreCase(type)) {
+					page = viewService.convertPdf2Img(rid, 1, 0);
+				} else if ("html".equalsIgnoreCase(type)) {
+					page = viewService.convertPdf2Html(rid, 1, 0);
+				}
 			} else if (ViewType.IMG == ViewType.getViewTypeByExt(ext)) {
 				page = viewService.convertImage2Jpg(rid);
 			} else if (ViewType.AUDIO == ViewType.getViewTypeByExt(ext)) {
