@@ -16,7 +16,7 @@
   overflow:auto;
 }
 #page-container { /* PDF container */
-  // position:absolute; /* required for calculating relative positions of pages in pdf2htmlEX.js */
+  position:absolute; /* required for calculating relative positions of pages in pdf2htmlEX.js */
   top:0;
   left:0px;
   margin:0; 
@@ -69,20 +69,20 @@
     overflow:visible;
     background-color:transparent;
   }
-  .d { display:none; }
+  .@CSS_CSS_DRAW_CN@ { display:none; }
 }
 /* Part 2: Page Elements: Modify with caution
  * The followings are base classes, some of which are meant to be override by PDF specific classes
  * So do not increase the specificity (e.g. ".classname" -> "#page-container .classname")
  */
-.pf { /* page */
+.@CSS_PAGE_FRAME_CN@ { /* page */
   position:relative;
   background-color:white;
   overflow: hidden;
   margin:0; 
   border:0; /* required by pdf2htmlEX.js for page visibility test */
 }
-.pc { /* content of a page */
+.@CSS_PAGE_CONTENT_BOX_CN@ { /* content of a page */
   position:absolute;
   border:0;
   padding:0;
@@ -98,10 +98,10 @@
   -ms-transform-origin:0% 0%;
   -webkit-transform-origin:0% 0%;
 }
-.pc.opened { /* used by pdf2htmlEX.js, to show/hide pages */
+.@CSS_PAGE_CONTENT_BOX_CN@.opened { /* used by pdf2htmlEX.js, to show/hide pages */
   display:block;
 }
-.bf { /* images that occupies the whole page */
+.@CSS_FULL_BACKGROUND_IMAGE_CN@ { /* images that occupies the whole page */
   position:absolute;
   border:0;
   margin:0;
@@ -114,7 +114,7 @@
   -webkit-user-select:none;
   user-select:none;
 }
-.bi { /* images that cover only a part of the page */
+.@CSS_BACKGROUND_IMAGE_CN@ { /* images that cover only a part of the page */
   position:absolute;
   border:0;
   margin:0;
@@ -124,7 +124,7 @@
   user-select:none;
 }
 @media print {
-  .pf {
+  .@CSS_PAGE_FRAME_CN@ {
     margin:0;
     box-shadow:none;
     page-break-after:always;
@@ -132,14 +132,14 @@
   }
   @-moz-document url-prefix() {
     /* fix page truncation for FireFox */
-    .pf {
+    .@CSS_PAGE_FRAME_CN@ {
       overflow:visible;
       border:1px solid #FFFFFF;
     }
-    .pc {overflow:visible;}
+    .@CSS_PAGE_CONTENT_BOX_CN@ {overflow:visible;}
   }
 }
-.c { /* clip box */
+.@CSS_CLIP_CN@ { /* clip box */
   position:absolute;
   border:0;
   padding:0;
@@ -147,7 +147,7 @@
   overflow:hidden;
   display:block;
 }
-.t { /* text line */
+.@CSS_LINE_CN@ { /* text line */
   position:absolute;
   white-space:pre;
   font-size:1px;
@@ -157,17 +157,17 @@
   unicode-bidi:bidi-override;/* For rtl languages, e.g. Hebrew, we don't want the default Unicode behaviour */
   -moz-font-feature-settings:"liga" 0;/* We don't want Firefox to recognize ligatures */
 }
-.t:after {
+.@CSS_LINE_CN@:after {
   /* Workaround for https://bugs.webkit.org/show_bug.cgi?id=35443 */
   content: '';
 }
-.t span { /* text blocks within a line */
+.@CSS_LINE_CN@ span { /* text blocks within a line */
   position:relative;
   /* _<id> for spaces may need display:inline, which will override this */ 
   display:inline-block;
   unicode-bidi:bidi-override; /* For rtl languages, e.g. Hebrew, we don't want the default Unicode behaviour */
 }
-._ { /* text shift */
+.@CSS_WHITESPACE_CN@ { /* text shift */
   color:transparent;
   z-index:-1;
 }
@@ -178,13 +178,13 @@
 ::-moz-selection{
   background: rgba(127,255,255,0.4);
 }
-.pi { /* info for Javascript */
+.@CSS_PAGE_DATA_CN@ { /* info for Javascript */
   display:none;
 }
-.l { /* annotation links */
+.@CSS_LINK_CN@ { /* annotation links */
 }
 /* transparent color - WebKit */
-.d { /* css drawing */
+.@CSS_CSS_DRAW_CN@ { /* css drawing */
   position:absolute;
   transform-origin:0% 100%;
   -ms-transform-origin:0% 100%;

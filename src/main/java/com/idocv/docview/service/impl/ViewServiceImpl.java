@@ -335,8 +335,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					if (!tmpPdfFile.isFile()) {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
 						throw new DocServiceException("对不起，该文档（"
-								+ RcUtil.getUuidByRid(rid)
- + "）暂无法预览，详情请联系管理员！");
+								+ RcUtil.getUuidByRid(rid) + "）暂无法预览，详情请联系管理员！");
 					}
 				}
 				
@@ -733,14 +732,17 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			if (ArrayUtils.isEmpty(pngFiles)) {
 				String destDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
 				String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
+				String convertResult = "";
 				if (!new File(destFirstPage).isFile()) {
 					String src = rcUtil.getPath(rid);
-					CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+					convertResult = CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+					pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
 				}
-			}
-			
-			if (ArrayUtils.isEmpty(pngFiles)) {
-				throw new DocServiceException("预览失败，不是一个PDF文件或该文件已损坏！");
+				if (ArrayUtils.isEmpty(pngFiles)) {
+					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid) + "）暂无法预览，详情请联系管理员！");
+				}
 			}
 			
 			List<File> pdfPageFiles = new ArrayList<File>();
@@ -772,36 +774,38 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	public PageVo<PdfVo> convertPdf2Html(String rid, int start, int limit) throws DocServiceException {
 		try {
 			convert(rid);
-			File htmlFile = new File(rcUtil.getParsePathOfHtml(rid));
-			String htmlRaw = FileUtils.readFileToString(htmlFile, "UTF-8");
+
+			String destDir = rcUtil.getParseDirOfPdf2Html(rid);
+
+			// double check & convert pdf->html
+			File destIndexFile = new File(destDir, "index.html");
+			if (!destIndexFile.isFile()) {
+				destDir = destDir.replaceAll("/", "\\\\");
+				destDir = destDir.endsWith("\\") ? destDir.substring(0, destDir.length() - 1) : destDir;
+				String src = rcUtil.getPath(rid);
+				CmdUtil.runWindows(pdf2html, "--embed", "cfijo", "--fallback",
+						"1", "--split-pages", "1", "--page-filename",
+						"%d.page", "--zoom", "1.3", "--dest-dir", destDir,
+						src.replaceAll("\\\\", "/"), "index.html");
+			}
+			
+			if (!destIndexFile.isFile()) {
+				logger.error("convertPdf2Html(" + rid
+						+ ") error: 预览失败，该pdf文档无法生成目标html文件或该文件已损坏！");
+				throw new DocServiceException("预览失败，该pdf文档无法生成目标html文件或该文件已损坏！");
+			}
 
 			// check first page existence
-			File firstPageFile = new File(rcUtil.getParseDir(rid) + "1.html");
-			String bodyString = htmlRaw;
-
-			// split all pages
+			File firstPageFile = new File(rcUtil.getParseDirOfPdf2Html(rid) + "1.page");
 			if (!firstPageFile.isFile()) {
-				List<String> pages = new ArrayList<String>();
-				String pageRegex = "(?s)(?i)(.*?)(<div class=\"pd w0 h0\">.+?></div></div></div>)(.*)(?-i)";
-				while (bodyString.matches(pageRegex)) {
-					String page = bodyString.replaceFirst(pageRegex, "$2");
-					bodyString = bodyString.replaceFirst(pageRegex, "$3");
-					pages.add(page);
-				}
-				if (CollectionUtils.isEmpty(pages)) {
-					logger.error("未找到页面内容（" + rid + "）！");
-					throw new DocServiceException("未找到页面内容！");
-				}
-
-				// save pages
-				for (int i = 0; i < pages.size(); i++) {
-					File curPageFile = new File(rcUtil.getParseDir(rid) + (i + 1) + ".html");
-					FileUtils.writeStringToFile(curPageFile, pages.get(i), "UTF-8");
-				}
+				logger.error("convertPdf2Html(" + rid
+						+ ") error: 预览失败，该pdf文档无法生成目标html(page1)文件或该文件已损坏！");
+				throw new DocServiceException(
+						"预览失败，该pdf文档无法生成目标html(page1)文件或该文件已损坏！");
 			}
 			
 			// get page content
-			File curPageFile = new File(rcUtil.getParseDir(rid) + start + ".html");
+			File curPageFile = new File(rcUtil.getParseDirOfPdf2Html(rid) + start + ".page");
 			if (!curPageFile.isFile()) {
 				// The last page.
 				return new PageVo<PdfVo>(null, 0);
@@ -811,11 +815,11 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			limit = limit == 0 ? Integer.MAX_VALUE : limit;
 			int totalPageCount = start;
 			for (int i = 0; i < limit; i++) {
-				curPageFile = new File(rcUtil.getParseDir(rid) + (start + i) + ".html");
-				if (curPageFile.isFile() && new File(rcUtil.getParseDir(rid) + "bg" + (i + 1) + ".png").isFile()) {
+				curPageFile = new File(rcUtil.getParseDirOfPdf2Html(rid) + (start + i) + ".page");
+				if (curPageFile.isFile() && new File(rcUtil.getParseDirOfPdf2Html(rid) + "bg" + (start + i) + ".png").isFile()) {
 					totalPageCount = start + i;
 					String curPageString = FileUtils.readFileToString(curPageFile, "UTF-8");
-					curPageString = processImageUrlOfPdf(rcUtil.getParseUrlDir(rid), curPageString);
+					curPageString = processImageUrlOfPdf(rcUtil.getParseUrlDir(rid) + "html/", curPageString);
 					pages.add(curPageString);
 				} else {
 					break;
@@ -829,13 +833,13 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			// construct vo
 			for (int i = 0; i < pages.size(); i++) {
 				PdfVo pdf = new PdfVo();
-				pdf.setContent("<div id=\"" + (start + i) + "\" class=\"scroll-page\">" + pages.get(i) + "</div>");
-				pdf.setBackground(rcUtil.getParseUrlDir(rid) + "bg" + (i + 1) + ".png");
+				pdf.setContent(pages.get(i));
+				pdf.setBackground(rcUtil.getParseUrlDir(rid) + "html/bg" + (i + 1) + ".png");
 				data.add(pdf);
 			}
 			PageVo<PdfVo> page = new PageVo<PdfVo>(data, totalPageCount);
-			page.setStyleUrl(rcUtil.getParseUrlDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".css");
-			page.setUrl(rcUtil.getParseUrlDir(rid) + "index.html");
+			page.setStyleUrl(rcUtil.getParseUrlDir(rid) + "html/" + RcUtil.getFileNameWithoutExt(rid) + ".css");
+			page.setUrl(rcUtil.getParseUrlDir(rid) + "html/index.html");
 			return page;
 		} catch (Exception e) {
 			logger.error("convertPdf2Html error: " + e.getMessage());
@@ -1095,7 +1099,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 						convertResult += CmdUtil.runWindows(pdf2html,
 								"--embed", "cfijo", "--fallback", "1",
 								"--split-pages", "1", "--page-filename",
-								"p%d.page", "--zoom", "1.5", "--dest-dir",
+								"%d.page", "--zoom", "1.3", "--dest-dir",
 								destDir, src.replaceAll("\\\\", "/"),
 								"index.html");
 					}
