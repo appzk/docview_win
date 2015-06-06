@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -815,11 +816,22 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			List<String> pages = new ArrayList<String>();
 			limit = limit >= 0 ? limit : 0;
 			limit = limit == 0 ? Integer.MAX_VALUE : limit;
-			int totalPageCount = start;
+			
+			File[] pageFiles = new File(rcUtil.getParseDirOfPdf2Html(rid)).listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					if (null != name && name.matches("\\d+\\.page")) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			});
+			
+			int totalPageCount = pageFiles.length;
 			for (int i = 0; i < limit; i++) {
 				curPageFile = new File(rcUtil.getParseDirOfPdf2Html(rid) + (start + i) + ".page");
-				if (curPageFile.isFile() && new File(rcUtil.getParseDirOfPdf2Html(rid) + "bg" + (start + i) + ".png").isFile()) {
-					totalPageCount = start + i;
+				if (curPageFile.isFile()) {
 					String curPageString = FileUtils.readFileToString(curPageFile, "UTF-8");
 					curPageString = processImageUrlOfPdf(rcUtil.getParseUrlDir(rid) + "html/", curPageString);
 					pages.add(curPageString);
@@ -827,16 +839,12 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					break;
 				}
 			}
-			while (new File(rcUtil.getParseDir(rid) + "bg" + (totalPageCount + 1) + ".png").isFile()) {
-				totalPageCount ++;
-			}
 
 			List<PdfVo> data = new ArrayList<PdfVo>();
 			// construct vo
 			for (int i = 0; i < pages.size(); i++) {
 				PdfVo pdf = new PdfVo();
 				pdf.setContent(pages.get(i));
-				pdf.setBackground(rcUtil.getParseUrlDir(rid) + "html/bg" + (i + 1) + ".png");
 				data.add(pdf);
 			}
 			PageVo<PdfVo> page = new PageVo<PdfVo>(data, totalPageCount);
