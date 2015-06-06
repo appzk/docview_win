@@ -22,6 +22,9 @@ $(document).ready(function() {
 				$('.bottom-paging-progress').hide();
 				$('.paging-bottom-all').hide();
 			}
+			if (pages.length <= 1) {
+				$('.btn-cmd-container').hide();
+			}
 			
 			// title
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
