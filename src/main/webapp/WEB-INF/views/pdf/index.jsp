@@ -75,7 +75,7 @@
       <div class="progress progress-striped active bottom-paging-progress">
         <div class="bar" style="width: 0%;"></div>
       </div>
-      <div class="paging-bottom-all">
+      <div class="paging-bottom-all" style="z-index: 2000">
         <!-- SUB PAGING DIV(s) HERE -->
         <!-- 
         <div class="paging-bottom-sub" page-num="1" style="width: 20%;">1</div>
@@ -84,6 +84,16 @@
       </div>
 
     </div><!--/.fluid-container-->
+    
+    <div class="btn-cmd-container text-center" style="position: fixed; bottom: 10px; left: 0px; right: 0px; text-align: center; z-index: 1000;">
+      <a cmd-string="left" class="btn btn-primary btn-cmd btn-cmd-previous" style="display: inline-block;" href="#" title="上一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-left icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+      &nbsp;
+      <select class="select-page-selector span1" style="width: 60px; margin-top: 10px; display: inline-block;">
+        <!-- PAGE NUMBERS HERE -->
+      </select>
+      &nbsp;
+      <a cmd-string="right" class="btn btn-primary btn-cmd btn-cmd-next" style="display: inline-block;" href="#" title="下一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-right icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+    </div>
     
     <!-- JavaSript
     ================================================== -->
