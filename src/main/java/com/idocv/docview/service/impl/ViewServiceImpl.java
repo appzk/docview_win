@@ -783,16 +783,18 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				destDir = destDir.replaceAll("/", "\\\\");
 				destDir = destDir.endsWith("\\") ? destDir.substring(0, destDir.length() - 1) : destDir;
 				String src = rcUtil.getPath(rid);
-				CmdUtil.runWindows(pdf2html, "--embed", "cfijo", "--fallback",
+				String convertResult = CmdUtil.runWindows(pdf2html, "--embed",
+						"cfijo", "--fallback",
 						"1", "--split-pages", "1", "--page-filename",
 						"%d.page", "--zoom", "1.3", "--dest-dir", destDir,
 						src.replaceAll("\\\\", "/"), "index.html");
-			}
-			
-			if (!destIndexFile.isFile()) {
-				logger.error("convertPdf2Html(" + rid
-						+ ") error: 预览失败，该pdf文档无法生成目标html文件或该文件已损坏！");
-				throw new DocServiceException("预览失败，该pdf文档无法生成目标html文件或该文件已损坏！");
+				if (!destIndexFile.isFile()) {
+					logger.error("convertPdf2Html(" + rid
+							+ ") error: 预览失败，该pdf文档无法生成目标html文件或该文件已损坏，转换结果："
+							+ convertResult);
+					throw new DocServiceException(
+							"预览失败，该pdf文档无法生成目标html文件或该文件已损坏！");
+				}
 			}
 
 			// check first page existence
