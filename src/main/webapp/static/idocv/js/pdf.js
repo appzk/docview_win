@@ -52,7 +52,13 @@ $(document).ready(function() {
 			});
 			$(".paging-bottom-sub").mouseover(function(){
 				var id = $(this).attr('page-num');
-				gotoPage(id);
+				var curWidth = $(this).width() + 10;
+				$(this).append('<div class="noti-page" style="position: absolute; bottom: 20px; width: ' + curWidth + 'px; height: 30px;"><font color="red">' + id + '</font></div>');
+			});
+			$(".paging-bottom-sub").mouseout(function(){
+				var id = $(this).attr('page-num');
+				$(this).text('·');
+				$('.noti-page').remove();
 			});
 			
 			afterLoad();
