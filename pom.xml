@@ -279,7 +279,7 @@
 				<pom.db.mongodb.port>27017</pom.db.mongodb.port>
 
 				<!-- Upload -->
-				<pom.upload.max.size>1000000</pom.upload.max.size>
+				<pom.upload.max.size>20000000</pom.upload.max.size>
 				<pom.upload.max.msg>\u514d\u8d39\u7248\u53ea\u652f\u63011M\u4ee5\u5185\u6587\u4ef6\u9884\u89c8\uff0c\u8be6\u60c5\u54a8\u8be2\uff1a400-000-7644</pom.upload.max.msg>
 
 				<!-- Office converter -->
