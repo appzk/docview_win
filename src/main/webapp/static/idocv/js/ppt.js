@@ -8,7 +8,7 @@ var slideThumbUrls = new Array();
 var ratio = 0.75;
 var curSlide = 1;
 var uuid = $.url().segment(2);
-var sessionId = $.url().param('session');
+var params = $.url().param();
 
 $(document).ready(function() {
 	
@@ -19,7 +19,7 @@ $(document).ready(function() {
 		url: '/view/' + uuid + '.json',
 		async: false,
 		dataType: "json",
-		data: { session:sessionId },
+		data: params,
 	}).done(function( data ) {
 		var code = data.code;
 		if (1 == code) {

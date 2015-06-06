@@ -4,13 +4,14 @@
  */
 
 var uuid = $.url().segment(2);
-var sessionId = $.url().param('session');
+var params = $.url().param();
+
 $(document).ready(function() {
 	
 	$.ajax({
 		type: "GET",
 		url: '/view/' + uuid + '.json',
-		data: {session:sessionId},
+		data: params,
 		async: false,
 		dataType: "json"
 	}).done(function( data ) {

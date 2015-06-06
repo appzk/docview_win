@@ -6,6 +6,8 @@
 var totalSize = 1;
 var id = $.url().segment(2);
 var uuid = id;
+var params = $.url().param();
+var type = $.url().param('type');
 
 $(document).ready(function() {
 	
@@ -19,7 +21,7 @@ $(document).ready(function() {
 	}
 	*/
 	
-	$.get('/view/' + id + '.json?start=1&size=5', {}, function(data, status) {
+	$.get('/view/' + id + '.json?start=1&size=5', params, function(data, status) {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;
@@ -103,7 +105,7 @@ $(document).ready(function() {
 			});
 			
 			// NEXT page link
-			$('.span12').parent().append('<a id="next" href="/view/' + id + '.json?start=2&size=5"></a>');
+			$('.span12').parent().append('<a id="next" href="/view/' + id + '.json?start=2&size=5&type=' + type + '"></a>');
 			
 			if (document.createStyleSheet){
 				document.createStyleSheet('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />');

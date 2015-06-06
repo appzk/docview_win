@@ -4,10 +4,11 @@
  */
 
 var uuid = $.url().segment(2);
-var sessionId = $.url().param('session');
+var params = $.url().param();
+
 $(document).ready(function() {
 	
-	$.get('/view/' + uuid + '.json?start=1&size=5', {session:sessionId}, function(data, status) {
+	$.get('/view/' + uuid + '.json?start=1&size=5', params, function(data, status) {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;
