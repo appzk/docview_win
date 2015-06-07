@@ -57,11 +57,11 @@ $(document).ready(function() {
 				var id = $(this).attr('page-num');
 				var curWidth = $(this).width();
 				curWidth = curWidth < 30 ? 30 : curWidth;
-				$(this).append('<div class="noti-page" style="position: absolute; bottom: 20px; width: ' + curWidth + 'px; height: 30px;"><font color="red">' + id + '</font></div>');
+				$(this).append('<div class="noti-page-number" style="position: absolute; bottom: 20px; width: ' + curWidth + 'px; height: 30px;"><font color="red">' + id + '</font></div>');
 			});
 			$('.paging-bottom-sub').bind('mouseup mouseleave touchend touchcancel', function(e) {
 				e.preventDefault();
-				$('.noti-page').remove();
+				$('.noti-page-number').remove();
 			});
 			
 			afterLoad();
