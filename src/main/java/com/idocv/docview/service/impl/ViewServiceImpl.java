@@ -945,7 +945,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			if (2 == convertStatus) {
 				String utimeString = docPo.getUtime();
 				Date utime = df.parse(utimeString);
-				Date nowBefore3Min = DateUtils.addMinutes(new Date(), -3);
+				Date nowBefore3Min = DateUtils.addMinutes(new Date(), -10);
 				if (utime.before(nowBefore3Min)) {
 					docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_FAIL);
 					logger.error("对不起，该文档（" + rid
