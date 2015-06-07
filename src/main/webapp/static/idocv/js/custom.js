@@ -113,7 +113,7 @@ function loadAllPage() {
 	$('.word-content').infinitescroll('destroy');
 	$.ajax({
 		type: "GET",
-		url: '/view/' + uuid + '.json?start=1&size=0',
+		url: '/view/' + (!!id ? id : uuid) + '.json?start=1&size=0',
 		data: {},
 		async: false,
 		dataType: "json"
