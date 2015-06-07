@@ -92,6 +92,10 @@ public class TextServiceImpl implements TextService {
 				textString = FileUtils.readFileToString(textFile, "UTF-8");
 			}
 
+			if (null != textString) {
+				textString = textString.replaceAll("[\\s 　]+", " ").trim();
+			}
+
 			List<WordVo> data = new ArrayList<WordVo>();
 			// construct vo
 			WordVo word = new WordVo();
