@@ -344,33 +344,40 @@ public class ViewController {
 			}
 			if (ViewType.WORD == ViewType.getViewTypeByExt(ext)) {
 				start = (start - 1) * size + 1;
-				if (pageWordStyle.startsWith("img")
-						|| pageWordStyle.startsWith("pdf")
-						|| "speaker".equalsIgnoreCase(type)
-						|| "audience".equalsIgnoreCase(type)) {
+				
+				// set view type
+				String viewType = "html";
+				if (pageWordStyle.startsWith("img") || pageWordStyle.startsWith("pdf")) {
+					viewType = "img";
+				}
+				if ("img".equalsIgnoreCase(type) || "speaker".equalsIgnoreCase(type) || "audience".equalsIgnoreCase(type)) {
+					viewType = "img";
+				} else if ("html".equalsIgnoreCase(type)) {
+					viewType = "html";
+				}
+				
+				// result data
+				if ("img".equalsIgnoreCase(viewType)) {
 					page = viewService.convertWord2Img(rid, 1, 0);
 				} else {
-					page = viewService.convertWord2Html(rid, start, size);
-				}
-
-				// if type is set, use it.
-				if ("img".equalsIgnoreCase(type)) {
-					page = viewService.convertWord2Img(rid, 1, 0);
-				} else if ("html".equalsIgnoreCase(type)) {
 					page = viewService.convertWord2Html(rid, start, size);
 				}
 			} else if (ViewType.EXCEL == ViewType.getViewTypeByExt(ext)) {
-				if (pageExcelStyle.startsWith("img")
-						|| pageExcelStyle.startsWith("pdf")) {
-					page = viewService.convertExcel2Img(rid, 1, 0);
-				} else {
-					page = viewService.convertExcel2Html(rid, start, size);
+				// set view type
+				String viewType = "html";
+				if (pageExcelStyle.startsWith("img") || pageExcelStyle.startsWith("pdf")) {
+					viewType = "img";
+				}
+				if ("img".equalsIgnoreCase(type)) {
+					viewType = "img";
+				} else if ("html".equalsIgnoreCase(type)) {
+					viewType = "html";
 				}
 
-				// if type is set, use it.
-				if ("img".equalsIgnoreCase(type)) {
+				// result data
+				if ("img".equalsIgnoreCase(viewType)) {
 					page = viewService.convertExcel2Img(rid, 1, 0);
-				} else if ("html".equalsIgnoreCase(type)) {
+				} else {
 					page = viewService.convertExcel2Html(rid, start, size);
 				}
 			} else if (ViewType.PPT == ViewType.getViewTypeByExt(ext)) {
@@ -379,18 +386,21 @@ public class ViewController {
 				start = (start - 1) * size + 1;
 				page = viewService.convertTxt2Html(rid, start, size);
 			} else if (ViewType.PDF == ViewType.getViewTypeByExt(ext)) {
-				// page = previewService.convertPdf2Html(rid, 1, 0);
-				if (pagePdfStyle.startsWith("img")
-						|| pagePdfStyle.startsWith("pdf")) {
-					page = viewService.convertPdf2Img(rid, 1, 0);
-				} else {
-					page = viewService.convertPdf2Html(rid, 1, 0);
+				// set view type
+				String viewType = "html";
+				if (pagePdfStyle.startsWith("img") || pagePdfStyle.startsWith("pdf")) {
+					viewType = "img";
+				}
+				if ("img".equalsIgnoreCase(type)) {
+					viewType = "img";
+				} else if ("html".equalsIgnoreCase(type)) {
+					viewType = "html";
 				}
 
-				// if type is set, use it.
-				if ("img".equalsIgnoreCase(type)) {
+				// result data
+				if ("img".equalsIgnoreCase(viewType)) {
 					page = viewService.convertPdf2Img(rid, 1, 0);
-				} else if ("html".equalsIgnoreCase(type)) {
+				} else {
 					page = viewService.convertPdf2Html(rid, 1, 0);
 				}
 			} else if (ViewType.IMG == ViewType.getViewTypeByExt(ext)) {
