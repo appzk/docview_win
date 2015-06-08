@@ -781,11 +781,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				destDir = destDir.replaceAll("/", "\\\\");
 				destDir = destDir.endsWith("\\") ? destDir.substring(0, destDir.length() - 1) : destDir;
 				String src = rcUtil.getPath(rid);
-				String convertResult = CmdUtil.runWindows(pdf2html, "--embed",
-						"cfijo", "--fallback",
-						"1", "--split-pages", "1", "--page-filename",
-						"%d.page", "--zoom", "1.3", "--dest-dir", destDir,
-						src.replaceAll("\\\\", "/"), "index.html");
+				String convertResult = CmdUtil.runWindows(pdf2html, "--embed", "cfijo", "--split-pages", "1", "--page-filename", "%d.page", "--zoom", "1.3", "--dest-dir", destDir, src.replaceAll("\\\\", "/"), "index.html");
 				if (!destIndexFile.isFile()) {
 					logger.error("convertPdf2Html(" + rid
 							+ ") error: 预览失败，该pdf文档无法生成目标html文件或该文件已损坏，转换结果："
@@ -945,8 +941,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			if (2 == convertStatus) {
 				String utimeString = docPo.getUtime();
 				Date utime = df.parse(utimeString);
-				Date nowBefore3Min = DateUtils.addMinutes(new Date(), -10);
-				if (utime.before(nowBefore3Min)) {
+				Date nowBefore5Min = DateUtils.addMinutes(new Date(), -5);
+				if (utime.before(nowBefore5Min)) {
 					docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_FAIL);
 					logger.error("对不起，该文档（" + rid
 							+ "）暂无法预览，可能设置了密码或已损坏，请确认能正常打开并重新上传！");
@@ -1103,12 +1099,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					String destIndex = destDir + "index.html";
 					File destIndexFile = new File(destIndex);
 					if (!destIndexFile.isFile()) {
-						convertResult += CmdUtil.runWindows(pdf2html,
-								"--embed", "cfijo", "--fallback", "1",
-								"--split-pages", "1", "--page-filename",
-								"%d.page", "--zoom", "1.3", "--dest-dir",
-								destDir, src.replaceAll("\\\\", "/"),
-								"index.html");
+						// option fallback(--fallback 1) is too slow, so do NOT use it.
+						convertResult += CmdUtil.runWindows(pdf2html, "--embed", "cfijo", "--split-pages", "1", "--page-filename", "%d.page", "--zoom", "1.3", "--dest-dir", destDir, src.replaceAll("\\\\", "/"), "index.html");
 					}
 				}
 				
