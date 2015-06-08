@@ -205,6 +205,9 @@ public class DocServiceImpl implements DocService {
 					throw new DocServiceException("URL预览失败，未找到本地文件（"
 							+ localPath + "）");
 				}
+				if (StringUtils.isBlank(name)) {
+					name = srcFile.getName();
+				}
 				data = FileUtils.readFileToByteArray(srcFile);
 			} else {
 				// Web File
