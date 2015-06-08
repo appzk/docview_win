@@ -61,13 +61,14 @@ public class ViewController {
 	private @Value("${view.page.load.async}")
 	boolean pageLoadAsync;
 	
-	private @Value("${view.page.word.style}")
-	String pageWordStyle;
+	private @Value("${view.page.style.word}")
+	String viewPageStyleWord;
 	
-	private @Value("${view.page.excel.style}")
-	String pageExcelStyle;
+	private @Value("${view.page.style.excel}")
+	String viewPageStyleExcel;
 	
-	private @Value("${view.page.pdf.style}") String pagePdfStyle;
+	private @Value("${view.page.style.pdf}")
+	String viewPageStylePdf;
 
 	private @Value("${view.page.private.session.duraion}")
 	int viewPagePrivateSessionDuraion;
@@ -148,10 +149,10 @@ public class ViewController {
 			}
 
 			if (uuid.endsWith(ViewType.WORD.getSymbol())) {
-				if (pageWordStyle.startsWith("img")
-						|| pageWordStyle.startsWith("pdf")) {
+				if (viewPageStyleWord.startsWith("img")
+						|| viewPageStyleWord.startsWith("pdf")) {
 					model.setViewName("word/pdf");
-				} else if (pageWordStyle.startsWith("bookmark")) {
+				} else if (viewPageStyleWord.startsWith("bookmark")) {
 					model.setViewName("word/bookmark");
 				} else {
 					model.setViewName("word/index");
@@ -179,8 +180,8 @@ public class ViewController {
 				}
 				return model;
 			} else if (uuid.endsWith(ViewType.EXCEL.getSymbol())) {
-				if (pageExcelStyle.startsWith("img")
-						|| pageExcelStyle.startsWith("pdf")) {
+				if (viewPageStyleExcel.startsWith("img")
+						|| viewPageStyleExcel.startsWith("pdf")) {
 					model.setViewName("excel/pdf");
 				} else {
 					model.setViewName("excel/index");
@@ -217,8 +218,8 @@ public class ViewController {
 					return model;
 				}
 			} else if (uuid.endsWith(ViewType.PDF.getSymbol())) {
-				if (pagePdfStyle.startsWith("img")
-						|| pagePdfStyle.startsWith("pdf")) {
+				if (viewPageStylePdf.startsWith("img")
+						|| viewPageStylePdf.startsWith("pdf")) {
 					model.setViewName("pdf/img");
 				} else {
 					model.setViewName("pdf/index");
@@ -347,7 +348,7 @@ public class ViewController {
 				
 				// set view type
 				String viewType = "html";
-				if (pageWordStyle.startsWith("img") || pageWordStyle.startsWith("pdf")) {
+				if (viewPageStyleWord.startsWith("img") || viewPageStyleWord.startsWith("pdf")) {
 					viewType = "img";
 				}
 				if ("img".equalsIgnoreCase(type) || "speaker".equalsIgnoreCase(type) || "audience".equalsIgnoreCase(type)) {
@@ -365,7 +366,7 @@ public class ViewController {
 			} else if (ViewType.EXCEL == ViewType.getViewTypeByExt(ext)) {
 				// set view type
 				String viewType = "html";
-				if (pageExcelStyle.startsWith("img") || pageExcelStyle.startsWith("pdf")) {
+				if (viewPageStyleExcel.startsWith("img") || viewPageStyleExcel.startsWith("pdf")) {
 					viewType = "img";
 				}
 				if ("img".equalsIgnoreCase(type)) {
@@ -388,7 +389,7 @@ public class ViewController {
 			} else if (ViewType.PDF == ViewType.getViewTypeByExt(ext)) {
 				// set view type
 				String viewType = "html";
-				if (pagePdfStyle.startsWith("img") || pagePdfStyle.startsWith("pdf")) {
+				if (viewPageStylePdf.startsWith("img") || viewPageStylePdf.startsWith("pdf")) {
 					viewType = "img";
 				}
 				if ("img".equalsIgnoreCase(type)) {

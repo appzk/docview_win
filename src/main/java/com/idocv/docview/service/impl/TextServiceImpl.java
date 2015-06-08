@@ -72,9 +72,6 @@ public class TextServiceImpl implements TextService {
 	private @Value("${converter.pdfsign}")
 	String pdfSign;
 	
-	private @Value("${view.page.excel.style}")
-	String pageExcelStyle;
-	
 	@Override
 	public PageVo<WordVo> getWordText(String rid, int start, int limit) throws DocServiceException{
 		try {

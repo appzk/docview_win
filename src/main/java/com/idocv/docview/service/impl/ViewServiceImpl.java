@@ -98,14 +98,14 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${converter.pdfsign}")
 	String pdfSign;
 
-	private @Value("${view.page.word.style}")
-	String pageWordStyle;
+	private @Value("${view.page.style.word}")
+	String viewPageStyleWord;
 	
-	private @Value("${view.page.excel.style}")
-	String pageExcelStyle;
+	private @Value("${view.page.style.excel}")
+	String viewPageStyleExcel;
 	
-	private @Value("${view.page.pdf.style}")
-	String pagePdfStyle;
+	private @Value("${view.page.style.pdf}")
+	String viewPageStylePdf;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -982,7 +982,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			String convertResult = "";
 			if (ViewType.WORD == ViewType.getViewTypeByExt(ext)) {
 				// view type 1: view by HTML
-				if (pageWordStyle.contains("html")) {
+				if (viewPageStyleWord.contains("html")) {
 					if (!destFile.isFile()) {
 						convertResult = CmdUtil
 								.runWindows(word2Html, src, dest);
@@ -996,8 +996,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					}
 				}
 				// view type 1: view by image
-				if (pageWordStyle.contains("img")
-						|| pageWordStyle.contains("pdf")) {
+				if (viewPageStyleWord.contains("img")
+						|| viewPageStyleWord.contains("pdf")) {
 					dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
 					destFile = new File(dest);
 					
@@ -1029,7 +1029,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				}
 			} else if (ViewType.EXCEL == ViewType.getViewTypeByExt(ext)) {
 				// view type 1: view by HTML
-				if (pageExcelStyle.contains("html")) {
+				if (viewPageStyleExcel.contains("html")) {
 					if (!destFile.isFile()) {
 						convertResult = CmdUtil.runWindows(excel2Html, src,
 								dest);
@@ -1043,8 +1043,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					}
 				}
 				// view type 2: view by image
-				if (pageExcelStyle.contains("img")
-						|| pageExcelStyle.contains("pdf")) {
+				if (viewPageStyleExcel.contains("img")
+						|| viewPageStyleExcel.contains("pdf")) {
 					dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
 					destFile = new File(dest);
 					
@@ -1091,7 +1091,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				}
 			} else if (ViewType.PDF == ViewType.getViewTypeByExt(ext)) {
 				// view type 1: view by HTML
-				if (pagePdfStyle.contains("html")) {
+				if (viewPageStylePdf.contains("html")) {
 					// pdf2htmlEx
 					String destDir = rcUtil.getParseDirOfPdf2Html(rid);
 					destDir = destDir.replaceAll("/", "\\\\");
@@ -1105,8 +1105,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				}
 				
 				// view type 2: view by image
-				if (pagePdfStyle.contains("img")
-						|| pagePdfStyle.contains("pdf")) {
+				if (viewPageStylePdf.contains("img")
+						|| viewPageStylePdf.contains("pdf")) {
 					String destDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
 					String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
 					if (!new File(destFirstPage).isFile()) {
