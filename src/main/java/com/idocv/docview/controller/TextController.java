@@ -56,9 +56,6 @@ public class TextController {
 
 	private @Value("${view.page.load.async}")
 	boolean pageLoadAsync;
-	
-	private @Value("${view.page.excel.style}")
-	String pageExcelStyle;
 
 	@Resource
 	private RcUtil rcUtil;
