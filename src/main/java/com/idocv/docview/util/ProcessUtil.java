@@ -23,6 +23,7 @@ public class ProcessUtil {
 		serviceNameList.add("word2html.exe");
 		serviceNameList.add("excel2html.exe");
 		serviceNameList.add("ppt2jpg.exe");
+		serviceNameList.add("pdf2htmlEX.exe");
 		serviceNameList.add("WINWORD.EXE");
 		serviceNameList.add("EXCEL.EXE");
 		serviceNameList.add("POWERPNT.EXE");
