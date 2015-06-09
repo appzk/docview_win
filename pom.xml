@@ -293,6 +293,7 @@
 				<pom.converter.pdfsign>/idocv/converter/pdfsign/JSignPdf.jar</pom.converter.pdfsign>
 				<pom.converter.img2jpg>C:/Program Files/ImageMagick-6.9.0-Q8/convert.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
+				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
 			</properties>
 		</profile>
 		
@@ -324,6 +325,7 @@
 				<pom.converter.pdfsign>/idocv/converter/pdfsign/JSignPdf.jar</pom.converter.pdfsign>
 				<pom.converter.img2jpg>C:/Program Files/ImageMagick-6.9.0-Q8/convert.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
+				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
 			</properties>
 		</profile>
 		
@@ -355,6 +357,7 @@
 				<pom.converter.pdfsign>/idocv/converter/pdfsign/JSignPdf.jar</pom.converter.pdfsign>
 				<pom.converter.img2jpg>C:/Program Files/ImageMagick-6.9.0-Q8/convert.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
+				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
 			</properties>
 		</profile>
 		<!-- Production -->
@@ -385,6 +388,7 @@
 				<pom.converter.pdfsign>/idocv/converter/pdfsign/JSignPdf.jar</pom.converter.pdfsign>
 				<pom.converter.img2jpg>C:/Program Files/ImageMagick-6.9.0-Q8/convert.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
+				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
 			</properties>
 		</profile>
 	</profiles>
