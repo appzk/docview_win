@@ -55,6 +55,11 @@ public enum ViewType {
 	VIDEO("v"),
 
 	/**
+	 * Zip
+	 */
+	ZIP("z"),
+
+	/**
 	 * Other
 	 */
 	OTHER("o");
@@ -94,6 +99,11 @@ public enum ViewType {
 		VIDEO.extSet.add("mpeg");
 		VIDEO.extSet.add("dat");
 		VIDEO.extSet.add("mov");
+
+		ZIP.extSet.add("zip");
+		ZIP.extSet.add("rar");
+		ZIP.extSet.add("tar");
+		ZIP.extSet.add("7z");
 	}
 
 	private ViewType(String symbol) {
@@ -114,7 +124,7 @@ public enum ViewType {
 	}
 
 	/**
-	 * Get ViewType by symbol: w, x, p, f, t, i, a, v, o
+	 * Get ViewType by symbol: w, x, p, f, t, i, a, v, z, o
 	 * 
 	 * @param symbol
 	 * @return
@@ -140,6 +150,8 @@ public enum ViewType {
 			return ViewType.AUDIO;
 		} else if (ViewType.VIDEO.symbol.equals(symbol)) {
 			return ViewType.VIDEO;
+		} else if (ViewType.ZIP.symbol.equals(symbol)) {
+			return ViewType.ZIP;
 		} else {
 			return ViewType.OTHER;
 		}
@@ -172,13 +184,15 @@ public enum ViewType {
 			return ViewType.AUDIO;
 		} else if (ViewType.VIDEO.extSet.contains(ext)) {
 			return ViewType.VIDEO;
+		} else if (ViewType.ZIP.extSet.contains(ext)) {
+			return ViewType.ZIP;
 		} else {
 			return ViewType.OTHER;
 		}
 	}
 
 	public static void main(String[] args) {
-		String ext = "jpeg";
+		String ext = "zip";
 		System.out.println("ext symbol: " + ViewType.getViewTypeByExt(ext));
 		System.out.println(ViewType.WORD == ViewType.getViewTypeByExt("pdf"));
 

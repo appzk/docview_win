@@ -134,7 +134,7 @@ public class ViewController {
 			// check extension
 			DocVo docVo = docService.getByUuid(uuid);
 			if (null == docVo || StringUtils.isBlank(docVo.getRid())) {
-				throw new DocServiceException("文档(" + uuid + ")不存在！");
+				throw new DocServiceException("文件(" + uuid + ")不存在！");
 			}
 			String rid = docVo.getRid();
 			String ext = RcUtil.getExt(rid);
@@ -383,9 +383,6 @@ public class ViewController {
 				}
 			} else if (ViewType.PPT == ViewType.getViewTypeByExt(ext)) {
 				page = viewService.convertPPT2Img(rid, start, size);
-			} else if (ViewType.TXT == ViewType.getViewTypeByExt(ext)) {
-				start = (start - 1) * size + 1;
-				page = viewService.convertTxt2Html(rid, start, size);
 			} else if (ViewType.PDF == ViewType.getViewTypeByExt(ext)) {
 				// set view type
 				String viewType = "html";
@@ -404,6 +401,9 @@ public class ViewController {
 				} else {
 					page = viewService.convertPdf2Html(rid, 1, 0);
 				}
+			} else if (ViewType.TXT == ViewType.getViewTypeByExt(ext)) {
+				start = (start - 1) * size + 1;
+				page = viewService.convertTxt2Html(rid, start, size);
 			} else if (ViewType.IMG == ViewType.getViewTypeByExt(ext)) {
 				page = viewService.convertImage2Jpg(rid);
 			} else if (ViewType.AUDIO == ViewType.getViewTypeByExt(ext)) {
