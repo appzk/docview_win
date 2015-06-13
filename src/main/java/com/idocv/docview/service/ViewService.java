@@ -9,6 +9,7 @@ import com.idocv.docview.vo.PageVo;
 import com.idocv.docview.vo.PdfVo;
 import com.idocv.docview.vo.TxtVo;
 import com.idocv.docview.vo.WordVo;
+import com.idocv.docview.vo.ZipVo;
 
 /**
  * Office Preview Service
@@ -142,6 +143,15 @@ public interface ViewService {
 	 * @return
 	 */
 	PageVo<AudioVo> convertAudio2Mp3(String rid) throws DocServiceException;
+
+	/**
+	 * Extract ZIP to files, support types including zip, rar, tar, 7z etc.
+	 * 
+	 * @param rid
+	 * @return
+	 * @throws DocServiceException
+	 */
+	PageVo<ZipVo> convertZip2File(String rid) throws DocServiceException;
 
 	/**
 	 * Validate client IP

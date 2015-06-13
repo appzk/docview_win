@@ -4,6 +4,7 @@ package com.idocv.docview.service.impl;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -51,6 +52,7 @@ import com.idocv.docview.vo.PageVo;
 import com.idocv.docview.vo.PdfVo;
 import com.idocv.docview.vo.TxtVo;
 import com.idocv.docview.vo.WordVo;
+import com.idocv.docview.vo.ZipVo;
 
 @Service
 public class ViewServiceImpl implements ViewService, InitializingBean {
@@ -94,6 +96,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	
 	private @Value("${converter.audio2mp3}")
 	String audio2mp3;
+	
+	private @Value("${converter.zip2file}")
+	String zip2file;
 
 	private @Value("${converter.pdfsign}")
 	String pdfSign;
@@ -919,6 +924,40 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			throw new DocServiceException(e.getMessage(), e);
 		}
 	}
+	
+	@Override
+	public PageVo<ZipVo> convertZip2File(String rid) throws DocServiceException {
+		try {
+			convert(rid);
+			File destDirFile = new File(rcUtil.getParseDir(rid));
+			File[] extractedFiles = destDirFile.listFiles(new FileFilter() {
+				@Override
+				public boolean accept(File pathname) {
+					return pathname.isFile();
+				}
+			});
+
+			if (extractedFiles.length < 1) {
+				throw new DocServiceException("没有可预览的文件！");
+			}
+
+			List<ZipVo> data = new ArrayList<ZipVo>();
+			for (File extractedFile : extractedFiles) {
+				ZipVo zipVo = new ZipVo();
+				String extractedFileName = extractedFile.getName();
+				zipVo.setTitle(extractedFile.getName());
+				boolean isViewable = ViewType.isViewableByFileName(extractedFileName);
+				zipVo.setViewable(isViewable);
+				zipVo.setPath(extractedFile.getAbsolutePath());
+				data.add(zipVo);
+			}
+			PageVo<ZipVo> page = new PageVo<ZipVo>(data, data.size());
+			return page;
+		} catch (Exception e) {
+			logger.error("convertZip2File error: " + e.getMessage());
+			throw new DocServiceException(e.getMessage(), e);
+		}
+	}
 
 	public boolean convert(String rid) throws DocServiceException {
 		String uuid = RcUtil.getUuidByRid(rid);
@@ -1159,6 +1198,17 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 						throw new DocServiceException("对不起，该音频文件（"
 								+ RcUtil.getUuidByRid(rid) + "）暂无法预览，请确认能正常打开！");
 					}
+				}
+			} else if (ViewType.ZIP == ViewType.getViewTypeByExt(ext)) {
+				File destDir = new File(rcUtil.getParseDir(rid));
+				File[] extractedFiles = destDir.listFiles();
+				if (extractedFiles.length < 1) {
+					convertResult += CmdUtil.runWindows(zip2file, "e", src, "-o" + destDir, "-r", "-y");
+					extractedFiles = destDir.listFiles();
+				}
+				if (extractedFiles.length < 1) {
+					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+					throw new DocServiceException("对不起，该压缩文件（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，请确认能正常打开且包含文件！");
 				}
 			} else {
 				logger.error("目前不支持（" + ext + "）格式！");

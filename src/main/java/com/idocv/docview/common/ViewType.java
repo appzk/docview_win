@@ -191,11 +191,35 @@ public enum ViewType {
 		}
 	}
 
+	/**
+	 * Check is viewable by file extension
+	 * 
+	 * @param ext
+	 * @return
+	 */
+	public static boolean isViewableByExt(String ext) {
+		ViewType viewType = getViewTypeByExt(ext);
+		return !(viewType == ViewType.OTHER);
+	}
+	
+	public static boolean isViewableByFileName(String fileName) {
+		if (null == fileName || !fileName.contains(".")) {
+			return false;
+		}
+		String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+		return isViewableByExt(ext);
+	}
+
 	public static void main(String[] args) {
 		String ext = "zip";
 		System.out.println("ext symbol: " + ViewType.getViewTypeByExt(ext));
 		System.out.println(ViewType.WORD == ViewType.getViewTypeByExt("pdf"));
 
 		System.out.println(ViewType.getViewTypeBySymbol("a"));
+
+		System.out.println("is viewable by ext: "
+				+ ViewType.isViewableByExt("DOc"));
+
+		System.out.println("is viewable by name: " + ViewType.isViewableByFileName("ds.Rar"));
 	}
 }
