@@ -110,12 +110,9 @@ $(document).ready(function() {
 				'</li>';
 				$('.word-tab-title').append(dropDownMenu);
 				version = (version == -1) ? versionCount : version;
-				for (i = 0; i <= versionCount; i++) {
-					if (0 == i) {
-						$('.word-tab-title .dropdown .dropdown-menu').append('<li' + ((version == i) ? ' class="active"' : '') + '><a href="/edit/' + uuid + '?v=' + i + '" data-toggle="tab">原始文档 </a></li>');
-					} else {
-						$('.word-tab-title .dropdown .dropdown-menu').append('<li' + ((version == i) ? ' class="active"' : '') + '><a href="/edit/' + uuid + '?v=' + i + '" data-toggle="tab">第' + i + '版本</a></li>');
-					}
+				$('.word-tab-title .dropdown .dropdown-menu').append('<li' + ((version == 0) ? ' class="active"' : '') + '><a href="/edit/' + uuid + '?v=' + 0 + '" data-toggle="tab">原始文档 </a></li>');
+				for (i = versionCount; i > 0; i--) {
+					$('.word-tab-title .dropdown .dropdown-menu').append('<li' + ((version == i) ? ' class="active"' : '') + '><a href="/edit/' + uuid + '?v=' + i + '" data-toggle="tab">第' + i + '个版本</a></li>');
 				}
 				var dropDownMenuHeight = $('.word-tab-title .dropdown-menu').height();
 				var windowHeight = $(window).height();
