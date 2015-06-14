@@ -4,10 +4,14 @@ import com.idocv.docview.util.CmdUtil;
 
 public class Test {
 	public static void main(String[] args) {
-		String cmd = "D:/zip/7z.exe";
-		String zipSrc = "D:/zip/test.rar";
-		String destDir = "D:/zip/ttt";
-		String result = CmdUtil.runWindows(cmd, "e", zipSrc, "-o" + destDir, "-r", "-y");
+		String dwg2jpg = "D:/qcad-3.9.4-win/qcad.exe -no-gui -autostart scripts/Pro/Tools/Dwg2Bmp/Dwg2Bmp.js";
+		String src = "D:/cad/test.dwg";
+		String destPath = "D:/cad/test.jpg";
+		// dwg2bmp.bat -f -a -b white -o d:\cad\c.jpg d:\cad\test.dwg
+		long start = System.currentTimeMillis();
+		String result = CmdUtil.runWindows(dwg2jpg, "-f", "-a", "-b", "white", "-o", destPath, src);
+		long end = System.currentTimeMillis();
+		System.out.println("elapse: " + (end - start));
 		System.out.println("result: " + result);
 	}
 }
