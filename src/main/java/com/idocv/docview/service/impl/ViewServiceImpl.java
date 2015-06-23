@@ -346,7 +346,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String pngDestDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
 				String pngDestFirstPage = pngDestDir + "1." + PDF_TO_IMAGE_TYPE;
 				if (!new File(pngDestFirstPage).isFile()) {
-					convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", tmpPdfPath);
+					// convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", tmpPdfPath);
+					convertResult += convertPdf2Img(pdf2img, pngDestDir, tmpPdfPath);
 				}
 				if (!new File(pngDestFirstPage).isFile()) {
 					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
@@ -738,7 +739,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String convertResult = "";
 				if (!new File(destFirstPage).isFile()) {
 					String src = rcUtil.getPath(rid);
-					convertResult = CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+					// convertResult = CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+					convertResult = convertPdf2Img(pdf2img, destDir, src);
 					pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
 				}
 				if (ArrayUtils.isEmpty(pngFiles)) {
@@ -1058,7 +1060,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					String pngDestFirstPage = pngDestDir + "1." + PDF_TO_IMAGE_TYPE;
 					if (!new File(pngDestFirstPage).isFile()) {
 						// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
-						convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", dest);
+						// convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", dest);
+						convertResult += convertPdf2Img(pdf2img, pngDestDir, dest);
 					}
 					if (!new File(pngDestFirstPage).isFile()) {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
@@ -1105,7 +1108,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					String pngDestFirstPage = pngDestDir + "1." + PDF_TO_IMAGE_TYPE;
 					if (!new File(pngDestFirstPage).isFile()) {
 						// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
-						convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", dest);
+						// convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", dest);
+						convertResult += convertPdf2Img(pdf2img, pngDestDir, dest);
 					}
 					if (!new File(pngDestFirstPage).isFile()) {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
@@ -1148,9 +1152,11 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 						|| viewPageStylePdf.contains("pdf")) {
 					String destDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
 					String destFirstPage = destDir + "1." + PDF_TO_IMAGE_TYPE;
+					// pdf2img, "-q", "-dSAFER", "-dBATCH", "-dNOPAUSE", "-r150", "-sDEVICE=png16m", "-dTextAlphaBits=4", "-dGraphicsAlphaBits=4", "-sOutputFile=" + destDir + "%d.png", src
 					if (!new File(destFirstPage).isFile()) {
 						// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
-						convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+						// old style(before 20150624): convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
+						convertResult += convertPdf2Img(pdf2img, destDir, src);
 					}
 					if (!new File(destFirstPage).isFile()) {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
@@ -1208,7 +1214,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				}
 				if (extractedFiles.length < 1) {
 					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
-					throw new DocServiceException("对不起，该压缩文件（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，请确认能正常打开且包含文件！");
+					throw new DocServiceException("对不起，该压缩文件（"
+							+ RcUtil.getUuidByRid(rid)
+							+ "）暂无法预览，请确认能正常打开且包含文件！");
 				}
 			} else {
 				logger.error("目前不支持（" + ext + "）格式！");
@@ -1278,6 +1286,18 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 		FileUtils.writeStringToFile(file, content, "UTF-8");
 	}
 
+	/**
+	 * Convert pdf 2 png
+	 * 
+	 * @param pdf2img
+	 * @param destDir dest dir, MUST end with slash/
+	 * @param src source PDF file
+	 * @return
+	 */
+	public static String convertPdf2Img(String pdf2img, String destDir, String src) {
+		return CmdUtil.runWindows(pdf2img, "-q", "-dSAFER", "-dBATCH", "-dNOPAUSE", "-r150", "-sDEVICE=png16m", "-dTextAlphaBits=4", "-dGraphicsAlphaBits=4", "-sOutputFile=" + destDir + "%d.png", src);
+	}
+	
 	public static String getEncoding(File file) {
 		if (!file.isFile()) {
 			return "UTF-8";
