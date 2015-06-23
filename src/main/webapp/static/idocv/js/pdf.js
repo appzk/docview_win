@@ -29,10 +29,12 @@ $(document).ready(function() {
 			// title
 			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 			
-			if (document.createStyleSheet){
-				document.createStyleSheet('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />');
-			} else {
-				$("head").append($('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />'));
+			if (!!data.styleUrl) {
+				if (document.createStyleSheet){
+					document.createStyleSheet('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />');
+				} else {
+					$("head").append($('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />'));
+				}
 			}
 			
 			$('.span12').html('<div id="page-container"></div>');
