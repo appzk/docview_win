@@ -230,6 +230,8 @@ public class ViewController {
 					model.setViewName("pdf/img");
 				} else if ("html".equalsIgnoreCase(type)) {
 					model.setViewName("pdf/index");
+				} else if ("zoom".equalsIgnoreCase(type)) {
+					model.setViewName("pdf/zoom");
 				}
 				return model;
 			} else if (uuid.endsWith(ViewType.TXT.getSymbol())) {
@@ -396,6 +398,8 @@ public class ViewController {
 					viewType = "img";
 				} else if ("html".equalsIgnoreCase(type)) {
 					viewType = "html";
+				} else if ("zoom".equalsIgnoreCase(type)) {
+					viewType = "img";
 				}
 
 				// result data
