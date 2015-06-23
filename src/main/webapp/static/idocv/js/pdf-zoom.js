@@ -145,7 +145,6 @@ function resetPageWidth(offset) {
 	var curWidth = $('.pdf-page').width();
 	var targetWidth = curWidth + offset;
 	var windowWidth = $(window).width();
-	console.log('cur width: ' + curWidth + ', offset: ' + offset + ', target width: ' + targetWidth + ", windowWidth: " + windowWidth);
 	$('.pdf-page').css("max-width", "none");
 	if (targetWidth < (windowWidth - 40)) {
 		$('.pdf-page').width(targetWidth);
