@@ -14,8 +14,6 @@
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet" />
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
-    <link href="/static/pdf2htmlEX/css/base.css" rel="stylesheet" />
-    <link href="/static/pdf2htmlEX/css/fancy.css" rel="stylesheet" />
 
     <!--[if lt IE 9]>
       <script src="/static/bootstrap/js/html5shiv.js"></script>
