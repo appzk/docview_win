@@ -100,9 +100,6 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${converter.zip2file}")
 	String zip2file;
 
-	private @Value("${converter.pdfsign}")
-	String pdfSign;
-
 	private @Value("${view.page.style.word}")
 	String viewPageStyleWord;
 	

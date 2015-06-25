@@ -69,9 +69,6 @@ public class TextServiceImpl implements TextService {
 	private @Value("${converter.img2jpg}")
 	String img2jpg;
 
-	private @Value("${converter.pdfsign}")
-	String pdfSign;
-	
 	@Override
 	public PageVo<WordVo> getWordText(String rid, int start, int limit) throws DocServiceException{
 		try {
