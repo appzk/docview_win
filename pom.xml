@@ -295,7 +295,7 @@
 				<pom.converter.img2jpg>/idocv/converter/img2jpg.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
 				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
-				<pom.converter.dwg2img>/idocv/converter/dwg2img/qcad.exe</pom.converter.dwg2img>
+				<pom.converter.cad2img>/idocv/converter/cad2img/qcad.exe</pom.converter.cad2img>
 			</properties>
 		</profile>
 		
@@ -329,7 +329,7 @@
 				<pom.converter.img2jpg>/idocv/converter/img2jpg.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
 				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
-				<pom.converter.dwg2img>/idocv/converter/dwg2img/qcad.exe</pom.converter.dwg2img>
+				<pom.converter.cad2img>/idocv/converter/cad2img/qcad.exe</pom.converter.cad2img>
 			</properties>
 		</profile>
 		
@@ -363,7 +363,7 @@
 				<pom.converter.img2jpg>/idocv/converter/img2jpg.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
 				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
-				<pom.converter.dwg2img>/idocv/converter/dwg2img/qcad.exe</pom.converter.dwg2img>
+				<pom.converter.cad2img>/idocv/converter/cad2img/qcad.exe</pom.converter.cad2img>
 			</properties>
 		</profile>
 		<!-- Production -->
@@ -396,7 +396,7 @@
 				<pom.converter.img2jpg>/idocv/converter/img2jpg.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
 				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
-				<pom.converter.dwg2img>/idocv/converter/dwg2img/qcad.exe</pom.converter.dwg2img>
+				<pom.converter.cad2img>/idocv/converter/cad2img/qcad.exe</pom.converter.cad2img>
 			</properties>
 		</profile>
 	</profiles>

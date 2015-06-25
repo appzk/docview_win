@@ -101,8 +101,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${converter.zip2file}")
 	String zip2file;
 	
-	private @Value("${converter.dwg2img}")
-	String dwg2img;
+	private @Value("${converter.cad2img}")
+	String cad2img;
 
 	private @Value("${view.page.style.word}")
 	String viewPageStyleWord;
@@ -1247,7 +1247,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String destPath = dest + destName;
 				File destDir = new File(dest);
 				if (ArrayUtils.isEmpty(destDir.listFiles())) {
-					convertResult = CmdUtil.runWindows(dwg2img + " -no-gui -autostart scripts/Pro/Tools/Dwg2Bmp/Dwg2Bmp.js", "-f", "-a", "-b", "white", "-o", destPath, src);
+					convertResult = CmdUtil.runWindows(cad2img + " -no-gui -autostart scripts/Pro/Tools/Dwg2Bmp/Dwg2Bmp.js", "-f", "-a", "-b", "white", "-o", destPath, src);
 				}
 				if (ArrayUtils.isEmpty(destDir.listFiles())) {
 					logger.error("[CONVERT ERROR] " + rid + " - "
