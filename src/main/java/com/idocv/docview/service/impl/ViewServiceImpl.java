@@ -1247,7 +1247,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String destPath = dest + destName;
 				File destDir = new File(dest);
 				if (ArrayUtils.isEmpty(destDir.listFiles())) {
-					convertResult = CmdUtil.runWindows(cad2img + " -no-gui -autostart scripts/Pro/Tools/Dwg2Bmp/Dwg2Bmp.js", "-f", "-a", "-b", "white", "-o", destPath, src);
+					convertResult = CmdUtil.runWindows(cad2img + " -no-gui -autostart scripts/Pro/Tools/Dwg2Bmp/Dwg2Bmp.js", "-f", "-a", "-b", "white", "-r", "1/1", "-o", destPath, src);
 				}
 				if (ArrayUtils.isEmpty(destDir.listFiles())) {
 					logger.error("[CONVERT ERROR] " + rid + " - "
