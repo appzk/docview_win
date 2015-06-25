@@ -45,6 +45,7 @@ import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.CmdUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.AudioVo;
+import com.idocv.docview.vo.CadVo;
 import com.idocv.docview.vo.ExcelVo;
 import com.idocv.docview.vo.ImgVo;
 import com.idocv.docview.vo.PPTVo;
@@ -99,6 +100,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	
 	private @Value("${converter.zip2file}")
 	String zip2file;
+	
+	private @Value("${converter.dwg2img}")
+	String dwg2img;
 
 	private @Value("${view.page.style.word}")
 	String viewPageStyleWord;
@@ -958,6 +962,28 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 		}
 	}
 
+	@Override
+	public PageVo<CadVo> convertDwg2Img(String rid) throws DocServiceException {
+		try {
+			convert(rid);
+			File destDirFile = new File(rcUtil.getParseDir(rid));
+
+			if (destDirFile.listFiles().length < 1) {
+				throw new DocServiceException("没有可预览的文件！");
+			}
+
+			List<CadVo> data = new ArrayList<CadVo>();
+			CadVo dwgVo = new CadVo();
+			dwgVo.setUrl(rcUtil.getParseUrlDir(rid) + "index.jpg");
+			data.add(dwgVo);
+			PageVo<CadVo> page = new PageVo<CadVo>(data, data.size());
+			return page;
+		} catch (Exception e) {
+			logger.error("convertDwg2Img error: " + e.getMessage());
+			throw new DocServiceException(e.getMessage(), e);
+		}
+	}
+
 	public boolean convert(String rid) throws DocServiceException {
 		String uuid = RcUtil.getUuidByRid(rid);
 		DocPo docPo;
@@ -1214,6 +1240,20 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					throw new DocServiceException("对不起，该压缩文件（"
 							+ RcUtil.getUuidByRid(rid)
 							+ "）暂无法预览，请确认能正常打开且包含文件！");
+				}
+			} else if (ViewType.CAD == ViewType.getViewTypeByExt(ext)) {
+				dest = rcUtil.getParseDir(rid);
+				String destName = "index.jpg";
+				String destPath = dest + destName;
+				File destDir = new File(dest);
+				if (ArrayUtils.isEmpty(destDir.listFiles())) {
+					convertResult = CmdUtil.runWindows(dwg2img + " -no-gui -autostart scripts/Pro/Tools/Dwg2Bmp/Dwg2Bmp.js", "-f", "-a", "-b", "white", "-o", destPath, src);
+				}
+				if (ArrayUtils.isEmpty(destDir.listFiles())) {
+					logger.error("[CONVERT ERROR] " + rid + " - "
+							+ convertResult);
+					throw new DocServiceException("对不起，该CAD文件（"
+							+ RcUtil.getUuidByRid(rid) + "）暂无法预览，请确认能正常打开！");
 				}
 			} else {
 				logger.error("目前不支持（" + ext + "）格式！");

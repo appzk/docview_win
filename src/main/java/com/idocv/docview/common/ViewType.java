@@ -60,6 +60,11 @@ public enum ViewType {
 	ZIP("z"),
 
 	/**
+	 * AutoCAD
+	 */
+	CAD("d"),
+
+	/**
 	 * Other
 	 */
 	OTHER("o");
@@ -104,6 +109,8 @@ public enum ViewType {
 		ZIP.extSet.add("rar");
 		ZIP.extSet.add("tar");
 		ZIP.extSet.add("7z");
+
+		CAD.extSet.add("dwg");
 	}
 
 	private ViewType(String symbol) {
@@ -152,6 +159,8 @@ public enum ViewType {
 			return ViewType.VIDEO;
 		} else if (ViewType.ZIP.symbol.equals(symbol)) {
 			return ViewType.ZIP;
+		} else if (ViewType.CAD.symbol.equals(symbol)) {
+			return ViewType.CAD;
 		} else {
 			return ViewType.OTHER;
 		}
@@ -186,6 +195,8 @@ public enum ViewType {
 			return ViewType.VIDEO;
 		} else if (ViewType.ZIP.extSet.contains(ext)) {
 			return ViewType.ZIP;
+		} else if (ViewType.CAD.extSet.contains(ext)) {
+			return ViewType.CAD;
 		} else {
 			return ViewType.OTHER;
 		}

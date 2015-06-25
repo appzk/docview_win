@@ -243,6 +243,9 @@ public class ViewController {
 			} else if (uuid.endsWith(ViewType.ZIP.getSymbol())) {
 				model.setViewName("zip/index");
 				return model;
+			} else if (uuid.endsWith(ViewType.CAD.getSymbol())) {
+				model.setViewName("cad/index");
+				return model;
 			}
 			if (StringUtils.isNotBlank(thdViewTemplate) && thdViewTemplate.contains(ext)) {
 				// jpg,gif,png,bmp@image#mp3,midi@audio#avi,rmvb,mp4,mkv@video
@@ -417,6 +420,8 @@ public class ViewController {
 				page = viewService.convertAudio2Mp3(rid);
 			} else if (ViewType.ZIP == ViewType.getViewTypeByExt(ext)) {
 				page = viewService.convertZip2File(rid);
+			} else if (ViewType.CAD == ViewType.getViewTypeByExt(ext)) {
+				page = viewService.convertDwg2Img(rid);
 			} else {
 				page = new PageVo<ViewBaseVo>(null, 0);
 				page.setCode(0);

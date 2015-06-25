@@ -2,6 +2,7 @@ package com.idocv.docview.service;
 
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.vo.AudioVo;
+import com.idocv.docview.vo.CadVo;
 import com.idocv.docview.vo.ExcelVo;
 import com.idocv.docview.vo.ImgVo;
 import com.idocv.docview.vo.PPTVo;
@@ -152,6 +153,15 @@ public interface ViewService {
 	 * @throws DocServiceException
 	 */
 	PageVo<ZipVo> convertZip2File(String rid) throws DocServiceException;
+
+	/**
+	 * Convert DWG to image
+	 * 
+	 * @param rid
+	 * @return
+	 * @throws DocServiceException
+	 */
+	PageVo<CadVo> convertDwg2Img(String rid) throws DocServiceException;
 
 	/**
 	 * Validate client IP
