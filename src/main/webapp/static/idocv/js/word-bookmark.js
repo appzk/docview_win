@@ -74,7 +74,7 @@ $(document).ready(function() {
 			$(window).scroll(function() {
 				var scrollPos = $(window).scrollTop();
 				$('.info').text('scrollTop: ' + scrollPos);
-				console.log('scrollTop: ' + scrollPos);
+				// console.log('scrollTop: ' + scrollPos);
 				$.cookie('IDOCV_WORD_BOOKMARK_POS_' + uuid, scrollPos, { expires: 30, path: '/' });
 			});
 			

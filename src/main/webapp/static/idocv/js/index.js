@@ -66,7 +66,7 @@ $(document).ready(function() {
 				errorMessagePosition : 'element',
 		};
 		
-		console.log($('#form-signin').find('input[name="login_username"]').val());
+		// console.log($('#form-signin').find('input[name="login_username"]').val());
 		
 		$('#form-signin').submit(function() {
 			if ($(this).validate(false, validationSettings)) {

@@ -151,7 +151,6 @@ function afterLoad() {
 	
 	// do NOT allow download
 	var ref = $('.lnk-file-title').attr('href');
-	console.log("ref: " + ref);
 	$('.lnk-file-title').removeAttr('href');
 	*/
 }
