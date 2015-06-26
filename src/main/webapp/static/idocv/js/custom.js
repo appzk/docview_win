@@ -144,13 +144,29 @@ function loadAllPage() {
 /*	Customized settings
 /* ---------------------------------------------------------------------- */
 function afterLoad() {
-	/* do NOT allow copy text
-	$('body').css('-webkit-user-select', 'none');
-	$('body').css('-moz-user-select', 'none');
-	$('body').css('-ms-user-select', 'none');
+	/**
+	 * Remove footer
+	 */
+	// $('footer').remove();
 	
-	// do NOT allow download
-	var ref = $('.lnk-file-title').attr('href');
-	$('.lnk-file-title').removeAttr('href');
-	*/
+	/**
+	 * Set title
+	 */
+	// var name = $('.lnk-file-title').text();
+	// if (!! name) {
+	// 	$('title').text(name);
+	// }
+	
+	/**
+	 * do NOT allow copy text
+	 */
+	// $('body').css('-webkit-user-select', 'none');
+	// $('body').css('-moz-user-select', 'none');
+	// $('body').css('-ms-user-select', 'none');
+	
+	/**
+	 * do NOT allow download
+	 */
+	// var ref = $('.lnk-file-title').attr('href');
+	// $('.lnk-file-title').removeAttr('href');
 }

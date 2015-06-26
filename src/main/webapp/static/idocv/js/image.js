@@ -25,6 +25,8 @@ $(document).ready(function() {
 			
 			// clear progress bar
 			clearProgress();
+			
+			afterLoad();
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}

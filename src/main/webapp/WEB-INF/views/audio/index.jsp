@@ -124,8 +124,8 @@
     ================================================== -->
     <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
     <script src="/static/bootstrap/js/bootstrap.min.js?v=${version}"></script>
-    <script src="/static/jplayer/js/jquery.jplayer.min.js?v=${version}"></script>
     <script src="/static/idocv/js/custom.js?v=${version}"></script>
+    <script src="/static/jplayer/js/jquery.jplayer.min.js?v=${version}"></script>
     <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
     <script src="/static/idocv/js/progress.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
