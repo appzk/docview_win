@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.idocv</groupId>
 	<artifactId>docview_win</artifactId>
-	<version>5.8.1_20150626</version>
+	<version>5.8.2_20150627</version>
 	<packaging>war</packaging>
 	<name>docview</name>
 	<description>document online viewer</description>
