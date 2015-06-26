@@ -6,11 +6,11 @@ public class Dwg2Jpg {
 	
 	private static String CMD_DWG2JPG_QCAD = "D:/qcad-3.9.4-pro-win/qcad.exe -no-gui -autostart scripts/Pro/Tools/Dwg2Bmp/Dwg2Bmp.js";
 	private static String CMD_DWG2JPG_TOTALCAD = "C:/Program Files (x86)/TotalCADConverter/CADConverter.exe";
-	private static String CMD_DWG2JPG_ANYDWG = "C:/Program Files (x86)/Any DWG to Image Converter Pro/di.exe";
+	private static String CMD_DWG2JPG_ANYDWG = "e:/idocv/converter/cad2img/di.exe";
 	
 	public static void main(String[] args) {
-		String src = "D:/cad/test/2d_test.dwg";
-		String destPath = "D:/cad/test_any.jpg";
+		String src = "e:/test/cad/Architecture.dwg";
+		String destPath = "e:/test/cad/test_any.png";
 		
 		// convert by QCAD
 		// convertDwg2ImgByQcad(src, destPath);

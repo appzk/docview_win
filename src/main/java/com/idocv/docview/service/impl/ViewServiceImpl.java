@@ -968,14 +968,23 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			convert(rid);
 			File destDirFile = new File(rcUtil.getParseDir(rid));
 
-			if (destDirFile.listFiles().length < 1) {
+			File[] pngFiles = destDirFile.listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return null != name && name.toLowerCase().endsWith(".png");
+				}
+			});
+
+			if (pngFiles.length < 1) {
 				throw new DocServiceException("没有可预览的文件！");
 			}
 
 			List<CadVo> data = new ArrayList<CadVo>();
-			CadVo dwgVo = new CadVo();
-			dwgVo.setUrl(rcUtil.getParseUrlDir(rid) + "index.jpg");
-			data.add(dwgVo);
+			for (File pngFile : pngFiles) {
+				CadVo dwgVo = new CadVo();
+				dwgVo.setUrl(rcUtil.getParseUrlDir(rid) + pngFile.getName());
+				data.add(dwgVo);
+			}
 			PageVo<CadVo> page = new PageVo<CadVo>(data, data.size());
 			return page;
 		} catch (Exception e) {
@@ -1243,11 +1252,13 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				}
 			} else if (ViewType.CAD == ViewType.getViewTypeByExt(ext)) {
 				dest = rcUtil.getParseDir(rid);
-				String destName = "index.jpg";
+				String destName = "index.png";
 				String destPath = dest + destName;
 				File destDir = new File(dest);
 				if (ArrayUtils.isEmpty(destDir.listFiles())) {
-					convertResult = CmdUtil.runWindows(cad2img + " -no-gui -autostart scripts/Pro/Tools/Dwg2Bmp/Dwg2Bmp.js", "-f", "-a", "-b", "white", "-r", "1/1", "-o", destPath, src);
+					src = src.replaceAll("/", "\\\\");
+					destPath = destPath.replaceAll("/", "\\\\");
+					convertResult = CmdUtil.runWindows(cad2img, "/Overwrite", "/OutLayout", "All", "/Hide", "/InFile", src, "/OutFile", destPath);
 				}
 				if (ArrayUtils.isEmpty(destDir.listFiles())) {
 					logger.error("[CONVERT ERROR] " + rid + " - "
