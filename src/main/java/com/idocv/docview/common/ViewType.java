@@ -111,6 +111,8 @@ public enum ViewType {
 		ZIP.extSet.add("7z");
 
 		CAD.extSet.add("dwg");
+		CAD.extSet.add("dxf");
+		CAD.extSet.add("dwf");
 	}
 
 	private ViewType(String symbol) {
