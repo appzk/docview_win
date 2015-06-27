@@ -20,7 +20,7 @@ $(document).ready(function() {
 			// pages
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
-				$('.span12').append('<p><img src="' + page.url + '" alt="' + data.name + '" /></p>');
+				$('.span12').append('<p><a href="' + page.url + '" target="_blank"><img src="' + page.url + '" alt="' + data.name + '" /></a></p>');
 			}
 			
 			// clear progress bar
