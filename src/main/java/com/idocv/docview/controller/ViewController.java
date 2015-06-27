@@ -225,13 +225,17 @@ public class ViewController {
 					model.setViewName("pdf/index");
 				}
 
+				if (viewPageStylePdf.startsWith("imgall")) {
+					model.setViewName("pdf/imgall");
+				}
+
 				// if type is set, use it.
 				if ("img".equalsIgnoreCase(type)) {
 					model.setViewName("pdf/img");
 				} else if ("html".equalsIgnoreCase(type)) {
 					model.setViewName("pdf/index");
-				} else if ("zoom".equalsIgnoreCase(type)) {
-					model.setViewName("pdf/zoom");
+				} else if ("imgall".equalsIgnoreCase(type)) {
+					model.setViewName("pdf/imgall");
 				}
 				return model;
 			} else if (uuid.endsWith(ViewType.TXT.getSymbol())) {
@@ -397,11 +401,12 @@ public class ViewController {
 				if (viewPageStylePdf.startsWith("img") || viewPageStylePdf.startsWith("pdf")) {
 					viewType = "img";
 				}
+
 				if ("img".equalsIgnoreCase(type)) {
 					viewType = "img";
 				} else if ("html".equalsIgnoreCase(type)) {
 					viewType = "html";
-				} else if ("zoom".equalsIgnoreCase(type)) {
+				} else if ("imgall".equalsIgnoreCase(type)) {
 					viewType = "img";
 				}
 

@@ -14,8 +14,6 @@
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet" />
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
-    <link href="/static/pdf2htmlEX/css/base.css" rel="stylesheet" />
-    <link href="/static/pdf2htmlEX/css/fancy.css" rel="stylesheet" />
 
     <!--[if lt IE 9]>
       <script src="/static/bootstrap/js/html5shiv.js"></script>
@@ -59,7 +57,7 @@
           <!-- 
           <div class="pdf-page">
             <div class="pdf-content">
-              <!-- WORD CENTENT HERE
+              <!-- WORD CENTENT HERE --
             </div>
           </div>
            -->
@@ -110,7 +108,7 @@
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
     <script src="/static/formvalidator/js/jquery.formvalidator.min.js?v=${version}"></script>
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
-    <script src="/static/idocv/js/pdf-zoom.js?v=${version}"></script>
+    <script src="/static/idocv/js/pdf-img-all.js?v=${version}"></script>
     <script src="/static/smart/js/jquery.easing-1.3.min.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
