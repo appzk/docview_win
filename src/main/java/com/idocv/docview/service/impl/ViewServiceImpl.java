@@ -951,7 +951,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				zipVo.setTitle(extractedFile.getName());
 				boolean isViewable = ViewType.isViewableByFileName(extractedFileName);
 				zipVo.setViewable(isViewable);
-				zipVo.setPath(extractedFile.getAbsolutePath());
+				zipVo.setPath(extractedFile.getAbsolutePath().replaceAll("\\\\", "/"));
 				data.add(zipVo);
 			}
 			PageVo<ZipVo> page = new PageVo<ZipVo>(data, data.size());
