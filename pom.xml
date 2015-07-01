@@ -277,8 +277,8 @@
 				<!-- Restriction -->
 				<pom.filetype.upload>doc,docx,xls,xlsx,ppt,pptx,pdf,txt,jpg,gif,png,bmp,tif,mp3,m4a,midi,wma,zip,rar,tar,7z,dwg,dxf,dwf</pom.filetype.upload>
 				<pom.filetype.view>doc,docx,xls,xlsx,ppt,pptx,pdf,txt,jpg,gif,png,bmp,tif,mp3,m4a,midi,wma,zip,rar,tar,7z,dwg,dxf,dwf</pom.filetype.view>
-				<pom.upload.max.size>20000000</pom.upload.max.size>
-				<pom.upload.max.msg>\u514d\u8d39\u7248\u53ea\u652f\u63011M\u4ee5\u5185\u6587\u4ef6\u9884\u89c8\uff0c\u8be6\u60c5\u54a8\u8be2\uff1a400-000-7644</pom.upload.max.msg>
+				<pom.upload.max.size>50000000</pom.upload.max.size>
+				<pom.upload.max.msg>\u514d\u8d39\u7248\u53ea\u652f\u630150M\u4ee5\u5185\u6587\u4ef6\u9884\u89c8\uff0c\u8be6\u60c5\u54a8\u8be2\uff1a400-000-7644</pom.upload.max.msg>
 
 				<!-- Database -->
 				<pom.db.mongodb.ip>localhost</pom.db.mongodb.ip>
