@@ -80,8 +80,8 @@
         </div>
         <div class="span9 offset2">
           <div class="slide-img-container">
-            <div class="ppt-turn-left-mask"></div>
-            <div class="ppt-turn-right-mask"></div>
+            <div class="ppt-turn-left-mask visible-desktop"></div>
+            <div class="ppt-turn-right-mask visible-desktop"></div>
             <!-- 
             <img src="" class="img-polaroid" style="max-height: 100%;">
              -->
