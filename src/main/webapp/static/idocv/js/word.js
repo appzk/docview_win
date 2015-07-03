@@ -8,6 +8,7 @@ var id = $.url().segment(2);
 var uuid = id;
 var params = $.url().param();
 var type = $.url().param('type');
+var isLoadAll = false;
 
 $(document).ready(function() {
 	
@@ -71,6 +72,7 @@ $(document).ready(function() {
 					if (! $(id).length) {
 						// page NOT exist, load all page.
 						loadAllPage();
+						isLoadAll = true;
 					}
 					$('html, body').animate({scrollTop:($(id).position().top + 20)}, 'slow');
 				});
@@ -100,6 +102,7 @@ $(document).ready(function() {
 				if (! $('#' + id).length) {
 					// page NOT exist, load all page.
 					loadAllPage();
+					isLoadAll = true;
 				}
 				$('html, body').animate({scrollTop:($('#' + id).position().top + 20)}, 'slow');
 			});
@@ -121,6 +124,11 @@ $(document).ready(function() {
 		clearProgress();
 		
 		// search & highlight
+		$('.input-search').focus(function() {
+			if(!isLoadAll) {
+				loadAllPage();
+			}
+		});
 		$('.btn-search-submit').click(function(){
 			var searchText = $('.input-search').val();
 			$('body').unhighlight();
