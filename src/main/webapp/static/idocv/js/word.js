@@ -120,6 +120,13 @@ $(document).ready(function() {
 		// clear progress bar
 		clearProgress();
 		
+		// search & highlight
+		$('.btn-search-submit').click(function(){
+			var searchText = $('.input-search').val();
+			$('body').unhighlight();
+			$('body').highlight(searchText);
+		});
+		
 		// infinite scroll
 		var _renderItem = function(data) {
 			// return '<div class="word-page"><div class="word-content">' + data.content + '</div></div>';

@@ -47,6 +47,15 @@
           <div class="nav-collapse collapse">
             <ul class="nav word-tab-title">
               <!-- WORD TAB TITLE(s) HERE -->
+              <!-- SEARCH & HIGHLIGHT -->
+              <li class="hidden-desktop">
+                <form class="navbar-form form-search" onsubmit="return false;">
+                  <div class="input-append">
+                    <input type="text" class="span2 search-query input-search">
+                    <button type="submit" class="btn btn-search-submit"><i class="icon-search"></i></button>
+                  </div>
+                </form>
+              </li>
             </ul>
           </div><!--/.nav-collapse -->
           <!-- SIGN UP & SIGN IN -->
@@ -106,6 +115,7 @@
     <script src="/static/idocv/js/word.js?v=${version}"></script>
     <script src="/static/iframe-resizer/js/iframeResizer.contentWindow.min.js?v=${version}"></script>
     <script src="/static/smart/js/jquery.easing-1.3.min.js?v=${version}"></script>
+    <script src="/static/highlight/js/jquery.highlight.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
 </html>
