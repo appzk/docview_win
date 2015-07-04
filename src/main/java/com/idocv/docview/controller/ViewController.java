@@ -213,6 +213,9 @@ public class ViewController {
 				} else if ("audience".equalsIgnoreCase(type)) {
 					model.setViewName("ppt/sync-audience");
 					return model;
+				} else if ("mobile".equalsIgnoreCase(type)) {
+					model.setViewName("ppt/mobile");
+					return model;
 				} else {
 					model.setViewName("ppt/index");
 					return model;
