@@ -17,6 +17,14 @@
     <link href="/static/contextMenu/css/jquery.contextMenu.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
     <!-- BOOTSTRAP STYLE end -->
+    
+    <script type="text/javascript">
+      var windowWidth = document.documentElement.clientWidth;
+      var searchStr = window.location.search;
+      if (windowWidth < 768 && (!searchStr || !searchStr.contains('type'))) {
+    	  window.location.href = 'http://' + window.location.host + window.location.pathname + '?type=mobile';
+      }
+    </script>
 
     <style type="text/css">
       .thumbnail{
