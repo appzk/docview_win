@@ -152,7 +152,6 @@
     ================================================== -->
     <script src="/static/jquery/js/jquery-1.11.3.min.js"></script>
     <script src="/static/bootstrap3/js/bootstrap.min.js"></script>
-    <script src="/static/idocv/js/custom.js?v=${version}"></script>
     <script src="/static/contextMenu/js/jquery.contextMenu.js?v=${version}"></script>
     <script src="/static/contextMenu/js/jquery.ui.position.js?v=${version}"></script>
     <script src="/static/jquery/js/jquery.mobile-events.min.js?v=${version}"></script>
@@ -161,7 +160,6 @@
     <script src="/static/fullscreen/js/jquery.fullscreen-min.js?v=${version}"></script>
     <script src='/static/photoswipe/js/photoswipe.min.js'></script>
     <script src='/static/photoswipe/js/photoswipe-ui-default.min.js'></script>
-    <script src="/static/smart/js/jquery.easing-1.3.min.js?v=${version}"></script>
     <script src='/static/idocv/js/ppt-mobile.js'></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
