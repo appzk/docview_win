@@ -18,7 +18,7 @@
     <link rel='stylesheet prefetch' href='/static/photoswipe/default-skin/default-skin.css'>
     <style type="text/css">
       body {
-        padding-top: 50px;
+        padding-top: 70px;
       }
       .my-gallery {
         width: 100%;
@@ -47,6 +47,20 @@
   </head>
 
   <body>
+  
+    <div class="loading-mask" style="display: none;">
+      <div class="loading-zone">
+        <div class="text">正在载入...0%</div>
+        <div class="progress progress-striped active">
+          <div class="bar" style="width: 0%;"></div>
+        </div>
+      </div>
+      <div class="brand">
+        <footer>
+          Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
+        </footer>
+      </div>
+    </div>
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
@@ -69,7 +83,6 @@
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-12">
-          <h2>幻灯片浏览</h2>
           <div class="my-gallery" itemscope itemtype="http://schema.org/ImageGallery">
             <!-- SLIDE HERE
             <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
@@ -131,7 +144,7 @@
       <hr>
 
       <footer>
-        <p>&copy; Company 2014</p>
+        Powered by: <a href="http://www.idocv.com">I Doc View</a>&nbsp;&nbsp;&nbsp;Email: <a href="mailto:support@idocv.com">support@idocv.com</a>
       </footer>
     </div> <!-- /container -->
 
@@ -148,6 +161,7 @@
     <script src="/static/fullscreen/js/jquery.fullscreen-min.js?v=${version}"></script>
     <script src='/static/photoswipe/js/photoswipe.min.js'></script>
     <script src='/static/photoswipe/js/photoswipe-ui-default.min.js'></script>
+    <script src="/static/smart/js/jquery.easing-1.3.min.js?v=${version}"></script>
     <script src='/static/idocv/js/ppt-mobile.js'></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
