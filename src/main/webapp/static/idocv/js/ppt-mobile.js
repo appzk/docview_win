@@ -28,7 +28,7 @@ $(document).ready(function() {
 			var pages = data.data;
 			
 			// title
-			$('.container-fluid:first button:first').after('<a class="navbar-brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
+			$('.container-fluid:first .navbar-header').append('<a class="navbar-brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
 			
 			// set ratio
 			ratio = pages[0].ratio;
