@@ -50,8 +50,6 @@ $(document).ready(function() {
 			
 			// photoswipe init
 			initPhotoSwipeFromDOM('.my-gallery');
-			
-			afterLoad();
 		} else {
 			$('.container-fluid .row-fluid').html('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}
