@@ -51,8 +51,9 @@
     <div class="loading-mask" style="display: none;">
       <div class="loading-zone">
         <div class="text">正在载入...0%</div>
-        <div class="progress progress-striped active">
-          <div class="bar" style="width: 0%;"></div>
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+          </div>
         </div>
       </div>
       <div class="brand">

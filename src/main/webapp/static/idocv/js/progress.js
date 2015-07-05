@@ -18,6 +18,7 @@ function updateProgress() {
 	
 	$('.loading-mask .loading-zone .text').text("正在载入..." + percent + "%");
 	$('.progress:first .bar').css("width", percent + "%");
+	$('.progress:first .progress-bar').css("width", percent + "%"); // Bootstrap 3
 }
 
 function updateRemainderProgress() {
@@ -37,6 +38,7 @@ function updateRemainderProgress() {
 		}
 		$('.loading-mask .loading-zone .text').text("正在载入..." + percent + "%");
 		$('.progress:first .bar').css("width", percent + "%");
+		$('.progress:first .progress-bar').css("width", percent + "%"); // Bootstrap 3
 	}
 }
 	
