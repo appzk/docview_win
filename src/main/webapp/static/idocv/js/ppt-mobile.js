@@ -29,7 +29,7 @@ $(document).ready(function() {
 			
 			// title
 			$('.container-fluid:first .navbar-header').append('<a class="navbar-brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
-			$('title').text(data.name + ' - I Doc View');
+			$('title').text(data.name);
 			
 			// set ratio
 			ratio = pages[0].ratio;
