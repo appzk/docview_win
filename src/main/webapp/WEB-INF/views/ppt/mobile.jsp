@@ -112,9 +112,9 @@
                 <div class="pswp__top-bar">
                   <!--  Controls are self-explanatory. Order can be changed. -->
                   <div class="pswp__counter"></div>
-                  <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-                  <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-                  <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                  <button class="pswp__button pswp__button--close" title="关闭 (Esc)"></button>
+                  <button class="pswp__button pswp__button--fs" title="全屏"></button>
+                  <button class="pswp__button pswp__button--zoom" title="缩放"></button>
                   <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
                   <!-- element will get class pswp__preloader--active when preloader is running -->
                   <div class="pswp__preloader">
@@ -128,9 +128,9 @@
                 <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
                   <div class="pswp__share-tooltip"></div>
                 </div>
-                <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                <button class="pswp__button pswp__button--arrow--left" title="上一张 (左箭头)">
                 </button>
-                <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                <button class="pswp__button pswp__button--arrow--right" title="下一张 (右箭头)">
                 </button>
                 <div class="pswp__caption">
                   <div class="pswp__caption__center"></div>
