@@ -126,7 +126,7 @@ $(document).ready(function() {
 		// search & highlight
 		$('.input-search').focus(function() {
 			if(!isLoadAll) {
-				loadAllPage();
+				loadAllPage(true);
 			}
 		});
 		$('.btn-search-submit').click(function(){

@@ -109,13 +109,13 @@ function bindBottomPagingProgress() {
 /* ---------------------------------------------------------------------- */
 /*	Load All pages of WORD || TXT
 /* ---------------------------------------------------------------------- */
-function loadAllPage() {
+function loadAllPage(isAsync) {
 	$('.word-content').infinitescroll('destroy');
 	$.ajax({
 		type: "GET",
 		url: '/view/' + (!!id ? id : uuid) + '.json?start=1&size=0',
 		data: {},
-		async: false,
+		async: !!isAsync,
 		dataType: "json"
 	}).done(function( data ) {
 		var code = data.code;
