@@ -9,6 +9,7 @@ var uuid = id;
 var params = $.url().param();
 var type = $.url().param('type');
 var isLoadAll = false;
+var searchIndex = 0;
 
 $(document).ready(function() {
 	
@@ -77,7 +78,7 @@ $(document).ready(function() {
 					$('html, body').animate({scrollTop:($(id).position().top + 20)}, 'slow');
 				});
 			}
-			
+
 			// pages
 			// $('.span12').append('<div class="word-page"><div class="word-content"></div></div>');
 			
@@ -124,15 +125,46 @@ $(document).ready(function() {
 		clearProgress();
 		
 		// search & highlight
+		var hightlightHtml =
+			'<!-- SEARCH & HIGHLIGHT -->' +
+			'<form class="navbar-form pull-right hidden-desktop" onsubmit="return false;">' +
+			  '<div class="input-append">' +
+			    '<input class="span2 input-search" id="appendedInputButtons" type="text" placeholder="搜索">' +
+			    '<span class="add-on"></span>' +
+			    '<button class="btn btn-search-up" type="button"><i class="icon-chevron-up"></i></button>' +
+			    '<button class="btn btn-search-down" type="button"><i class="icon-chevron-down"></i></button>' +
+			  '</div>' +
+			'<form>';
+        $('.word-tab-title').after(hightlightHtml);
 		$('.input-search').focus(function() {
 			if(!isLoadAll) {
 				loadAllPage(true);
 			}
 		});
-		$('.btn-search-submit').click(function(){
+		$('.input-search').on("change paste keyup", function() {
 			var searchText = $('.input-search').val();
-			$('body').unhighlight();
-			$('body').highlight(searchText);
+			$('.word-page').unhighlight();
+			$('.word-page').highlight(searchText);
+			var highLightCount = $('.highlight').length;
+			if (highLightCount > 0) {
+				searchIndex = 0;
+				$('.input-append .add-on').text('1 / ' + highLightCount);
+				$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top)}, 'slow');
+			} else {
+				$('.input-append .add-on').text('');
+			}
+		});
+		$('.btn-search-up').click(function(){
+			searchIndex = searchIndex - 1;
+			searchIndex = (-1 == searchIndex) ? (searchIndex + $('.highlight').length) : searchIndex;
+			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
+			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top)}, 'slow');
+		});
+		$('.btn-search-down').click(function(){
+			searchIndex = searchIndex + 1;
+			searchIndex = ($('.highlight').length == searchIndex) ? 0 : searchIndex;
+			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
+			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top)}, 'slow');
 		});
 		
 		// infinite scroll

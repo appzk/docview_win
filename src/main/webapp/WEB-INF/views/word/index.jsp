@@ -13,7 +13,9 @@
     <!-- styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet">
+    <!-- 
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+     -->
 
     <!--[if lt IE 9]>
       <script src="/static/bootstrap/js/html5shiv.js"></script>
@@ -47,15 +49,6 @@
           <div class="nav-collapse collapse">
             <ul class="nav word-tab-title">
               <!-- WORD TAB TITLE(s) HERE -->
-              <!-- SEARCH & HIGHLIGHT -->
-              <li class="hidden-desktop">
-                <form class="navbar-form form-search" onsubmit="return false;">
-                  <div class="input-append">
-                    <input type="text" class="span2 search-query input-search">
-                    <button type="submit" class="btn btn-search-submit"><i class="icon-search"></i></button>
-                  </div>
-                </form>
-              </li>
             </ul>
           </div><!--/.nav-collapse -->
           <!-- SIGN UP & SIGN IN -->
