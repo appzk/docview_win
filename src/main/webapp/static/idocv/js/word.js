@@ -138,6 +138,7 @@ $(document).ready(function() {
 			'</form>';
         $('.word-tab-title').after(hightlightHtml);
         $('.btn-search-toggle').click(function() {
+        	$('.lnk-file-title').toggle('slow');
         	$('.nav-search-container').toggle('slow');
         	$('.nav-search-container').css('float', 'right');
 		});
@@ -166,7 +167,7 @@ $(document).ready(function() {
 			searchIndex = searchIndex - 1;
 			searchIndex = (-1 == searchIndex) ? (searchIndex + $('.highlight').length) : searchIndex;
 			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
-			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 60)}, 'slow');
+			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 80)}, 'slow');
 		});
 		$('.btn-search-down').click(function(){
 			if ($('.highlight').length < 1) {
@@ -175,7 +176,7 @@ $(document).ready(function() {
 			searchIndex = searchIndex + 1;
 			searchIndex = ($('.highlight').length == searchIndex) ? 0 : searchIndex;
 			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
-			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 60)}, 'slow');
+			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 80)}, 'slow');
 		});
 		
 		// infinite scroll
