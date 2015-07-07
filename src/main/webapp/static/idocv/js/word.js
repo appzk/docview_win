@@ -139,6 +139,7 @@ $(document).ready(function() {
         $('.word-tab-title').after(hightlightHtml);
         $('.btn-search-toggle').click(function() {
         	$('.nav-search-container').toggle('slow');
+        	$('.nav-search-container').css('float', 'right');
 		});
 		$('.input-search').focus(function() {
 			if(!isLoadAll) {
