@@ -129,7 +129,7 @@ $(document).ready(function() {
 			'<!-- SEARCH & HIGHLIGHT -->' +
 			'<form class="navbar-form pull-right hidden-desktop" onsubmit="return false;">' +
 			  '<div class="nav-collapse collapse pull-right btn-search-toggle" style="margin-top: 10px;">&nbsp;&nbsp;<i class="icon-search icon-white"></i></div>' +
-			  '<div class="input-append nav-search-container" style="display: none;">' +
+			  '<div class="input-append nav-search-container" style="display: none; float: right;">' +
 			    '<input class="span2 input-search" id="appendedInputButtons" type="text" placeholder="搜索" />' +
 			    '<span class="add-on"></span>' +
 			    '<button class="btn btn-search-up" type="button"><i class="icon-chevron-up"></i></button>' +
@@ -141,7 +141,6 @@ $(document).ready(function() {
         	$('.lnk-file-title').toggle('slow');
         	$('.word-tab-title-li').toggle('slow');
         	$('.nav-search-container').toggle('slow');
-        	$('.nav-search-container').css('float', 'right');
 		});
 		$('.input-search').focus(function() {
 			if(!isLoadAll) {
@@ -168,7 +167,7 @@ $(document).ready(function() {
 			searchIndex = searchIndex - 1;
 			searchIndex = (-1 == searchIndex) ? (searchIndex + $('.highlight').length) : searchIndex;
 			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
-			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 40)}, 'slow');
+			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top)}, 'slow');
 		});
 		$('.btn-search-down').click(function(){
 			if ($('.highlight').length < 1) {
@@ -177,7 +176,7 @@ $(document).ready(function() {
 			searchIndex = searchIndex + 1;
 			searchIndex = ($('.highlight').length == searchIndex) ? 0 : searchIndex;
 			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
-			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 40)}, 'slow');
+			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top)}, 'slow');
 		});
 		
 		// infinite scroll
