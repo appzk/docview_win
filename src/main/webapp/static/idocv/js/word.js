@@ -128,14 +128,18 @@ $(document).ready(function() {
 		var hightlightHtml =
 			'<!-- SEARCH & HIGHLIGHT -->' +
 			'<form class="navbar-form pull-right hidden-desktop" onsubmit="return false;">' +
-			  '<div class="input-append">' +
-			    '<input class="span2 input-search" id="appendedInputButtons" type="text" placeholder="搜索">' +
+			  '<div class="nav-collapse collapse pull-right btn-search-toggle" style="margin-top: 10px;">&nbsp;&nbsp;<i class="icon-search icon-white"></i></div>' +
+			  '<div class="input-append nav-search-container" style="display: none;">' +
+			    '<input class="span2 input-search" id="appendedInputButtons" type="text" placeholder="搜索" />' +
 			    '<span class="add-on"></span>' +
 			    '<button class="btn btn-search-up" type="button"><i class="icon-chevron-up"></i></button>' +
 			    '<button class="btn btn-search-down" type="button"><i class="icon-chevron-down"></i></button>' +
 			  '</div>' +
-			'<form>';
+			'</form>';
         $('.word-tab-title').after(hightlightHtml);
+        $('.btn-search-toggle').click(function() {
+        	$('.nav-search-container').toggle();
+		});
 		$('.input-search').focus(function() {
 			if(!isLoadAll) {
 				loadAllPage(true);
@@ -155,16 +159,22 @@ $(document).ready(function() {
 			}
 		});
 		$('.btn-search-up').click(function(){
+			if ($('.highlight').length < 1) {
+				return;
+			}
 			searchIndex = searchIndex - 1;
 			searchIndex = (-1 == searchIndex) ? (searchIndex + $('.highlight').length) : searchIndex;
 			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
-			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top)}, 'slow');
+			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 60)}, 'slow');
 		});
 		$('.btn-search-down').click(function(){
+			if ($('.highlight').length < 1) {
+				return;
+			}
 			searchIndex = searchIndex + 1;
 			searchIndex = ($('.highlight').length == searchIndex) ? 0 : searchIndex;
 			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
-			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top)}, 'slow');
+			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 60)}, 'slow');
 		});
 		
 		// infinite scroll
