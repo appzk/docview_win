@@ -42,7 +42,7 @@ $(document).ready(function() {
 			// titles - navigation
 			if (!!titles && titles.length > 3) {
 				// Dropdown tabs
-				var dropDownMenu = '<li class="dropdown">' +
+				var dropDownMenu = '<li class="dropdown word-tab-title-li">' +
 					'<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
 					'导航' +
 					'<b class="caret"></b>' +
@@ -139,6 +139,7 @@ $(document).ready(function() {
         $('.word-tab-title').after(hightlightHtml);
         $('.btn-search-toggle').click(function() {
         	$('.lnk-file-title').toggle('slow');
+        	$('.word-tab-title-li').toggle('slow');
         	$('.nav-search-container').toggle('slow');
         	$('.nav-search-container').css('float', 'right');
 		});
@@ -167,7 +168,7 @@ $(document).ready(function() {
 			searchIndex = searchIndex - 1;
 			searchIndex = (-1 == searchIndex) ? (searchIndex + $('.highlight').length) : searchIndex;
 			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
-			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 80)}, 'slow');
+			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 40)}, 'slow');
 		});
 		$('.btn-search-down').click(function(){
 			if ($('.highlight').length < 1) {
@@ -176,7 +177,7 @@ $(document).ready(function() {
 			searchIndex = searchIndex + 1;
 			searchIndex = ($('.highlight').length == searchIndex) ? 0 : searchIndex;
 			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
-			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 80)}, 'slow');
+			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top - 40)}, 'slow');
 		});
 		
 		// infinite scroll
