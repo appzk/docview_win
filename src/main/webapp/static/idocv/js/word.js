@@ -138,7 +138,7 @@ $(document).ready(function() {
 			'</form>';
         $('.word-tab-title').after(hightlightHtml);
         $('.btn-search-toggle').click(function() {
-        	$('.nav-search-container').toggle();
+        	$('.nav-search-container').toggle('slow');
 		});
 		$('.input-search').focus(function() {
 			if(!isLoadAll) {
