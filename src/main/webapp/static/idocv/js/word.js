@@ -155,6 +155,8 @@ $(document).ready(function() {
 			if (highLightCount > 0) {
 				searchIndex = 0;
 				$('.input-append .add-on').text('1 / ' + highLightCount);
+				$('.highlight').removeClass('highlight-selected');
+				$('.highlight:eq(' + searchIndex + ')').addClass('highlight-selected');
 				$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top)}, 'slow');
 			} else {
 				$('.input-append .add-on').text('');
@@ -167,6 +169,8 @@ $(document).ready(function() {
 			searchIndex = searchIndex - 1;
 			searchIndex = (-1 == searchIndex) ? (searchIndex + $('.highlight').length) : searchIndex;
 			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
+			$('.highlight').removeClass('highlight-selected');
+			$('.highlight:eq(' + searchIndex + ')').addClass('highlight-selected');
 			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top)}, 'slow');
 		});
 		$('.btn-search-down').click(function(){
@@ -176,6 +180,8 @@ $(document).ready(function() {
 			searchIndex = searchIndex + 1;
 			searchIndex = ($('.highlight').length == searchIndex) ? 0 : searchIndex;
 			$('.input-append .add-on').text((searchIndex + 1) + ' / ' + $('.highlight').length);
+			$('.highlight').removeClass('highlight-selected');
+			$('.highlight:eq(' + searchIndex + ')').addClass('highlight-selected');
 			$('html, body').animate({scrollTop:($('.highlight:eq(' + searchIndex + ')').position().top)}, 'slow');
 		});
 		

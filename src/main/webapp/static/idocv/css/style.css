@@ -104,6 +104,9 @@
 	.highlight {
 		background-color: #FFFF88;
 	}
+	.highlight-selected {
+		background-color: darkorange;
+	}
 
 	/* -------------------------------------------------- */
 	/*	Word Style
