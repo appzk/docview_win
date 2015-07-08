@@ -13,9 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.net.ssl.HostnameVerifier;
@@ -102,19 +100,6 @@ public class DocServiceImpl implements DocService {
 	@Value("${url.view.allow.domains.msg}")
 	private String urlViewAllowDomainsMsg;
 
-	private static Set<String> docTypes = new HashSet<String>();
-
-	static {
-		docTypes.add("doc");
-		docTypes.add("docx");
-		docTypes.add("xls");
-		docTypes.add("xlsx");
-		docTypes.add("ppt");
-		docTypes.add("pptx");
-		docTypes.add("pdf");
-		docTypes.add("txt");
-	}
-
 	private static String authUrl = "http://www.idocv.com/auth.json";
 	private static final ObjectMapper om = new ObjectMapper();
 	private static final DateFormat dateFormatYMD = new SimpleDateFormat("yyyy-MM-dd");
@@ -123,7 +108,7 @@ public class DocServiceImpl implements DocService {
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
-	private static final String expireDateString = "2015-07-31 23:59:59";
+	private static final String expireDateString = "2015-08-31 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
