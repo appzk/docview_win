@@ -36,12 +36,13 @@
 		<bean class="com.idocv.docview.interceptor.ConfInterceptor" />
 	</mvc:interceptors>
 
+	<mvc:default-servlet-handler />
 	<mvc:view-controller path="/" view-name="index" />
 	<mvc:view-controller path="/doclist" view-name="doclist" />
 	<mvc:view-controller path="/test" view-name="/test" />
 	<mvc:resources location="/static/" mapping="/static/**" />
-	<mvc:resources location="/*.html" mapping="/**" />
-
+	<mvc:resources location="/page/" mapping="/page/**" />
+	
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/" />
