@@ -141,6 +141,11 @@ $(document).ready(function() {
         	$('.lnk-file-title').toggle('slow');
         	$('.word-tab-title-li').toggle('slow');
         	$('.nav-search-container').toggle('slow');
+        	$('.input-search').val('');
+        	$('.input-append .add-on').text('');
+        	$('.input-search').focus();
+        	$('.highlight').removeClass('highlight-selected');
+        	$('.highlight').removeClass('highlight');
 		});
 		$('.input-search').focus(function() {
 			if(!isLoadAll) {
