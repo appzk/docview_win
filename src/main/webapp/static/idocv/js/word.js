@@ -143,7 +143,6 @@ $(document).ready(function() {
         	$('.nav-search-container').toggle('slow');
         	$('.input-search').val('');
         	$('.input-append .add-on').text('');
-        	$('.input-search').focus();
         	$('.highlight').removeClass('highlight-selected');
         	$('.highlight').removeClass('highlight');
 		});
