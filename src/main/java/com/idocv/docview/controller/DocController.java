@@ -173,6 +173,9 @@ public class DocController {
 				result.put("name", vo.getName());
 				result.put("size", "" + vo.getSize());
 				result.put("rid", vo.getRid());
+				if (vo.isExist()) {
+					result.put("nname", name);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("upload error <controller>: " + e.getMessage());

@@ -169,4 +169,15 @@ function afterLoad() {
 	 */
 	// var ref = $('.lnk-file-title').attr('href');
 	// $('.lnk-file-title').removeAttr('href');
+	
+	/**
+	 * set filename from URL param
+	 */
+	try {
+		var fileName = $.url().param('name');
+		if (!!fileName) {
+			$('.lnk-file-title').text(fileName);
+		}
+	} catch (e) {
+	}
 }

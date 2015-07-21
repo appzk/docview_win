@@ -91,6 +91,11 @@ public class DocVo implements Serializable {
 	 * Other params
 	 */
 	private Map<String, Object> metas;
+	
+	/**
+	 * whether exist a same file
+	 */
+	private boolean isExist = false;
 
 	public String getRid() {
 		return rid;
@@ -218,6 +223,14 @@ public class DocVo implements Serializable {
 
 	public void setMetas(Map<String, Object> metas) {
 		this.metas = metas;
+	}
+
+	public boolean isExist() {
+		return isExist;
+	}
+
+	public void setExist(boolean isExist) {
+		this.isExist = isExist;
 	}
 
 	@Override

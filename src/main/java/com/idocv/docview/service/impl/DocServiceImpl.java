@@ -108,7 +108,7 @@ public class DocServiceImpl implements DocService {
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
-	private static final String expireDateString = "2015-08-31 23:59:59";
+	private static final String expireDateString = "2015-09-15 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
@@ -320,6 +320,7 @@ public class DocServiceImpl implements DocService {
 			if (isUniqueUpload.contains("true") || isUniqueUpload.contains("md5")) {
 				DocVo vo = convertPo2Vo(docDao.getByMd5(md5, false));
 				if (null != vo) {
+					vo.setExist(true);
 					return vo;
 				}
 			}
