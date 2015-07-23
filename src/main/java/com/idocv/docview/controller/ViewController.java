@@ -595,7 +595,7 @@ public class ViewController {
 				throw new DocServiceException("上传URL文件错误！");
 			}
 			String uuid = vo.getUuid();
-			return "redirect:" + uuid + (pageLoadAsync ? "" : ".html");
+			return "redirect:" + uuid + (pageLoadAsync ? "" : ".html") + (StringUtils.isBlank(name) ? "" : "?name=" + name);
 		} catch (Exception e) {
 			logger.error("view url(" + url + ") error: " + e.getMessage());
 			model.addAttribute("error", e.getMessage());
