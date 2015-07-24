@@ -1,6 +1,7 @@
 package com.idocv.docview.controller;
 
 import java.io.Serializable;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -110,7 +111,7 @@ public class ViewController {
 	}
 
 	@RequestMapping("{id:\\w{1,31}}")
-	public ModelAndView page(ModelAndView model,
+	public ModelAndView page(HttpServletRequest req, ModelAndView model,
 			@PathVariable String id,
 			@RequestParam(defaultValue = "1") int start,
 			@RequestParam(defaultValue = "5") int size,
@@ -595,7 +596,7 @@ public class ViewController {
 				throw new DocServiceException("上传URL文件错误！");
 			}
 			String uuid = vo.getUuid();
-			return "redirect:" + uuid + (pageLoadAsync ? "" : ".html") + (StringUtils.isBlank(name) ? "" : "?name=" + name);
+			return "redirect:" + uuid + (pageLoadAsync ? "" : ".html") + (StringUtils.isBlank(name) ? "" : "?name=" + URLEncoder.encode(name, "UTF-8"));
 		} catch (Exception e) {
 			logger.error("view url(" + url + ") error: " + e.getMessage());
 			model.addAttribute("error", e.getMessage());
