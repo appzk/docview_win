@@ -15,7 +15,6 @@
 		http://www.springframework.org/schema/task/spring-task.xsd ">
 
 	<context:property-placeholder location="classpath:conf.properties" />
-	<context:component-scan base-package="com.idocv.docview" />
 	
 	<task:annotation-driven />
 	<mvc:annotation-driven >
@@ -55,5 +54,7 @@
 		<property name="maxInMemorySize" value="1000000" />
 		<property name="maxUploadSize" value="50000000" />
 	</bean>
+	
+	<context:component-scan base-package="com.idocv.docview" />
 
 </beans>
