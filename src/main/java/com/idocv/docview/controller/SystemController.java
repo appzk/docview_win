@@ -59,7 +59,7 @@ public class SystemController {
 	@RequestMapping("info.json")
 	public Map<String, Object> infoJson() {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("cpuCount", ConvertServiceImpl.cpuCount);
+		params.put("cpuCount", ConvertServiceImpl.processorCount);
 		params.put("queueSize", ConvertServiceImpl.convertQueue.size());
 		params.put("highLoad", ConvertServiceImpl.SYSTEM_LOAD_HIGH);
 

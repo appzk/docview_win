@@ -40,7 +40,7 @@ public class ConvertServiceImpl implements ConvertService {
 	private static final Logger logger = LoggerFactory.getLogger(ConvertServiceImpl.class);
 	
 	private static final ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-	private static final int processorCount = Runtime.getRuntime().availableProcessors();
+	public static final int processorCount = Runtime.getRuntime().availableProcessors();
 	
 	public static final BlockingQueue<String> convertQueue = new ArrayBlockingQueue<String>(100000);
 
