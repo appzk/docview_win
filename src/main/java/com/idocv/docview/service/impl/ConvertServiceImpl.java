@@ -30,6 +30,7 @@ import com.idocv.docview.service.ConvertService;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.MemoryUtil;
+import com.idocv.docview.util.ProcessUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.MemoryVo;
 
@@ -39,7 +40,7 @@ public class ConvertServiceImpl implements ConvertService {
 	private static final Logger logger = LoggerFactory.getLogger(ConvertServiceImpl.class);
 	
 	private static final ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-	public static final int cpuCount = Runtime.getRuntime().availableProcessors();
+	private static final int processorCount = Runtime.getRuntime().availableProcessors();
 	
 	public static final BlockingQueue<String> convertQueue = new ArrayBlockingQueue<String>(100000);
 
@@ -85,6 +86,7 @@ public class ConvertServiceImpl implements ConvertService {
 		new Thread() {
 			public void run() {
 				int emptyCheckCount = 0;
+				int convertingDocCount = 0;
 				while (true) {
 					if (convertQueue.isEmpty()) {
 						emptyCheckCount++;
@@ -99,19 +101,36 @@ public class ConvertServiceImpl implements ConvertService {
 					}
 					if (SYSTEM_LOAD_HIGH) {
 						try {
-							logger.info("[CONVERT] system load is high, waiting for 10 minutes...");
-							Thread.sleep(600000);
+							logger.info("[CONVERT] system load is high, waiting for 0.5 minutes...");
+							Thread.sleep(30000);
 						} catch (Exception e) {
 							logger.error("[CONVERT] convert thread(high load waiting) sleep error: " + e.getMessage());
 						}
 						continue;
 					}
+
+					if (convertingDocCount > 20) {
+						try {
+							Map<Integer, String> curRunningProcessMap = ProcessUtil.getProcessByNameList(ProcessUtil.serviceNameList);
+							convertingDocCount = curRunningProcessMap.size();
+							if (curRunningProcessMap.size() > (5 * processorCount)) {
+								logger.warn("[SYSTEM LOAD] PROCESSOR(" + processorCount + ") is processing " + curRunningProcessMap.size() + " docs(" + curRunningProcessMap + ")");
+								SYSTEM_LOAD_HIGH = true;
+								continue;
+							}
+						} catch (Exception e) {
+							logger.error("[CONVERT]" + e.getMessage());
+						}
+					}
+
 					emptyCheckCount = 0;
 					try {
 						String rid = convertQueue.take();
 						logger.info("[CONVERT] start converting(" + rid + ") from convert queue(" + (convertQueue.size() + 1) + ")");
 						ConvertService convertService = new ConvertServiceImpl(viewService, rid);
 						es.submit(convertService);
+						convertingDocCount++;
+						Thread.sleep(100);
 					} catch (Exception e) {
 						logger.error("[CONVERT] take RID from convert queue error: " + e.getMessage());
 					}
@@ -161,6 +180,10 @@ public class ConvertServiceImpl implements ConvertService {
 			return;
 		}
 
+		if (SYSTEM_LOAD_HIGH) {
+			return;
+		}
+
 		ConvertService convertService = new ConvertServiceImpl(viewService, rid);
 		es.submit(convertService);
 		return;
@@ -186,11 +209,11 @@ public class ConvertServiceImpl implements ConvertService {
 			return;
 		}
 		
-		// check memory usage
+		// check heap memory usage
 		try {
 			MemoryVo heapVo = MemoryUtil.getHeapMemoryInfo();
 			MemoryVo systemVo = MemoryUtil.getSystemMemoryInfo();
-			if (heapVo.getRate() < convertSwitchThresholdMemoryUsage) {
+			if (heapVo.getRate() < convertSwitchThresholdMemoryUsage && systemVo.getFree() > 200000000) {
 				logger.info("[SYSTEM LOAD] memory info - HEAP(init|used|max): " + heapVo.getRate() + "(" + heapVo.getMin() + "|" + heapVo.getUsed() + "|" + heapVo.getMax() + ") - SYSTEM(used|free|total): " + systemVo.getRate() + "(" + systemVo.getUsed() + "|" + systemVo.getFree() + "|" + systemVo.getMax() + ")");
 			} else {
 				isHighLoad = true;
@@ -199,6 +222,18 @@ public class ConvertServiceImpl implements ConvertService {
 		} catch (Exception e) {
 			logger.error("[SYSTEM LOAD] check memeory usage error: " + e.getMessage());
 			return;
+		}
+		
+		// converting proccess
+		try {
+			Map<Integer, String> curRunningProcessMap = ProcessUtil.getProcessByNameList(ProcessUtil.serviceNameList);
+			if (curRunningProcessMap.size() > (5 * processorCount)) {
+				logger.warn("[SYSTEM LOAD] PROCESSOR(" + processorCount + ") is processing " + curRunningProcessMap.size() + " docs(" + curRunningProcessMap + ")");
+				isHighLoad = true;
+				return;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		// check CPU usage
