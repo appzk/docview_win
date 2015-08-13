@@ -240,6 +240,8 @@ public class ViewController {
 					model.setViewName("pdf/index");
 				} else if ("imgall".equalsIgnoreCase(type)) {
 					model.setViewName("pdf/imgall");
+				} else if ("mobile".equalsIgnoreCase(type)) {
+					model.setViewName("pdf/mobile");
 				}
 				return model;
 			} else if (uuid.endsWith(ViewType.TXT.getSymbol())) {

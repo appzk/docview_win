@@ -783,6 +783,14 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			Collections.sort(pdfPageFiles, new FileComparator());
 			Collections.sort(pdfPageFilesThumb, new FileComparator());
 
+			// ratio
+			File imgRatioFile = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE + "thumb/" + File.separator + pdfPageFiles.get(0).getName());
+			if (!imgRatioFile.isFile()) {
+				throw new DocServiceException("未找到缩略图！");
+			}
+			BufferedImage imgRatio = ImageIO.read(imgRatioFile);
+			float ratio = (float) imgRatio.getHeight() / imgRatio.getWidth();
+			
 			List<PdfVo> data = new ArrayList<PdfVo>();
 			if (!CollectionUtils.isEmpty(pdfPageFiles) && !CollectionUtils.isEmpty(pdfPageFilesThumb)) {
 				for (int i = 0; i < pdfPageFiles.size(); i++) {
@@ -791,6 +799,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					String thumbUrl = rcUtil.getParseUrlDir(rid) + PDF_TO_IMAGE_TYPE + "thumb/" + pdfPageFiles.get(i).getName();
 					pdf.setUrl(url);
 					pdf.setThumbUrl(thumbUrl);
+					pdf.setRatio(ratio);
 					data.add(pdf);
 				}
 			}

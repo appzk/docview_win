@@ -3,6 +3,7 @@ package com.idocv.docview.vo;
 public class PdfVo extends ViewBaseVo {
 
 	private String thumbUrl;
+	private float ratio;
 	private String background;
 
 	public String getThumbUrl() {
@@ -11,6 +12,14 @@ public class PdfVo extends ViewBaseVo {
 
 	public void setThumbUrl(String thumbUrl) {
 		this.thumbUrl = thumbUrl;
+	}
+
+	public float getRatio() {
+		return ratio;
+	}
+
+	public void setRatio(float ratio) {
+		this.ratio = ratio;
 	}
 
 	public String getBackground() {
