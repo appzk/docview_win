@@ -112,6 +112,12 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	
 	private @Value("${view.page.style.pdf}")
 	String viewPageStylePdf;
+	
+	private @Value("${view.img.quality.ppt.thumb.width}")
+	String viewImgQualityPptThumbWidth;
+	
+	private @Value("${view.img.quality.ppt.big.width}")
+	String viewImgQualityPptBigWidth;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -557,18 +563,18 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	public PageVo<PPTVo> convertPPT2Img(String rid, int start, int limit) throws DocServiceException {
 		try {
 			// get page count
-			File[] slide200Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_200).listFiles();
-			File[] slide1024Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_1024).listFiles();
+			File[] slide200Files = new File(rcUtil.getParseDir(rid) + viewImgQualityPptThumbWidth).listFiles();
+			File[] slide1024Files = new File(rcUtil.getParseDir(rid) + viewImgQualityPptBigWidth).listFiles();
 			if (ArrayUtils.isEmpty(slide200Files) || ArrayUtils.isEmpty(slide1024Files)) {
 				convert(rid);
-				slide200Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_200).listFiles();
-				slide1024Files = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_1024).listFiles();
+				slide200Files = new File(rcUtil.getParseDir(rid) + viewImgQualityPptThumbWidth).listFiles();
+				slide1024Files = new File(rcUtil.getParseDir(rid) + viewImgQualityPptBigWidth).listFiles();
 			}
 			if (ArrayUtils.isEmpty(slide200Files) || ArrayUtils.isEmpty(slide1024Files)) {
 				throw new DocServiceException("预览失败，未找到目标文件！");
 			}
 			
-			File imgRatioFile = new File(rcUtil.getParseDir(rid) + IMG_WIDTH_200 + File.separator + "slide1.jpg");
+			File imgRatioFile = new File(rcUtil.getParseDir(rid) + viewImgQualityPptThumbWidth + File.separator + "slide1.jpg");
 			if (!imgRatioFile.isFile()) {
 				throw new DocServiceException("未找到缩略图！");
 			}
@@ -613,8 +619,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					// title
 					String title = titles.get("slide" + (i + 1) + ".title");
 					ppt.setTitle(title);
-					String thumbUrl = rcUtil.getParseUrlDir(rid) + IMG_WIDTH_200 + "/" + slideImgThumbFiles.get(i).getName();
-					String url = rcUtil.getParseUrlDir(rid) + IMG_WIDTH_1024 + "/" + slideImgFiles.get(i).getName();
+					String thumbUrl = rcUtil.getParseUrlDir(rid) + viewImgQualityPptThumbWidth + "/" + slideImgThumbFiles.get(i).getName();
+					String url = rcUtil.getParseUrlDir(rid) + viewImgQualityPptBigWidth + "/" + slideImgFiles.get(i).getName();
 					ppt.setThumbUrl(thumbUrl);
 					ppt.setUrl(url);
 					ppt.setRatio(ratio);
@@ -1152,13 +1158,13 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			} else if (ViewType.PPT == ViewType.getViewTypeByExt(ext)) {
 				dest = rcUtil.getParseDir(rid);
 				destFile = new File(dest);
-				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles())) {
-					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "true", IMG_WIDTH_200);
+				if (ArrayUtils.isEmpty(new File(dest + viewImgQualityPptThumbWidth).listFiles())) {
+					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "true", viewImgQualityPptThumbWidth);
 				}
-				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_1024).listFiles())) {
-					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "false", IMG_WIDTH_1024);
+				if (ArrayUtils.isEmpty(new File(dest + viewImgQualityPptBigWidth).listFiles())) {
+					convertResult += CmdUtil.runWindows(ppt2Jpg, src, dest, "false", viewImgQualityPptBigWidth);
 				}
-				if (ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_200).listFiles()) || ArrayUtils.isEmpty(new File(dest + IMG_WIDTH_1024).listFiles())) {
+				if (ArrayUtils.isEmpty(new File(dest + viewImgQualityPptThumbWidth).listFiles()) || ArrayUtils.isEmpty(new File(dest + viewImgQualityPptBigWidth).listFiles())) {
 					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
 					throw new DocServiceException("对不起，该文档（"
 							+ RcUtil.getUuidByRid(rid)
