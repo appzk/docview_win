@@ -172,6 +172,21 @@ public class RcUtil {
 		}
 		return pdf2ImgDir;
 	}
+	
+	/**
+	 * 获取PDF解析文档的本地目录(PNG)
+	 * 
+	 * @param rid
+	 * @return
+	 */
+	public String getParseDirOfPdf2PngThumb(String rid) {
+		String parseDir = getParseDir(rid);
+		String pdf2ImgDir = parseDir + ViewService.PDF_TO_IMAGE_TYPE + "thumb" + File.separator;
+		if (!new File(pdf2ImgDir).isDirectory()) {
+			new File(pdf2ImgDir).mkdirs();
+		}
+		return pdf2ImgDir;
+	}
 
 	/**
 	 * 根据rid获取绝对目录
