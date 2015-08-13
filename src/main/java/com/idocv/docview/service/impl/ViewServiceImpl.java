@@ -760,7 +760,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				}
 				if (!new File(destFirstPageThumb).isFile()) {
 					String src = rcUtil.getPath(rid);
-					convertResult = convertPdf2Img(pdf2img, viewImgQualityPdfThumbWidth, destDir, src);
+					convertResult = convertPdf2Img(pdf2img, viewImgQualityPdfThumbWidth, destDirThumb, src);
 					pngFilesThumb = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE + "thumb").listFiles();
 				}
 				if (ArrayUtils.isEmpty(pngFiles)) {
@@ -784,7 +784,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			Collections.sort(pdfPageFilesThumb, new FileComparator());
 
 			// ratio
-			File imgRatioFile = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE + "thumb/" + File.separator + pdfPageFiles.get(0).getName());
+			File imgRatioFile = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE + File.separator + pdfPageFiles.get(0).getName());
 			if (!imgRatioFile.isFile()) {
 				throw new DocServiceException("未找到缩略图！");
 			}
