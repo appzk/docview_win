@@ -14,6 +14,14 @@
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet" />
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
+    
+    <script type="text/javascript">
+      var windowWidth = document.documentElement.clientWidth;
+      var searchStr = window.location.search;
+      if (windowWidth < 768 && (!searchStr || !searchStr.contains('type'))) {
+    	  window.location.href = 'http://' + window.location.host + window.location.pathname + '?type=mobile';
+      }
+    </script>
 
     <!--[if lt IE 9]>
       <script src="/static/bootstrap/js/html5shiv.js"></script>
