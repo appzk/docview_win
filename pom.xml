@@ -292,7 +292,7 @@
 				<pom.converter.ppt2jpg>/idocv/converter/ppt2jpg.exe</pom.converter.ppt2jpg>
 				<pom.converter.pdf2img>/idocv/converter/pdf2img/gswin64c.exe</pom.converter.pdf2img>
 				<pom.converter.pdf2html>/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.converter.pdf2html>
-				<pom.converter.img2jpg>/idocv/converter/img2jpg.exe</pom.converter.img2jpg>
+				<pom.converter.img2jpg>C:/Program Files/ImageMagick-6.9.0-Q8/converter.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
 				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
 				<pom.converter.cad2img>/idocv/converter/cad2img/di.exe</pom.converter.cad2img>
@@ -326,7 +326,7 @@
 				<pom.converter.ppt2jpg>/idocv/converter/ppt2jpg.exe</pom.converter.ppt2jpg>
 				<pom.converter.pdf2img>/idocv/converter/pdf2img/gswin64c.exe</pom.converter.pdf2img>
 				<pom.converter.pdf2html>/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.converter.pdf2html>
-				<pom.converter.img2jpg>/idocv/converter/img2jpg.exe</pom.converter.img2jpg>
+				<pom.converter.img2jpg>C:/Program Files/ImageMagick-6.9.0-Q8/converter.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
 				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
 				<pom.converter.cad2img>/idocv/converter/cad2img/di.exe</pom.converter.cad2img>
@@ -360,7 +360,7 @@
 				<pom.converter.ppt2jpg>/idocv/converter/ppt2jpg.exe</pom.converter.ppt2jpg>
 				<pom.converter.pdf2img>/idocv/converter/pdf2img/gswin64c.exe</pom.converter.pdf2img>
 				<pom.converter.pdf2html>/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.converter.pdf2html>
-				<pom.converter.img2jpg>/idocv/converter/img2jpg.exe</pom.converter.img2jpg>
+				<pom.converter.img2jpg>C:/Program Files/ImageMagick-6.9.0-Q8/converter.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
 				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
 				<pom.converter.cad2img>/idocv/converter/cad2img/di.exe</pom.converter.cad2img>
@@ -393,7 +393,7 @@
 				<pom.converter.ppt2jpg>/idocv/converter/ppt2jpg.exe</pom.converter.ppt2jpg>
 				<pom.converter.pdf2img>/idocv/converter/pdf2img/gswin64c.exe</pom.converter.pdf2img>
 				<pom.converter.pdf2html>/idocv/converter/pdf2html/pdf2htmlEX.exe</pom.converter.pdf2html>
-				<pom.converter.img2jpg>/idocv/converter/img2jpg.exe</pom.converter.img2jpg>
+				<pom.converter.img2jpg>C:/Program Files/ImageMagick-6.9.0-Q8/converter.exe</pom.converter.img2jpg>
 				<pom.converter.audio2mp3>/idocv/converter/ffmpeg.exe</pom.converter.audio2mp3>
 				<pom.converter.zip2file>/idocv/converter/zip2file/7z.exe</pom.converter.zip2file>
 				<pom.converter.cad2img>/idocv/converter/cad2img/di.exe</pom.converter.cad2img>
