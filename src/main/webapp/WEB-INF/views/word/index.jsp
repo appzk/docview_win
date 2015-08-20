@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid container-fluid-content">
       <div class="row-fluid">
         <div class="span12">
           <!-- WORD PAGES HERE -->

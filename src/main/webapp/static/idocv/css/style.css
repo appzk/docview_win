@@ -154,12 +154,9 @@
 			max-width: 85%;
 		}
 		
-		.container-fluid {
+		.container-fluid-content {
 		    padding-left: 0px;
 			padding-right: 0px;
-		}
-		body {
-			padding-top: 0px;
 		}
 	}
 	
