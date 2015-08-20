@@ -145,6 +145,15 @@ function loadAllPage(isAsync) {
 /* ---------------------------------------------------------------------- */
 function afterLoad() {
 	/**
+	 * Hide title under Weixin browser
+	 */
+	var ua = navigator.userAgent.toLowerCase();
+    var isWeixinBrowser = (/micromessenger/.test(ua)) ? true : false ;
+    if (isWeixinBrowser) {
+    	$('.navbar').hide();
+    }
+	
+	/**
 	 * Remove footer
 	 */
 	// $('footer').remove();
