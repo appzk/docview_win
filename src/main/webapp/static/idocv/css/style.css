@@ -151,12 +151,16 @@
 	
 	@media (max-width: 767px) {
 		.word-page .word-content {
-			max-width: 85%;
+			max-width: 90%;
 		}
 		
+		/* 取消手机端Word预览左右边距 */	
 		.container-fluid-content {
 		    padding-left: 0px;
 			padding-right: 0px;
+		}
+		.word-body {
+			padding-top: 40px;
 		}
 	}
 	
