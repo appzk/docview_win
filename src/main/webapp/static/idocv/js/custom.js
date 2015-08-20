@@ -151,6 +151,7 @@ function afterLoad() {
     var isWeixinBrowser = (/micromessenger/.test(ua)) ? true : false ;
     if (isWeixinBrowser) {
     	$('.navbar').hide();
+    	$('body').attr('padding-top', '20px;');
     }
 	
 	/**
