@@ -154,6 +154,7 @@ function afterLoad() {
     	$('.word-body').css('padding-top', '0px');
     	
     	$('.ppt-body .navbar').hide();
+    	$('.ppt-body').css('padding-top', '20px');
     	
     	$('.pdf-body .navbar').hide();
     	$('.pdf-body').css('padding-top', '20px');
