@@ -29,10 +29,10 @@
         height: auto;
       }
       .my-gallery figure {
+      	width: 100%;
         display: block;
-        float: left;
-        margin: 0 5px 5px 0;
-        width: 200px;
+        margin: 5px auto;
+        width: 100%;
       }
       .my-gallery figcaption {
         display: none;
