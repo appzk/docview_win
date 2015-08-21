@@ -151,7 +151,7 @@
 	
 	@media (max-width: 767px) {
 		.word-page .word-content {
-			max-width: 90%;
+			max-width: 85%;
 		}
 		
 		/* 取消手机端Word预览左右边距 */	
