@@ -152,6 +152,11 @@ function afterLoad() {
     if (isWeixinBrowser) {
     	$('.word-body .navbar').hide();
     	$('.word-body').css('padding-top', '0px');
+    	
+    	$('.ppt-body .navbar').hide();
+    	
+    	$('.pdf-body .navbar').hide();
+    	$('.pdf-body').css('padding-top', '20px');
     }
 	
 	/**

@@ -46,7 +46,7 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body class="pdf-body">
   
     <div class="loading-mask" style="display: none;">
       <div class="loading-zone">
@@ -80,7 +80,7 @@
       </div>
     </nav>
 
-    <div class="container-fluid">
+    <div class="container-fluid container-fluid-content">
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-12">
@@ -153,6 +153,7 @@
     ================================================== -->
     <script src="/static/jquery/js/jquery-1.11.3.min.js"></script>
     <script src="/static/bootstrap3/js/bootstrap.min.js"></script>
+    <script src="/static/idocv/js/custom.js?v=${version}"></script>
     <script src="/static/contextMenu/js/jquery.contextMenu.js?v=${version}"></script>
     <script src="/static/contextMenu/js/jquery.ui.position.js?v=${version}"></script>
     <script src="/static/jquery/js/jquery.mobile-events.min.js?v=${version}"></script>

@@ -149,29 +149,6 @@
 		padding-bottom: 10%;
 	}
 	
-	@media (max-width: 767px) {
-		.word-page .word-content {
-			max-width: 85%;
-		}
-		
-		/* 取消手机端Word预览左右边距 */	
-		.container-fluid-content {
-		    padding-left: 0px;
-			padding-right: 0px;
-		}
-		.word-body {
-			padding-top: 40px;
-		}
-		.word-body, .ppt-body {
-			background-color:#FFF;
-		}
-		.word-page{
-			-moz-box-shadow: 0 0 10px 5px #FFF;
-			-webkit-box-shadow: 0 0 0px 0px #FFF;
-			box-shadow: 0 0 0px 0px #FFF;
-		}
-	}
-	
 	.doc-page .doc-content p{
 		word-wrap:break-word;
 		word-break:normal;
@@ -371,4 +348,37 @@
 		height: 20px;
 		font-weight: bold;
 		color: green;
+	}
+	
+	/* -------------------------------------------------- */
+	/*	Mobile css
+	/* -------------------------------------------------- */
+	@media (max-width: 767px) {
+		.word-body {
+			padding-top: 40px;
+		}
+		.word-page .word-content {
+			max-width: 85%;
+		}
+		/* 取消手机端Word预览左右边距 */	
+		.word-body .container-fluid-content {
+		    padding-left: 0px;
+			padding-right: 0px;
+		}
+		.word-body, .ppt-body, .pdf-body {
+			background-color:#FFF;
+		}
+		.word-page{
+			-moz-box-shadow: 0 0 10px 5px #FFF;
+			-webkit-box-shadow: 0 0 0px 0px #FFF;
+			box-shadow: 0 0 0px 0px #FFF;
+		}
+		
+		.pdf-body {
+			padding-top: 50px;
+		}
+		.pdf-body .container-fluid-content {
+		    padding-left: 0px;
+			padding-right: 0px;
+		}
 	}
