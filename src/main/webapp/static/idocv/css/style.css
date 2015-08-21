@@ -162,6 +162,14 @@
 		.word-body {
 			padding-top: 40px;
 		}
+		.word-body, .ppt-body {
+			background-color:#FFF;
+		}
+		.word-page{
+			-moz-box-shadow: 0 0 10px 5px #FFF;
+			-webkit-box-shadow: 0 0 0px 0px #FFF;
+			box-shadow: 0 0 0px 0px #FFF;
+		}
 	}
 	
 	.doc-page .doc-content p{
