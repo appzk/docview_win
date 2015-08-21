@@ -150,8 +150,8 @@ function afterLoad() {
 	var ua = navigator.userAgent.toLowerCase();
     var isWeixinBrowser = (/micromessenger/.test(ua)) ? true : false ;
     if (isWeixinBrowser) {
-    	$('.navbar').hide();
-    	$('body').css('padding-top', '0px');
+    	$('.word-body .navbar').hide();
+    	$('.word-body').css('padding-top', '0px');
     }
 	
 	/**
