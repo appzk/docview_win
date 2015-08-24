@@ -593,7 +593,7 @@ public class ViewController {
 				throw new DocServiceException(0, "不存在该应用！");
 			}
 			String app = appPo.getId();
-			DocVo vo = docService.addUrl(app, null, name, url, mode, label);
+			DocVo vo = docService.addUrl(req, app, null, name, url, mode, label);
 			if (null == vo) {
 				throw new DocServiceException("上传URL文件错误！");
 			}

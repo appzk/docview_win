@@ -1,5 +1,7 @@
 package com.idocv.docview.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.idocv.docview.common.Paging;
 import com.idocv.docview.dao.DocDao.QueryOrder;
 import com.idocv.docview.exception.DocServiceException;
@@ -29,8 +31,8 @@ public interface DocService {
 	 */
 	DocVo add(String app, String uid, String name, byte[] data, int mode, String labelName) throws DocServiceException;
 	
-	DocVo addUrl(String app, String uid, String name, String url, int mode, String labelName) throws DocServiceException;
-
+	DocVo addUrl(HttpServletRequest req, String app, String uid, String name, String url, int mode, String labelName) throws DocServiceException;
+	
 	/**
 	 * Delete file logically
 	 * 

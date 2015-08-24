@@ -155,7 +155,7 @@ public class DocController {
 				}
 			} else if (StringUtils.isNotBlank(url)) {
 				// upload by URL
-				vo = docService.addUrl(app, uid, name, url, mode, label);
+				vo = docService.addUrl(req, app, uid, name, url, mode, label);
 			} else {
 				throw new DocServiceException(0, "上传错误，file和url参数必选其一！");
 			}

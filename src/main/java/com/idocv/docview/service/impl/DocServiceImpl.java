@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.net.ssl.HostnameVerifier;
@@ -22,6 +23,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
@@ -32,6 +35,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -108,7 +112,7 @@ public class DocServiceImpl implements DocService {
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
-	private static final String expireDateString = "2015-09-15 23:59:59";
+	private static final String expireDateString = "2015-09-30 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
@@ -148,7 +152,7 @@ public class DocServiceImpl implements DocService {
 	}
 
 	@Override
-	public DocVo addUrl(String app, String uid, String name, String url, int mode, String labelName) throws DocServiceException {
+	public DocVo addUrl(HttpServletRequest req, String app, String uid, String name, String url, int mode, String labelName) throws DocServiceException {
 		if (StringUtils.isBlank(app) || StringUtils.isBlank(url)) {
 			logger.error("参数不足：app=" + app + ", uid=" + uid + ", url=" + url
 					+ ", name=" + name + ", mode=" + mode);
@@ -206,7 +210,20 @@ public class DocServiceImpl implements DocService {
 						setTrustAllCerts();
 					}
 					// urlResponse = Jsoup.connect(url).referrer(host).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreContentType(true).execute();
-					urlResponse = Jsoup.connect(encodedUrl).maxBodySize(uploadMaxSize.intValue() + 1000).referrer(host).timeout(60000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true).execute();
+					Connection connection = Jsoup.connect(encodedUrl).maxBodySize(uploadMaxSize.intValue() + 1000).referrer(host).timeout(60000).userAgent("Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).followRedirects(true).ignoreContentType(true);
+
+					// set cookies
+					if (null != req) {
+						Cookie[] cookieArr = req.getCookies();
+						if (null != cookieArr && cookieArr.length > 0) {
+							Map<String, String> cookieMap = new HashMap<String, String>();
+							for (Cookie cookie : cookieArr) {
+								cookieMap.put(cookie.getName(), cookie.getValue());
+							}
+							connection.cookies(cookieMap);
+						}
+					}
+					urlResponse = connection.execute();
 					if (urlResponse.statusCode() == 307) {
 						String sNewUrl = urlResponse.header("Location");
 						if (sNewUrl != null && sNewUrl.length() > 7) {

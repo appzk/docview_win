@@ -224,7 +224,7 @@ public class XiWangController {
 			}
 			url = URLDecoder.decode(url, "UTF-8");
 			String queryString = req.getQueryString();
-			DocVo vo = docService.addUrl(appId, userId, name, url, 1, null);
+			DocVo vo = docService.addUrl(req, appId, userId, name, url, 1, null);
 			if (null == vo) {
 				throw new DocServiceException("获取文件失败！");
 			}
