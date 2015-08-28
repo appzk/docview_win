@@ -20,6 +20,7 @@ $(document).ready(function() {
 			
 			// title
 			$('.container-fluid:first .btn:first').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
+			$('title').text(data.name);
 			
 			// set ratio
 			ratio = pages[0].ratio;

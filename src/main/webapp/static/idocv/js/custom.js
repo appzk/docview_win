@@ -150,7 +150,7 @@ function afterLoad() {
 	var ua = navigator.userAgent.toLowerCase();
     var isWeixinBrowser = (/micromessenger/.test(ua)) ? true : false ;
     if (isWeixinBrowser) {
-    	$('.lnk-file-title').hide();
+    	$('.lnk-file-title').remove();
     	
     	if ($('.word-tab-title-li').length) {
     		// only hide title
@@ -174,10 +174,10 @@ function afterLoad() {
 	/**
 	 * Set title
 	 */
-	// var name = $('.lnk-file-title').text();
-	// if (!! name) {
-	// 	$('title').text(name);
-	// }
+	var name = $('.lnk-file-title').text();
+	if (!! name) {
+		$('title').text(name);
+	}
 	
 	/**
 	 * do NOT allow copy text
