@@ -21,7 +21,7 @@
     <script type="text/javascript">
       var windowWidth = document.documentElement.clientWidth;
       var searchStr = window.location.search;
-      if (windowWidth < 768 && (!searchStr || !searchStr.contains('type'))) {
+      if (windowWidth < 768 && (!searchStr || searchStr.indexOf('type=') < 0)) {
     	  window.location.href = 'http://' + window.location.host + window.location.pathname + '?type=mobile';
       }
     </script>
