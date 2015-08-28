@@ -13,7 +13,9 @@
     <!-- styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet">
+    <!-- 
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+     -->
     <style type="text/css">
       table, tbody, tfoot, thead, tr, th, td {
         border: 1px solid #dddddd !important;
