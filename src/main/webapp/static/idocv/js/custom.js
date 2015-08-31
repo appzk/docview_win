@@ -164,6 +164,9 @@ function afterLoad() {
     	
     	$('.pdf-body .navbar').hide();
     	$('.pdf-body').css('padding-top', '20px');
+    	
+    	$('.zip-body .navbar').hide();
+    	$('.zip-body').css('padding-top', '20px');
     }
 	
 	/**
