@@ -13,14 +13,13 @@
     <!-- styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet">
-    <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
       <script src="/static/bootstrap/js/html5shiv.js"></script>
     <![endif]-->
   </head>
 
-  <body>
+  <body class="img-body">
     <div class="loading-mask" style="display: none;">
       <div class="loading-zone">
         <div class="text">正在载入...0%</div>
