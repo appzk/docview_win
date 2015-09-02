@@ -7,6 +7,8 @@ import java.util.Date;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,8 @@ import com.idocv.docview.service.ViewService;
 
 @Component("rcUtil")
 public class RcUtil {
+
+	private static Logger logger = LoggerFactory.getLogger(RcUtil.class);
 
 	private @Value("${data.url}")
 	String dataUrl;
@@ -102,6 +106,7 @@ public class RcUtil {
 	 */
 	public static void validateRid(String rid) throws IllegalArgumentException {
 		if (StringUtils.isBlank(rid) || !rid.matches("\\w{1,}_\\d{8}_\\d{6}.*")) {
+			logger.error("Invalid rid: " + rid);
 			throw new IllegalArgumentException("Invalid rid.");
 		}
 	}
