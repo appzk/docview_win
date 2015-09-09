@@ -185,7 +185,8 @@ function afterLoad() {
 	 */
 	var name = $('.lnk-file-title').text();
 	if (!! name) {
-		$('title').text(name);
+		document.title = name;
+		// $('title').text(name);	IE 8 does NOT support this
 	}
 	
 	/**
