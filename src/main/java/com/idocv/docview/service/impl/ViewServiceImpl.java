@@ -792,13 +792,15 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			float ratio = (float) imgRatio.getHeight() / imgRatio.getWidth();
 			
 			List<PdfVo> data = new ArrayList<PdfVo>();
-			if (!CollectionUtils.isEmpty(pdfPageFiles) && !CollectionUtils.isEmpty(pdfPageFilesThumb)) {
+			if (!CollectionUtils.isEmpty(pdfPageFiles)) {
 				for (int i = 0; i < pdfPageFiles.size(); i++) {
 					PdfVo pdf = new PdfVo();
 					String url = rcUtil.getParseUrlDir(rid) + PDF_TO_IMAGE_TYPE + "/" + pdfPageFiles.get(i).getName();
 					String thumbUrl = rcUtil.getParseUrlDir(rid) + PDF_TO_IMAGE_TYPE + "thumb/" + pdfPageFiles.get(i).getName();
 					pdf.setUrl(url);
-					pdf.setThumbUrl(thumbUrl);
+					if (!pdfPageFilesThumb.isEmpty()) {
+						pdf.setThumbUrl(thumbUrl);
+					}
 					pdf.setRatio(ratio);
 					data.add(pdf);
 				}
@@ -1232,7 +1234,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 						// old style(before 20150624): convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + destDir + "%d.png", src);
 						convertResult += convertPdf2Img(pdf2img, viewImgQualityPdfThumbWidth, destDirThumb, src);
 					}
-					if (!new File(destFirstPage).isFile() || !new File(destFirstPageThumb).isFile()) {
+					if (!new File(destFirstPage).isFile()) {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
 						throw new DocServiceException("对不起，该文档（"
 								+ RcUtil.getUuidByRid(rid)
@@ -1385,11 +1387,12 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	 * @param src
 	 * @return
 	 */
-	public static String convertPdf2Img(String pdf2img, String inchResolution, String destDir, String src) {
-		if (StringUtils.isBlank(inchResolution)) {
-			inchResolution = "150";
+	public static String convertPdf2Img(String pdf2img, String widthPixel, String destDir, String src) {
+		if (StringUtils.isBlank(widthPixel) || !widthPixel.matches("\\d+") || Integer.valueOf(widthPixel) < 1) {
+			return "Width pixel NOT set";
 		}
-		return CmdUtil.runWindows(pdf2img, "-q", "-dSAFER", "-dBATCH", "-dNOPAUSE", "-r" + inchResolution, "-sDEVICE=png16m", "-dTextAlphaBits=4", "-dGraphicsAlphaBits=4", "-sOutputFile=" + destDir + "%d.png", src);
+		Integer heightPixel = (int) (Integer.valueOf(widthPixel) * 1.415);
+		return CmdUtil.runWindows(pdf2img, "-q", "-dSAFER", "-dBATCH", "-dNOPAUSE", "-dPDFFitPage", "-dDEVICEWIDTHPOINTS=" + widthPixel, "-dDEVICEHEIGHTPOINTS=" + heightPixel, "-sDEVICE=png16m", "-dTextAlphaBits=4", "-dGraphicsAlphaBits=4", "-sOutputFile=" + destDir + "%d.png", src);
 	}
 	
 	public static String getEncoding(File file) {

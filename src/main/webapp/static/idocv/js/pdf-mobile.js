@@ -38,12 +38,12 @@ $(document).ready(function() {
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
 				slideUrls[i] = page.url;
-				slideThumbUrls[i] = page.thumbUrl;
-				$('.row-fluid .span2').append('<div class="thumbnail" page="' + (i + 1) + '"><img src="' + page.thumbUrl + '"></div>' + (i + 1) + '/' + pages.length + '<br />');
+				slideThumbUrls[i] = page.url;
+				$('.row-fluid .span2').append('<div class="thumbnail" page="' + (i + 1) + '"><img src="' + page.url + '"></div>' + (i + 1) + '/' + pages.length + '<br />');
 				var slideFigure = 
 					'<figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">' +
 		              '<a href="' + page.url + '" itemprop="contentUrl" data-size="1024x' + (1024 * ratio) + '">' +
-		                '<img src="' + page.thumbUrl + '" itemprop="thumbnail" alt="' + page.title + '" />' +
+		                '<img src="' + page.url + '" itemprop="thumbnail" alt="' + page.title + '" />' +
 		              '</a>' +
 		            '</figure>';
 				$('.my-gallery').append(slideFigure);
