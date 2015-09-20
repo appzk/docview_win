@@ -154,6 +154,15 @@
 		word-break:normal;
 		margin: 0px;
 	}
+	
+	span.msoIns, span.msoIns ins {
+		mso-style-name:"批注插入";
+		text-decoration: none;
+	}
+	span.msoDel, span.msoDel ins {
+		mso-style-name:"批注删除";
+		display: none;
+	}
 
 	/* -------------------------------------------------- */
 	/*	PPT Style

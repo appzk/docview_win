@@ -144,7 +144,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String contentWhole = FileUtils.readFileToString(htmlFile, "UTF-8");
 				String styleString = contentWhole.replaceFirst("(?s)(?i).*?(<style>)(.*?)</style>.*", "$2");
 				bodyString = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
-				bodyString = processStyle(bodyString);
+				styleString = processWordCssStyle(styleString);
+				bodyString = processWordBodyStyle(bodyString);
 				FileUtils.writeStringToFile(styleFile, styleString, "UTF-8");
 				FileUtils.writeStringToFile(bodyFile, bodyString, "UTF-8");
 			} else {
@@ -180,7 +181,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String contentWhole = FileUtils.readFileToString(htmlFile, "UTF-8");
 				String styleString = contentWhole.replaceFirst("(?s)(?i).*?(<style>)(.*?)</style>.*", "$2");
 				bodyString = contentWhole.replaceFirst("(?s)(?i).*?(<BODY[^>]*>)(.*?)</BODY>.*", "$2");
-				bodyString = processStyle(bodyString);
+				styleString = processWordCssStyle(styleString);
+				bodyString = processWordBodyStyle(bodyString);
 				FileUtils.writeStringToFile(styleFile, styleString, "UTF-8");
 				FileUtils.writeStringToFile(bodyFile, bodyString, "UTF-8");
 			} else {
@@ -502,7 +504,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String sheetContent = sheetFileContent.replaceFirst("(?s)(?i).+?<body.+?(<table[^>]+)(>.*</table>).*(?-i)", "$1" + " class=\"table table-condensed table-bordered\"" + "$2");
 				sheetContent = sheetContent.replaceFirst("table-layout:fixed;", "");
 				sheetContent = processImageUrl(rcUtil.getParseUrlDir(rid) + subDirName + "/", sheetContent);
-				sheetContent = processStyle(sheetContent);
+				sheetContent = processWordBodyStyle(sheetContent);
 				// contentList.add(sheetContent);
 
 				vo.setTitle(title);
@@ -1341,12 +1343,31 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	}
 
 	/**
+	 * remove CSS styles (annotate ins & del)
+	 * 
+	 * @param cssString
+	 * @return
+	 */
+	private static String processWordCssStyle(String cssString) {
+		// remove annotate style
+		String annoStyleInsRegex = "(?s)(?i)(.*?)(span\\.msoIns[^\\}]+\\})(.*)";
+		if (cssString.matches(annoStyleInsRegex)) {
+			cssString = cssString.replaceAll(annoStyleInsRegex, "$1$3");
+		}
+		String annoStyleDelRegex = "(?s)(?i)(.*?)(span\\.msoDel[^\\}]+\\})(.*)";
+		if (cssString.matches(annoStyleDelRegex)) {
+			cssString = cssString.replaceAll(annoStyleDelRegex, "$1$3");
+		}
+		return cssString;
+	}
+
+	/**
 	 * remove unnecessary content styles
 	 * 
 	 * @param content
 	 * @return
 	 */
-	private static String processStyle(String content) {
+	private static String processWordBodyStyle(String content) {
 		return content.replaceAll("position:[^;]{5,12};", "")			// remove position style
 					  .replaceAll("margin-left:[^;]{1,10};", "")		// remove margin left
 					  .replaceAll("margin-right:[^;]{1,10};", "")		// remove position right
