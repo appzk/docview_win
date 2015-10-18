@@ -34,6 +34,7 @@
 
 	<mvc:interceptors>
 		<bean class="com.idocv.docview.interceptor.ConfInterceptor" />
+		<bean class="com.idocv.docview.interceptor.ViewInterceptor" />
 	</mvc:interceptors>
 
 	<mvc:default-servlet-handler />

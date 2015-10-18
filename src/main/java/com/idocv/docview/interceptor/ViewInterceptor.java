@@ -1,0 +1,68 @@
+package com.idocv.docview.interceptor;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.idocv.docview.util.RemoteUtil;
+
+public class ViewInterceptor extends HandlerInterceptorAdapter {
+
+	private static final Logger logger = LoggerFactory.getLogger(ViewInterceptor.class);
+	
+	@Value("${thd.view.check.switch}")
+	private boolean thdViewCheckSwitch = false;
+
+	@Value("${thd.view.check.url}")
+	private String thdViewCheckUrl;
+
+	@Value("${thd.view.check.key.name}")
+	private String thdViewCheckKeyName;
+
+	private static ObjectMapper om = new ObjectMapper();
+
+	@Override
+	public void postHandle(HttpServletRequest request,
+			HttpServletResponse response, Object handler,
+			ModelAndView model) throws Exception {
+		String requestUri = request.getRequestURI();
+		if (thdViewCheckSwitch && StringUtils.isNotBlank(thdViewCheckUrl)
+				&& requestUri.startsWith("/view/")
+				&& requestUri.matches("/view/\\w{4,10}")) {
+			try {
+				String thdViewCheckKeyValue = request.getParameter(thdViewCheckKeyName);
+				String uuid = requestUri.replaceFirst("/view/(\\w{4,10})", "$1");
+				String checkUrl = thdViewCheckUrl + "?" + thdViewCheckKeyName + "=" + thdViewCheckKeyValue;
+				String str = RemoteUtil.get(checkUrl);
+				logger.info("[REMOTE GET] URL(" + checkUrl + "), RET(" + str + ")");
+				Map<String, String> map = om.readValue(str, new TypeReference<HashMap<String, String>>() { });
+				String read = map.get("read");
+				String down = map.get("down");
+				String copy = map.get("copy");
+				if (StringUtils.isNotBlank(read) && read.matches("\\d{1,}")) {
+					response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_READ_" + uuid, read));
+				}
+				if (StringUtils.isNotBlank(down)) {
+					response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_DOWN_" + uuid, down));
+				}
+				if (StringUtils.isNotBlank(copy)) {
+					response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_COPY_" + uuid, copy));
+				}
+			} catch (Exception e) {
+				logger.warn("[VIEW CHECK ERROR] " + e.getMessage());
+			}
+		}
+	}
+}
