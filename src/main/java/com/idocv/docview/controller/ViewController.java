@@ -1,7 +1,6 @@
 package com.idocv.docview.controller;
 
 import java.io.Serializable;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +31,7 @@ import com.idocv.docview.service.SessionService;
 import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.IpUtil;
 import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.util.StringUtil;
 import com.idocv.docview.vo.AppVo;
 import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.PageVo;
@@ -598,7 +598,13 @@ public class ViewController {
 				throw new DocServiceException("上传URL文件错误！");
 			}
 			String uuid = vo.getUuid();
-			return "redirect:" + uuid + (pageLoadAsync ? "" : ".html") + (StringUtils.isBlank(name) ? "" : "?name=" + URLEncoder.encode(name, "UTF-8"));
+			String queryString = req.getQueryString();
+			queryString = StringUtil.urlencode(queryString);
+			String returnStr = "redirect:" + uuid + (pageLoadAsync ? "" : ".html");
+			if (StringUtils.isNotBlank(queryString)) {
+				returnStr += "?" + queryString;
+			}
+			return returnStr;
 		} catch (Exception e) {
 			logger.error("view url(" + url + ") error: " + e.getMessage());
 			model.addAttribute("error", e.getMessage());
