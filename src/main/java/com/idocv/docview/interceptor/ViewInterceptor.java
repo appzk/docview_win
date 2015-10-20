@@ -31,6 +31,9 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 	@Value("${thd.view.check.key.name}")
 	private String thdViewCheckKeyName;
 
+	@Value("${thd.view.check.default}")
+	private String thdViewCheckDefault;
+
 	private static ObjectMapper om = new ObjectMapper();
 
 	@Override
@@ -38,31 +41,41 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 			HttpServletResponse response, Object handler,
 			ModelAndView model) throws Exception {
 		String requestUri = request.getRequestURI();
-		if (thdViewCheckSwitch && StringUtils.isNotBlank(thdViewCheckUrl)
-				&& requestUri.startsWith("/view/")
-				&& requestUri.matches("/view/\\w{4,10}")) {
+		if (thdViewCheckSwitch && requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,10}")) {
+			// default value
+			Map<String, String> defaultMap = om.readValue(thdViewCheckDefault, new TypeReference<HashMap<String, String>>() { });;
+			String read = defaultMap.get("read");
+			String down = defaultMap.get("down");
+			String copy = defaultMap.get("copy");
+
+			// remote value
+			String thdViewCheckKeyValue = request.getParameter(thdViewCheckKeyName);
+			String uuid = requestUri.replaceFirst("/view/(\\w{4,10})", "$1");
+			String checkUrl = thdViewCheckUrl + "?" + thdViewCheckKeyName + "=" + thdViewCheckKeyValue;
 			try {
-				String thdViewCheckKeyValue = request.getParameter(thdViewCheckKeyName);
-				String uuid = requestUri.replaceFirst("/view/(\\w{4,10})", "$1");
-				String checkUrl = thdViewCheckUrl + "?" + thdViewCheckKeyName + "=" + thdViewCheckKeyValue;
 				String str = RemoteUtil.get(checkUrl);
 				logger.info("[REMOTE GET] URL(" + checkUrl + "), RET(" + str + ")");
-				Map<String, String> map = om.readValue(str, new TypeReference<HashMap<String, String>>() { });
-				String read = map.get("read");
-				String down = map.get("down");
-				String copy = map.get("copy");
-				if (StringUtils.isNotBlank(read) && read.matches("\\d{1,}")) {
-					response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_READ_" + uuid, read));
+				Map<String, String> remoteMap = om.readValue(str, new TypeReference<HashMap<String, String>>() { });
+				String remoteRead = remoteMap.get("read");
+				String remoteDown = remoteMap.get("down");
+				String remoteCopy = remoteMap.get("copy");
+
+				if (StringUtils.isNotBlank(remoteRead) && remoteRead.matches("\\d{1,}")) {
+					read = remoteRead;
 				}
-				if (StringUtils.isNotBlank(down)) {
-					response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_DOWN_" + uuid, down));
+				if (StringUtils.isNotBlank(remoteDown) && remoteDown.matches("\\d{1,}")) {
+					down = remoteDown;
 				}
-				if (StringUtils.isNotBlank(copy)) {
-					response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_COPY_" + uuid, copy));
+				if (StringUtils.isNotBlank(remoteCopy) && remoteCopy.matches("\\d{1,}")) {
+					copy = remoteCopy;
 				}
 			} catch (Exception e) {
-				logger.warn("[VIEW CHECK ERROR] " + e.getMessage());
+				logger.warn("[REMOTE GET] URL(" + checkUrl + "), EXCEPTION(" + e.getMessage() + ")");
+				
 			}
+			response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_READ_" + uuid, read));
+			response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_DOWN_" + uuid, down));
+			response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_COPY_" + uuid, copy));
 		}
 	}
 }

@@ -30,7 +30,7 @@ public class RemoteUtil {
 			// List<HashMap<String, String>> authMap = om.readValue(response, new TypeReference<List<HashMap<String, String>>>() { });
 			return response;
 		} catch (Exception e) {
-			System.out.println("[ERROR] Get expire status error(" + e.getMessage() + ")");
+			System.out.println("[ERROR] Get URL (" + url + ") error(" + e.getMessage() + ")");
 			return "ERROR:" + e.getMessage();
 		} finally {
 			method.releaseConnection();
