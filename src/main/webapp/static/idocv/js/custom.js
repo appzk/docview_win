@@ -220,7 +220,7 @@ function afterLoad() {
 		// read
 		/* put these code at the end of word.js file
 		var readCheck = $.cookie('IDOCV_THD_VIEW_CHECK_READ_' + uuid);
-		if (!!readCheck) {
+		if (!!readCheck && (readCheck > 0)) {
 			$('.word-content').infinitescroll('destroy');
 			$('.word-content').append('<br /><br /><div class="alert alert-info">试读结束，支付后阅读全文！</div>');
 			$('.btn-search-toggle').hide();
@@ -230,12 +230,12 @@ function afterLoad() {
 		// download
 		/*
 		var downCheck = $.cookie('IDOCV_THD_VIEW_CHECK_DOWN_' + uuid);
-		if (!!downCheck && '1' == downCheck) {
+		if (!!downCheck && '0' == downCheck) {
 			$('.lnk-file-title').removeAttr('href');
 		}
 		// copy
 		var copyCheck = $.cookie('IDOCV_THD_VIEW_CHECK_COPY_' + uuid);
-		if (!!copyCheck && '1' == copyCheck) {
+		if (!!copyCheck && '0' == copyCheck) {
 			$('body').css('-webkit-user-select', 'none');
 			$('body').css('-moz-user-select', 'none');
 			$('body').css('-ms-user-select', 'none');
