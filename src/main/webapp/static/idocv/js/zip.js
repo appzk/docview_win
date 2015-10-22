@@ -5,6 +5,7 @@
 
 var uuid = $.url().segment(2);
 var params = $.url().param();
+var queryString = $.url().attr('query');
 
 $(document).ready(function() {
 	
@@ -25,7 +26,7 @@ $(document).ready(function() {
 				var opStr = '';
 				if (isViewable) {
 					var encodedLocalViewPath = encodeURIComponent('file:///' + page.path);
-					var viewUrl = '/view/url?token=ziptoken&url=' + encodedLocalViewPath;
+					var viewUrl = '/view/url?token=ziptoken&url=' + encodedLocalViewPath + '&' + queryString;
 					opStr = '<a href="' + viewUrl + '" target="_blank">预览</a>';
 				}
 				var trStr = '<tr><td>' + page.title + '</td><td>' + opStr + '</td></tr>';
