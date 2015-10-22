@@ -590,12 +590,14 @@ public class ViewController {
 			}
 
 			if (StringUtils.isBlank(url)) {
+				logger.error("URL上传错误，请提供URL参数(" + url + ")");
 				throw new DocServiceException("URL上传错误，请提供URL参数！");
 			}
 
 			// url = URLDecoder.decode(url, "UTF-8"); // 已经decode，无需再次decode
 			
 			if (StringUtils.isBlank(token)) {
+				logger.error("URL上传错误，请提供token参数(" + token + ")");
 				throw new DocServiceException("URL上传错误，请提供token参数！");
 			}
 			AppVo appPo = appService.getByToken(token);
