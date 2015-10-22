@@ -220,11 +220,12 @@ function afterLoad() {
 		// read
 		/* put these code at the end of word.js file
 		var readCheck = $.cookie('IDOCV_THD_VIEW_CHECK_READ_' + uuid);
-		if (!!readCheck && (readCheck > 0)) {
+		if ((totalSize > 5) && !!readCheck && (readCheck > 0)) {
 			$('.word-content').infinitescroll('destroy');
 			$('.word-content').append('<br /><br /><div class="alert alert-info">试读结束，支付后阅读全文！</div>');
 			$('.btn-search-toggle').hide();
 			$('.word-tab-title').hide();
+			$('.paging-bottom-all').hide();
 		}
 		*/
 		// download
