@@ -26,7 +26,7 @@ $(document).ready(function() {
 				var opStr = '';
 				if (isViewable) {
 					var encodedLocalViewPath = encodeURIComponent('file:///' + page.path);
-					var viewUrl = '/view/url?token=ziptoken&url=' + encodedLocalViewPath + '&' + queryString;
+					var viewUrl = '/view/url?url=' + encodedLocalViewPath + '&' + queryString;
 					opStr = '<a href="' + viewUrl + '" target="_blank">预览</a>';
 				}
 				var trStr = '<tr><td>' + page.title + '</td><td>' + opStr + '</td></tr>';
