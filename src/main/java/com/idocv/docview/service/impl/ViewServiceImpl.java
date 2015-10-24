@@ -643,7 +643,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					data.add(ppt);
 				}
 			}
-			PageVo<PPTVo> page = new PageVo<PPTVo>(data, 1);
+			PageVo<PPTVo> page = new PageVo<PPTVo>(data, slideImgThumbFiles.size());
 			return page;
 		} catch (Exception e) {
 			logger.error("convertPPT2Html(" + rid + ") error: ", e.fillInStackTrace());
