@@ -83,19 +83,21 @@
 
     </div><!--/.fluid-container-->
     
+    <!-- 
     <div class="btn-cmd-container text-center" style="position: fixed; bottom: 10px; left: 0px; right: 0px; text-align: center; z-index: 1000;">
       <a cmd-string="out" class="btn btn-primary btn-cmd btn-cmd-zoom-out" style="display: inline-block;" href="#" title="上一页"><i class="icon-zoom-out icon-white"></i></a>
       &nbsp;
       <a cmd-string="left" class="btn btn-primary btn-cmd btn-cmd-previous" style="display: inline-block;" href="#" title="上一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-left icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
       &nbsp;
       <select class="select-page-selector span1" style="width: 62px; margin-top: 10px; display: inline-block;">
-        <!-- PAGE NUMBERS HERE -->
+        <!-- PAGE NUMBERS HERE --
       </select>
       &nbsp;
       <a cmd-string="right" class="btn btn-primary btn-cmd btn-cmd-next" style="display: inline-block;" href="#" title="下一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-right icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
       &nbsp;
       <a cmd-string="in" class="btn btn-primary btn-cmd btn-cmd-zoom-in" style="display: inline-block;" href="#" title="上一页"><i class="icon-zoom-in icon-white"></i></a>
     </div>
+     -->
     
     <!-- JavaSript
     ================================================== -->

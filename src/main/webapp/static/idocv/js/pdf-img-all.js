@@ -8,6 +8,7 @@ var params = $.url().param();
 var pages;
 var curPage = 1;
 var totalSize = 1;
+var lastImgWidth = 0;
 
 $(document).ready(function() {
 	
@@ -40,7 +41,7 @@ $(document).ready(function() {
 			
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
-				$('.span12').append('<div class="pdf-page"><div class="pdf-content"><img alt="第' + (i + 1) + '页" src="' + page.url + '"></div></div>');
+				$('.span12').append('<div class="pdf-page"><div class="pdf-content"><img alt="第' + (i + 1) + '页" src="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
 				$('.select-page-selector').append('<option>' + (i + 1) + '</option>');
 			}
 			
@@ -85,9 +86,9 @@ $(document).ready(function() {
 			} else if ('right' == cmdString) {
 				nextPage();
 			} else if ('out' == cmdString) {
-				resetPageWidth(-40);
+				resetPageWidth(-0.1);
 			} else if ('in' == cmdString) {
-				resetPageWidth(40);
+				resetPageWidth(0.1);
 			}
 		}
 	});
@@ -139,15 +140,23 @@ function gotoPage(page) {
 	
 	var percent = Math.round(page / pageSum * 100);
 	$('.bottom-paging-progress .bar').width('' + percent + '%');
+	
+	if (lastImgWidth > 0) {
+		$('.pdf-page').width(lastImgWidth);
+		$('.pdf-page img').width(lastImgWidth);
+	}
 }
 
 function resetPageWidth(offset) {
 	var curWidth = $('.pdf-page').width();
-	var targetWidth = curWidth + offset;
+	var targetWidth = curWidth * (1 + offset);
 	var windowWidth = $(window).width();
 	$('.pdf-page').css("max-width", "none");
-	if (targetWidth < (windowWidth - 40)) {
+	if (targetWidth < (windowWidth * 5)) {
+	//if (targetWidth < (windowWidth - 40)) {
 		$('.pdf-page').width(targetWidth);
+		$('.pdf-page img').width(targetWidth);
+		lastImgWidth = targetWidth;
 		gotoPage(curPage);
 		return;
 	}
