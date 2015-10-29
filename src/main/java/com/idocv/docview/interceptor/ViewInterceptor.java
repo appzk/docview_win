@@ -1,5 +1,6 @@
 package com.idocv.docview.interceptor;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +15,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.idocv.docview.common.DocResponse;
 import com.idocv.docview.util.RemoteUtil;
 
 public class ViewInterceptor extends HandlerInterceptorAdapter {
@@ -37,45 +40,90 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 	private static ObjectMapper om = new ObjectMapper();
 
 	@Override
+	public boolean preHandle(HttpServletRequest request,
+			HttpServletResponse response, Object handler) throws Exception {
+		String requestUri = request.getRequestURI();
+		if (thdViewCheckSwitch) {
+			// uplad
+			if (requestUri.startsWith("/doc/upload")) {
+				Map<String, String> authMap = getRemoteAuthMap(request);
+				String uploadAuth = authMap.get("upload");
+				if ("0".equals(uploadAuth)) {
+					Map<String, Object> respMap = DocResponse.getErrorResponseMap("没有上传权限");
+					response.getWriter().write(JSON.toJSONString(respMap));
+					return false;
+				}
+			}
+			// view
+			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,10}.json")) {
+				Map<String, String> authMap = getRemoteAuthMap(request);
+				String viewAuth = authMap.get("view");
+				if ("0".equals(viewAuth)) {
+					Map<String, Object> respMap = DocResponse.getErrorResponseMap("没有预览权限");
+					response.getWriter().write(JSON.toJSONString(respMap));
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	@Override
 	public void postHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler,
 			ModelAndView model) throws Exception {
 		String requestUri = request.getRequestURI();
-		if (thdViewCheckSwitch && requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,10}")) {
-			// default value
-			Map<String, String> defaultMap = om.readValue(thdViewCheckDefault, new TypeReference<HashMap<String, String>>() { });;
-			String read = defaultMap.get("read");
-			String down = defaultMap.get("down");
-			String copy = defaultMap.get("copy");
-
-			// remote value
-			String thdViewCheckKeyValue = request.getParameter(thdViewCheckKeyName);
-			String uuid = requestUri.replaceFirst("/view/(\\w{4,10})", "$1");
-			String checkUrl = thdViewCheckUrl + "?" + thdViewCheckKeyName + "=" + thdViewCheckKeyValue;
-			try {
-				String str = RemoteUtil.get(checkUrl);
-				logger.info("[REMOTE GET] URL(" + checkUrl + "), RET(" + str + ")");
-				Map<String, String> remoteMap = om.readValue(str, new TypeReference<HashMap<String, String>>() { });
-				String remoteRead = remoteMap.get("read");
-				String remoteDown = remoteMap.get("down");
-				String remoteCopy = remoteMap.get("copy");
-
-				if (StringUtils.isNotBlank(remoteRead) && remoteRead.matches("\\d{1,}")) {
-					read = remoteRead;
-				}
-				if (StringUtils.isNotBlank(remoteDown) && remoteDown.matches("\\d{1,}")) {
-					down = remoteDown;
-				}
-				if (StringUtils.isNotBlank(remoteCopy) && remoteCopy.matches("\\d{1,}")) {
-					copy = remoteCopy;
-				}
-			} catch (Exception e) {
-				logger.warn("[REMOTE GET] URL(" + checkUrl + "), EXCEPTION(" + e.getMessage() + ")");
-				
+		if (thdViewCheckSwitch) {
+			// read, down and copy
+			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,10}")) {
+				// remote value
+				String uuid = requestUri.replaceFirst("/view/(\\w{4,10})", "$1");
+				Map<String, String> authMap = getRemoteAuthMap(request);
+				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_READ_" + uuid, authMap.get("read")));
+				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_DOWN_" + uuid, authMap.get("down")));
+				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_COPY_" + uuid, authMap.get("copy")));
 			}
-			response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_READ_" + uuid, read));
-			response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_DOWN_" + uuid, down));
-			response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_COPY_" + uuid, copy));
 		}
+	}
+
+	public Map<String, String> getRemoteAuthMap(HttpServletRequest request) {
+		// default value
+		Map<String, String> authMap = null;
+		try {
+			authMap = om.readValue(thdViewCheckDefault, new TypeReference<HashMap<String, String>>() { });
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.warn("[DEFAULT AHTU VALUE ERROR]" + e.getMessage());
+		}
+		String thdViewCheckKeyValue = request.getParameter(thdViewCheckKeyName);
+		String checkUrl = thdViewCheckUrl + "?" + thdViewCheckKeyName + "=" + thdViewCheckKeyValue;
+		try {
+			String str = RemoteUtil.get(checkUrl);
+			logger.info("[REMOTE GET] URL(" + checkUrl + "), RET(" + str + ")");
+			Map<String, String> remoteMap = om.readValue(str, new TypeReference<HashMap<String, String>>() { });
+			String remoteUpload = remoteMap.get("upload");
+			String remoteView = remoteMap.get("view");
+			String remoteRead = remoteMap.get("read");
+			String remoteDown = remoteMap.get("down");
+			String remoteCopy = remoteMap.get("copy");
+			if (StringUtils.isNotBlank(remoteUpload) && remoteUpload.matches("\\d{1,}")) {
+				authMap.put("upload", remoteUpload);
+			}
+			if (StringUtils.isNotBlank(remoteView) && remoteView.matches("\\d{1,}")) {
+				authMap.put("view", remoteView);
+			}
+			if (StringUtils.isNotBlank(remoteRead) && remoteRead.matches("\\d{1,}")) {
+				authMap.put("read", remoteRead);
+			}
+			if (StringUtils.isNotBlank(remoteDown) && remoteDown.matches("\\d{1,}")) {
+				authMap.put("down", remoteDown);
+			}
+			if (StringUtils.isNotBlank(remoteCopy) && remoteCopy.matches("\\d{1,}")) {
+				authMap.put("copy", remoteCopy);
+			}
+		} catch (Exception e) {
+			logger.warn("[REMOTE GET] URL(" + checkUrl + "), EXCEPTION(" + e.getMessage() + ")");
+		}
+		return authMap;
 	}
 }

@@ -109,6 +109,11 @@
 			<version>2.4.4</version>
 		</dependency>
 		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.7</version>
+		</dependency>
+		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
 			<version>2.2</version>
@@ -273,7 +278,7 @@
 				<pom.data.url>http://127.0.0.1/data/</pom.data.url>
 				<pom.data.dir>/idocv/data/</pom.data.dir>
 				<pom.view.page.draw.server>http://127.0.0.1:8997</pom.view.page.draw.server>
-				
+
 				<!-- Restriction -->
 				<pom.filetype.upload>doc,docx,xls,xlsx,ppt,pptx,pdf,txt,jpg,gif,png,bmp,tif,mp3,m4a,midi,wma,zip,rar,tar,7z,dwg,dxf,dwf</pom.filetype.upload>
 				<pom.filetype.view>doc,docx,xls,xlsx,ppt,pptx,pdf,txt,jpg,gif,png,bmp,tif,mp3,m4a,midi,wma,zip,rar,tar,7z,dwg,dxf,dwf</pom.filetype.view>
@@ -298,7 +303,7 @@
 				<pom.converter.cad2img>/idocv/converter/cad2img/di.exe</pom.converter.cad2img>
 			</properties>
 		</profile>
-		
+
 		<!-- Test -->
 		<profile>
 			<id>test</id>
@@ -307,7 +312,7 @@
 				<pom.data.url>http://west.idocv.com/data/</pom.data.url>
 				<pom.data.dir>/idocv/data/</pom.data.dir>
 				<pom.view.page.draw.server>http://draw.idocv.com:8997</pom.view.page.draw.server>
-				
+
 				<!-- Restriction -->
 				<pom.filetype.upload>doc,docx,xls,xlsx,ppt,pptx,pdf,txt</pom.filetype.upload>
 				<pom.filetype.view>doc,docx,xls,xlsx,ppt,pptx,pdf,txt</pom.filetype.view>
@@ -332,7 +337,7 @@
 				<pom.converter.cad2img>/idocv/converter/cad2img/di.exe</pom.converter.cad2img>
 			</properties>
 		</profile>
-		
+
 		<!-- user. run with: clean install -Puser -->
 		<profile>
 			<id>user</id>
@@ -341,7 +346,7 @@
 				<pom.data.url>http://127.0.0.1/data/</pom.data.url>
 				<pom.data.dir>/idocv/data/</pom.data.dir>
 				<pom.view.page.draw.server>http://draw.idocv.com:8997</pom.view.page.draw.server>
-				
+
 				<!-- Restriction -->
 				<pom.filetype.upload>doc,docx,xls,xlsx,ppt,pptx,pdf,txt</pom.filetype.upload>
 				<pom.filetype.view>doc,docx,xls,xlsx,ppt,pptx,pdf,txt</pom.filetype.view>
@@ -374,7 +379,7 @@
 				<pom.data.url>http://data.idocv.com/</pom.data.url>
 				<pom.data.dir>/idocv/data/</pom.data.dir>
 				<pom.view.page.draw.server>http://draw.idocv.com:8997</pom.view.page.draw.server>
-				
+
 				<!-- Restriction -->
 				<pom.filetype.upload>doc,docx,xls,xlsx,ppt,pptx,pdf,txt,jpg,gif,png,bmp,tif,mp3,m4a,midi,wma,zip,rar,tar,7z,dwg,dxf,dwf</pom.filetype.upload>
 				<pom.filetype.view>doc,docx,xls,xlsx,ppt,pptx,pdf,txt,jpg,gif,png,bmp,tif,mp3,m4a,midi,wma,zip,rar,tar,7z,dwg,dxf,dwf</pom.filetype.view>
