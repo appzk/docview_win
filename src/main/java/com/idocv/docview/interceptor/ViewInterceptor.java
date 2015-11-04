@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,12 +20,18 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idocv.docview.common.DocResponse;
+import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.service.UserService;
 import com.idocv.docview.util.RemoteUtil;
+import com.idocv.docview.vo.UserVo;
 
 public class ViewInterceptor extends HandlerInterceptorAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(ViewInterceptor.class);
 	
+	@Resource
+	private UserService userService;
+
 	@Value("${thd.view.check.switch}")
 	private boolean thdViewCheckSwitch = false;
 
@@ -44,12 +51,13 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 			HttpServletResponse response, Object handler) throws Exception {
 		String requestUri = request.getRequestURI();
 		if (thdViewCheckSwitch) {
-			// uplad
+			// upload
 			if (requestUri.startsWith("/doc/upload")) {
 				Map<String, String> authMap = getRemoteAuthMap(request);
 				String uploadAuth = authMap.get("upload");
 				if ("0".equals(uploadAuth)) {
-					Map<String, Object> respMap = DocResponse.getErrorResponseMap("没有上传权限");
+					Map<String, Object> respMap = DocResponse
+							.getErrorResponseMap("没有上传权限");
 					response.getWriter().write(JSON.toJSONString(respMap));
 					return false;
 				}
@@ -59,7 +67,8 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				Map<String, String> authMap = getRemoteAuthMap(request);
 				String viewAuth = authMap.get("view");
 				if ("0".equals(viewAuth)) {
-					Map<String, Object> respMap = DocResponse.getErrorResponseMap("没有预览权限");
+					Map<String, Object> respMap = DocResponse
+							.getErrorResponseMap("没有预览权限");
 					response.getWriter().write(JSON.toJSONString(respMap));
 					return false;
 				}
@@ -124,6 +133,36 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 		} catch (Exception e) {
 			logger.warn("[REMOTE GET] URL(" + checkUrl + "), EXCEPTION(" + e.getMessage() + ")");
 		}
+
+		// admin login
+		if (null != authMap && isAdminLogin(request)) {
+			authMap.put("upload", "1");
+			authMap.put("view", "1");
+			authMap.put("read", "0");
+			authMap.put("down", "1");
+			authMap.put("copy", "1");
+		}
 		return authMap;
+	}
+
+	private boolean isAdminLogin(HttpServletRequest req) {
+		boolean isAdmin = false;
+		try {
+			Cookie[] cookies = req.getCookies();
+			String sid = null;
+			for (Cookie cookie : cookies) {
+				if ("IDOCVSID".equalsIgnoreCase(cookie.getName())) {
+					sid = cookie.getValue();
+					break;
+				}
+			}
+			UserVo vo = userService.getBySid(sid);
+			if (100 == vo.getStatus()) {
+				isAdmin = true;
+			}
+		} catch (DocServiceException e) {
+
+		}
+		return isAdmin;
 	}
 }
