@@ -22,7 +22,7 @@
 
   <body class="word-body">
   
-    <div class="loading-mask" style="display: none;">
+    <div class="loading-mask" style="display: block;">
       <div class="loading-zone">
         <div class="text">正在载入...0%</div>
         <div class="progress progress-striped active">
