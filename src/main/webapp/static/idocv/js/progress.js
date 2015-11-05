@@ -47,3 +47,12 @@ function clearProgress() {
 	clearInterval(convertInterval);
 	remainderInterval = setInterval(updateRemainderProgress, 30);
 }
+
+function serverBusy() {
+	if (percent < 100) {
+		window.location.reload();
+		// $('.span12').html('<div class="alert alert-info">服务器忙，请稍后 <a href="javascript:window.location.reload();">刷新</a> 重试...</div>');
+		// clearProgress();
+	}
+}
+window.setTimeout('serverBusy()', 10000);
