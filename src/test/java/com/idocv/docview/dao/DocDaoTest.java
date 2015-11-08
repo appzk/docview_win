@@ -1,5 +1,6 @@
 package com.idocv.docview.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -30,6 +31,7 @@ public class DocDaoTest {
 			String name = "test.doc";
 			int size = 1;
 			String ext = "doc";
+			System.out.println("done");
 			docDao.add(appId, null, id, uuid, md5, name, size, ext, 1, null, null, null);
 		} catch (DBException e) {
 			e.printStackTrace();
@@ -41,6 +43,17 @@ public class DocDaoTest {
 		try {
 			String id = "doc_20130101_0101011_doc";
 			docDao.delete(id, false);
+		} catch (DBException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testDeleteByTimeRange() {
+		try {
+			Date start = new Date();
+			Date end = new Date();
+			docDao.deleteByTimeRange(start, end, true);
 		} catch (DBException e) {
 			e.printStackTrace();
 		}

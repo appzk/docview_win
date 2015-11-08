@@ -1,5 +1,7 @@
 package com.idocv.docview.service;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.idocv.docview.common.Paging;
@@ -54,6 +56,8 @@ public interface DocService {
 	 * @throws DocServiceException
 	 */
 	boolean delete(String uuid, boolean isPhysical) throws DocServiceException;
+	
+	boolean deleteByDateRange(Date startDate, Date endDate, boolean isDeleteRecord) throws DocServiceException;
 
 	public void logView(String uuid) throws DocServiceException;
 

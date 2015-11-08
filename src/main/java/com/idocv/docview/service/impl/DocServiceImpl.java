@@ -35,6 +35,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -112,7 +113,7 @@ public class DocServiceImpl implements DocService {
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
-	private static final String expireDateString = "2015-10-31 23:59:59";
+	private static final String expireDateString = "2015-12-31 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
@@ -396,6 +397,32 @@ public class DocServiceImpl implements DocService {
 		} catch (DBException e) {
 			logger.error("doc delete error: " + e.getMessage());
 			throw new DocServiceException("delete doc error: ", e);
+		}
+	}
+
+	@Override
+	public boolean deleteByDateRange(Date startDate, Date endDate, boolean isDeleteRecord) throws DocServiceException {
+		try {
+			String rootDirStr = rcUtil.getRootDataDir();
+			File[] appDirs = new File(rootDirStr).listFiles();
+			if (null == appDirs || appDirs.length < 1) {
+				logger.info("nothing to delete");
+			}
+			DateFormat dfDatePath = new SimpleDateFormat("yyyy" + File.separator + "MMdd");
+			for (File appDir : appDirs) {
+				for (Date increDate = startDate; increDate.before(endDate); increDate = DateUtils.addDays(increDate, 1)) {
+					String datePath = dfDatePath.format(increDate);
+					File dateDir = new File(appDir, datePath);
+					if (dateDir.isDirectory()) {
+						logger.info("[AUTO DATA CLENUP] DELETING DIR: " + dateDir);
+						FileUtils.deleteQuietly(dateDir);
+					}
+				}
+			}
+			return docDao.deleteByTimeRange(startDate, endDate, isDeleteRecord);
+		} catch (DBException e) {
+			logger.error("doc delete error: " + e.getMessage());
+			throw new DocServiceException("deleteByTimeRange error: ", e);
 		}
 	}
 

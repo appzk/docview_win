@@ -118,6 +118,27 @@ public class DocDaoImpl extends BaseDaoImpl implements DocDao, InitializingBean 
 	}
 
 	@Override
+	public boolean deleteByTimeRange(Date startTime, Date endTime, boolean isDeleteRecord) throws DBException {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String startTimeStr = df.format(startTime);
+		String endTimeStr = df.format(endTime);
+		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		DBObject query = QueryBuilder.start(CTIME).greaterThanEquals(startTimeStr).and(CTIME).lessThanEquals(endTimeStr).get();
+		try {
+			DBCollection coll = db.getCollection(COLL_DOC);
+			if (isDeleteRecord) {
+				coll.remove(query, WriteConcern.UNACKNOWLEDGED);
+			} else {
+				BasicDBObjectBuilder ob = BasicDBObjectBuilder.start().push("$set").append(UTIME, time).append(STATUS, -1);
+				coll.update(query, ob.get(), false, true);
+			}
+			return true;
+		} catch (MongoException e) {
+			throw new DBException(e.getMessage());
+		}
+	}
+	
+	@Override
 	public boolean updateFieldById(String id, String name, Object value) throws DBException {
 		if (StringUtils.isEmpty(id) || StringUtils.isEmpty(name)) {
 			throw new DBException("请提供必要参数：id=" + id + ", name=" + name);

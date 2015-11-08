@@ -1,5 +1,6 @@
 package com.idocv.docview.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -89,6 +90,8 @@ public interface DocDao {
 	 */
 	boolean delete(String uuid, boolean isDeleteRecord) throws DBException;
 	
+	boolean deleteByTimeRange(Date startTime, Date endTime, boolean isDeleteRecord) throws DBException;
+
 	/**
 	 * update field
 	 * 
