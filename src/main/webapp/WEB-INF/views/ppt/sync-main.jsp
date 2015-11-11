@@ -111,6 +111,7 @@
     <script src="/static/contextMenu/js/jquery.contextMenu.js?v=${version}"></script>
     <script src="/static/contextMenu/js/jquery.ui.position.js?v=${version}"></script>
     <script src="/static/jquery/js/jquery.mobile-events.min.js?v=${version}"></script>
+    <script src="/static/idocv/js/progress.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
     <script src="/static/fullscreen/js/jquery.fullscreen-min.js?v=${version}"></script>
     <script src="/static/qrcode/js/jquery.qrcode.min.js?v=${version}"></script>

@@ -27,10 +27,10 @@ $(document).ready(function() {
 			$('.qrcode-container-audience').qrcode(audienceUrl);
 			$('.speaker-link-container').html('链接：' + speakerUrl + '<br />点击<a href="' + speakerUrl + '" target="_blank">进入</a>');
 			$('.audience-link-container').html('链接：' + audienceUrl + '<br />点击<a href="' + audienceUrl + '" target="_blank">进入</a>');
-			
-			
 		} else {
 			$('.container-fluid .row-fluid').html('<section><div class="alert alert-error">' + data.desc + '</div></section>');
 		}
+		
+		clearProgress();
 	});
 });
