@@ -20,7 +20,6 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idocv.docview.common.DocResponse;
-import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.UserService;
 import com.idocv.docview.util.RemoteUtil;
 import com.idocv.docview.vo.UserVo;
@@ -150,18 +149,20 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 		try {
 			Cookie[] cookies = req.getCookies();
 			String sid = null;
-			for (Cookie cookie : cookies) {
-				if ("IDOCVSID".equalsIgnoreCase(cookie.getName())) {
-					sid = cookie.getValue();
-					break;
+			if (null != cookies) {
+				for (Cookie cookie : cookies) {
+					if ("IDOCVSID".equalsIgnoreCase(cookie.getName())) {
+						sid = cookie.getValue();
+						break;
+					}
+				}
+				UserVo vo = userService.getBySid(sid);
+				if (100 == vo.getStatus()) {
+					isAdmin = true;
 				}
 			}
-			UserVo vo = userService.getBySid(sid);
-			if (100 == vo.getStatus()) {
-				isAdmin = true;
-			}
-		} catch (DocServiceException e) {
-
+		} catch (Exception e) {
+			logger.warn("判断管理员登录失败: " + e.getMessage());
 		}
 		return isAdmin;
 	}
