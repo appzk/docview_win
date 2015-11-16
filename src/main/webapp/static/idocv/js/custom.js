@@ -181,15 +181,6 @@ function afterLoad() {
 	// $('footer').remove();
 	
 	/**
-	 * Set title
-	 */
-	var name = $('.lnk-file-title').text();
-	if (!! name) {
-		document.title = name;
-		// $('title').text(name);	IE 8 does NOT support this
-	}
-	
-	/**
 	 * do NOT allow copy text
 	 */
 	// $('body').css('-webkit-user-select', 'none');
@@ -211,6 +202,15 @@ function afterLoad() {
 			$('.lnk-file-title').text(fileName);
 		}
 	} catch (e) {
+	}
+	
+	/**
+	 * Set title
+	 */
+	var name = $('.lnk-file-title').text();
+	if (!! name) {
+		document.title = name;
+		// $('title').text(name);	IE 8 does NOT support this
 	}
 	
 	/**
