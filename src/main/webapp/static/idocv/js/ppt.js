@@ -13,7 +13,8 @@ var params = $.url().param();
 $(document).ready(function() {
 	
 	// async method:
-	// $.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
+	$.get('/view/' + uuid + '.json', params, function(data, status) {
+	/* sync method
 	$.ajax({
 		type: "GET",
 		url: '/view/' + uuid + '.json',
@@ -21,6 +22,7 @@ $(document).ready(function() {
 		dataType: "json",
 		data: params,
 	}).done(function( data ) {
+	*/
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;
