@@ -7,11 +7,17 @@ var slideUrls = new Array();
 var slideThumbUrls = new Array();
 var ratio = 0.75;
 var curSlide = 1;
+var uuid = $.url().segment(2);
+var params = $.url().param();
+
 $(document).ready(function() {
-	var uuid = $.url().segment(2);
-	var sessionId = $.url().param('session');
-	
-	$.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
+	$.ajax({
+		type: "GET",
+		url: '/view/' + uuid + '.json',
+		async: false,
+		dataType: "json",
+		data: params,
+	}).done(function( data ) {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;
@@ -32,15 +38,16 @@ $(document).ready(function() {
 				slideUrls[i] = page.url;
 				slideThumbUrls[i] = page.thumbUrl;
 				$('.row-fluid .span2').append('<div class="thumbnail" page="' + (i + 1) + '"><img src="' + page.thumbUrl + '"></div>' + (i + 1) + '/' + pages.length + '<br />');
-				$('#page-selector').append('<option>' + (i + 1) + '</option>');
+				$('.select-page-selector').append('<option>' + (i + 1) + '</option>');
+				$('.select-page-selector-sync').append('<option>' + (i + 1) + '</option>');
 			}
 			
-			$('.slide-img').append('<img src="' + slideUrls[0] + '" class="img-polaroid" style="height: 100%;">');
+			$('.slide-img-container').append('<img src="' + slideUrls[0] + '" class="img-polaroid" style="height: 100%;">');
 			resetImgSize();
 			
 			var percent = Math.ceil((curSlide / slideUrls.length) * 100);
 			$('.thumbnail[page="' + curSlide + '"]').addClass('ppt-thumb-border');
-			$('#page-selector').val(curSlide);
+			$('.select-page-selector').val(curSlide);
 			$('.bottom-paging-progress .bar').width('' + percent + '%');
 
 			$('.thumbnail').click(function () {
@@ -58,34 +65,34 @@ $(document).ready(function() {
 	
 	$('.fullscreen-link').toggle($(document).fullScreen() != null);
 	$('.fullscreen-link').click(function(){
-		$('.slide-img').fullScreen(true);
+		$('.slide-img-container').fullScreen(true);
 	});
 	$(document).bind("fullscreenchange", function() {
 		var isFullscreen = $(document).fullScreen() ? true : false;
 		if (isFullscreen) {
-			$('.slide-img').css('background-color', 'black');
-			$('.slide-img').contextMenu(true);
+			$('.slide-img-container').css('background-color', 'black');
+			$('.slide-img-container').contextMenu(true);
 		} else {
-			$('.slide-img').css('background-color', '');
-			$('.slide-img').contextMenu(false);
+			$('.slide-img-container').css('background-color', '');
+			$('.slide-img-container').contextMenu(false);
 		}
 	});
 	
-	$('#page-selector').change(function() {
-		var selectNum = $("#page-selector option:selected").text();
+	$('.select-page-selector').change(function() {
+		var selectNum = $(".select-page-selector option:selected").text();
 		gotoSlide(selectNum);
 	});
-	$('.slide-img .ppt-turn-left-mask').click(function () {
+	$('.slide-img-container .ppt-turn-left-mask').click(function () {
 		preSlide();
 	});
-	$('.slide-img .ppt-turn-right-mask').click(function () {
+	$('.slide-img-container .ppt-turn-right-mask').click(function () {
 		nextSlide();
 	});
 	
 	// Right click (NOT supported in SOUGOU browser)
 	/*
 	$.contextMenu({
-        selector: '.slide-img',
+        selector: '.slide-img-container',
         items: {
         	"next": {
                 name: "下一张",
@@ -103,17 +110,17 @@ $(document).ready(function() {
             "exit": {
                 name: "结束放映",
                 callback: function(key, options) {
-                	$('.slide-img').fullScreen(false);
+                	$('.slide-img-container').fullScreen(false);
                 }
             },
         }
     });
     */
-	$('.slide-img').contextMenu(false);
+	$('.slide-img-container').contextMenu(false);
 	
 	// Swipe method is NOT supported in IE6, so it should be the last one.
-	$('.slide-img').swipeleft(function() { nextSlide(); });
-	$('.slide-img').swiperight(function() { preSlide(); });
+	$('.slide-img-container').swipeleft(function() { nextSlide(); });
+	$('.slide-img-container').swiperight(function() { preSlide(); });
 });
 
 $(window).resize(function() {
@@ -134,11 +141,11 @@ function resetImgSize() {
 		wh = wh + 80;
 	}
 	if (wh / ww < ratio) {
-		$('.slide-img').height(wh);
-		$('.slide-img').width(wh / ratio);
+		$('.slide-img-container').height(wh);
+		$('.slide-img-container').width(wh / ratio);
 	} else {
-		$('.slide-img').width(ww);
-		$('.slide-img').height(ww * ratio);
+		$('.slide-img-container').width(ww);
+		$('.slide-img-container').height(ww * ratio);
 	}
 }
 
@@ -149,7 +156,7 @@ $(document).keydown(function(event){
 		nextSlide();
 	} else if (event.keyCode == 13) {
 		var isFullscreen = $(document).fullScreen() ? true : false;
-		$('.slide-img').toggleFullScreen();
+		$('.slide-img-container').toggleFullScreen();
 	}
 });
 
@@ -176,14 +183,15 @@ function gotoSlide(slide) {
 	}
 	curSlide = slide;
 	/*
-	$(".slide-img img").fadeOut(function() {
+	$(".slide-img-container img").fadeOut(function() {
 		$(this).attr("src", slideUrls[slide - 1]).fadeIn();
 	});
 	*/
-	$(".slide-img img").attr("src", slideUrls[slide - 1]);
+	$(".slide-img-container img").attr("src", slideUrls[slide - 1]);
 	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
 	$('.thumbnail').removeClass('ppt-thumb-border');
 	$('.thumbnail[page="' + slide + '"]').addClass('ppt-thumb-border');
-	$('#page-selector').val(slide);
+	$('.select-page-selector').val(slide);
+	$('.select-page-selector-sync').val(slide);
 	$('.bottom-paging-progress .bar').width('' + percent + '%');
 }

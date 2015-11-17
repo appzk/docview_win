@@ -14,7 +14,7 @@ $(document).ready(function() {
 	
 	// async method:
 	$.get('/view/' + uuid + '.json', params, function(data, status) {
-	/* sync method
+	/* sync method, used by sync view (speaker & audience)
 	$.ajax({
 		type: "GET",
 		url: '/view/' + uuid + '.json',
