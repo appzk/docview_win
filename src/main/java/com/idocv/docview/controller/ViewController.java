@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.idocv.docview.common.ViewType;
 import com.idocv.docview.exception.DocServiceException;
@@ -568,6 +569,7 @@ public class ViewController {
 	public String url(
 			HttpServletRequest req,
 			Model model,
+			RedirectAttributes redirectAttrs,
 			@RequestParam(required = false) String url,
 			@RequestParam(value = "md5", required = false) String md5,
 			@RequestParam(value = "token", defaultValue = "testtoken") String token,
@@ -616,6 +618,9 @@ public class ViewController {
 			String returnStr = "redirect:" + uuid + (pageLoadAsync ? "" : ".html");
 			if (StringUtils.isNotBlank(queryString)) {
 				returnStr += "?" + queryString;
+			}
+			if (StringUtils.isNotBlank(token)) {
+				redirectAttrs.addAttribute("token", token);
 			}
 			return returnStr;
 		} catch (Exception e) {
