@@ -103,34 +103,36 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 			e.printStackTrace();
 			logger.warn("[DEFAULT AHTU VALUE ERROR]" + e.getMessage());
 		}
-		String thdViewCheckKeyValue = request.getParameter(thdViewCheckKeyName);
-		String checkUrl = thdViewCheckUrl + "?" + thdViewCheckKeyName + "=" + thdViewCheckKeyValue;
-		try {
-			String str = RemoteUtil.get(checkUrl);
-			logger.info("[REMOTE GET] URL(" + checkUrl + "), RET(" + str + ")");
-			Map<String, String> remoteMap = om.readValue(str, new TypeReference<HashMap<String, String>>() { });
-			String remoteUpload = remoteMap.get("upload");
-			String remoteView = remoteMap.get("view");
-			String remoteRead = remoteMap.get("read");
-			String remoteDown = remoteMap.get("down");
-			String remoteCopy = remoteMap.get("copy");
-			if (StringUtils.isNotBlank(remoteUpload) && remoteUpload.matches("\\d{1,}")) {
-				authMap.put("upload", remoteUpload);
+		if (StringUtils.isNotBlank(thdViewCheckUrl)) {
+			String thdViewCheckKeyValue = request.getParameter(thdViewCheckKeyName);
+			String checkUrl = thdViewCheckUrl + "?" + thdViewCheckKeyName + "=" + thdViewCheckKeyValue;
+			try {
+				String str = RemoteUtil.get(checkUrl);
+				logger.info("[REMOTE GET] URL(" + checkUrl + "), RET(" + str + ")");
+				Map<String, String> remoteMap = om.readValue(str, new TypeReference<HashMap<String, String>>() { });
+				String remoteUpload = remoteMap.get("upload");
+				String remoteView = remoteMap.get("view");
+				String remoteRead = remoteMap.get("read");
+				String remoteDown = remoteMap.get("down");
+				String remoteCopy = remoteMap.get("copy");
+				if (StringUtils.isNotBlank(remoteUpload) && remoteUpload.matches("\\d{1,}")) {
+					authMap.put("upload", remoteUpload);
+				}
+				if (StringUtils.isNotBlank(remoteView) && remoteView.matches("\\d{1,}")) {
+					authMap.put("view", remoteView);
+				}
+				if (StringUtils.isNotBlank(remoteRead) && remoteRead.matches("\\d{1,}")) {
+					authMap.put("read", remoteRead);
+				}
+				if (StringUtils.isNotBlank(remoteDown) && remoteDown.matches("\\d{1,}")) {
+					authMap.put("down", remoteDown);
+				}
+				if (StringUtils.isNotBlank(remoteCopy) && remoteCopy.matches("\\d{1,}")) {
+					authMap.put("copy", remoteCopy);
+				}
+			} catch (Exception e) {
+				logger.warn("[REMOTE GET] URL(" + checkUrl + "), EXCEPTION(" + e.getMessage() + ")");
 			}
-			if (StringUtils.isNotBlank(remoteView) && remoteView.matches("\\d{1,}")) {
-				authMap.put("view", remoteView);
-			}
-			if (StringUtils.isNotBlank(remoteRead) && remoteRead.matches("\\d{1,}")) {
-				authMap.put("read", remoteRead);
-			}
-			if (StringUtils.isNotBlank(remoteDown) && remoteDown.matches("\\d{1,}")) {
-				authMap.put("down", remoteDown);
-			}
-			if (StringUtils.isNotBlank(remoteCopy) && remoteCopy.matches("\\d{1,}")) {
-				authMap.put("copy", remoteCopy);
-			}
-		} catch (Exception e) {
-			logger.warn("[REMOTE GET] URL(" + checkUrl + "), EXCEPTION(" + e.getMessage() + ")");
 		}
 
 		// admin login

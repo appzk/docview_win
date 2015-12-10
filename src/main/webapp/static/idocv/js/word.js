@@ -238,7 +238,6 @@ function watermark() {
 	var watermarkImg = 'http://data.idocv.com/idocv_logo.png';
 	var watermarkText = '绝密文件';
 	var step = 300;
-	var imgHtml = '<img src="" />';
     for (var i = 0; i < parseInt($(".word-content").height() / step); i++) {
         $('.word-content').append('<div style="width:100%;text-align:center;opacity:0.2;color:#000;position:absolute;top:' + step * (i + 1) + 'px;font-size:30px;transform:rotate(-30deg)">' + watermarkText + '<br /><img src="' + watermarkImg + '" /></div>');
     }
