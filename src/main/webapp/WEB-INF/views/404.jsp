@@ -56,11 +56,10 @@
 
     </div><!--/.fluid-container-->
 
-    <!-- Le javascript
+    <!-- javascript
     ================================================== -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script>window.jQuery || document.write('<script src="/static/jquery/js/jquery-1.9.1.min.js"><\/script>')</script>
-	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
+	<script src="/static/bootstrap/js/bootstrap.min.js?v=${version}"></script>
 	<script>
 		var time = 10; //How long (in seconds) to countdown
 		var page = "http://www.idocv.com"; //The page to redirect to
