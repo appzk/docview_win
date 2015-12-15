@@ -10,7 +10,7 @@ import java.util.List;
 public class ImageConverter {
 
 	public static void main(String[] args) throws Exception {
-		File srcDir = new File("d:/img");
+		File srcDir = new File("d:/test");
 		File destDir = new File(srcDir, "tiny");
 		if (!destDir.isDirectory()) {
 			destDir.mkdirs();
