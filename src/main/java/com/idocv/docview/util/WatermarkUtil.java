@@ -16,12 +16,21 @@ public class WatermarkUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(WatermarkUtil.class);
 
-	private static final String CONVERT_CMD_PARAMS_DEFAULT = "-composite -gravity southeast -geometry +10+10";
+	// private static final String CONVERT_CMD_PARAMS_DEFAULT = "-composite -gravity southeast -geometry +10+10";
+	private static final String CONVERT_CMD_PARAMS_DEFAULT = "<logo> miff:- | composite -dissolve 50 -gravity southeast -geometry +10+10 - <src> <dest>";
 
 	public static String watermarkImg(String convertCmd, String convertCmdParams, String src, String logo, String dest) {
 		if (StringUtils.isBlank(convertCmdParams)) {
 			convertCmdParams = CONVERT_CMD_PARAMS_DEFAULT;
 		}
+		src = src.replaceAll("\\\\", "/");
+		logo = logo.replaceAll("\\\\", "/");
+		dest = dest.replaceAll("\\\\", "/");
+
+		convertCmdParams = convertCmdParams.replaceFirst("<src>", src);
+		convertCmdParams = convertCmdParams.replaceFirst("<logo>", logo);
+		convertCmdParams = convertCmdParams.replaceFirst("<dest>", dest);
+
 		List<String> paramList = new ArrayList<String>();
 		paramList.add(convertCmd);
 		paramList.addAll(Arrays.asList(convertCmdParams.split(" ")));
@@ -49,9 +58,10 @@ public class WatermarkUtil {
 
 	public static void main(String[] args) {
 		String convertCmd = "C:/Program Files/ImageMagick-6.9.0-Q8/convert.exe";
-		File srcDir = new File("E:/test/232541_380397_isUIAQp");
+		File srcDir = new File("E:/test/test");
 		String logo = "e:/test/logo.png";
-		String result = watermarkDir(convertCmd, null, srcDir, logo);
+		String params = "<logo> miff:- | composite -dissolve 50 -gravity southeast -geometry +10+10 - <src> <dest>";
+		String result = watermarkDir(convertCmd, params, srcDir, logo);
 		System.err.println("Done!");
 		System.out.println(result);
 	}
