@@ -13,6 +13,7 @@ import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -44,6 +45,7 @@ import com.idocv.docview.po.DocPo;
 import com.idocv.docview.service.ViewService;
 import com.idocv.docview.util.CmdUtil;
 import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.util.WatermarkUtil;
 import com.idocv.docview.vo.AudioVo;
 import com.idocv.docview.vo.CadVo;
 import com.idocv.docview.vo.ExcelVo;
@@ -124,6 +126,12 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	
 	private @Value("${view.img.quality.pdf.big.width}")
 	String viewImgQualityPdfBigWidth;
+	
+	private @Value("${view.img.watermark.filetype}")
+	String viewImgWatermarkFiletype;
+	
+	private @Value("${view.img.watermark.path}")
+	String viewImgWatermarkPath;
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -1321,6 +1329,21 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				docDao.updateFieldById(rid, BaseDao.STATUS_CONVERT, BaseDao.STATUS_CONVERT_SUCCESS);
 			} catch (DBException e) {
 				logger.error("update field of " + rid + " error: " + e.getMessage());
+			}
+
+			// watermark
+			if (StringUtils.isNotBlank(viewImgWatermarkFiletype) && viewImgWatermarkFiletype.contains(ext)) {
+				File parseDirFile = new File(rcUtil.getParseDir(rid));
+				File watermarkFlagFile = new File(parseDirFile, "watermark.txt");
+				if (watermarkFlagFile.isFile()) {
+					logger.info("[CONVERT WATERMARK] already has watermarked(" + rid + ")");
+				} else {
+					// 1. watermark
+					WatermarkUtil.watermarkDir(img2jpg, parseDirFile, viewImgWatermarkPath);
+					
+					// 2. create watermark.txt
+					watermarkFlagFile.createNewFile();
+				}
 			}
 		} catch (Exception e) {
 			logger.error("[CONVERT ERROR] " + rid + " - " + e.getMessage());
