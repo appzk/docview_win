@@ -133,6 +133,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${view.img.watermark.path}")
 	String viewImgWatermarkPath;
 	
+	private @Value("${view.img.watermark.params}")
+	String viewImgWatermarkParams;
+	
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO
@@ -1339,7 +1342,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					logger.info("[CONVERT WATERMARK] already has watermarked(" + rid + ")");
 				} else {
 					// 1. watermark
-					WatermarkUtil.watermarkDir(img2jpg, parseDirFile, viewImgWatermarkPath);
+					WatermarkUtil.watermarkDir(img2jpg, viewImgWatermarkParams, parseDirFile, viewImgWatermarkPath);
 					
 					// 2. create watermark.txt
 					watermarkFlagFile.createNewFile();
