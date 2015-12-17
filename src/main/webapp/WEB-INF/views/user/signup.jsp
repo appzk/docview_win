@@ -118,8 +118,8 @@
     ================================================== -->
     <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
     <script src="/static/bootstrap/js/bootstrap.js?v=${version}"></script>
-	<script src="/static/urlparser/js/purl.js?v=${version}"></script>
 	<script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
+	<script src="/static/urlparser/js/purl.js?v=${version}"></script>
 	<script src="/static/formvalidator/js/jquery.formvalidator.min.js?v=${version}"></script>
 <!-- 	<script src="/static/idocv/js/user.js?v=${version}"></script> -->
     <script src="/static/idocv/js/user-signup.js?v=${version}"></script>

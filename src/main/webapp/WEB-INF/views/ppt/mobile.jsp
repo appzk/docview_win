@@ -151,9 +151,10 @@
 
     <!-- JavaScript
     ================================================== -->
-    <script src="/static/jquery/js/jquery-1.11.3.min.js"></script>
+    <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js?v=${version}"></script>
     <script src="/static/idocv/js/progress.js?v=${version}"></script>
-    <script src="/static/bootstrap3/js/bootstrap.min.js"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
     <script src="/static/idocv/js/custom.js?v=${version}"></script>
     <script src="/static/contextMenu/js/jquery.contextMenu.js?v=${version}"></script>
     <script src="/static/contextMenu/js/jquery.ui.position.js?v=${version}"></script>

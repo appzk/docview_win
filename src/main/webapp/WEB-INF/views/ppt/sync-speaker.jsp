@@ -123,11 +123,12 @@
     ================================================== -->
     <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
     <script src="/static/bootstrap/js/bootstrap.min.js?v=${version}"></script>
+    <script src="/static/idocv/js/progress.js?v=${version}"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
     <script src="/static/idocv/js/custom.js?v=${version}"></script>
     <script src="/static/contextMenu/js/jquery.contextMenu.js?v=${version}"></script>
     <script src="/static/contextMenu/js/jquery.ui.position.js?v=${version}"></script>
     <script src="/static/jquery/js/jquery.mobile-events.min.js?v=${version}"></script>
-    <script src="/static/idocv/js/progress.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
     <script src="/static/fullscreen/js/jquery.fullscreen-min.js?v=${version}"></script>
     <script src="/static/draw/js/socket.io-1.3.5.js?v=${version}"></script>
