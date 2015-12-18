@@ -198,6 +198,7 @@ public class UserController {
 			for (Cookie cookie : cookies) {
 				if ("IDOCVSID".equalsIgnoreCase(cookie.getName())) {
 					sid = cookie.getValue();
+					logger.debug("UserController.checkLogin get sid: " + sid);
 					break;
 				}
 			}
@@ -205,6 +206,7 @@ public class UserController {
 				throw new DocServiceException("未登录！");
 			}
 			UserVo vo = userService.getBySid(sid);
+			logger.debug("get user vo: " + vo);
 			if (null != vo) {
 				map.put("uid", vo.getId());
 				map.put("sid", vo.getSid());
@@ -215,6 +217,7 @@ public class UserController {
 				return map;
 			}
 		} catch (DocServiceException e) {
+			logger.error("checkLogin fail: ", e);
 			map.put("error", e.getMessage());
 			return map;
 		}
