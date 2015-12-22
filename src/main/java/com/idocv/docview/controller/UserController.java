@@ -203,6 +203,7 @@ public class UserController {
 				}
 			}
 			if (StringUtils.isBlank(sid)) {
+				logger.debug("UserController.checkLogin sid is blank.");
 				throw new DocServiceException("未登录！");
 			}
 			UserVo vo = userService.getBySid(sid);
