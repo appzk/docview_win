@@ -195,7 +195,9 @@ public class UserController {
 		try {
 			Cookie[] cookies = req.getCookies();
 			String sid = null;
+			logger.debug("UserController.checkLogin cookies: " + cookies + ", details:");
 			for (Cookie cookie : cookies) {
+				logger.debug("UserController.checkLogin cookie " + cookie.getName() + " - " + cookie.getValue());
 				if ("IDOCVSID".equalsIgnoreCase(cookie.getName())) {
 					sid = cookie.getValue();
 					logger.debug("UserController.checkLogin get sid: " + sid);
