@@ -5,6 +5,7 @@
 
 var uuid = $.url().segment(2);
 var params = $.url().param();
+var tokenValue = $.url().param('token');
 var queryString = $.url().attr('query');
 
 $(document).ready(function() {
@@ -26,7 +27,10 @@ $(document).ready(function() {
 				var opStr = '';
 				if (isViewable) {
 					var encodedLocalViewPath = encodeURIComponent('file:///' + page.path);
-					var viewUrl = '/view/url?url=' + encodedLocalViewPath + '&' + queryString;
+					var viewUrl = '/view/url?url=' + encodedLocalViewPath;
+					if (!!tokenValue) {
+						viewUrl = viewUrl + '&token=' + tokenValue;
+					}
 					opStr = '<a href="' + viewUrl + '" target="_blank">预览</a>';
 				}
 				var trStr = '<tr><td>' + page.title + '</td><td>' + opStr + '</td></tr>';
