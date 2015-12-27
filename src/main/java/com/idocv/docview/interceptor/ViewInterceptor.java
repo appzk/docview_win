@@ -20,8 +20,11 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idocv.docview.common.DocResponse;
+import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.service.SessionService;
 import com.idocv.docview.service.UserService;
 import com.idocv.docview.util.RemoteUtil;
+import com.idocv.docview.vo.SessionVo;
 import com.idocv.docview.vo.UserVo;
 
 public class ViewInterceptor extends HandlerInterceptorAdapter {
@@ -30,6 +33,9 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 	
 	@Resource
 	private UserService userService;
+
+	@Resource
+	private SessionService sessionService;
 
 	@Value("${thd.view.check.switch}")
 	private boolean thdViewCheckSwitch = false;
@@ -62,7 +68,7 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				}
 			}
 			// view
-			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,10}.json")) {
+			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,31}.json")) {
 				Map<String, String> authMap = getRemoteAuthMap(request);
 				String viewAuth = authMap.get("view");
 				if ("0".equals(viewAuth)) {
@@ -83,9 +89,12 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 		String requestUri = request.getRequestURI();
 		if (thdViewCheckSwitch) {
 			// read, down and copy
-			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,10}")) {
+			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,31}")) {
 				// remote value
-				String uuid = requestUri.replaceFirst("/view/(\\w{4,10})", "$1");
+				String uuid = requestUri.replaceFirst("/view/(\\w{4,31})", "$1");
+				if (StringUtils.isNotBlank(uuid) && uuid.matches("\\w{24}")) {
+					uuid = getUuidBySessionId(uuid);
+				}
 				Map<String, String> authMap = getRemoteAuthMap(request);
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_READ_" + uuid, authMap.get("read")));
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_DOWN_" + uuid, authMap.get("down")));
@@ -93,6 +102,21 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 			}
 		}
 	}
+	
+	public String getUuidBySessionId(String sessionId) throws DocServiceException {
+		if (StringUtils.isBlank(sessionId) || !sessionId.matches("\\w{24}")) {
+			return "";
+		}
+		// session id
+		SessionVo sessionVo = sessionService.get(sessionId);
+		if (null == sessionVo) {
+			logger.warn("[ERROR] getUuidBySessionId 无效的会话ID.");
+			throw new DocServiceException("无效的会话ID！");
+		}
+		String uuid = sessionVo.getUuid();
+		return uuid;
+	}
+	
 
 	public Map<String, String> getRemoteAuthMap(HttpServletRequest request) {
 		// default value
