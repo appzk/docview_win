@@ -13,7 +13,6 @@ import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -220,7 +219,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					titleCount++;
 					titleString = titleString.replaceFirst(titleRegex, "$6");
 					for (int li = 1; li < titleLevel; li++) {
-						title = "->" + title;
+						title = ">" + title;
 					}
 					
 					// 格式标题，注意正则中间的空格，第一个是160，第二个是32

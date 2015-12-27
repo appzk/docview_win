@@ -229,7 +229,6 @@ function afterLoad() {
 		}
 		*/
 		// download
-		/*
 		var downCheck = $.cookie('IDOCV_THD_VIEW_CHECK_DOWN_' + uuid);
 		if (!!downCheck && '0' == downCheck) {
 			$('.lnk-file-title').removeAttr('href');
@@ -238,10 +237,12 @@ function afterLoad() {
 		var copyCheck = $.cookie('IDOCV_THD_VIEW_CHECK_COPY_' + uuid);
 		if (!!copyCheck && '0' == copyCheck) {
 			$('body').css('-webkit-user-select', 'none');
+			$('body').css('-khtml-user-select', 'none');
 			$('body').css('-moz-user-select', 'none');
 			$('body').css('-ms-user-select', 'none');
+			$('body').css('user-select', 'none');
+			$('body').on("selectstart", function(e) { e.preventDefault(); });
 		}
-		*/
 	} catch (e) {
 	}
 }
