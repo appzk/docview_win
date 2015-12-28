@@ -7,7 +7,8 @@ var slideUrls = new Array();
 var slideThumbUrls = new Array();
 var ratio = 0.75;
 var curSlide = 1;
-var uuid = $.url().segment(2);
+var id = $.url().segment(2);
+var uuid = id;
 var params = $.url().param();
 
 $(document).ready(function() {
@@ -17,7 +18,7 @@ $(document).ready(function() {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;
-			var uuid = data.uuid;
+			uuid = data.uuid;
 			var pages = data.data;
 			
 			// title

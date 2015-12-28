@@ -4,14 +4,15 @@
  */
 
 var totalSize = 1;
-var uuid = $.url().segment(2);
+var id = $.url().segment(2);
+var uuid = id;
 var sessionId = $.url().param('session');
 $(document).ready(function() {
 	$.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;
-			var uuid = data.uuid;
+			uuid = data.uuid;
 			var pages = data.data;
 			
 			// title

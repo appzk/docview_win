@@ -4,7 +4,8 @@
  */
 
 var totalSize = 1;
-var uuid = $.url().segment(2);
+var id = $.url().segment(2);
+var uuid = id;
 var sessionId = $.url().param('session');
 var version = $.url().param('v');
 version = (version === undefined) ? -1 : version;
@@ -25,7 +26,7 @@ $(document).ready(function() {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;
-			var uuid = data.uuid;
+			uuid = data.uuid;
 			var pages = data.data;
 			var titles = data.titles;
 			var versionCount = data.versionCount;
