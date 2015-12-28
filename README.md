@@ -33,3 +33,22 @@ db.cache.drop();
 ```
 
 原因：PPT默认缩略图宽度由200px增加到480px，需重新生成缩略图
+
+## 特殊功能
+
+### 禁止打印
+文件static\idocv\css\style.css中添加：
+	@media print {
+	  html, body {
+	    display: none;  /* hide whole page */
+	  }
+	}
+
+### 页面水印
+文件static\idocv\js\word.js中添加watermark方法
+
+### 判断用户是否登录
+var username = $.cookie('username');
+if (!username) {
+	window.location = 'http://www.idocv.com';
+}

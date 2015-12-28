@@ -32,5 +32,7 @@ $(document).ready(function() {
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}
+		
+		clearProgress();
 	});
 });

@@ -3,11 +3,7 @@
  * @author Godwin <godwin668@gmail.com>
  */
 
-// If JavaScript is enabled remove 'no-js' class and give 'js' class
-jQuery('html').removeClass('no-js').addClass('js');
-
-// When DOM is fully loaded
-jQuery(document).ready(function($) {
+$(document).ready(function() {
 
 	/* ---------------------------------------------------------------------- */
 	/*	Custom Functions

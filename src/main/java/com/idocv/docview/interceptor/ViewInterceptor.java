@@ -99,6 +99,7 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_READ_" + uuid, authMap.get("read")));
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_DOWN_" + uuid, authMap.get("down")));
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_COPY_" + uuid, authMap.get("copy")));
+				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_INFO_" + uuid, authMap.get("info")));
 			}
 		}
 	}
@@ -139,6 +140,7 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				String remoteRead = remoteMap.get("read");
 				String remoteDown = remoteMap.get("down");
 				String remoteCopy = remoteMap.get("copy");
+				String remoteInfo = remoteMap.get("info");
 				if (StringUtils.isNotBlank(remoteUpload) && remoteUpload.matches("\\d{1,}")) {
 					authMap.put("upload", remoteUpload);
 				}
@@ -153,6 +155,9 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				}
 				if (StringUtils.isNotBlank(remoteCopy) && remoteCopy.matches("\\d{1,}")) {
 					authMap.put("copy", remoteCopy);
+				}
+				if (StringUtils.isNotBlank(remoteInfo)) {
+					authMap.put("info", remoteInfo);
 				}
 			} catch (Exception e) {
 				logger.warn("[REMOTE GET] URL(" + checkUrl + "), EXCEPTION(" + e.getMessage() + ")");
