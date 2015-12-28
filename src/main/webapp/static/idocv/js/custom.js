@@ -149,6 +149,7 @@ function afterLoad() {
 	 */
 	var ua = navigator.userAgent.toLowerCase();
     var isWeixinBrowser = (/micromessenger/.test(ua)) ? true : false ;
+    // if (document.documentElement.clientWidth < 768) { // 根据屏幕宽度控制顶部黑色标题
     if (isWeixinBrowser) {
     	$('.lnk-file-title').remove();
     	
