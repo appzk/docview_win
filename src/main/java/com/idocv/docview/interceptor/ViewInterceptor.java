@@ -100,7 +100,9 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_READ_" + uuid, authMap.get("read")));
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_DOWN_" + uuid, authMap.get("down")));
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_COPY_" + uuid, authMap.get("copy")));
-				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_INFO_" + uuid, URLEncoder.encode(authMap.get("info"), "UTF-8")));
+				if (StringUtils.isNotBlank(authMap.get("info"))) {
+					response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_INFO_" + uuid, URLEncoder.encode(authMap.get("info"), "UTF-8")));
+				}
 			}
 		}
 	}
