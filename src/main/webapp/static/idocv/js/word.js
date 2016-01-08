@@ -257,7 +257,7 @@ function watermarkWord() {
 	// info
 	var infoCheck = $.cookie('IDOCV_THD_VIEW_CHECK_INFO_' + uuid);
 	if (!!infoCheck) {
-		watermarkText = infoCheck;
+		watermarkText = decodeURI(infoCheck);
 	}
 	
 	var step = 300;
