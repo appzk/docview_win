@@ -2,6 +2,10 @@ package com.idocv.docview.interceptor;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,8 +53,12 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 
 	@Value("${thd.view.check.default}")
 	private String thdViewCheckDefault;
+	
+	private @Value("${view.page.private.session.duraion}")
+	int viewPagePrivateSessionDuraion;
 
 	private static ObjectMapper om = new ObjectMapper();
+	private static DateFormat dateTimeFmt = new SimpleDateFormat("yyyyMMddHHmmss");
 
 	@Override
 	public boolean preHandle(HttpServletRequest request,
@@ -59,9 +67,6 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 		if (thdViewCheckSwitch) {
 			// upload
 			if (requestUri.startsWith("/doc/upload")) {
-				if (isChecked(request)) {
-					return true;
-				}
 				Map<String, String> authMap = getRemoteAuthMap(request);
 				String uploadAuth = authMap.get("upload");
 				if ("0".equals(uploadAuth)) {
@@ -73,14 +78,19 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 			}
 			// view
 			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,31}.json")) {
-				if (isChecked(request)) {
+				// get uuid
+				String uuid = requestUri.replaceFirst("/view/(\\w{4,31}).json", "$1");
+				if (StringUtils.isNotBlank(uuid) && uuid.matches("\\w{24}")) {
+					uuid = getUuidBySessionId(uuid);
+				}
+				
+				if (isChecked(request, uuid)) {
 					return true;
 				}
 				Map<String, String> authMap = getRemoteAuthMap(request);
 				String viewAuth = authMap.get("view");
 				if ("0".equals(viewAuth)) {
-					Map<String, Object> respMap = DocResponse
-							.getErrorResponseMap("没有预览权限");
+					Map<String, Object> respMap = DocResponse.getErrorResponseMap("没有预览权限");
 					response.getWriter().write(JSON.toJSONString(respMap));
 					return false;
 				}
@@ -97,12 +107,12 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 		if (thdViewCheckSwitch) {
 			// read, down and copy
 			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,31}")) {
-				// remote value
+				// get uuid
 				String uuid = requestUri.replaceFirst("/view/(\\w{4,31})", "$1");
 				if (StringUtils.isNotBlank(uuid) && uuid.matches("\\w{24}")) {
 					uuid = getUuidBySessionId(uuid);
 				}
-				if (isChecked(request)) {
+				if (isChecked(request, uuid)) {
 					return;
 				}
 				Map<String, String> authMap = getRemoteAuthMap(request);
@@ -114,9 +124,8 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				}
 
 				// set check status cookie
-				String sessionId = request.getSession().getId();
-				String cookieKey = "IDOCV_THD_VIEW_CHECK_STATUS_" + sessionId;
-				response.addCookie(new Cookie(cookieKey, "1"));
+				String cookieKey = "IDOCV_THD_VIEW_CHECK_STATUS_" + uuid;
+				response.addCookie(new Cookie(cookieKey, dateTimeFmt.format(new Date())));
 			}
 		}
 	}
@@ -127,16 +136,27 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 	 * @param req
 	 * @return
 	 */
-	public boolean isChecked(HttpServletRequest req) {
-		Cookie[] cookies = req.getCookies();
-		String sessionId = req.getSession().getId();
-		String cookieKey = "IDOCV_THD_VIEW_CHECK_STATUS_" + sessionId;
-		if (null != cookies && cookies.length > 0) {
-			for (Cookie cookie : cookies) {
-				if (cookieKey.equals(cookie.getName())) {
-					return true;
+	public boolean isChecked(HttpServletRequest req, String uuid) {
+		try {
+			Cookie[] cookies = req.getCookies();
+			String cookieKey = "IDOCV_THD_VIEW_CHECK_STATUS_" + uuid;
+			if (null != cookies && cookies.length > 0) {
+				for (Cookie cookie : cookies) {
+					if (cookieKey.equals(cookie.getName())) {
+						String checkStatusValue = cookie.getValue();
+						long lastCheckTime = dateTimeFmt.parse(checkStatusValue).getTime();
+						long currentTime = System.currentTimeMillis();
+						if (currentTime >= lastCheckTime && (currentTime - lastCheckTime < (viewPagePrivateSessionDuraion * 60 * 1000))) {
+							logger.debug("上次文档权限验证有效: " + cookieKey + "=" + checkStatusValue);
+							return true;
+						} else {
+							logger.info("上次文档权限验证已过期，需要重新验证: " + cookieKey + "=" + checkStatusValue);
+						}
+					}
 				}
 			}
+		} catch (Exception e) {
+			logger.info("验证用户上一次预览权限失败：" + e.getMessage());
 		}
 		return false;
 	}
