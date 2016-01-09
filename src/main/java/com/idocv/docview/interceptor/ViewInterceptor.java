@@ -59,6 +59,9 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 		if (thdViewCheckSwitch) {
 			// upload
 			if (requestUri.startsWith("/doc/upload")) {
+				if (isChecked(request)) {
+					return true;
+				}
 				Map<String, String> authMap = getRemoteAuthMap(request);
 				String uploadAuth = authMap.get("upload");
 				if ("0".equals(uploadAuth)) {
@@ -70,6 +73,9 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 			}
 			// view
 			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,31}.json")) {
+				if (isChecked(request)) {
+					return true;
+				}
 				Map<String, String> authMap = getRemoteAuthMap(request);
 				String viewAuth = authMap.get("view");
 				if ("0".equals(viewAuth)) {
@@ -96,6 +102,9 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				if (StringUtils.isNotBlank(uuid) && uuid.matches("\\w{24}")) {
 					uuid = getUuidBySessionId(uuid);
 				}
+				if (isChecked(request)) {
+					return;
+				}
 				Map<String, String> authMap = getRemoteAuthMap(request);
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_READ_" + uuid, authMap.get("read")));
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_DOWN_" + uuid, authMap.get("down")));
@@ -103,10 +112,35 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				if (StringUtils.isNotBlank(authMap.get("info"))) {
 					response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_INFO_" + uuid, URLEncoder.encode(authMap.get("info"), "UTF-8")));
 				}
+
+				// set check status cookie
+				String sessionId = request.getSession().getId();
+				String cookieKey = "IDOCV_THD_VIEW_CHECK_STATUS_" + sessionId;
+				response.addCookie(new Cookie(cookieKey, "1"));
 			}
 		}
 	}
 	
+	/**
+	 * Whether checked user auth before
+	 * 
+	 * @param req
+	 * @return
+	 */
+	public boolean isChecked(HttpServletRequest req) {
+		Cookie[] cookies = req.getCookies();
+		String sessionId = req.getSession().getId();
+		String cookieKey = "IDOCV_THD_VIEW_CHECK_STATUS_" + sessionId;
+		if (null != cookies && cookies.length > 0) {
+			for (Cookie cookie : cookies) {
+				if (cookieKey.equals(cookie.getName())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public String getUuidBySessionId(String sessionId) throws DocServiceException {
 		if (StringUtils.isBlank(sessionId) || !sessionId.matches("\\w{24}")) {
 			return "";
