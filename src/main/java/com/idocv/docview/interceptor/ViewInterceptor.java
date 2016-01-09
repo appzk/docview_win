@@ -70,8 +70,7 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				Map<String, String> authMap = getRemoteAuthMap(request);
 				String uploadAuth = authMap.get("upload");
 				if ("0".equals(uploadAuth)) {
-					Map<String, Object> respMap = DocResponse
-							.getErrorResponseMap("没有上传权限");
+					Map<String, Object> respMap = DocResponse.getErrorResponseMap("没有上传权限");
 					response.getWriter().write(JSON.toJSONString(respMap));
 					return false;
 				}
@@ -85,7 +84,10 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				}
 				
 				if (isChecked(request, uuid)) {
-					return true;
+					String viewCookie = getCookie(request, "IDOCV_THD_VIEW_CHECK_VIEW_" + uuid);
+					if ("1".equals(viewCookie)) {
+						return true;
+					}
 				}
 				Map<String, String> authMap = getRemoteAuthMap(request);
 				String viewAuth = authMap.get("view");
@@ -116,6 +118,7 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 					return;
 				}
 				Map<String, String> authMap = getRemoteAuthMap(request);
+				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_VIEW_" + uuid, authMap.get("view")));
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_READ_" + uuid, authMap.get("read")));
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_DOWN_" + uuid, authMap.get("down")));
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_COPY_" + uuid, authMap.get("copy")));
@@ -130,6 +133,18 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 		}
 	}
 	
+	public static String getCookie(HttpServletRequest req, String key) {
+		Cookie[] cookies = req.getCookies();
+		if (null != cookies && cookies.length > 0) {
+			for (Cookie cookie : cookies) {
+				if (key.equals(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return "";
+	}
+
 	/**
 	 * Whether checked user auth before
 	 * 
