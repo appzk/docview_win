@@ -3,7 +3,6 @@ package com.idocv.docview.interceptor;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -191,7 +190,7 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 	}
 	
 
-	public Map<String, String> getRemoteAuthMap(HttpServletRequest request) {
+	public Map<String, String> getRemoteAuthMap(HttpServletRequest req) {
 		// default value
 		Map<String, String> authMap = null;
 		try {
@@ -201,8 +200,11 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 			logger.warn("[DEFAULT AHTU VALUE ERROR]" + e.getMessage());
 		}
 		if (StringUtils.isNotBlank(thdViewCheckUrl)) {
-			String thdViewCheckKeyValue = request.getParameter(thdViewCheckKeyName);
-			String checkUrl = thdViewCheckUrl + "?" + thdViewCheckKeyName + "=" + thdViewCheckKeyValue;
+			String thdViewCheckKeyValue = req.getParameter(thdViewCheckKeyName);
+
+			String sessionId = req.getSession().getId();
+
+			String checkUrl = thdViewCheckUrl + "?" + thdViewCheckKeyName + "=" + thdViewCheckKeyValue + "&sessionid=" + sessionId;
 			try {
 				String str = RemoteUtil.get(checkUrl);
 				logger.info("[REMOTE GET] URL(" + checkUrl + "), RET(" + str + ")");
@@ -237,7 +239,7 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 		}
 
 		// admin login
-		if (null != authMap && isAdminLogin(request)) {
+		if (null != authMap && isAdminLogin(req)) {
 			authMap.put("upload", "1");
 			authMap.put("view", "1");
 			authMap.put("read", "0");
