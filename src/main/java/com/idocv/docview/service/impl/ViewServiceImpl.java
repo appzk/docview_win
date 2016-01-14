@@ -544,6 +544,40 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				convert(rid);
 				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
 			}
+			
+			// double check & convert excel->pdf-png
+			if (ArrayUtils.isEmpty(pngFiles)) {
+				String src = rcUtil.getPath(rid);
+				String dest = rcUtil.getParseDir(rid) + RcUtil.getFileNameWithoutExt(rid) + ".pdf";
+				File destFile = new File(dest);
+				
+				// two steps to convert EXCEL to PNG
+				// step 1. convert EXCEL to PDF
+				String convertResult = CmdUtil.runWindows(excel2Pdf, src, dest);
+				if (!destFile.isFile()) {
+					convertResult += CmdUtil.runWindows(excel2Pdf, src, dest);
+					if (!destFile.isFile()) {
+						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+						throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，详情请联系管理员！");
+					}
+				}
+				
+				// step 2. convert PDF to PNG pictures
+				String pngDestDir = rcUtil.getParseDirOfPdf2Png(rid);	// Directory MUST exist(Apache PDFBox)
+				String pngDestFirstPage = pngDestDir + "1." + PDF_TO_IMAGE_TYPE;
+				if (!new File(pngDestFirstPage).isFile()) {
+					// String convertInfo = CmdUtil.runWindows("java", "-jar", pdf2img, "PDFToImage", "-imageType", PDF_TO_IMAGE_TYPE, "-outputPrefix", destDir, src);
+					// convertResult += CmdUtil.runWindows(pdf2img, "-q", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", "-sPAPERSIZE=a3", "-dPDFFitPage", "-dUseCropBox", "-sOutputFile=" + pngDestDir + "%d.png", dest);
+					convertResult += convertPdf2Img(pdf2img, viewImgQualityPdfBigWidth, pngDestDir, dest);
+				}
+				if (!new File(pngDestFirstPage).isFile()) {
+					logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
+					throw new DocServiceException("对不起，该文档（"
+							+ RcUtil.getUuidByRid(rid) + "）暂无法预览，详情请联系管理员！");
+				}
+				pngFiles = new File(rcUtil.getParseDir(rid) + PDF_TO_IMAGE_TYPE).listFiles();
+			}
+			
 			if (ArrayUtils.isEmpty(pngFiles)) {
 				logger.error("convertExcel2Img(" + rid
 						+ ") error: 预览失败，该excel文档无法生成目标PNG文件或该文件已损坏！");
