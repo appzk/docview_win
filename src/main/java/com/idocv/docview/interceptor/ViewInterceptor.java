@@ -55,6 +55,9 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 	
 	private @Value("${view.page.private.session.duraion}")
 	int viewPagePrivateSessionDuraion;
+	
+	private @Value("${thd.view.check.everytime}")
+	boolean thdViewCheckEverytime;
 
 	private static ObjectMapper om = new ObjectMapper();
 	private static DateFormat dateTimeFmt = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -152,6 +155,10 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 	 */
 	public boolean isChecked(HttpServletRequest req, String uuid) {
 		try {
+			if (thdViewCheckEverytime) {
+				return false;
+			}
+			
 			Cookie[] cookies = req.getCookies();
 			String cookieKey = "IDOCV_THD_VIEW_CHECK_STATUS_" + uuid;
 			if (null != cookies && cookies.length > 0) {
