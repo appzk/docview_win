@@ -5,6 +5,7 @@
 
 var totalSize = 1;
 var id = $.url().segment(2);
+var queryStr = $.url().attr('query');
 var uuid = id;
 var params = $.url().param();
 var type = $.url().param('type');
@@ -110,7 +111,7 @@ $(document).ready(function() {
 			});
 			
 			// NEXT page link
-			$('.span12').parent().append('<a id="next" href="/view/' + id + '.json?start=2&size=5&type=' + type + '"></a>');
+			$('.span12').parent().append('<a id="next" href="/view/' + id + '.json?start=2&size=5&type=' + type + '&' + queryStr + '"></a>');
 			
 			if (document.createStyleSheet){
 				document.createStyleSheet('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />');
