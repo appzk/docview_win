@@ -14,6 +14,21 @@
 		<org.eclipse.jetty.version>9.2.6.v20141205</org.eclipse.jetty.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>http://repo1.maven.org/maven2</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<!-- common jar start -->
 		<dependency>
@@ -371,7 +386,7 @@
 				<pom.converter.cad2img>/idocv/converter/cad2img/di.exe</pom.converter.cad2img>
 			</properties>
 		</profile>
-		
+
 		<!-- user professional. run with: clean install -Puserpro -->
 		<profile>
 			<id>userpro</id>
@@ -405,7 +420,7 @@
 				<pom.converter.cad2img>/idocv/converter/cad2img/di.exe</pom.converter.cad2img>
 			</properties>
 		</profile>
-		
+
 		<!-- Production -->
 		<profile>
 			<id>prod</id>
