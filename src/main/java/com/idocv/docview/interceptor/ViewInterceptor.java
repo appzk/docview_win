@@ -44,6 +44,9 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 	@Value("${thd.view.check.switch}")
 	private boolean thdViewCheckSwitch = false;
 
+	@Value("${thd.view.check.uri}")
+	private String thdViewCheckUri;
+
 	@Value("${thd.view.check.url}")
 	private String thdViewCheckUrl;
 
@@ -63,20 +66,35 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 	private static DateFormat dateTimeFmt = new SimpleDateFormat("yyyyMMddHHmmss");
 
 	@Override
-	public boolean preHandle(HttpServletRequest request,
+	public boolean preHandle(HttpServletRequest req,
 			HttpServletResponse response, Object handler) throws Exception {
-		String requestUri = request.getRequestURI();
-		if (thdViewCheckSwitch) {
+		String requestUri = req.getRequestURI();
+		if (thdViewCheckSwitch && isCheckUri(req)) {
 			// upload
 			if (requestUri.startsWith("/doc/upload")) {
-				Map<String, String> authMap = getRemoteAuthMap(request);
+				Map<String, String> authMap = getRemoteAuthMap(req);
 				String uploadAuth = authMap.get("upload");
 				if ("0".equals(uploadAuth)) {
-					Map<String, Object> respMap = DocResponse.getErrorResponseMap("没有上传权限");
+					Map<String, Object> respMap = DocResponse
+							.getErrorResponseMap("没有上传权限");
 					response.getWriter().write(JSON.toJSONString(respMap));
 					return false;
 				}
 			}
+
+			// download
+			if (requestUri.startsWith("/doc/download")) {
+				Map<String, String> authMap = getRemoteAuthMap(req);
+				String downloadAuth = authMap.get("down");
+				if ("0".equals(downloadAuth)) {
+					Map<String, Object> respMap = DocResponse
+							.getErrorResponseMap("没有下载权限");
+					response.getWriter().write(JSON.toJSONString(respMap));
+					return false;
+				}
+			}
+
+
 			// view
 			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,31}.json")) {
 				// get uuid
@@ -85,30 +103,34 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 					uuid = getUuidBySessionId(uuid);
 				}
 				
-				if (isChecked(request, uuid)) {
-					String viewCookie = getCookie(request, "IDOCV_THD_VIEW_CHECK_VIEW_" + uuid);
+				if (isChecked(req, uuid)) {
+					String viewCookie = getCookie(req, "IDOCV_THD_VIEW_CHECK_VIEW_" + uuid);
 					if ("1".equals(viewCookie)) {
 						return true;
 					}
 				}
-				Map<String, String> authMap = getRemoteAuthMap(request);
+				Map<String, String> authMap = getRemoteAuthMap(req);
 				String viewAuth = authMap.get("view");
 				if ("0".equals(viewAuth)) {
-					Map<String, Object> respMap = DocResponse.getErrorResponseMap("没有预览权限");
+					Map<String, Object> respMap = DocResponse
+							.getErrorResponseMap("没有预览权限");
 					response.getWriter().write(JSON.toJSONString(respMap));
 					return false;
 				}
 			}
+
+			// delete
+			// TODO
 		}
 		return true;
 	}
 
 	@Override
-	public void postHandle(HttpServletRequest request,
+	public void postHandle(HttpServletRequest req,
 			HttpServletResponse response, Object handler,
 			ModelAndView model) throws Exception {
-		String requestUri = request.getRequestURI();
-		if (thdViewCheckSwitch) {
+		String requestUri = req.getRequestURI();
+		if (thdViewCheckSwitch && isCheckUri(req)) {
 			// read, down and copy
 			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,31}")) {
 				// get uuid
@@ -116,10 +138,10 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 				if (StringUtils.isNotBlank(uuid) && uuid.matches("\\w{24}")) {
 					uuid = getUuidBySessionId(uuid);
 				}
-				if (isChecked(request, uuid)) {
+				if (isChecked(req, uuid)) {
 					return;
 				}
-				Map<String, String> authMap = getRemoteAuthMap(request);
+				Map<String, String> authMap = getRemoteAuthMap(req);
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_VIEW_" + uuid, authMap.get("view")));
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_READ_" + uuid, authMap.get("read")));
 				response.addCookie(new Cookie("IDOCV_THD_VIEW_CHECK_DOWN_" + uuid, authMap.get("down")));
@@ -168,10 +190,12 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 						long lastCheckTime = dateTimeFmt.parse(checkStatusValue).getTime();
 						long currentTime = System.currentTimeMillis();
 						if (currentTime >= lastCheckTime && (currentTime - lastCheckTime < (viewPagePrivateSessionDuraion * 60 * 1000))) {
-							logger.debug("上次文档权限验证有效: " + cookieKey + "=" + checkStatusValue);
+							logger.debug("上次文档权限验证有效: " + cookieKey + "="
+									+ checkStatusValue);
 							return true;
 						} else {
-							logger.info("上次文档权限验证已过期，需要重新验证: " + cookieKey + "=" + checkStatusValue);
+							logger.info("上次文档权限验证已过期，需要重新验证: " + cookieKey
+									+ "=" + checkStatusValue);
 						}
 					}
 				}
@@ -277,5 +301,26 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 			logger.warn("判断管理员登录失败: " + e.getMessage());
 		}
 		return isAdmin;
+	}
+
+	private boolean isCheckUri(HttpServletRequest req) {
+		String reqUri = req.getRequestURI();
+		if (StringUtils.isBlank(thdViewCheckUri)) {
+			return false;
+		}
+		if ("*".equals(thdViewCheckUri)) {
+			return true;
+		}
+		if (StringUtils.isBlank(reqUri)) {
+			return false;
+		}
+
+		String[] checkUris = thdViewCheckUri.split(",|;");
+		for (String checkUri : checkUris) {
+			if (reqUri.startsWith(checkUri)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
