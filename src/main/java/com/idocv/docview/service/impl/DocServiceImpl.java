@@ -104,6 +104,9 @@ public class DocServiceImpl implements DocService {
 
 	@Value("${url.view.allow.domains.msg}")
 	private String urlViewAllowDomainsMsg;
+	
+	@Value("${url.view.dir.replace}")
+	private String urlViewDirReplace;
 
 	private static String authUrl = "http://www.idocv.com/auth.json";
 	private static final ObjectMapper om = new ObjectMapper();
@@ -192,6 +195,17 @@ public class DocServiceImpl implements DocService {
 			if (StringUtils.isNotBlank(url) && url.matches("file:/{2,3}(.*)")) {
 				// Local File
 				String localPath = url.replaceFirst("file:/{2,3}(.*)", "$1");
+
+				// replace prefix
+				if (StringUtils.isNotBlank(urlViewDirReplace)) {
+					String[] replaceKVAllArr = urlViewDirReplace.split("#");
+					if (null != replaceKVAllArr && replaceKVAllArr.length > 0) {
+						for (String replaceKVArr : replaceKVAllArr) {
+							// TODO
+						}
+					}
+				}
+
 				File srcFile = new File(localPath);
 				if (!srcFile.isFile()) {
 					logger.error("URL预览失败，未找到本地文件（" + localPath + "）");
