@@ -171,6 +171,9 @@ public class DocServiceImpl implements DocService {
 			// check domain
 			if (!"*".equalsIgnoreCase(urlViewAllowDomains)) {
 				String host = new URL(url).getHost();
+				if (url.matches("file:/{2,3}(.*)")) {
+					host = "file:///";
+				}
 				String[] domains = urlViewAllowDomains.split(",");
 				boolean isValid = false;
 				for (String domain : domains) {
