@@ -196,12 +196,17 @@ public class DocServiceImpl implements DocService {
 				// Local File
 				String localPath = url.replaceFirst("file:/{2,3}(.*)", "$1");
 
-				// replace prefix
+				// replace directory prefix
 				if (StringUtils.isNotBlank(urlViewDirReplace)) {
-					String[] replaceKVAllArr = urlViewDirReplace.split("#");
-					if (null != replaceKVAllArr && replaceKVAllArr.length > 0) {
-						for (String replaceKVArr : replaceKVAllArr) {
-							// TODO
+					String[] replaceKVArr = urlViewDirReplace.split("#");
+					if (null != replaceKVArr && replaceKVArr.length > 0) {
+						for (String replaceKV : replaceKVArr) {
+							String replaceK = replaceKV.split("@")[0];
+							String replaceV = replaceKV.split("@")[1];
+							if (StringUtils.isNotBlank(replaceK) && localPath.startsWith(replaceK)) {
+								localPath = localPath.replaceFirst(replaceK, replaceV);
+								break;
+							}
 						}
 					}
 				}
