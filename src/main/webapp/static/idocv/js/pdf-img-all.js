@@ -40,11 +40,58 @@ $(document).ready(function() {
 				}
 			}
 			
+			// Image Content
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
-				$('.span12').append('<div class="pdf-page"><div class="pdf-content"><img class="lazyload" alt="第' + (i + 1) + '页" src="' + pages[0].url + '" data-src="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
+				if (i < 5) {
+					$('.span12').append('<div class="pdf-page"><div id="' + (i + 2) + '" class="pdf-content scroll-page"><img alt="第' + (i + 1) + '页" src="' + page.url + '" rel="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
+				} else {
+					$('.span12').append('<div class="pdf-page"><div id="' + (i + 2) + '" class="pdf-content scroll-page"><img alt="第' + (i + 1) + '页" src="" rel="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
+				}
 				$('.select-page-selector').append('<option>' + (i + 1) + '</option>');
 			}
+			
+			var lazyLoadImg = function() {
+				var $ul = $('.span12');
+				var $img = $ul.find("img[rel]");
+				if (!$img || $img.length == 0) {
+					return;
+				}
+				var $li = $ul.find('.pdf-content');
+				var _wH = document.documentElement.clientHeight * 5;
+				var _liH = $li[0].offsetHeight;
+				var scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+				var curH = scrollTop;
+				var allH = _wH + curH;
+				var _liH = $li.get(0).offsetHeight;
+				var curItem = Math.floor(curH / _liH);
+				var allItem = Math.ceil(allH / _liH);
+				var _max = $('.span12').find('.pdf-content').length;
+				if (curItem > _max) return;
+				if (allItem > _max) allItem = _max;
+				for (var i = curItem - 1; i < allItem; i++) {
+					var thum = $ul.find("img[rel]")[i];
+					var rel = $(thum).attr("rel");
+					if (rel && rel != $(thum).attr("src") && rel.indexOf("noimg") < 0 && rel.indexOf("invalid_pic") < 0) {
+						$(thum).attr("src", rel);
+					}
+				}
+			};
+			
+			// set all image size before image load
+			$('.span12 .pdf-content img:first').load(function() {
+				var imgWidth = $(this).width();
+				var imgHeight = $(this).height();
+				$('.pdf-content img').width(imgWidth);
+				$('.pdf-content img').height(imgHeight);
+				bindBottomPagingProgress();
+				lazyLoadImg();
+			});
+			
+			// lazyLoadImg();
+			$(window).on("scroll", function(e) {
+				lazyLoadImg();
+			});
 			
 			// bottom paging positioning
 			var onePagePercent = 100 / totalSize;
