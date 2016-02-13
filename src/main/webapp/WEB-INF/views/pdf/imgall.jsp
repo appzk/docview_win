@@ -73,15 +73,13 @@
       <div class="progress progress-striped active bottom-paging-progress">
         <div class="bar" style="width: 0%;"></div>
       </div>
-      <!-- 
       <div class="paging-bottom-all" style="z-index: 2000">
         <!-- SUB PAGING DIV(s) HERE -->
         <!-- 
         <div class="paging-bottom-sub" page-num="1" style="width: 20%;">1</div>
         ...
-         --
+         -->
       </div>
-       -->
 
     </div><!--/.fluid-container-->
     
@@ -107,10 +105,10 @@
     <script src="/static/bootstrap/js/bootstrap.min.js?v=${version}"></script>
     <script src="/static/idocv/js/progress.js?v=${version}"></script>
     <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
+    <script src="/static/lazysizes/js/lazysizes.min.js?v=${version}"></script>
     <script src="/static/idocv/js/custom.js?v=${version}"></script>
     <script src="/static/scrollspy/js/jquery-scrollspy.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
-    <script src="/static/formvalidator/js/jquery.formvalidator.min.js?v=${version}"></script>
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
     <script src="/static/idocv/js/pdf-img-all.js?v=${version}"></script>
     <script src="/static/smart/js/jquery.easing-1.3.min.js?v=${version}"></script>

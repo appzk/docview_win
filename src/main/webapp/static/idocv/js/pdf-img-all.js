@@ -42,7 +42,7 @@ $(document).ready(function() {
 			
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
-				$('.span12').append('<div class="pdf-page"><div class="pdf-content"><img alt="第' + (i + 1) + '页" src="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
+				$('.span12').append('<div class="pdf-page"><div class="pdf-content"><img class="lazyload" alt="第' + (i + 1) + '页" src="' + pages[0].url + '" data-src="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
 				$('.select-page-selector').append('<option>' + (i + 1) + '</option>');
 			}
 			
@@ -60,7 +60,7 @@ $(document).ready(function() {
 				var id = $(this).attr('page-num');
 				var curWidth = $(this).width();
 				curWidth = curWidth < 30 ? 30 : curWidth;
-				$(this).append('<div class="noti-page-number" style="position: absolute; bottom: 20px; width: ' + curWidth + 'px; height: 30px;"><font color="red">' + id + '</font></div>');
+				$(this).append('<div class="noti-page-number" style="position: absolute; bottom: 20px; width: ' + curWidth + 'px; height: 30px;"><font color="green">' + id + '</font></div>');
 			});
 			$('.paging-bottom-sub').bind('mouseup mouseleave touchend touchcancel', function(e) {
 				e.preventDefault();
