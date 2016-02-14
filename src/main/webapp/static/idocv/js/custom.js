@@ -211,6 +211,13 @@ function afterLoad() {
 	}
 	
 	/**
+	 * disable right click (contextmenu)
+	 */
+	//document.addEventListener("contextmenu", function(e){
+	//	e.preventDefault();
+	//}, false);
+	
+	/**
 	 * view checker
 	 */
 	try {
