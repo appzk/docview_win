@@ -263,9 +263,15 @@ public class DocController {
 
 	@ResponseBody
 	@RequestMapping("meta/{uuid}")
-	public Map<String, Object> meta(@PathVariable(value = "uuid") String uuid) {
+	public Map<String, Object> meta(@PathVariable(value = "uuid") String uuid,
+			@RequestParam(value = "url", required = false) String url) {
 		try {
-			DocVo docVo = docService.getByUuid(uuid);
+			DocVo docVo = null;
+			if ("url".equalsIgnoreCase(uuid) && StringUtils.isNotBlank(url)) {
+				docVo = docService.getUrl(url);
+			} else {
+				docVo = docService.getByUuid(uuid);
+			}
 			if (null == docVo) {
 				throw new DocServiceException("Document NOT found!");
 			}
