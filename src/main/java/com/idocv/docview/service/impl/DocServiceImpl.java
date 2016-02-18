@@ -62,6 +62,7 @@ import com.idocv.docview.po.LabelPo;
 import com.idocv.docview.po.UserPo;
 import com.idocv.docview.service.ConvertService;
 import com.idocv.docview.service.DocService;
+import com.idocv.docview.util.FTPUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.util.UrlUtil;
 import com.idocv.docview.vo.DocVo;
@@ -221,8 +222,14 @@ public class DocServiceImpl implements DocService {
 					name = srcFile.getName();
 				}
 				data = FileUtils.readFileToByteArray(srcFile);
+			} else if (StringUtils.isNotBlank(url) && url.matches("ftp://(.*)")) {
+				// FTP file
+				data = FTPUtil.downloadFTPFile(url, null, null);
+				if (StringUtils.isBlank(name)) {
+					name = FTPUtil.getFileNameFromUrl(url);
+				}
 			} else {
-				// Web File
+				// HTTP File
 				String host = getHost(url);
 				Response urlResponse = null;
 				try {
