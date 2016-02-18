@@ -109,6 +109,9 @@ public class DocServiceImpl implements DocService {
 	@Value("${url.view.dir.replace}")
 	private String urlViewDirReplace;
 
+	@Value("${url.view.ftp.user.and.pass}")
+	private String urlViewFtpUserAndPass;
+
 	private static String authUrl = "http://www.idocv.com/auth.json";
 	private static final ObjectMapper om = new ObjectMapper();
 	private static final DateFormat dateFormatYMD = new SimpleDateFormat("yyyy-MM-dd");
@@ -224,7 +227,27 @@ public class DocServiceImpl implements DocService {
 				data = FileUtils.readFileToByteArray(srcFile);
 			} else if (StringUtils.isNotBlank(url) && url.matches("ftp://(.*)")) {
 				// FTP file
-				data = FTPUtil.downloadFTPFile(url, null, null);
+				String ftpUser = "";
+				String ftpPassword = "";
+				if (StringUtils.isNotBlank(urlViewFtpUserAndPass)) {
+					try {
+						String ftpUserPassStrRegex = "([^@]+)@([^P]+)P(.+)";
+						String[] ftpDomainParaStrs = urlViewFtpUserAndPass.split("#");
+						for (String ftpDomainParaStr : ftpDomainParaStrs) {
+							if (ftpDomainParaStr.matches(ftpUserPassStrRegex)) {
+								String ftpDomainPara = ftpDomainParaStr.replaceFirst(ftpUserPassStrRegex, "$2");
+								if (url.contains(ftpDomainPara)) {
+									ftpUser = ftpDomainParaStr.replaceFirst(ftpUserPassStrRegex, "$1");
+									ftpPassword = ftpDomainParaStr.replaceFirst(ftpUserPassStrRegex, "$3");
+									break;
+								}
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				data = FTPUtil.downloadFTPFile(url, ftpUser, ftpPassword);
 				if (StringUtils.isBlank(name)) {
 					name = FTPUtil.getFileNameFromUrl(url);
 				}
