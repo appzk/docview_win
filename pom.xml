@@ -10,32 +10,22 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframework.version>4.1.3.RELEASE</org.springframework.version>
-		<org.eclipse.jetty.version>9.2.6.v20141205</org.eclipse.jetty.version>
+		<org.springframework.version>4.2.4.RELEASE</org.springframework.version>
+		<org.eclipse.jetty.version>9.3.7.v20160115</org.eclipse.jetty.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>central</id>
-			<url>http://repo1.maven.org/maven2</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-		</repository>
-	</repositories>
-
 	<dependencies>
-		<!-- common jar start -->
+		<!-- common jar START -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
+			<version>4.12</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -82,6 +72,11 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -138,47 +133,8 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.8.1</version>
 		</dependency>
-		<!-- common jar end -->
-
-		<!-- jetty container start -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<version>${org.eclipse.jetty.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlets</artifactId>
-			<version>${org.eclipse.jetty.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlet</artifactId>
-			<version>${org.eclipse.jetty.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<version>${org.eclipse.jetty.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-jsp</artifactId>
-			<version>${org.eclipse.jetty.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>3.0.20100224</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- jetty container end -->
-
+		<!-- common jar END -->
+		
 		<dependency>
 			<groupId>com.belerweb</groupId>
 			<artifactId>pinyin4j</artifactId>
@@ -227,18 +183,6 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${org.eclipse.jetty.version}</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.eclipse.jetty</groupId>
-						<artifactId>jetty-servlets</artifactId>
-						<version>${org.eclipse.jetty.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.eclipse.jetty</groupId>
-						<artifactId>jetty-jsp</artifactId>
-						<version>${org.eclipse.jetty.version}</version>
-					</dependency>
-				</dependencies>
 				<configuration>
 					<scanIntervalSeconds>0</scanIntervalSeconds>
 					<useFileMappedBuffer>false</useFileMappedBuffer>
