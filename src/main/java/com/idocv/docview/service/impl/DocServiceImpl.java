@@ -105,9 +105,6 @@ public class DocServiceImpl implements DocService {
 
 	@Value("${url.view.allow.domains.msg}")
 	private String urlViewAllowDomainsMsg;
-	
-	@Value("${url.view.dir.replace}")
-	private String urlViewDirReplace;
 
 	@Value("${url.view.ftp.user.and.pass}")
 	private String urlViewFtpUserAndPass;
@@ -196,25 +193,10 @@ public class DocServiceImpl implements DocService {
 			}
 
 			byte[] data = null;
+
 			if (StringUtils.isNotBlank(url) && url.matches("file:/{2,3}(.*)")) {
 				// Local File
 				String localPath = url.replaceFirst("file:/{2,3}(.*)", "$1");
-
-				// replace directory prefix
-				if (StringUtils.isNotBlank(urlViewDirReplace)) {
-					String[] replaceKVArr = urlViewDirReplace.split("#");
-					if (null != replaceKVArr && replaceKVArr.length > 0) {
-						for (String replaceKV : replaceKVArr) {
-							String replaceK = replaceKV.split("@")[0];
-							String replaceV = replaceKV.split("@")[1];
-							if (StringUtils.isNotBlank(replaceK) && localPath.startsWith(replaceK)) {
-								localPath = localPath.replaceFirst(replaceK, replaceV);
-								break;
-							}
-						}
-					}
-				}
-
 				File srcFile = new File(localPath);
 				if (!srcFile.isFile()) {
 					logger.error("URL预览失败，未找到本地文件（" + localPath + "）");

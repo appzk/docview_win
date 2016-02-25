@@ -59,6 +59,9 @@ public class ViewController {
 	private @Value("${thd.view.template}")
 	String thdViewTemplate;
 
+	@Value("${url.view.dir.replace}")
+	private String urlViewDirReplace;
+
 	private @Value("${view.page.load.async}")
 	boolean pageLoadAsync;
 	
@@ -606,6 +609,22 @@ public class ViewController {
 				throw new DocServiceException(0, "不存在该应用！");
 			}
 			String app = appPo.getId();
+			
+			// replace directory prefix
+			if (StringUtils.isNotBlank(urlViewDirReplace)) {
+				String[] replaceKVArr = urlViewDirReplace.split("#");
+				if (null != replaceKVArr && replaceKVArr.length > 0) {
+					for (String replaceKV : replaceKVArr) {
+						String replaceK = replaceKV.split("@")[0];
+						String replaceV = replaceKV.split("@")[1];
+						if (StringUtils.isNotBlank(replaceK) && url.contains(replaceK)) {
+							url = url.replaceFirst(replaceK, replaceV);
+							break;
+						}
+					}
+				}
+			}
+			
 			DocVo vo = docService.addUrl(req, app, null, name, url, mode, label);
 			if (null == vo) {
 				throw new DocServiceException("上传URL文件错误！");
