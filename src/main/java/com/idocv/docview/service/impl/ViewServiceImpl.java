@@ -135,6 +135,9 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 	private @Value("${view.img.watermark.params}")
 	String viewImgWatermarkParams;
 	
+	@Value("${url.view.url.substring.replace}")
+	private String urlViewUrlSubstringReplace;
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO
@@ -558,7 +561,8 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 					convertResult += CmdUtil.runWindows(excel2Pdf, src, dest);
 					if (!destFile.isFile()) {
 						logger.error("[CONVERT ERROR] " + rid + " - " + convertResult);
-						throw new DocServiceException("对不起，该文档（" + RcUtil.getUuidByRid(rid) + "）暂无法预览，详情请联系管理员！");
+						throw new DocServiceException("对不起，该文档（"
+								+ RcUtil.getUuidByRid(rid) + "）暂无法预览，详情请联系管理员！");
 					}
 				}
 				
@@ -1028,13 +1032,16 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			}
 
 			List<ZipVo> data = new ArrayList<ZipVo>();
+			
 			for (File extractedFile : extractedFiles) {
 				ZipVo zipVo = new ZipVo();
 				String extractedFileName = extractedFile.getName();
 				zipVo.setTitle(extractedFile.getName());
 				boolean isViewable = ViewType.isViewableByFileName(extractedFileName);
 				zipVo.setViewable(isViewable);
-				zipVo.setPath(extractedFile.getAbsolutePath().replaceAll("\\\\", "/"));
+				String realPath = extractedFile.getAbsolutePath().replaceAll("\\\\", "/");
+				String replacedPath = getReplaceStr(realPath);
+				zipVo.setPath(replacedPath);
 				data.add(zipVo);
 			}
 			PageVo<ZipVo> page = new PageVo<ZipVo>(data, data.size());
@@ -1475,6 +1482,35 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 		return CmdUtil.runWindows(pdf2img, "-q", "-dSAFER", "-dBATCH", "-dNOPAUSE", "-dPDFFitPage", "-dDEVICEWIDTHPOINTS=" + widthPixel, "-dDEVICEHEIGHTPOINTS=" + heightPixel, "-sDEVICE=png16m", "-dTextAlphaBits=4", "-dGraphicsAlphaBits=4", "-sOutputFile=" + destDir + "%d.png", src);
 	}
 	
+	/**
+	 * For security reason, some URL substring can be replaced
+	 * 
+	 * @param src
+	 * @return
+	 */
+	public String getReplaceStr(String src) {
+		if (StringUtils.isBlank(src)) {
+			return src;
+		}
+		// replace directory prefix
+		if (StringUtils.isNotBlank(urlViewUrlSubstringReplace)) {
+			String[] replaceKVArr = urlViewUrlSubstringReplace.split("#");
+			if (null != replaceKVArr && replaceKVArr.length > 0) {
+				for (String replaceKV : replaceKVArr) {
+					String replaceK = replaceKV.split("@")[0];
+					String replaceV = replaceKV.split("@")[1];
+					if (StringUtils.isNotBlank(replaceK)
+							&& StringUtils.isNotBlank(replaceV)
+							&& StringUtils.contains(src, replaceV)) {
+						src = src.replaceFirst(replaceV, replaceK);
+						return src;
+					}
+				}
+			}
+		}
+		return src;
+	}
+
 	public static String getEncoding(File file) {
 		if (!file.isFile()) {
 			return "UTF-8";

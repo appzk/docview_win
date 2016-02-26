@@ -59,8 +59,8 @@ public class ViewController {
 	private @Value("${thd.view.template}")
 	String thdViewTemplate;
 
-	@Value("${url.view.dir.replace}")
-	private String urlViewDirReplace;
+	@Value("${url.view.url.substring.replace}")
+	private String urlViewUrlSubstringReplace;
 
 	private @Value("${view.page.load.async}")
 	boolean pageLoadAsync;
@@ -611,8 +611,8 @@ public class ViewController {
 			String app = appPo.getId();
 			
 			// replace directory prefix
-			if (StringUtils.isNotBlank(urlViewDirReplace)) {
-				String[] replaceKVArr = urlViewDirReplace.split("#");
+			if (StringUtils.isNotBlank(urlViewUrlSubstringReplace)) {
+				String[] replaceKVArr = urlViewUrlSubstringReplace.split("#");
 				if (null != replaceKVArr && replaceKVArr.length > 0) {
 					for (String replaceKV : replaceKVArr) {
 						String replaceK = replaceKV.split("@")[0];
