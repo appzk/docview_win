@@ -174,6 +174,10 @@ public class DocServiceImpl implements DocService {
 			
 			// check domain
 			if (!"*".equalsIgnoreCase(urlViewAllowDomains)) {
+				if (StringUtils.isBlank(urlViewAllowDomains)) {
+					logger.warn(urlViewAllowDomainsMsg + " - " + url);
+					throw new DocServiceException(urlViewAllowDomainsMsg);
+				}
 				String host = new URL(url).getHost();
 				if (url.matches("file:/{2,3}(.*)")) {
 					host = "file:///";
