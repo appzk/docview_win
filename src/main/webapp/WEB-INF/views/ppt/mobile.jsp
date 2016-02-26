@@ -164,6 +164,7 @@
     <script src='/static/photoswipe/js/photoswipe.min.js'></script>
     <script src='/static/photoswipe/js/photoswipe-ui-default.min.js'></script>
     <script src='/static/idocv/js/ppt-mobile.js'></script>
+    <script src="/static/smart/js/jquery.easing-1.3.min.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
 </html>
