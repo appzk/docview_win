@@ -116,7 +116,6 @@ public class ViewController {
 	@RequestMapping("{id:\\w{1,31}}")
 	public ModelAndView page(HttpServletRequest req, ModelAndView model,
 			@PathVariable String id,
-			@RequestParam(value = "token", defaultValue = "testtoken") String token,
 			@RequestParam(defaultValue = "1") int start,
 			@RequestParam(defaultValue = "5") int size,
 			@RequestParam(value = "type", required = false) String type) {
@@ -134,16 +133,6 @@ public class ViewController {
 				sessionId = sessionVo.getId();
 			} else {
 				uuid = id;
-
-				// check token
-				if (StringUtils.isBlank(token)) {
-					throw new DocServiceException("URL上传错误，请提供token参数！");
-				}
-				AppVo appPo = appService.getByToken(token);
-				if (null == appPo || StringUtils.isBlank(appPo.getId())) {
-					logger.error("不存在该应用，token=" + token);
-					throw new DocServiceException(0, "不存在该应用！");
-				}
 			}
 
 			// check extension
