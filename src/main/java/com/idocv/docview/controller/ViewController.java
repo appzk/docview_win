@@ -155,7 +155,7 @@ public class ViewController {
 			if (uuid.endsWith(ViewType.WORD.getSymbol())) {
 				if (viewPageStyleWord.startsWith("img")
 						|| viewPageStyleWord.startsWith("pdf")) {
-					model.setViewName("word/pdf");
+					model.setViewName("word/img");
 				} else if (viewPageStyleWord.startsWith("bookmark")) {
 					model.setViewName("word/bookmark");
 				} else {
@@ -178,7 +178,7 @@ public class ViewController {
 
 				// if type is set, use it.
 				if ("img".equalsIgnoreCase(type)) {
-					model.setViewName("word/pdf");
+					model.setViewName("word/img");
 				} else if ("html".equalsIgnoreCase(type)) {
 					model.setViewName("word/index");
 				}
