@@ -193,7 +193,7 @@
 						</connector>
 					</connectors>
 					<stopKey>docviewstopkey</stopKey>
-					<stopPort>8081</stopPort>
+					<stopPort>9080</stopPort>
 					<jvmArgs>-Xms512M -Xmx1024M -XX:PermSize=128M -XX:MaxPermSize=256M</jvmArgs>
 					<systemProperties>
 						<systemProperty>
