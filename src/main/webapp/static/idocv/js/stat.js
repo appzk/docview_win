@@ -48,6 +48,7 @@
 /* ---------------------------------------------------------------------- */
 /*	StatCounter
 /* ---------------------------------------------------------------------- */
+/*
 	var sc_project=8658950; 
 	var sc_invisible=1; 
 	var sc_security="d4122c0b"; 
@@ -56,3 +57,4 @@
 	document.write("<sc"+"ript type='text/javascript' src='" +
 	scJsHost+
 	"statcounter.com/counter/counter.js'></"+"script>");
+*/
