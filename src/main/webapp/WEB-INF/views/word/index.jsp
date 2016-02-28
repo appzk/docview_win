@@ -107,7 +107,6 @@
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
     <script src="/static/idocv/js/word.js?v=${version}"></script>
     <script src="/static/iframe-resizer/js/iframeResizer.contentWindow.min.js?v=${version}"></script>
-    <script src="/static/smart/js/jquery.easing-1.3.min.js?v=${version}"></script>
     <script src="/static/highlight/js/jquery.highlight.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>

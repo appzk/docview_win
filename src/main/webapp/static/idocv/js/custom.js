@@ -37,8 +37,7 @@ $(document).ready(function() {
 				min         : 200,
 				fadeIn      : 400,
 				fadeOut     : 400,
-				scrollSpeed : 800,
-				easingType  : 'easeInOutExpo'
+				scrollSpeed : 800
 			},
 			oldiOS     = false,
 			oldAndroid = false;
@@ -54,14 +53,12 @@ $(document).ready(function() {
 		$('body').append('<a href="#" id="' + settings.button.substring(1) + '" title="' + settings.text + '">' + settings.text + '</a>');
 
 		$( settings.button ).click(function( e ){
-				$('html, body').animate({ scrollTop : 0 }, settings.scrollSpeed, settings.easingType );
-
+				$('html, body').animate({ scrollTop : 0 }, settings.scrollSpeed );
 				e.preventDefault();
 			});
 
 		$(window).scroll(function() {
 			var position = $(window).scrollTop();
-
 			if( oldiOS || oldAndroid ) {
 				$( settings.button ).css({
 					'position' : 'absolute',
@@ -69,16 +66,15 @@ $(document).ready(function() {
 				});
 			}
 
-			if ( position > settings.min ) 
+			if ( position > settings.min ) {
 				$( settings.button ).fadeIn( settings.fadeIn );
-			else 
+			} else {
 				$( settings.button ).fadeOut( settings.fadeOut );
+			}
 		});
 
 	})();
-
 	/* end UItoTop (Back to Top) */
-
 });
 
 function bindBottomPagingProgress() {

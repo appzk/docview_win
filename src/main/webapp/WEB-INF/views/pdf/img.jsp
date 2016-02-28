@@ -119,7 +119,6 @@
     <script src="/static/formvalidator/js/jquery.formvalidator.min.js?v=${version}"></script>
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
     <script src="/static/idocv/js/pdf-img.js?v=${version}"></script>
-    <script src="/static/smart/js/jquery.easing-1.3.min.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
 </html>

@@ -99,7 +99,6 @@
 <!--     <script src="/static/infinite-scroll/js/debug.js"></script> -->
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js"></script>
     <script src="/static/idocv/js/word_test_watermark.js"></script>
-    <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
     <script src="/static/idocv/js/stat.js"></script>
   </body>
 </html>

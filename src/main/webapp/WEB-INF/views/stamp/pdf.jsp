@@ -167,7 +167,6 @@
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js"></script>
     <script src="/static/kinetic/js/kinetic-v4.7.4.min.js"></script>
     <script src="/static/idocv/js/stamp-pdf.js"></script>
-    <script src="/static/smart/js/jquery.easing-1.3.min.js"></script>
     <script src="/static/idocv/js/stat.js"></script>
   </body>
 </html>
