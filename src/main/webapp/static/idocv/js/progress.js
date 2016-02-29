@@ -4,7 +4,7 @@
  */
 
 // Progress bar
-$('.loading-mask').css("display", "");
+// $('.loading-mask').css("display", "");
 var startSeconds;
 var percent;
 var convertInterval = setInterval(updateProgress, 100);
