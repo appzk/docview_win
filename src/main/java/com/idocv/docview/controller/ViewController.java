@@ -450,7 +450,9 @@ public class ViewController {
 			page.setUuid(docVo.getUuid());
 			page.setMd5(docVo.getMd5());
 			page.setCtime(docVo.getCtime());
-			docService.logView(uuid);
+			if (start < 3) {
+				docService.logView(uuid);
+			}
 		} catch (Exception e) {
 			logger.error("view id.json(" + id + ") error: " + e.getMessage());
 			page = new PageVo<ViewBaseVo>(null, 0);
