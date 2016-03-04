@@ -117,7 +117,7 @@ public class DocServiceImpl implements DocService {
 	private static final boolean isCheckMacAddress = false;
 	private static final boolean isCheckExpireDate = false;
 	// if isCheckExpireDate is true & this value NOT blank, check this date, check remote otherwise
-	private static final String expireDateString = "2016-03-31 23:59:59";
+	private static final String expireDateString = "2016-04-30 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
 	private static String lastCheckingDate = "2013-01-01";
