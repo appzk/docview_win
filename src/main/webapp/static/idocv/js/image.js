@@ -7,6 +7,8 @@ var totalSize = 1;
 var id = $.url().segment(2);
 var uuid = id;
 var sessionId = $.url().param('session');
+var degree = 0;
+
 $(document).ready(function() {
 	$.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
 		var code = data.code;
@@ -27,6 +29,15 @@ $(document).ready(function() {
 			
 			// clear progress bar
 			clearProgress();
+			
+			$('.img-tool-container a .fa-undo').click(function(){
+				degree = degree-90;
+				$('img').rotate(degree);
+			});
+			$('.img-tool-container a .fa-repeat').click(function(){
+				degree = degree+90;
+				$('img').rotate(degree);
+			});
 			
 			afterLoad();
 		} else {

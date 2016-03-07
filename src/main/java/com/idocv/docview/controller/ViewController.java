@@ -250,6 +250,9 @@ public class ViewController {
 			} else if (uuid.endsWith(ViewType.TXT.getSymbol())) {
 				model.setViewName("txt/index");
 				return model;
+			} else if (uuid.endsWith(ViewType.IMG.getSymbol())) {
+				model.setViewName("image/index");
+				return model;
 			} else if (uuid.endsWith(ViewType.AUDIO.getSymbol())) {
 				model.setViewName("audio/index");
 				return model;
@@ -261,7 +264,7 @@ public class ViewController {
 				return model;
 			}
 			if (StringUtils.isNotBlank(thdViewTemplate) && thdViewTemplate.contains(ext)) {
-				// jpg,gif,png,bmp@image#mp3,midi@audio#avi,rmvb,mp4,mkv@video
+				// avi,rmvb,mp4,mkv@video
 				String templateName = thdViewTemplate.replaceFirst(".*?" + ext + ".*?@(\\w+).*", "$1");
 				model.setViewName("template/" + templateName);
 				String dfsUrl = docVo.getUrl();

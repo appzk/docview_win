@@ -12,6 +12,7 @@
 
     <!-- styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet">
 
     <!--[if lt IE 9]>
@@ -65,6 +66,11 @@
            -->
         </div><!--/span-->
       </div><!--/row-->
+      
+      <div class="img-tool-container" style="position: fixed; bottom: 0px; left: 0px; right: 0px; height: 40px; background-color: gray; opacity: 0.5; text-align: center;">
+        <a title="逆时针旋转90°"><i class="fa fa-undo fa-3x" style="margin-right: 20px;"></i></a>
+        <a title="顺时针旋转90°"><i class="fa fa-repeat fa-3x" style="margin-left: 20px;"></i></a>
+      </div>
 
       <hr>
 
@@ -81,6 +87,7 @@
     <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
     <script src="/static/idocv/js/custom.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
+    <script src="/static/jquery/js/jQueryRotate.js?v=${version}"></script>
     <script src="/static/idocv/js/image.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
