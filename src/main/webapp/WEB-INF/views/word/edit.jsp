@@ -110,6 +110,7 @@
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
     <script src="/static/ckeditor/ckeditor.js"></script>
     <script src="/static/ckeditor/adapters/jquery.js"></script>
+    <script src="/static/ckeditor/plugins/lite/lite-interface.js"></script>
     <script src="/static/idocv/js/word-edit.js?v=${version}"></script>
     <script src="/static/iframe-resizer/js/iframeResizer.contentWindow.min.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
