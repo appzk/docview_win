@@ -92,9 +92,7 @@
     <script src="/static/idocv/js/progress.js?v=${version}"></script>
     <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
     <script src="/static/idocv/js/custom.js?v=${version}"></script>
-    <script src="/static/scrollspy/js/jquery-scrollspy.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
-    <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
     <script src="/static/idocv/js/word-img.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
