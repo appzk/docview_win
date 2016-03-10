@@ -102,17 +102,11 @@
     <script src="/static/idocv/js/progress.js?v=${version}"></script>
     <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
     <script src="/static/idocv/js/custom.js?v=${version}"></script>
-    <script src="/static/scrollspy/js/jquery-scrollspy.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
-    <script src="/static/formvalidator/js/jquery.formvalidator.min.js?v=${version}"></script>
-<!--     <script src="/static/idocv/js/user.js?v=${version}"></script> -->
-<!--     <script src="/static/infinite-scroll/js/debug.js?v=${version}"></script> -->
-    <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
     <script src="/static/ckeditor/ckeditor.js"></script>
     <script src="/static/ckeditor/adapters/jquery.js"></script>
     <script src="/static/ckeditor/plugins/lite/lite-interface.js"></script>
     <script src="/static/idocv/js/word-edit.js?v=${version}"></script>
-    <script src="/static/iframe-resizer/js/iframeResizer.contentWindow.min.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
 </html>

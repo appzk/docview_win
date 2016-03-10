@@ -35,5 +35,10 @@ CKEDITOR.editorConfig = function( config ) {
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
 	
-	// config.extraPlugins = 'lite';
+	// lite
+	config.extraPlugins = 'lite';
+	var lite = config.lite = (config.lite || {});
+	lite.userName = 'I Doc View';
+	lite.userId = '111';
+	lite.tooltipTemplate = '%u，%y-%mm-%dd %hh:%nn %a';
 };
