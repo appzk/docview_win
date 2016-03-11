@@ -103,9 +103,9 @@
     <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
     <script src="/static/idocv/js/custom.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
-    <script src="/static/ckeditor/ckeditor.js"></script>
-    <script src="/static/ckeditor/adapters/jquery.js"></script>
-    <script src="/static/ckeditor/plugins/lite/lite-interface.js"></script>
+    <script src="/static/ckeditor/ckeditor.js?v=${version}"></script>
+    <script src="/static/ckeditor/adapters/jquery.js?v=${version}"></script>
+    <script src="/static/ckeditor/plugins/lite/lite-interface.js?v=${version}"></script>
     <script src="/static/idocv/js/word-edit.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
