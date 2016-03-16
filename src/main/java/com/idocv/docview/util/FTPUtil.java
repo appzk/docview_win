@@ -57,15 +57,14 @@ public class FTPUtil {
 				if (ftpClient.login(user, pass)) {
 					if (FTPReply.isPositiveCompletion(ftpClient.sendCommand("OPTS UTF8", "ON"))) {// 开启服务器对UTF-8的支持，如果服务器支持就用UTF-8编码，否则就使用本地编码（GBK）.
 						System.out.println("FTP OPTS UTF8 is ON");
-						LOCAL_CHARSET = "UTF-8";
+						// LOCAL_CHARSET = "UTF-8";
 					}
-					System.out.println("FTP local charset: " + LOCAL_CHARSET + ", server charset: " + SERVER_CHARSET);
+					System.out.println("FTP LOCAL_CHARSET: " + LOCAL_CHARSET + ", SERVER_CHARSET: " + SERVER_CHARSET);
 					ftpClient.setControlEncoding(LOCAL_CHARSET);
 					ftpClient.enterLocalPassiveMode();// 设置被动模式
 					ftpClient.setFileType(FTP.BINARY_FILE_TYPE);// 设置传输的模式
-					System.out.println("FTP remoteFile before encodeing: " + remoteFile);
+					System.out.println("FTP remoteFile before encoding: " + remoteFile);
 					remoteFile = new String(remoteFile.getBytes(LOCAL_CHARSET), SERVER_CHARSET);
-					System.out.println("FTP remoteFile after encodeing: " + remoteFile);
 					InputStream inputStream = ftpClient.retrieveFileStream(remoteFile);
 					data = IOUtils.toByteArray(inputStream);
 					boolean success = ftpClient.completePendingCommand();
