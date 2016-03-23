@@ -27,6 +27,7 @@ import com.idocv.docview.common.DocResponse;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.SessionService;
 import com.idocv.docview.service.UserService;
+import com.idocv.docview.service.impl.DocServiceImpl;
 import com.idocv.docview.util.RemoteUtil;
 import com.idocv.docview.vo.SessionVo;
 import com.idocv.docview.vo.UserVo;
@@ -69,6 +70,18 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest req,
 			HttpServletResponse response, Object handler) throws Exception {
 		String requestUri = req.getRequestURI();
+
+		// para auth
+		if (DocServiceImpl.isCheckPara && requestUri.startsWith("/view/")) {
+			String authValue = req.getParameter("idocv_auth");
+			if (!DocServiceImpl.AUTH_PARA_VALUE.equalsIgnoreCase(authValue)) {
+				Map<String, Object> respMap = DocResponse
+						.getErrorResponseMap("授权失败");
+				response.getWriter().write(JSON.toJSONString(respMap));
+				return false;
+			}
+		}
+
 		if (thdViewCheckSwitch && isCheckUri(req)) {
 			// upload
 			if (requestUri.startsWith("/doc/upload")) {
@@ -96,6 +109,7 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 
 
 			// view
+			// 预览接口
 			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,31}.json")) {
 				// get uuid
 				String uuid = requestUri.replaceFirst("/view/(\\w{4,31}).json", "$1");
@@ -132,6 +146,7 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 		String requestUri = req.getRequestURI();
 		if (thdViewCheckSwitch && isCheckUri(req)) {
 			// read, down and copy
+			// 预览页面
 			if (requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,31}")) {
 				// get uuid
 				String uuid = requestUri.replaceFirst("/view/(\\w{4,31})", "$1");

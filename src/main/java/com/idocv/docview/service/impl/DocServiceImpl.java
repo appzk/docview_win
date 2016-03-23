@@ -120,6 +120,8 @@ public class DocServiceImpl implements DocService {
 	private static final String expireDateString = "2016-04-30 23:59:59";
 	public static final boolean isCheckDomain = false;
 	public static final String domain = "ciwong";
+	public static final boolean isCheckPara = false;
+	public static final String AUTH_PARA_VALUE = "authValue";
 	private static String lastCheckingDate = "2013-01-01";
 	private static boolean lastCheckingStatus = true;
 	private static File macAuthFile = new File("/idocv/idocv.auth");
