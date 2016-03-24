@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>在线文档预览 - I Doc View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="在线文档预览(doc,docx,xls,xlsx,ppt,pptx,pdf等)|在线压缩文件预览(zip,rar,tar,7z等)|在线图纸预览(dwg,dxf,dwf)|图片预览|音频播放|协助编辑|同步展示等">
+    <meta name="description" content="在线文档预览(doc,docx,xls,xlsx,ppt,pptx,pdf等)|在线压缩文件预览(zip,rar,tar,7z等)|在线图纸预览(dwg,dxf,dwf)|图片预览|音频播放|协作编辑|同步展示等">
 	<meta name="keywords" content="在线 文档 文件 预览 压缩文件 图纸 图片 音频 协作 编辑 同步 Online Document Preview view viewer office word excel doc docx xls xlsx ppt pptx pdf zip rar tar 7z dwg dxf dwf" />
     <meta name="copyright" content="I Doc View 2014">
     <meta name="author" content="godwin668@gmail.com">
@@ -47,7 +47,7 @@
     <div class="container-fluid">
     
       <div class="hero-unit">
-        <h1>在线文档预览、压缩文件预览、图纸预览、图片预览、音频播放、协助编辑、同步展示等 - I Doc View</h1>
+        <h1>在线文档预览、压缩文件预览、图纸预览、图片预览、音频播放、协作编辑、同步展示等 - I Doc View</h1>
         
         <br />
         
