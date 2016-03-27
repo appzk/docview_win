@@ -199,12 +199,20 @@ public class EditController {
 			@RequestParam(value = "v", defaultValue = "-1") Integer version) {
 		try {
 			DocVo vo = docService.getByUuid(uuid);
+			int latestVersion = editService.getLatestVersion(uuid);
+			version = (version > latestVersion) ? latestVersion : version;
+			version = (version < 0) ? latestVersion : version;
 			String path = editService.getDocPathByVersion(uuid, version);
 			String contentType = MimeUtil.getContentType("docx");
 			if (StringUtils.isNotBlank(contentType)) {
 				resp.setContentType(contentType);
 			}
-			DocResponse.setResponseHeaders(req, resp, vo.getName());
+			String name = vo.getName();
+			if (version > 0 && StringUtils.isNotBlank(name) && name.contains(".")) {
+				int indexOfDot = name.lastIndexOf(".");
+				name = name.substring(0, indexOfDot) + "_v" + version + name.substring(indexOfDot);
+			}
+			DocResponse.setResponseHeaders(req, resp, name);
 			IOUtils.write(FileUtils.readFileToByteArray(new File(path)), resp.getOutputStream());
 			docService.logDownload(uuid);
 		} catch (Exception e) {
