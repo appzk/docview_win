@@ -144,10 +144,11 @@ public class EditServiceImpl implements EditService {
 		}
 		File baseDir = new File(rcUtil.getParseDir(rid));
 		File versionDir = new File(rcUtil.getParseDir(rid) + "v" + version);
+		File styleFile = new File(rcUtil.getParseDir(rid) + "style.css");
 		File versionBodyFie = new File(versionDir + File.separator + "body.html");
 		File versionDocxFie = new File(versionDir + File.separator + "body.docx");
 		if (!versionDocxFie.isFile()) {
-			String result = CmdUtil.runWindows("cd /D", baseDir.getAbsolutePath(), "&", html2word, versionBodyFie.getAbsolutePath(), "-o", versionDocxFie.getAbsolutePath());
+			String result = CmdUtil.runWindows("cd /D", baseDir.getAbsolutePath(), "&", html2word, "--include-in-header=" + styleFile.getAbsolutePath(), versionBodyFie.getAbsolutePath(), "-o", versionDocxFie.getAbsolutePath());
 			logger.info("[EDIT WORD] convert body html to docx when download docx: " + result);
 		}
 		if (!versionDocxFie.isFile()) {
