@@ -32,6 +32,16 @@ public interface EditService {
 	 * @throws DocServiceException
 	 */
 	String getBody(String uuid, int version) throws DocServiceException;
+	
+	/**
+	 * get docx from html
+	 * 
+	 * @param uuid
+	 * @param version
+	 * @return
+	 * @throws DocServiceException
+	 */
+	String getDocPathByVersion(String uuid, int version) throws DocServiceException;
 
 	/**
 	 * Get the HTML body of a document

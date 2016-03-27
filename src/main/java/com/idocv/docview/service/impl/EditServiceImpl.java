@@ -1,6 +1,5 @@
 package com.idocv.docview.service.impl;
 
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.List;
@@ -13,6 +12,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -20,11 +20,11 @@ import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.EditService;
 import com.idocv.docview.service.ViewService;
+import com.idocv.docview.util.CmdUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.PageVo;
 import com.idocv.docview.vo.WordVo;
-
 
 @Service
 public class EditServiceImpl implements EditService {
@@ -39,6 +39,9 @@ public class EditServiceImpl implements EditService {
 
 	@Resource
 	private ViewService viewService;
+	
+	private @Value("${converter.html2word}")
+	String html2word;
 
 	@Override
 	public void save(String uuid, String body) throws DocServiceException {
@@ -59,7 +62,6 @@ public class EditServiceImpl implements EditService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -123,6 +125,36 @@ public class EditServiceImpl implements EditService {
 			e.printStackTrace();
 			return "";
 		}
+	}
+
+	@Override
+	public String getDocPathByVersion(String uuid, int version) throws DocServiceException {
+		int latestVersion = getLatestVersion(uuid);
+		// file NOT exist
+		if (latestVersion < 0) {
+			return "";
+		}
+		DocVo vo = docService.getByUuid(uuid);
+		String rid = vo.getRid();
+
+		version = (version > latestVersion) ? latestVersion : version;
+		version = (version < 0) ? latestVersion : version;
+		if (version == 0) { // original doc
+			return rcUtil.getPath(rid);
+		}
+		File baseDir = new File(rcUtil.getParseDir(rid));
+		File versionDir = new File(rcUtil.getParseDir(rid) + "v" + version);
+		File versionBodyFie = new File(versionDir + File.separator + "body.html");
+		File versionDocxFie = new File(versionDir + File.separator + "body.docx");
+		if (!versionDocxFie.isFile()) {
+			String result = CmdUtil.runWindows("cd /D", baseDir.getAbsolutePath(), "&", html2word, versionBodyFie.getAbsolutePath(), "-o", versionDocxFie.getAbsolutePath());
+			logger.info("[EDIT WORD] convert body html to docx when download docx: " + result);
+		}
+		if (!versionDocxFie.isFile()) {
+			logger.info("生成编辑后文档失败，uuid=" + uuid + ", version=" + version);
+			throw new DocServiceException("生成编辑后文档失败");
+		}
+		return versionDocxFie.getAbsolutePath();
 	}
 
 	@Override

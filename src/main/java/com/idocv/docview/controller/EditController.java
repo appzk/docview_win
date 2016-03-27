@@ -1,11 +1,16 @@
 package com.idocv.docview.controller;
 
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.idocv.docview.common.DocResponse;
 import com.idocv.docview.common.ViewType;
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.DocService;
 import com.idocv.docview.service.EditService;
 import com.idocv.docview.service.ViewService;
+import com.idocv.docview.util.MimeUtil;
 import com.idocv.docview.util.RcUtil;
 import com.idocv.docview.vo.DocVo;
 import com.idocv.docview.vo.PageVo;
@@ -41,6 +48,9 @@ public class EditController {
 	
 	@Resource
 	private EditService editService;
+
+	@Resource
+	private RcUtil rcUtil;
 
 	// TODO
 	// Etherpad ref: https://github.com/ether/etherpad-lite
@@ -174,6 +184,31 @@ public class EditController {
 			result.put("msg", e.getMessage());
 			result.put("code", "0");
 			return result;
+		}
+	}
+
+	/**
+	 * 下载文档
+	 * 
+	 * @param uuid
+	 * @return
+	 */
+	@RequestMapping("download/{uuid}")
+	public void download(HttpServletRequest req, HttpServletResponse resp,
+			@PathVariable(value = "uuid") String uuid,
+			@RequestParam(value = "v", defaultValue = "-1") Integer version) {
+		try {
+			DocVo vo = docService.getByUuid(uuid);
+			String path = editService.getDocPathByVersion(uuid, version);
+			String contentType = MimeUtil.getContentType("docx");
+			if (StringUtils.isNotBlank(contentType)) {
+				resp.setContentType(contentType);
+			}
+			DocResponse.setResponseHeaders(req, resp, vo.getName());
+			IOUtils.write(FileUtils.readFileToByteArray(new File(path)), resp.getOutputStream());
+			docService.logDownload(uuid);
+		} catch (Exception e) {
+			logger.error("doc download error: " + e.getMessage());
 		}
 	}
 }
