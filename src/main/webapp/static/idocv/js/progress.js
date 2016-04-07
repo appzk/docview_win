@@ -55,4 +55,4 @@ function serverBusy() {
 		// clearProgress();
 	}
 }
-window.setTimeout('serverBusy()', 20000);
+window.setTimeout('serverBusy()', 40000);
