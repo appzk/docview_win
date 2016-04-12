@@ -245,4 +245,40 @@ function afterLoad() {
 		}
 	} catch (e) {
 	}
+	
+	// watermark
+	var isWatermark = false;
+	try {
+		var watermarkFunct = function() {
+			if (!isWatermark) {
+				return;
+			}
+			var watermarkImg = 'http://data.idocv.com/idocv_logo.png';
+			var watermarkText = '绝密文件';
+			
+			// info
+			var infoCheck = $.cookie('IDOCV_THD_VIEW_CHECK_INFO_' + uuid);
+			if (!!infoCheck) {
+				watermarkText = decodeURI(infoCheck);
+			}
+			
+			var watermarkContainer = $('.span12:visible').length > 0 ? $('.span12') : $('body');
+			var step = 200;
+		    for (var i = 0; i < parseInt(watermarkContainer.height() / step); i++) {
+		    	watermarkContainer.append('<div style="width:100%;text-align:center;opacity:0.2;color:#000;position:absolute;top:' + step * (i + 1) + 'px;font-size:30px;transform:rotate(-30deg)">' + watermarkText + '<br /><img src="' + watermarkImg + '" /></div>');
+		    }
+		}
+		
+		// after load
+		if ($('img').length > 0) {
+			// run afterload after first image loaded
+			$('img:first').load(function() {
+				// first image loaded.
+				watermarkFunct();
+			});
+		} else {
+			watermarkFunct();
+		}
+	} catch (e) {
+	}
 }
