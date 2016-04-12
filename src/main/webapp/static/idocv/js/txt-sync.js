@@ -6,13 +6,13 @@
 var totalSize = 1;
 var id = $.url().segment(2);
 var uuid = id;
-var sessionId = $.url().param('session');
+var params = $.url().param();
 $(document).ready(function() {
 	
 	$.ajax({
 		type: "GET",
 		url: '/view/' + uuid + '.json?start=1&size=0',
-		data: {session:sessionId},
+		data: params,
 		async: false,
 		dataType: "json"
 	}).done(function( data ) {

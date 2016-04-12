@@ -6,9 +6,9 @@
 var totalSize = 1;
 var id = $.url().segment(2);
 var uuid = id;
-var sessionId = $.url().param('session');
+var params = $.url().param();
 $(document).ready(function() {
-	$.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
+	$.get('/view/' + uuid + '.json', params, function(data, status) {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;
@@ -25,12 +25,11 @@ $(document).ready(function() {
 				$('.span12').append('<p><a href="' + page.url + '" target="_blank"><img src="' + page.url + '" alt="' + data.name + '" /></a></p>');
 			}
 			
-			// clear progress bar
-			clearProgress();
-			
 			afterLoad();
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
 		}
+		// clear progress bar
+		clearProgress();
 	});
 });

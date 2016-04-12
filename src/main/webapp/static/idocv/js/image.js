@@ -6,11 +6,11 @@
 var totalSize = 1;
 var id = $.url().segment(2);
 var uuid = id;
-var sessionId = $.url().param('session');
+var params = $.url().param();
 var degree = 0;
 
 $(document).ready(function() {
-	$.get('/view/' + uuid + '.json', {session:sessionId}, function(data, status) {
+	$.get('/view/' + uuid + '.json', params, function(data, status) {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;
