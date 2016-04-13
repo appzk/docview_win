@@ -185,12 +185,10 @@
 				<version>${org.eclipse.jetty.version}</version>
 				<configuration>
 					<scanIntervalSeconds>0</scanIntervalSeconds>
-					<connectors>
-						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-							<port>8080</port>
-							<maxIdleTime>60000</maxIdleTime>
-						</connector>
-					</connectors>
+					<httpConnector>
+						<port>8080</port>
+						<idleTimeout>60000</idleTimeout>
+					</httpConnector>
 					<stopKey>docviewstopkey</stopKey>
 					<stopPort>9080</stopPort>
 					<jvmArgs>-Xms512M -Xmx1024M -XX:PermSize=128M -XX:MaxPermSize=256M</jvmArgs>
@@ -209,15 +207,6 @@
 					<descriptors>
 						<descriptor>src/main/assembly/package.xml</descriptor>
 					</descriptors>
-					<executions>
-						<execution>
-							<id>make-assembly</id>
-							<phase>package</phase>
-							<goals>
-								<goal>single</goal>
-							</goals>
-						</execution>
-					</executions>
 				</configuration>
 			</plugin>
 		</plugins>
