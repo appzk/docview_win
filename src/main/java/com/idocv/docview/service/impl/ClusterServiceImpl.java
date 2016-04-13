@@ -1,19 +1,15 @@
 package com.idocv.docview.service.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.codec.digest.DigestUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.idocv.docview.dao.CacheDao;
+import com.idocv.docview.dao.DocDao;
+import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.po.DocPo;
+import com.idocv.docview.service.ClusterService;
+import com.idocv.docview.service.ConvertService;
+import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.util.UrlUtil;
+import com.idocv.docview.vo.DocVo;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.ByteArrayPartSource;
@@ -33,17 +29,17 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.idocv.docview.dao.CacheDao;
-import com.idocv.docview.dao.DocDao;
-import com.idocv.docview.exception.DocServiceException;
-import com.idocv.docview.po.DocPo;
-import com.idocv.docview.service.ClusterService;
-import com.idocv.docview.service.ConvertService;
-import com.idocv.docview.service.ThdService;
-import com.idocv.docview.util.RcUtil;
-import com.idocv.docview.util.UrlUtil;
-import com.idocv.docview.vo.DocVo;
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 @Service
 public class ClusterServiceImpl implements ClusterService {
@@ -83,118 +79,11 @@ public class ClusterServiceImpl implements ClusterService {
 	@Value("${thd.upload.unique}")
 	private String isUniqueUpload;
 
-	@Value("${thd.upload.check.switch}")
-	private boolean thdUploadCheckSwitch = false;
-
 	@Value("${cluster.upload2dfs.batch.size}")
 	private int clusterUpload2dfsBatchSize;
 
 	@Value("${cluster.upload2dfs.batch.interval}")
 	private int clusterUpload2dfsBatchInterval;
-
-	@Resource
-	private ThdService thdService;
-
-	@Override
-	public DocVo add(String fileName, byte[] data, String appid, String uid,
-			String tid, String sid, int mode, String node)
-			throws DocServiceException {
-		try {
-			if (DocServiceImpl.isCheckDomain) {
-				String dataUrl = rcUtil.getDataUrl();
-				if (StringUtils.isBlank(dataUrl) || !dataUrl.toLowerCase().contains(DocServiceImpl.domain)) {
-					System.out.println("[ERROR] This software is only authorized to <" + DocServiceImpl.domain + ">!");
-					return null;
-				}
-			}
-
-			if (!DocServiceImpl.validateMacAddressFromAuthFile()) {
-				System.out.println("[ERROR] This machine has NOT been authorized!");
-				return null;
-			}
-
-			int size = data.length;
-			String rid = RcUtil.genRid(appid, fileName, size);
-			String uuid = RcUtil.getUuidByRid(rid);
-
-			// 1. validate user params
-			if (thdUploadCheckSwitch) {
-				long checkStart = System.currentTimeMillis();
-				if (!thdService.validateUser(uid, tid, sid)) {
-					logger.warn("[CLUSTER] " + uuid + " - check user fail, uid=" + uid + ", tid=" + tid + ", sid=" + sid);
-					throw new DocServiceException("用户验证失败");
-				}
-				long checkEnd = System.currentTimeMillis();
-				logger.info("[CLUSTER] " + uuid + " - check user elapse: " + (checkEnd - checkStart) + " miliseconds.");
-			}
-
-			// 2. save file
-			File srcFile = new File(rcUtil.getPath(rid));
-			FileUtils.writeByteArrayToFile(srcFile, data);
-
-			// 3. get fileName md5
-			long md5Start = System.currentTimeMillis();
-			String md5 = DigestUtils.md5Hex(data);
-			long md5End = System.currentTimeMillis();
-			long md5Elapse = md5End - md5Start;
-			logger.info("[CLUSTER] " + uuid + " - get md5 elapse: " + md5Elapse + " miliseconds.");
-
-			// 4. if file md5 already exist, return
-			String ext = RcUtil.getExt(rid);
-			if (!rcUtil.isSupportUpload(ext)) {
-				throw new DocServiceException("不支持上传" + ext + "文件，详情请联系管理员！");
-			}
-			String url = "dfs:///" + appid + "/" + md5 + "." + ext;
-
-			// check existence
-			if (isUniqueUpload.contains("true") || isUniqueUpload.contains("url") || isUniqueUpload.contains("md5")) {
-				DocPo docPo = isUniqueUpload.contains("url") ? docDao.getUrl(url, false) : docDao.getByMd5(md5, false);
-				DocVo vo = DocServiceImpl.convertPo2Vo(docPo);
-				if (null != vo) {
-					// remove just created file
-					try {
-						FileUtils.forceDelete(srcFile);
-					} catch (Exception e) {
-						logger.error("[CLUSTER] delete file(" + srcFile + ") error: " + e.getMessage());
-					}
-					return vo;
-				}
-			}
-
-			// 5. set DocPo and save to database
-			DocPo doc = new DocPo();
-			doc.setRid(rid);
-			doc.setUuid(uuid);
-			doc.setName(fileName);
-			doc.setSize(size);
-			doc.setCtime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-			doc.setStatus(1);
-			Map<String, Object> metas = new HashMap<String, Object>();
-			metas.put("appid", appid);
-			metas.put("uid", uid);
-			metas.put("tid", tid);
-			metas.put("sid", sid);
-			metas.put("mode", mode);
-			metas.put("node", node);
-			doc.setMetas(metas);
-			doc.setUrl(url);
-			// save info
-			docDao.add(appid, uid, rid, uuid, md5, fileName, size, ext, 1, null, metas, url);
-			// docDao.updateUrl(uuid, url);
-
-			// Asynchronously convert document
-			convertService.convert(rid);
-
-			// 4. upload to cluster
-			upload2DFSInstantly(uuid);
-
-			// 5. return
-			return DocServiceImpl.convertPo2Vo(doc);
-		} catch (Exception e) {
-			logger.error("[CLUSTER] add file error: " + e.getMessage());
-			throw new DocServiceException(e.getMessage(), e);
-		}
-	}
 
 	@Override
 	@Async

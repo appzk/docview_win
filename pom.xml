@@ -185,7 +185,6 @@
 				<version>${org.eclipse.jetty.version}</version>
 				<configuration>
 					<scanIntervalSeconds>0</scanIntervalSeconds>
-					<useFileMappedBuffer>false</useFileMappedBuffer>
 					<connectors>
 						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
 							<port>8080</port>

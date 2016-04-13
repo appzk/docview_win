@@ -5,10 +5,6 @@ import com.idocv.docview.vo.DocVo;
 
 public interface ClusterService {
 
-	public DocVo add(String fileName, byte[] data, String appid, String uid,
-			String tid, String sid, int mode, String node)
-			throws DocServiceException;
-
 	/**
 	 * Asynchronously & instantly upload new file to DFS
 	 * 
