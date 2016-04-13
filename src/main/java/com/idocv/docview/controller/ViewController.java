@@ -1,15 +1,15 @@
 package com.idocv.docview.controller;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.idocv.docview.common.ViewType;
+import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.service.AppService;
+import com.idocv.docview.service.DocService;
+import com.idocv.docview.service.SessionService;
+import com.idocv.docview.service.ViewService;
+import com.idocv.docview.util.IpUtil;
+import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.util.StringUtil;
+import com.idocv.docview.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,20 +23,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.idocv.docview.common.ViewType;
-import com.idocv.docview.exception.DocServiceException;
-import com.idocv.docview.service.AppService;
-import com.idocv.docview.service.DocService;
-import com.idocv.docview.service.SessionService;
-import com.idocv.docview.service.ViewService;
-import com.idocv.docview.util.IpUtil;
-import com.idocv.docview.util.RcUtil;
-import com.idocv.docview.util.StringUtil;
-import com.idocv.docview.vo.AppVo;
-import com.idocv.docview.vo.DocVo;
-import com.idocv.docview.vo.PageVo;
-import com.idocv.docview.vo.SessionVo;
-import com.idocv.docview.vo.ViewBaseVo;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("view")
@@ -292,6 +286,7 @@ public class ViewController {
 			logger.error("view id(" + id + ") error: " + e.getMessage());
 			model.setViewName("404");
 			model.addObject("error", e.getMessage());
+			model.addObject("uuid", uuid);
 			return model;
 		}
 	}
@@ -544,6 +539,7 @@ public class ViewController {
 			page.setUuid(uuid);
 		}
 		model.addObject("page", page);
+		model.addObject("uuid", uuid);
 		if (uuid.endsWith(ViewType.WORD.getSymbol())) {
 			model.setViewName("word/static");
 		} else if (uuid.endsWith(ViewType.EXCEL.getSymbol())) {
@@ -571,6 +567,7 @@ public class ViewController {
 			@RequestParam(required = false) String name,
 			@RequestParam(value = "mode", defaultValue = "public") String modeString,
 			@RequestParam(value = "label", defaultValue = "") String label) {
+		String uuid = null;
 		try {
 			int mode = 1;
 			if ("private".equalsIgnoreCase(modeString)) {
@@ -581,7 +578,7 @@ public class ViewController {
 			if (StringUtils.isNotBlank(md5)) {
 				DocVo vo = docService.getByMd5(md5);
 				if (null != vo && StringUtils.isNotBlank(vo.getUuid())) {
-					String uuid = vo.getUuid();
+					uuid = vo.getUuid();
 					return "redirect:" + uuid + (pageLoadAsync ? "" : ".html");
 				}
 			}
@@ -623,7 +620,7 @@ public class ViewController {
 			if (null == vo) {
 				throw new DocServiceException("上传URL文件错误！");
 			}
-			String uuid = vo.getUuid();
+			uuid = vo.getUuid();
 			String queryString = req.getQueryString();
 			queryString = StringUtil.urlencode(queryString);
 			String returnStr = "redirect:" + uuid + (pageLoadAsync ? "" : ".html");
@@ -634,6 +631,7 @@ public class ViewController {
 		} catch (Exception e) {
 			logger.error("view url(" + url + ") error: " + e.getMessage());
 			model.addAttribute("error", e.getMessage());
+			model.addAttribute("uuid", uuid);
 			return "404";
 		}
 	}

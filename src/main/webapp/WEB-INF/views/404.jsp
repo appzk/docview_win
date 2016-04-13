@@ -43,7 +43,7 @@
       <div class="row-fluid">
         <div class="span12">
           <div class="alert alert-error">
-                                预览失败：${error}&nbsp;&nbsp;&nbsp;<span id='container'></span> 秒后返回主页！
+                                预览失败：${error}
           </div>
         </div><!--/span-->
       </div><!--/row-->
@@ -56,36 +56,16 @@
 
     </div><!--/.fluid-container-->
 
+    <div class="info-container-uuid" style="display: none;">${uuid}</div>
+
     <!-- javascript
     ================================================== -->
     <script src="/static/jquery/js/jquery-1.11.1.min.js?v=${version}"></script>
-	<script src="/static/bootstrap/js/bootstrap.min.js?v=${version}"></script>
-	<script>
-		var time = 10; //How long (in seconds) to countdown
-		var page = "http://www.idocv.com"; //The page to redirect to
-		function countDown(){
-			time--;
-			gett("container").innerHTML = time;
-			if(time == 0){
-				window.location = page;
-			}
-		}
-		function gett(id){
-			if(document.getElementById) return document.getElementById(id);
-			if(document.all) return document.all.id;
-			if(document.layers) return document.layers.id;
-			if(window.opera) return window.opera.id;
-		}
-		function init(){
-			if(gett('container')){
-				setInterval(countDown, 1000);
-				gett("container").innerHTML = time;
-			} else {
-				setTimeout(init, 50);
-			}
-		}
-		document.onload = init();
-	</SCRIPT>
-	<script src="/static/idocv/js/stat.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js?v=${version}"></script>
+    <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
+    <script src="/static/idocv/js/custom.js?v=${version}"></script>
+    <script src="/static/urlparser/js/purl.js?v=${version}"></script>
+    <script src="/static/idocv/js/404.js?v=${version}"></script>
+    <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
 </html>
