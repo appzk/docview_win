@@ -130,6 +130,17 @@ function loadAllPage(isAsync) {
 					$('.span12 .word-page .word-content').append(page.content);
 				}
 			}
+
+			// anchor scroll
+			$('a[href^=#]').click(function(e){
+				var anchorHrefName = $(this).attr('href').substring(1);
+				if (! anchorHrefName) {
+					return;
+				}
+				e.preventDefault();
+				$('html, body').animate({scrollTop:($('a[name=' + anchorHrefName + ']').position().top + 20)}, 'slow');
+			});
+
 			bindBottomPagingProgress();
 		} else {
 			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');

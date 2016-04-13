@@ -108,6 +108,20 @@ $(document).ready(function() {
 				}
 				$('html, body').animate({scrollTop:($('#' + id).position().top + 20)}, 'slow');
 			});
+			// anchor scroll
+			$('a[href^=#]').click(function(e){
+				var anchorHrefName = $(this).attr('href').substring(1);
+				if (! anchorHrefName) {
+					return;
+				}
+				e.preventDefault();
+				if (! $('a[name=' + anchorHrefName + ']').length) {
+					// page NOT exist, load all page.
+					loadAllPage();
+					isLoadAll = true;
+				}
+				$('html, body').animate({scrollTop:($('a[name=' + anchorHrefName + ']').position().top + 20)}, 'slow');
+			});
 			
 			// NEXT page link
 			$('.span12').parent().append('<a id="next" href="/view/' + id + '.json?start=2&size=5&' + queryStr + '"></a>');
