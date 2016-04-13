@@ -68,7 +68,8 @@ $(document).ready(function() {
 					$('.word-tab-title .dropdown-menu').height(windowHeight - 80);
 					$('.word-tab-title .dropdown-menu').addClass('pre-scrollable');
 				}
-				
+
+				/*
 				$('.word-tab-title .dropdown .dropdown-menu a').click(function(){
 					var id = $(this).attr('href');
 					if (! $(id).length) {
@@ -78,6 +79,7 @@ $(document).ready(function() {
 					}
 					$('html, body').animate({scrollTop:($(id).position().top + 20)}, 'slow');
 				});
+				*/
 			}
 
 			// pages
@@ -99,11 +101,11 @@ $(document).ready(function() {
 			for (var i = 0; i < totalSize; i++) {
 				$('.paging-bottom-all').append('<div class="paging-bottom-sub" page-num="' + (i + 1) + '" style="width: ' + onePagePercent + '%;">·</div>');
 			}
-			$(".paging-bottom-sub").click(function(){
+			$('.paging-bottom-sub').click(function(){
 				var id = $(this).attr('page-num');
 				if (! $('#' + id).length) {
 					// page NOT exist, load all page.
-					loadAllPage();
+					loadAllPage(false);
 					isLoadAll = true;
 				}
 				$('html, body').animate({scrollTop:($('#' + id).position().top + 20)}, 'slow');
@@ -115,12 +117,16 @@ $(document).ready(function() {
 					return;
 				}
 				e.preventDefault();
-				if (! $('a[name=' + anchorHrefName + ']').length) {
+				if (! $('a[name=' + anchorHrefName + ']').length && ! $('a[id=' + anchorHrefName + ']').length) {
 					// page NOT exist, load all page.
-					loadAllPage();
+					loadAllPage(false);
 					isLoadAll = true;
 				}
-				$('html, body').animate({scrollTop:($('a[name=' + anchorHrefName + ']').position().top + 20)}, 'slow');
+				if ($('a[name=' + anchorHrefName + ']').length) {
+					$('html, body').animate({scrollTop:($('a[name=' + anchorHrefName + ']').position().top + 20)}, 'slow');
+				} else if ($('a[id=' + anchorHrefName + ']').length) {
+					$('html, body').animate({scrollTop:($('a[id=' + anchorHrefName + ']').position().top + 20)}, 'slow');
+				}
 			});
 			
 			// NEXT page link
