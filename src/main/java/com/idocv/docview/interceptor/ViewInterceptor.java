@@ -1,25 +1,5 @@
 package com.idocv.docview.interceptor;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +11,24 @@ import com.idocv.docview.service.impl.DocServiceImpl;
 import com.idocv.docview.util.RemoteUtil;
 import com.idocv.docview.vo.SessionVo;
 import com.idocv.docview.vo.UserVo;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ViewInterceptor extends HandlerInterceptorAdapter {
 
@@ -74,9 +72,8 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 		// para auth
 		if (DocServiceImpl.isCheckPara && requestUri.startsWith("/view/")) {
 			String authValue = req.getParameter("idocv_auth");
-			if (!DocServiceImpl.AUTH_PARA_VALUE.equalsIgnoreCase(authValue)) {
-				Map<String, Object> respMap = DocResponse
-						.getErrorResponseMap("授权失败");
+			if (null == authValue || !authValue.startsWith(DocServiceImpl.AUTH_PARA_VALUE)) {
+				Map<String, Object> respMap = DocResponse.getErrorResponseMap("授权失败");
 				response.getWriter().write(JSON.toJSONString(respMap));
 				return false;
 			}

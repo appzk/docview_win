@@ -5,8 +5,9 @@
 
 var totalSize = 1;
 var id = $.url().segment(2);
+var queryStr = $.url().attr('query');
 var uuid = id;
-var sessionId = $.url().param('session');
+var params = $.url().param();
 var version = $.url().param('v');
 version = (version === undefined) ? -1 : version;
 
@@ -22,7 +23,7 @@ $(document).ready(function() {
 	}
 	*/
 	
-	$.get('/edit/' + uuid + '.json?v=' + version, {session:sessionId}, function(data, status) {
+	$.get('/edit/' + uuid + '.json?v=' + version, params, function(data, status) {
 		var code = data.code;
 		if (1 == code) {
 			var rid = data.rid;

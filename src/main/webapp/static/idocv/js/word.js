@@ -8,7 +8,6 @@ var id = $.url().segment(2);
 var queryStr = $.url().attr('query');
 var uuid = id;
 var params = $.url().param();
-var type = $.url().param('type');
 var isLoadAll = false;
 var searchIndex = 0;
 
@@ -111,7 +110,7 @@ $(document).ready(function() {
 			});
 			
 			// NEXT page link
-			$('.span12').parent().append('<a id="next" href="/view/' + id + '.json?start=2&size=5&type=' + type + '&' + queryStr + '"></a>');
+			$('.span12').parent().append('<a id="next" href="/view/' + id + '.json?start=2&size=5&' + queryStr + '"></a>');
 			
 			if (document.createStyleSheet){
 				document.createStyleSheet('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />');

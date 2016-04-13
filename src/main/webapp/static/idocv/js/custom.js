@@ -102,10 +102,15 @@ function bindBottomPagingProgress() {
 /*	Load All pages of WORD || TXT
 /* ---------------------------------------------------------------------- */
 function loadAllPage(isAsync) {
+	var queryStr = '';
+	try {
+		queryStr = $.url().attr('query');
+    } catch (e) {
+	}
 	$('.word-content').infinitescroll('destroy');
 	$.ajax({
 		type: "GET",
-		url: '/view/' + (!!id ? id : uuid) + '.json?start=1&size=0',
+		url: '/view/' + (!!id ? id : uuid) + '.json?start=1&size=0&' + queryStr,
 		data: {},
 		async: !!isAsync,
 		dataType: "json"

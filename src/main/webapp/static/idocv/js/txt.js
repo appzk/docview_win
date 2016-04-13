@@ -5,8 +5,11 @@
 
 var totalSize = 1;
 var id = $.url().segment(2);
+var queryStr = $.url().attr('query');
 var uuid = id;
 var params = $.url().param();
+var isLoadAll = false;
+var searchIndex = 0;
 $(document).ready(function() {
 	
 	$.get('/view/' + uuid + '.json?start=1&size=5', params, function(data, status) {
@@ -54,7 +57,7 @@ $(document).ready(function() {
 			});
 			
 			// NEXT page link
-			$('.span12').parent().append('<a id="next" href="/view/' + uuid + '.json?start=2&size=5"></a>');
+			$('.span12').parent().append('<a id="next" href="/view/' + uuid + '.json?start=2&size=5&' + queryStr + '"></a>');
 			
 			afterLoad();
 		} else {
