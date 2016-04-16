@@ -54,7 +54,8 @@ $(document).ready(function() {
 			for (var i = 0; i < totalSize; i++) {
 				$('.paging-bottom-all').append('<div class="paging-bottom-sub" page-num="' + (i + 1) + '" style="width: ' + onePagePercent + '%;">·</div>');
 			}
-			$(".paging-bottom-sub").click(function(){
+			$('.paging-bottom-sub').on('click touchstart', function(e) {
+				e.preventDefault();
 				var id = $(this).attr('page-num');
 				gotoPage(id);
 			});
