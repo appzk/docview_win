@@ -3,6 +3,7 @@
  * @author Godwin <godwin668@gmail.com>
  */
 
+var queryStr = $.url().attr('query');
 $(document).ready(function() {
 	
 	var oTable;
@@ -118,7 +119,7 @@ $(document).ready(function() {
 			"aaSorting": [[1,'desc']],
 			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 				var uuid = aData.uuid;
-				$('td:eq(0)', nRow).html( '<a href="/view/'+aData.uuid+'" target="_blank">'+aData.name+'</a>' );
+				$('td:eq(0)', nRow).html( '<a href="/view/' + aData.uuid + (queryStr.length > 0 ? ('?' + queryStr) : '') + '" target="_blank">'+aData.name+'</a>' );
 				// $('td:eq(3)', nRow).html( '<a href="http://wev.cc/'+aData.uuid+'" target="_blank">wev.cc/' + aData.uuid + '</a>' );
 				$('td:eq(4)', nRow).html( '' + aData.viewCount + '/' + aData.downloadCount + '' );
 				/*

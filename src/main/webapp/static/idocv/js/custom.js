@@ -390,5 +390,5 @@ function afterLoad() {
 	} catch (e) {
 	}
 	
-	$('body').append('<div class="loader" style="display: none; position: fixed; top: 0px; left: 0px; right: 0px; height: 40px; z-index: 1500; text-align: center;"><img style="height: 100%" alt="加载中" src="/static/loading/img/ajax-loader-big-circle-ball.gif"></div>');
+	$('body').append('<div class="loader">加载中……</div>');
 }
