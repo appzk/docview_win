@@ -155,9 +155,7 @@ public class ViewController {
 				} else {
 					model.setViewName("word/index");
 				}
-				if ("watermark".equals(type)) {
-					model.setViewName("word/test_wartermark");
-				} else if ("entry".equalsIgnoreCase(type)) {
+				if ("entry".equalsIgnoreCase(type)) {
 					model.setViewName("word/sync-main");
 					return model;
 				} else if ("speaker".equalsIgnoreCase(type)) {
