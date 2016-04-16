@@ -87,9 +87,7 @@
       </div>
 
     </div><!--/.fluid-container-->
-    
-    <div class="loader" style="visibility: hidden; position: fixed; top: 0px; left: 0px; right: 0px; height: 40px; z-index: 5000; text-align: center;"><img style="height: 100%" alt="加载中" src="/static/loading/img/ajax-loader-big-circle-ball.gif"></div>
-    
+
     <!-- 
     <a href="http://www.idocv.com"><img style="position: fixed; top: 80px; right: 20px; max-width: 15%" alt="在线文档预览双十一特惠" src="http://data.idocv.com/promotion_20131111.jpg"></a>
      -->

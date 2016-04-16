@@ -5,14 +5,16 @@
 
 var totalSize = 1;
 var id = $.url().segment(2);
+var queryStr = $.url().attr('query');
 var uuid = id;
-var sessionId = $.url().param('session');
+var params = $.url().param();
+var isLoadAll = false;
 $(document).ready(function() {
 	
 	$.ajax({
 		type: "GET",
 		url: '/view/' + uuid + '.json?start=1&size=0',
-		data: {session:sessionId},
+		data: params,
 		async: false,
 		dataType: "json"
 	}).done(function( data ) {
@@ -52,11 +54,7 @@ $(document).ready(function() {
 			}
 			$(".paging-bottom-sub").click(function(){
 				var id = $(this).attr('page-num');
-				if (! $('#' + id).length) {
-					// page NOT exist, load all page.
-					loadAllPage();
-				}
-				$('html, body').animate({scrollTop:($('#' + id).position().top + 20)}, 'slow');
+				gotoAnchor(id);
 			});
 			
 			// NEXT page link

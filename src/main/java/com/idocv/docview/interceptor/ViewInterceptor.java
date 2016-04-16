@@ -70,10 +70,10 @@ public class ViewInterceptor extends HandlerInterceptorAdapter {
 		String requestUri = req.getRequestURI();
 
 		// para auth
-		if (DocServiceImpl.isCheckPara && requestUri.startsWith("/view/")) {
+		if (DocServiceImpl.isCheckPara && requestUri.startsWith("/view/") && requestUri.matches("/view/\\w{4,31}.json")) {
 			String authValue = req.getParameter("idocv_auth");
 			if (null == authValue || !authValue.startsWith(DocServiceImpl.AUTH_PARA_VALUE)) {
-				Map<String, Object> respMap = DocResponse.getErrorResponseMap("授权失败");
+				Map<String, Object> respMap = DocResponse.getErrorResponseMap("KEY授权失败");
 				response.getWriter().write(JSON.toJSONString(respMap));
 				return false;
 			}

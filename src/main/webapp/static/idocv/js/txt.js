@@ -49,11 +49,7 @@ $(document).ready(function() {
 			}
 			$(".paging-bottom-sub").click(function(){
 				var id = $(this).attr('page-num');
-				if (! $('#' + id).length) {
-					// page NOT exist, load all page.
-					loadAllPage();
-				}
-				$('html, body').animate({scrollTop:($('#' + id).position().top + 20)}, 'slow');
+				gotoAnchor(id);
 			});
 			
 			// NEXT page link

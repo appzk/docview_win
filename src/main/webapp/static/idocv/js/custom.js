@@ -98,15 +98,107 @@ function bindBottomPagingProgress() {
 	});
 }
 
+/**
+ * Bind Anchor Scroll
+ */
+function bindAnchorScroll() {
+	// anchor scroll
+	$('a[href^=#]').click(function(e){
+		var anchorHrefName = $(this).attr('href').substring(1);
+		if (! anchorHrefName) {
+			return;
+		}
+		e.preventDefault();
+		gotoAnchor(anchorHrefName);
+	});
+}
+
+/**
+ * goto anchor OR id
+ */
+var isLoadAll = false;
+function gotoAnchor(anchorNameOrId) {
+	var anchorHrefName = anchorNameOrId;
+	var isExist = false;
+	if ($('a[name=' + anchorHrefName + ']').length) {
+		isExist = true;
+		setTimeout(function () {
+			$('html, body').animate({scrollTop:($('a[name=' + anchorHrefName + ']').position().top + 20)}, 'slow');
+		}, 100);
+
+	} else if ($('#' + anchorHrefName).length) {
+		isExist = true;
+		setTimeout(function () {
+			$('html, body').animate({scrollTop:($('#' + anchorHrefName).position().top + 20)}, 'slow');
+		}, 100);
+	}
+
+	if (!isExist && !isLoadAll) {
+		var showLoader = function () {
+			$('.loader').show();
+		}
+		var hideLoader = function () {
+			$('.loader').hide();
+		}
+
+		// page NOT exist, load all page.
+		var queryStr
+		try {
+			queryStr = $.url().attr('query');
+		} catch (e) {
+		}
+		try {
+			$('.word-content').infinitescroll('destroy');
+		} catch (e) {
+		}
+
+		showLoader();
+		$.ajax({
+			type: "GET",
+			url: '/view/' + (!!id ? id : uuid) + '.json?start=1&size=0&' + queryStr,
+			data: {},
+			async: true,
+			dataType: "json"
+		}).done(function( data ) {
+			var code = data.code;
+			if (1 == code) {
+				var rid = data.rid;
+				var pages = data.data;
+
+				// pages
+				// $('.span12 .word-page .word-content').html();
+				for (i = 0; i < pages.length; i++) {
+					var page = pages[i];
+					if (i == 0) {
+						$('.span12 .word-page .word-content').html(page.content);
+					} else {
+						$('.span12 .word-page .word-content').append(page.content);
+					}
+				}
+
+				isLoadAll = true;
+
+				// goto anchor OR id
+				gotoAnchor(anchorNameOrId);
+				hideLoader();
+
+				// bind anchor scroll event
+				bindAnchorScroll();
+
+				// bind bottom paging progress event
+				bindBottomPagingProgress();
+			} else {
+				$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
+			}
+		});
+	}
+}
+
 /* ---------------------------------------------------------------------- */
 /*	Load All pages of WORD || TXT
 /* ---------------------------------------------------------------------- */
 function loadAllPage(isAsync) {
-	var queryStr = '';
-	try {
-		queryStr = $.url().attr('query');
-    } catch (e) {
-	}
+	var queryStr = $.url().attr('query');
 	$('.word-content').infinitescroll('destroy');
 	$.ajax({
 		type: "GET",
@@ -119,7 +211,7 @@ function loadAllPage(isAsync) {
 		if (1 == code) {
 			var rid = data.rid;
 			var pages = data.data;
-			
+
 			// pages
 			// $('.span12 .word-page .word-content').html();
 			for (i = 0; i < pages.length; i++) {
@@ -297,4 +389,6 @@ function afterLoad() {
 		}
 	} catch (e) {
 	}
+	
+	$('body').append('<div class="loader" style="display: none; position: fixed; top: 0px; left: 0px; right: 0px; height: 40px; z-index: 1500; text-align: center;"><img style="height: 100%" alt="加载中" src="/static/loading/img/ajax-loader-big-circle-ball.gif"></div>');
 }

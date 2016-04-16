@@ -8,6 +8,7 @@ var id = $.url().segment(2);
 var queryStr = $.url().attr('query');
 var uuid = id;
 var params = $.url().param();
+var isLoadAll = false;
 var version = $.url().param('v');
 version = (version === undefined) ? -1 : version;
 
@@ -62,11 +63,7 @@ $(document).ready(function() {
 			}
 			$(".paging-bottom-sub").click(function(){
 				var id = $(this).attr('page-num');
-				if (! $('#' + id).length) {
-					// page NOT exist, load all page.
-					loadAllPage();
-				}
-				$('html, body').animate({scrollTop:($('#' + id).position().top + 20)}, 'slow');
+				gotoAnchor(id);
 			});
 			
 			// NEXT page link
