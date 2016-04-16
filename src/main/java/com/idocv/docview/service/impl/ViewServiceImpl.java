@@ -1,28 +1,17 @@
 package com.idocv.docview.service.impl;
 
 
-import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.imageio.ImageIO;
-
+import com.idocv.docview.common.ViewType;
+import com.idocv.docview.dao.BaseDao;
+import com.idocv.docview.dao.DocDao;
+import com.idocv.docview.exception.DBException;
+import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.po.DocPo;
+import com.idocv.docview.service.ViewService;
+import com.idocv.docview.util.CmdUtil;
+import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.util.WatermarkUtil;
+import com.idocv.docview.vo.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -35,26 +24,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.idocv.docview.common.ViewType;
-import com.idocv.docview.dao.BaseDao;
-import com.idocv.docview.dao.DocDao;
-import com.idocv.docview.exception.DBException;
-import com.idocv.docview.exception.DocServiceException;
-import com.idocv.docview.po.DocPo;
-import com.idocv.docview.service.ViewService;
-import com.idocv.docview.util.CmdUtil;
-import com.idocv.docview.util.RcUtil;
-import com.idocv.docview.util.WatermarkUtil;
-import com.idocv.docview.vo.AudioVo;
-import com.idocv.docview.vo.CadVo;
-import com.idocv.docview.vo.ExcelVo;
-import com.idocv.docview.vo.ImgVo;
-import com.idocv.docview.vo.PPTVo;
-import com.idocv.docview.vo.PageVo;
-import com.idocv.docview.vo.PdfVo;
-import com.idocv.docview.vo.TxtVo;
-import com.idocv.docview.vo.WordVo;
-import com.idocv.docview.vo.ZipVo;
+import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class ViewServiceImpl implements ViewService, InitializingBean {
@@ -1032,7 +1010,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 			}
 
 			List<ZipVo> data = new ArrayList<ZipVo>();
-			
+
 			for (File extractedFile : extractedFiles) {
 				ZipVo zipVo = new ZipVo();
 				String extractedFileName = extractedFile.getName();
@@ -1042,6 +1020,7 @@ public class ViewServiceImpl implements ViewService, InitializingBean {
 				String realPath = extractedFile.getAbsolutePath().replaceAll("\\\\", "/");
 				String replacedPath = getReplaceStr(realPath);
 				zipVo.setPath(replacedPath);
+				zipVo.setUrl(rcUtil.getParseUrlDir(rid) + extractedFileName);
 				data.add(zipVo);
 			}
 			PageVo<ZipVo> page = new PageVo<ZipVo>(data, data.size());

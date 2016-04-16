@@ -4,10 +4,10 @@
  */
 
 var id = $.url().segment(2);
+var queryStr = $.url().attr('query');
 var uuid = id;
 var params = $.url().param();
 var tokenValue = $.url().param('token');
-var queryString = $.url().attr('query');
 
 $(document).ready(function() {
 	
@@ -26,13 +26,21 @@ $(document).ready(function() {
 				var page = pages[i];
 				var isViewable = page.viewable;
 				var opStr = '';
+				var downCheck = $.cookie('IDOCV_THD_VIEW_CHECK_DOWN_' + uuid);
+				if (!downCheck || '0' != downCheck) {
+					opStr += '<a href="' + page.url + '" target="_blank">下载</a>';
+				}
 				if (isViewable) {
 					var encodedLocalViewPath = encodeURIComponent('file:///' + page.path);
-					var viewUrl = '/view/url?url=' + encodedLocalViewPath;
-					if (!!tokenValue) {
-						viewUrl = viewUrl + '&token=' + tokenValue;
+					queryStr = queryStr + '&';
+					if (queryStr.indexOf('url=') > -1) {
+						queryStr = queryStr.replace(/(url=).*?(&)/, '$1' + encodedLocalViewPath + '$2');
+					} else {
+						queryStr = 'url=' + encodedLocalViewPath + '&' + queryStr;
 					}
-					opStr = '<a href="' + viewUrl + '" target="_blank">预览</a>';
+					queryStr = queryStr.replace(/(&+)$/, '');
+					var viewUrl = '/view/url?' + queryStr;
+					opStr += '<a style="margin-left: 20px;" href="' + viewUrl + '" target="_blank">预览</a>';
 				}
 				var trStr = '<tr><td>' + page.title + '</td><td>' + opStr + '</td></tr>';
 				$('.span12 .table-zip-files tbody').append(trStr);

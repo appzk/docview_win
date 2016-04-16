@@ -124,13 +124,13 @@ function gotoAnchor(anchorNameOrId) {
 		isExist = true;
 		setTimeout(function () {
 			$('html, body').animate({scrollTop:($('a[name=' + anchorHrefName + ']').position().top + 20)}, 'slow');
-		}, 100);
+		}, 300);
 
 	} else if ($('#' + anchorHrefName).length) {
 		isExist = true;
 		setTimeout(function () {
 			$('html, body').animate({scrollTop:($('#' + anchorHrefName).position().top + 20)}, 'slow');
-		}, 100);
+		}, 300);
 	}
 
 	if (!isExist && !isLoadAll) {
