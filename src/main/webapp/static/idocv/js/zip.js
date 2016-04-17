@@ -28,7 +28,7 @@ $(document).ready(function() {
 				var opStr = '';
 				var downCheck = $.cookie('IDOCV_THD_VIEW_CHECK_DOWN_' + uuid);
 				if (!downCheck || '0' != downCheck) {
-					opStr += '<a href="' + page.url + '" title="' + page.url + '" target="_blank">下载</a>';
+					opStr += '<a href="' + page.url + '" target="_blank">下载</a>';
 				}
 				if (isViewable) {
 					var encodedLocalViewPath = encodeURIComponent('file:///' + page.path);
