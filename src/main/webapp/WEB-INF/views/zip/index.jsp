@@ -13,6 +13,32 @@
     <!-- styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet">
+    <style type="text/css">
+      table{
+        table-layout:fixed;                 /* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+      }
+      .table-zip-files{
+        width: 80%;
+      }
+      .tb-tr-td-name {
+        text-align: left !important;
+        overflow: hidden;
+        -ms-word-break: keep-all;
+        word-break: keep-all;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .tb-tr-td-opt {
+        min-width: 80px;
+        -ms-word-break: keep-all;
+        word-break: keep-all;
+      }
+      @media (max-width: 767px) {
+        .table-zip-files{
+          width: 100%;
+        }
+      }
+    </style>
     <!-- 
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
      -->
@@ -55,7 +81,7 @@
       <div class="row-fluid">
         <div class="span12">
           <!-- ZIP TABLE HERE -->
-          <table class="table table-hover text-center table-zip-files" style="width: 80%">
+          <table class="table table-hover text-center table-zip-files">
             <caption></caption>
             <thead>
               <tr>

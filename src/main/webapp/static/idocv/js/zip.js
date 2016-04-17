@@ -40,9 +40,9 @@ $(document).ready(function() {
 					}
 					queryStr = queryStr.replace(/(&+)$/, '');
 					var viewUrl = '/view/url?' + queryStr;
-					opStr += '<a style="margin-left: 20px;" href="' + viewUrl + '" target="_blank">预览</a>';
+					opStr += '<a style="margin-left: 10px;" href="' + viewUrl + '" target="_blank">预览</a>';
 				}
-				var trStr = '<tr><td>' + page.title + '</td><td>' + opStr + '</td></tr>';
+				var trStr = '<tr><td class="tb-tr-td-name">' + page.title + '</td><td class="tb-tr-td-opt">' + opStr + '</td></tr>';
 				$('.span12 .table-zip-files tbody').append(trStr);
 			}
 			
