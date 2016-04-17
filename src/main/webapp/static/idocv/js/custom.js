@@ -81,7 +81,7 @@ function bindBottomPagingProgress() {
 	$('.scroll-page').each(function(i) {
 		var position = $(this).position();
 		$(this).scrollspy({
-			min: position.top - 300,
+			min: position.top - 20,
 			max: position.top + $(this).height(),
 			onEnter: function(element, position) {
 				// if(console) console.log('entering ' +  element.id);
