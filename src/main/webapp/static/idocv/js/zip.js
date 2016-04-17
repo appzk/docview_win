@@ -42,7 +42,7 @@ $(document).ready(function() {
 					var viewUrl = '/view/url?' + queryStr;
 					opStr += '<a style="margin-left: 10px;" href="' + viewUrl + '" target="_blank">预览</a>';
 				}
-				var trStr = '<tr><td class="tb-tr-td-name">' + page.title + '</td><td class="tb-tr-td-opt">' + opStr + '</td></tr>';
+				var trStr = '<tr><td class="tb-tr-td-name" title="' + page.title + '">' + page.title + '</td><td class="tb-tr-td-opt">' + opStr + '</td></tr>';
 				$('.span12 .table-zip-files tbody').append(trStr);
 			}
 			
