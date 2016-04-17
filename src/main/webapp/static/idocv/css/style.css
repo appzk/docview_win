@@ -379,6 +379,9 @@
 	/*	Mobile css
 	/* -------------------------------------------------- */
 	@media (max-width: 767px) {
+		.navbar .brand {
+			max-width: 60%;
+		}
 		.word-body {
 			padding-top: 40px;
 		}
