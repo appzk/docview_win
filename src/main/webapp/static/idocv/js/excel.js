@@ -21,7 +21,7 @@ $(document).ready(function() {
 			
 			// pages
 			// Dropdown tabs
-			var isDropDown = pages.length > 4;
+			var isDropDown = (pages.length > 4) || (document.documentElement.clientWidth < 768);
 			if (isDropDown) {
 				var dropDownMenu = '<li class="dropdown">' +
 				'<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
@@ -38,7 +38,8 @@ $(document).ready(function() {
 				var page = pages[i];
 				// tab navigation & tab content
 				if (0 == i) {
-					$('.excel-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li class="active"><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
+					// $('.excel-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li class="active"><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
+					$('.excel-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
 					$('.tab-content').append('<div class="tab-pane fade in active" id="tab' + (i + 1) + '">' + page.content + '</div>');
 				} else {
 					$('.excel-tab-title' + (isDropDown ? ' .dropdown .dropdown-menu' : '')).append('<li><a href="#tab' + (i + 1) + '" data-toggle="tab">' + page.title + '</a></li>');
