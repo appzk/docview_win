@@ -382,9 +382,11 @@
 		.navbar .brand {
 			max-width: 55%;
 		}
+		/*
 		.word-body {
 			padding-top: 40px;
 		}
+		*/
 		.word-page .word-content {
 			max-width: 85%;
 		}
