@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.idocv.docview.exception.DocServiceException;
 import com.idocv.docview.service.UserService;
+import com.idocv.docview.service.impl.DocServiceImpl;
 import com.idocv.docview.vo.UserVo;
 
 @Controller
@@ -214,6 +215,9 @@ public class UserController {
 				map.put("uid", vo.getId());
 				map.put("sid", vo.getSid());
 				map.put("username", vo.getUsername());
+				if (DocServiceImpl.isCheckPara) {
+					map.put("idocv_auth", DocServiceImpl.AUTH_PARA_VALUE);
+				}
 				return map;
 			} else {
 				map.put("error", "未登录！");
