@@ -224,7 +224,7 @@ public class UserController {
 				return map;
 			}
 		} catch (DocServiceException e) {
-			logger.error("checkLogin fail: ", e);
+			logger.error("checkLogin fail: " + e.getMessage());
 			map.put("error", e.getMessage());
 			return map;
 		}
