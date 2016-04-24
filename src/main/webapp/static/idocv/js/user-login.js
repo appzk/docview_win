@@ -19,11 +19,12 @@ $.ajax({
 }).done(function( data ) {
 	username = data.username;
 	uid = data.uid;
+	var idocvAuthValue = data.idocv_auth;
 	
 	// Already logged in user, redirect to his(her) own document list.
 	var label = $.url().segment(2);
 	if (uid !== undefined) {
-		window.location = '/user/' + username + '/all';
+		window.location = '/user/' + username + '/all' + (!!idocvAuthValue ? ('?idocv_auth=' + idocvAuthValue) : '');
 	}
 });
 
