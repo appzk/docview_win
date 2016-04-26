@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -223,10 +224,14 @@ public class GrabWebPageUtil {
 				htmlContent = GrabUtility.searchForNewFilesToGrab(htmlContent, obj);
 				
 				try {
+					FileUtils.writeStringToFile(outputFile, htmlContent, "UTF-8");
+					
 					// clear previous files contents
+					/*
 					fop = new FileOutputStream(outputFile);
 					fop.write(htmlContent.getBytes());
 					fop.flush();
+					*/
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
