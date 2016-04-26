@@ -52,16 +52,18 @@ public class HtmlController {
 			String md5Url = DigestUtils.md5Hex(url);
 			File htmlDir = new File(baseDir, md5Url);
 			// String encodedUrl = URLEncoder.encode(url, "UTF-8");
-			// download html page
-			GrabWebPageUtil.downloadHtml(url, htmlDir);
-
 			File destHtmlFile = new File(htmlDir, "index.html");
+			// download html page
+			if (!destHtmlFile.isFile()) {
+				GrabWebPageUtil.downloadHtml(url, htmlDir);
+			}
+
 			File destWordFile = new File(baseDir, md5Url + ".docx");
 			String result = "";
 			if (!destWordFile.isFile()) {
 				result += CmdUtil.runWindows("cd /D", htmlDir.getAbsolutePath(), "&", html2word, destHtmlFile.getAbsolutePath(), "-o", destWordFile.getAbsolutePath());
+				logger.info("url 2 word done! (url=" + url + ") result: " + result);
 			}
-			logger.info("url 2 word done! (url=" + url + ") result: " + result);
 
 			String contentType = MimeUtil.getContentType("docx");
 			if (StringUtils.isNotBlank(contentType)) {
