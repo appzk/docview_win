@@ -210,7 +210,7 @@ public class GrabWebPageUtil {
 					|| filename.endsWith("asp") || filename.endsWith("aspx")
 					|| filename.endsWith("php") || filename.endsWith("php")
 					|| filename.endsWith("net")){
-				in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 				//Convert parse only if its html, others leave it as is
 				String inputLine;
 				StringBuffer strResponse = new StringBuffer();
