@@ -313,13 +313,12 @@ function afterLoad() {
 		document.title = name;
 		// $('title').text(name);	IE 8 does NOT support this
 	}
-	
+
 	/**
 	 * disable right click (contextmenu)
 	 */
-	//document.addEventListener("contextmenu", function(e){
-	//	e.preventDefault();
-	//}, false);
+	// × document.addEventListener("contextmenu", function(e){ e.preventDefault(); }, false);	// IE8或以下版本不支持addEventListener()
+	// document.oncontextmenu = document.body.oncontextmenu = function() {return false;}
 	
 	/**
 	 * view checker
