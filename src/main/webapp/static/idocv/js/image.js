@@ -24,7 +24,7 @@ $(document).ready(function() {
 			// pages
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
-				$('.span12').append('<p><img src="' + page.url + '" alt="' + data.name + '" /></p>');
+				$('.span12').append('<p><img id="img1" src="' + page.url + '" alt="' + data.name + '" /></p>');
 			}
 			
 			// clear progress bar
@@ -32,11 +32,11 @@ $(document).ready(function() {
 			
 			$('.img-tool-container a .fa-undo').click(function(){
 				degree = degree-90;
-				$('img').rotate(degree);
+				$('#img1').rotate(degree);
 			});
 			$('.img-tool-container a .fa-repeat').click(function(){
 				degree = degree+90;
-				$('img').rotate(degree);
+				$('#img1').rotate(degree);
 			});
 			
 			afterLoad();
