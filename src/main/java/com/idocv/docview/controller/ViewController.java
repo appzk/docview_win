@@ -147,8 +147,7 @@ public class ViewController {
 			}
 
 			if (uuid.endsWith(ViewType.WORD.getSymbol())) {
-				if (viewPageStyleWord.startsWith("img")
-						|| viewPageStyleWord.startsWith("pdf")) {
+				if (viewPageStyleWord.startsWith("img")) {
 					model.setViewName("word/img");
 				} else if (viewPageStyleWord.startsWith("bookmark")) {
 					model.setViewName("word/bookmark");
@@ -171,6 +170,8 @@ public class ViewController {
 					model.setViewName("word/img");
 				} else if ("html".equalsIgnoreCase(type)) {
 					model.setViewName("word/index");
+				} else if ("draw".equalsIgnoreCase(type)) {
+					model.setViewName("word/draw");
 				}
 				return model;
 			} else if (uuid.endsWith(ViewType.EXCEL.getSymbol())) {
@@ -363,10 +364,12 @@ public class ViewController {
 				
 				// set view type
 				String viewType = "html";
-				if (viewPageStyleWord.startsWith("img") || viewPageStyleWord.startsWith("pdf")) {
+				if (viewPageStyleWord.startsWith("img")) {
 					viewType = "img";
 				}
 				if ("img".equalsIgnoreCase(type) || "speaker".equalsIgnoreCase(type) || "audience".equalsIgnoreCase(type)) {
+					viewType = "img";
+				} else if ("draw".equalsIgnoreCase(type)) {
 					viewType = "img";
 				} else if ("html".equalsIgnoreCase(type)) {
 					viewType = "html";
