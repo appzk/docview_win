@@ -16,7 +16,7 @@
     <link href="/static/literallycanvas/css/literallycanvas.css?v=${version}" rel="stylesheet" />
     <style type="text/css">
       .literally {
-        background-color: transparent;
+        background-color: rgba(220, 230, 220, 0.2);
         top: 0px;
         left: 0px;
         right: 0px;
@@ -107,7 +107,7 @@
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
     <script src="/static/react/js/react.min.js?v=${version}"></script>
     <script src="/static/react/js/react-dom.min.js?v=${version}"></script>
-    <script src="/static/literallycanvas/js/literallycanvas.min.js?v=${version}"></script>
+    <script src="/static/literallycanvas/js/literallycanvas-core.min.js?v=${version}"></script>
     <script src="/static/idocv/js/word-draw.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>

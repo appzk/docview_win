@@ -86,11 +86,8 @@ $(document).ready(function() {
 				$('.pdf-content img').height(imgHeight);
 				lazyLoadImg();
 
-				// draw container
-				var drawContainer = '<div class="draw-container" style="position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"></div>';
-				$('.pdf-content').append(drawContainer);
-				// draw
-				$('.draw-container').literallycanvas({imageURLPrefix: '/static/literallycanvas/img'});
+				// init drawer
+				initDrawer();
 			});
 			
 			// lazyLoadImg();
@@ -196,4 +193,20 @@ function resetPageWidth(offset) {
 		gotoPage(curPage);
 		return;
 	}
+}
+
+function initDrawer() {
+	// draw container
+	var drawContainer = '<div class="draw-container" style="position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"></div>';
+	$('.pdf-content').append(drawContainer);
+	// draw
+	$('.draw-container').literallycanvas({
+		imageURLPrefix: '/static/literallycanvas/img',
+		onInit: function(lc) {
+			console.log('lc: ' + lc.toString());
+			lc.on('drawingChange', function() {
+				console.log("The drawing was changed, json: " + JSON.stringify(lc.getSnapshot()));
+			})
+		}
+	});
 }
