@@ -293,6 +293,9 @@ function afterLoad() {
 	 */
 	// var ref = $('.lnk-file-title').attr('href');
 	// $('.lnk-file-title').removeAttr('href');
+
+	// diable drag image to elsewhere
+	window.ondragstart = function() { return false; }
 	
 	/**
 	 * set filename from URL param
