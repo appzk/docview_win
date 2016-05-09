@@ -1,144 +1,97 @@
 ﻿/**
  * Copyright 2015 I Doc View
+ *
  * @author Godwin <godwin668@gmail.com>
  */
 
-var id = $.url().segment(2);
-var uuid = id;
-var params = $.url().param();
-var pages;
-var curPage = 1;
-var totalSize = 1;
-var lastImgWidth = 0;
+// predefined params in word-pdf-single.js
+// slideUrls, curSlide, uuid, sessionId
+
+// draw server
+var drawServer = $('.server-param-container :text[key="conf-draw-server"]')
+	.val();
+
+var canvasArray = new Array();
+
+var doc = $(document);
+var win = $(window);
+var canvas;
+var ctx;
+var img;
+
+// all screen lines
+var lines = [];
+
+// Generate an unique ID
+var id = Math.round($.now() * Math.random());
+
+// A flag for drawing activity
+var drawing = false;
+
+var clients = {};
+var cursors = {};
+
+// previous position
+var prev = {};
+// current position
+var curr = {};
+// percent position
+var perc = {};
+// points (from -> to)
+var p;
+
+var socket = io.connect(drawServer);
 
 $(document).ready(function() {
-	
-	$.get('/view/' + uuid + '.json?start=1&size=0', params, function(data, status) {
-		var code = data.code;
-		if (1 == code) {
-			var rid = data.rid;
-			uuid = data.uuid;
-			pages = data.data;
-			totalSize = pages.length;
-			if (pages.length < 3) {
-				$('.bottom-paging-progress').hide();
-				$('.paging-bottom-all').hide();
-			}
-			if (pages.length <= 1) {
-				$('.btn-cmd-container').hide();
-			}
-			
-			// title
-			$('.navbar-inner .container-fluid .btn-navbar').after('<a class="brand lnk-file-title" style="text-decoration: none;" href="/doc/download/' + uuid + '" title="' + data.name + '">' + data.name + '</a>');
-			document.title = data.name;
-			
-			if (!!data.styleUrl) {
-				if (document.createStyleSheet){
-					document.createStyleSheet('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />');
-				} else {
-					$("head").append($('<link rel="stylesheet" href="' + data.styleUrl + '" type="text/css" />'));
-				}
-			}
-			
-			// Image Content
-			for (i = 0; i < pages.length; i++) {
-				var page = pages[i];
-				if (i < 3) {
-					$('.span12').append('<div class="pdf-page"><div id="' + (i + 2) + '" class="pdf-content scroll-page"><img alt="第' + (i + 1) + '页" src="' + page.url + '" rel="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
-				} else {
-					$('.span12').append('<div class="pdf-page"><div id="' + (i + 2) + '" class="pdf-content scroll-page"><img alt="第' + (i + 1) + '页" src="" rel="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
-				}
-				$('.select-page-selector').append('<option>' + (i + 1) + '</option>');
-			}
-			
-			var lazyLoadImg = function() {
-				var $ul = $('.span12');
-				var $img = $ul.find("img[rel]");
-				if (!$img || $img.length == 0) {
-					return;
-				}
-				var $li = $ul.find('.pdf-content');
-				var _wH = document.documentElement.clientHeight * 5;
-				var _liH = $li[0].offsetHeight;
-				var scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-				var curH = scrollTop;
-				var allH = _wH + curH;
-				var _liH = $li.get(0).offsetHeight;
-				var curItem = Math.floor(curH / _liH);
-				var allItem = Math.ceil(allH / _liH);
-				var _max = $('.span12').find('.pdf-content').length;
-				if (curItem > _max) return;
-				if (allItem > _max) allItem = _max;
-				for (var i = curItem - 1; i < allItem; i++) {
-					var thum = $ul.find("img[rel]")[i];
-					var rel = $(thum).attr("rel");
-					if (rel && rel != $(thum).attr("src") && rel.indexOf("noimg") < 0 && rel.indexOf("invalid_pic") < 0) {
-						$(thum).attr("src", rel);
-					}
-				}
-			};
-			
-			// set all image size before image load
-			$('.span12 .pdf-content img:first').load(function() {
-				var imgWidth = $(this).width();
-				var imgHeight = $(this).height();
-				$('.pdf-content img').width(imgWidth);
-				$('.pdf-content img').height(imgHeight);
-				lazyLoadImg();
 
-				// init drawer
-				initDrawer();
-			});
-			
-			// lazyLoadImg();
-			$(window).on("scroll", function(e) {
-				lazyLoadImg();
-			});
-			
-			// bottom paging positioning
-			var onePagePercent = 100 / totalSize;
-			var all = totalSize * onePagePercent;
-			for (var i = 0; i < totalSize; i++) {
-				$('.paging-bottom-all').append('<div class="paging-bottom-sub" page-num="' + (i + 1) + '" style="width: ' + onePagePercent + '%;">·</div>');
+	// Check whether current browser support canvas
+	if (!('getContext' in document.createElement('canvas'))) {
+		alert('对不起，您的浏览器不支持画笔同步，推荐您使用新版Chrome或360浏览器！');
+		return false;
+	}
+
+	gotoSlideSync(1);
+
+	// receive socket event
+	// speaker does NOT need receive moving event from audience
+
+	// send flip event
+	// Send page turning command
+	$('.btn-cmd').on('click touchstart', function(e) {
+		e.preventDefault();
+		if ($(this).attr('cmd-string')) {
+			var cmdString = $(this).attr('cmd-string');
+			var pageNum = 0;
+			if ('left' == cmdString) {
+				preSlideSync();
+			} else if ('right' == cmdString) {
+				nextSlideSync();
+			} else if ('clear' == cmdString) {
+				socket.emit('clear', {
+					'uuid' : uuid,
+				});
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				// location.reload();
 			}
-			$('.paging-bottom-sub').on('click touchstart', function(e) {
-				e.preventDefault();
-				var id = $(this).attr('page-num');
-				gotoPage(id);
-			});
-			$(".paging-bottom-sub").mouseover(function(){
-				var id = $(this).attr('page-num');
-				var curWidth = $(this).width();
-				curWidth = curWidth < 30 ? 30 : curWidth;
-				$(this).append('<div class="noti-page-number" style="position: absolute; bottom: 20px; width: ' + curWidth + 'px; height: 30px;"><font color="green">' + id + '</font></div>');
-			});
-			$('.paging-bottom-sub').bind('mouseup mouseleave touchend touchcancel', function(e) {
-				e.preventDefault();
-				$('.noti-page-number').remove();
-			});
-			
-			afterLoad();
-		} else {
-			$('.span12').html('<div class="alert alert-error">' + data.desc + '</div>');
+			// iosocket.send($(this).attr('data-key'));
 		}
-		
-		// clear progress bar
-		clearProgress();
 	});
-	
+
 	// page selector
-	$('.select-page-selector').val(curPage);
-	$('.select-page-selector').change(function() {
-		var selectNum = $(".select-page-selector option:selected").text();
-		gotoPage(selectNum);
+	$('.select-page-selector-sync').val(curSlide);
+	$('.select-page-selector-sync').change(function() {
+		var selectNum = $(".select-page-selector-sync option:selected").text();
+		gotoSlideSync(selectNum);
 	});
-	
+
+	// send draw event
+
 	// keyboard
 	$(document).keydown(function(event){
 		if (event.keyCode == 37 || event.keyCode == 38) {
-			prePage();
+			preSlideSync();
 		} else if (event.keyCode == 39 || event.keyCode == 40 || event.keyCode == 32){
-			nextPage();
+			nextSlideSync();
 		} else if (event.keyCode == 13) {
 			var isFullscreen = $(document).fullScreen() ? true : false;
 			$('.img-container-sync').toggleFullScreen();
@@ -146,67 +99,197 @@ $(document).ready(function() {
 	});
 });
 
-
-function prePage() {
-	var prePage = eval(Number(curPage) - 1);
-	gotoPage(prePage);
-}
-
-function nextPage() {
-	var nextPage = eval(Number(curPage) + 1);
-	gotoPage(nextPage);
-}
-
-function gotoPage(page) {
-	var prePage = curPage;
-	var pageSum = pages.length;
-	if (page <= 0) {
-		page = 1;
-	} else if (pageSum < page) {
-		page = pageSum;
-	}
-	curPage = page;
-	
-	$('html, body').animate({scrollTop:($('.pdf-page:eq(' + (page - 1) + ')').position().top - 55)}, 'slow');
-	
-	$('.select-page-selector').val(curPage);
-	
-	var percent = Math.round(page / pageSum * 100);
-	$('.bottom-paging-progress .bar').width('' + percent + '%');
-	
-	if (lastImgWidth > 0) {
-		$('.pdf-page').width(lastImgWidth);
-		$('.pdf-page img').width(lastImgWidth);
-	}
-}
-
-function resetPageWidth(offset) {
-	var curWidth = $('.pdf-page').width();
-	var targetWidth = curWidth * (1 + offset);
-	var windowWidth = $(window).width();
-	$('.pdf-page').css("max-width", "none");
-	if (targetWidth < (windowWidth * 5)) {
-	//if (targetWidth < (windowWidth - 40)) {
-		$('.pdf-page').width(targetWidth);
-		$('.pdf-page img').width(targetWidth);
-		lastImgWidth = targetWidth;
-		gotoPage(curPage);
+var imgLoadInterval = setInterval(initDraw, 50);
+function initDraw() {
+	if ($('img').length <= 0 || $('img')[0].height <= 0) {
 		return;
 	}
+	clearInterval(imgLoadInterval);
 }
 
-function initDrawer() {
-	// draw container
-	var drawContainer = '<div class="draw-container" style="position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"></div>';
-	$('.pdf-content').append(drawContainer);
-	// draw
-	$('.draw-container').literallycanvas({
-		imageURLPrefix: '/static/literallycanvas/img',
-		onInit: function(lc) {
-			console.log('lc: ' + lc.toString());
-			lc.on('drawingChange', function() {
-				console.log("The drawing was changed, json: " + JSON.stringify(lc.getSnapshot()));
-			})
-		}
+// bind canvas event: start -> move -> end
+function bindCanvasEvent() {
+	// start
+	$('canvas').bind(
+		'mousedown touchstart',
+		function(e) {
+			var type = e.type;
+			var oleft = img.offset().left;
+			var otop = img.offset().top;
+			if ("mousedown" == type) {
+				curr.x = Math.round(e.pageX - oleft);
+				curr.y = Math.round(e.pageY - otop);
+			} else if ("touchstart" == type) {
+				var touch = e.originalEvent.touches[0]
+					|| e.originalEvent.changedTouches[0];
+				curr.x = Math.round(touch.pageX - oleft);
+				curr.y = Math.round(touch.pageY - otop);
+
+				// Move touchstart start position
+				perc.x = (curr.x / canvas.width).toFixed(4);
+				perc.y = (curr.y / canvas.height).toFixed(4);
+				socket.emit('mousemove', {
+					'uuid' : uuid,
+					'x' : perc.x,
+					'y' : perc.y,
+					'drawing' : false,
+					'id' : id
+				});
+			}
+			drawing = true;
+			prev.x = curr.x;
+			prev.y = curr.y;
+		});
+
+	// move
+	$('canvas').bind(
+		'mousemove touchmove',
+		function(e) {
+			e.preventDefault();
+			var oleft = img.offset().left;
+			var otop = img.offset().top;
+			var type = e.type;
+			if ("mousemove" == type) {
+				curr.x = Math.round(e.pageX - oleft);
+				curr.y = Math.round(e.pageY - otop);
+			} else if ("touchmove" == type) {
+				var touch = e.originalEvent.touches[0]
+					|| e.originalEvent.changedTouches[0];
+				curr.x = Math.round(touch.pageX - oleft);
+				curr.y = Math.round(touch.pageY - otop);
+			}
+
+			perc.x = (curr.x / canvas.width).toFixed(4);
+			perc.y = (curr.y / canvas.height).toFixed(4);
+
+			if (Math.sqrt(Math.pow(prev.x - curr.x, 2)
+					+ Math.pow(prev.y - curr.y, 2)) > 8) {
+				/*
+				 * var p = {x1:prev.x, y1:prev.y, x2:curr.x, y2:curr.y}
+				 * lines.push(p); draw(p); send(JSON.stringify(p)); prev =
+				 * curr;
+				 */
+				socket.emit('mousemove', {
+					'uuid' : uuid,
+					'x' : perc.x,
+					'y' : perc.y,
+					'drawing' : drawing,
+					'id' : id
+				});
+
+				// Draw a line for the current user's movement, as it is
+				// not received in the socket.on('moving') event above
+				if (drawing) {
+					drawLine(prev.x + 1, prev.y, curr.x + 1, curr.y);
+
+					// save percent points
+					var prePercX = (prev.x / canvas.width).toFixed(4);
+					var prePercY = (prev.y / canvas.height).toFixed(4);
+					p = {
+						x1 : prePercX,
+						y1 : prePercY,
+						x2 : perc.x,
+						y2 : perc.y
+					};
+					lines.push(p);
+
+					prev.x = curr.x;
+					prev.y = curr.y;
+				}
+			}
+		});
+
+	// end
+	doc.bind('mouseup mouseleave touchend touchcancel', function(e) {
+		e.preventDefault();
+		drawing = false;
+	});
+}
+
+function drawLine(fromx, fromy, tox, toy){
+	ctx.moveTo(fromx, fromy);
+	ctx.lineTo(tox, toy);
+	/*
+	 ctx.strokeStyle = 'red';
+	 ctx.lineWidth = "10";
+	 ctx.lineCap = "round";
+	 */
+	ctx.stroke();
+}
+
+$(window).resize(function() {
+	resetImgSizeSync();
+});
+
+function resetImgSizeSync() {
+	$('.img-container-sync img').load(function() {
+		$('.slide-canvas').width($('.img-container-sync').width());
+		$('.slide-canvas').height($('.img-container-sync').height());
+		$('.slide-canvas')[0].width = $('.img-container-sync').width();
+		$('.slide-canvas')[0].height = $('.img-container-sync').height();
+		resetStroke();
+	});
+	$('.slide-canvas').width($('.img-container-sync').width());
+	$('.slide-canvas').height($('.img-container-sync').height());
+	$('.slide-canvas')[0].width = $('.img-container-sync').width();
+	$('.slide-canvas')[0].height = $('.img-container-sync').height();
+	resetStroke();
+}
+
+function resetStroke() {
+	if (canvas) {
+		ctx = canvas.getContext("2d");
+		ctx.strokeStyle = 'red';
+		ctx.lineWidth = "2";
+		ctx.lineCap = "round";
+	} else {
+		alert('Please set canvas first!');
+	}
+}
+
+function preSlideSync() {
+	var preSlide = eval(Number(getCurSlide()) - 1);
+	gotoSlideSync(preSlide);
+}
+
+function nextSlideSync() {
+	var nextSlide = eval(Number(getCurSlide()) + 1);
+	gotoSlideSync(nextSlide);
+}
+
+function gotoSlideSync(slide) {
+	// slide turning
+	var preSlide = curSlide;
+	var slideSum = slideUrls.length;
+	if (slide <= 0) {
+		slide = 1;
+	} else if (slideSum < slide) {
+		slide = slideSum;
+	}
+	curSlide = slide;
+
+	// set img & canvas
+	var imgHtml = '<img class="slide-img-' + (slide - 1) + '" alt="第1页" src="' + slideUrls[slide - 1] + '">';
+	var canvasHtml = '<canvas class="slide-canvas-' + (slide - 1) + ' slide-canvas" style="width: 100%; height: 100%; border: 1px solid orange; position: absolute; left: 0px; top: 0px;">您的浏览器不支持画布！</canvas>';
+	$('.img-container-sync').html(imgHtml + canvasHtml);
+	canvas = $('.slide-canvas-' + (slide - 1))[0];
+	resetImgSizeSync();
+	img = $('.slide-img-' + (slide - 1));
+	bindCanvasEvent();
+
+	/*
+	 * $(".img-container-sync img").fadeOut(function() { $(this).attr("src",
+	 * slideUrls[slide - 1]).fadeIn(); });
+	 */
+	$(".img-container-sync img").attr("src", slideUrls[slide - 1]);
+	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
+	$('.select-page-selector').val(slide);
+	$('.select-page-selector-sync').val(slide);
+	$('.bottom-paging-progress .bar').width('' + percent + '%');
+
+	// sync flip event to audience
+	socket.emit('flip', {
+		'uuid' : uuid,
+		'page' : curSlide,
 	});
 }

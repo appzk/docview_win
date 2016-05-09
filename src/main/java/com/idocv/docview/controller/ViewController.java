@@ -172,6 +172,8 @@ public class ViewController {
 					model.setViewName("word/index");
 				} else if ("draw".equalsIgnoreCase(type)) {
 					model.setViewName("word/draw");
+				} else if ("lc".equalsIgnoreCase(type)) {
+					model.setViewName("word/draw-literallycanvas");
 				}
 				return model;
 			} else if (uuid.endsWith(ViewType.EXCEL.getSymbol())) {
@@ -370,6 +372,8 @@ public class ViewController {
 				if ("img".equalsIgnoreCase(type) || "speaker".equalsIgnoreCase(type) || "audience".equalsIgnoreCase(type)) {
 					viewType = "img";
 				} else if ("draw".equalsIgnoreCase(type)) {
+					viewType = "img";
+				} else if ("lc".equalsIgnoreCase(type)) {
 					viewType = "img";
 				} else if ("html".equalsIgnoreCase(type)) {
 					viewType = "html";

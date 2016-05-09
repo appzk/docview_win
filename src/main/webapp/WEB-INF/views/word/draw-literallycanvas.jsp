@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>PDF - I Doc View</title>
+    <title>Word Draw - I Doc View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="在线文档预览、文档协作编辑、幻灯片远程控制、同步信息展示等，支持格式：doc, docx, xls, xlsx, ppt, pptx, pdf和txt等。">
     <meta name="keywords" content="在线 文档 预览 同步 协作 Online Document Preview doc view viewer office word excel" />
@@ -13,9 +13,21 @@
     <!-- styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet" />
+    <link href="/static/literallycanvas/css/literallycanvas.css?v=${version}" rel="stylesheet" />
+    <style type="text/css">
+      .literally {
+        background-color: rgba(220, 230, 220, 0.2);
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        position: absolute;
+      }
+    </style>
+
+    <!-- 
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
-    <link href="/static/pdf2htmlEX/css/base.css" rel="stylesheet" />
-    <link href="/static/pdf2htmlEX/css/fancy.css" rel="stylesheet" />
+     -->
 
     <!--[if lt IE 9]>
       <script src="/static/bootstrap/js/html5shiv.js"></script>
@@ -59,7 +71,7 @@
           <!-- 
           <div class="pdf-page">
             <div class="pdf-content">
-              <!-- WORD CENTENT HERE
+              <!-- WORD CENTENT HERE --
             </div>
           </div>
            -->
@@ -75,21 +87,15 @@
       <div class="progress progress-striped active bottom-paging-progress">
         <div class="bar" style="width: 0%;"></div>
       </div>
+      <div class="paging-bottom-all" style="z-index: 2000">
+        <!-- SUB PAGING DIV(s) HERE -->
+        <!-- 
+        <div class="paging-bottom-sub" page-num="1" style="width: 20%;">1</div>
+        ...
+         -->
+      </div>
+
     </div><!--/.fluid-container-->
-
-    <div class="btn-word-sync-cmd-container text-center" style="position: fixed; bottom: 10px; left: 0px; right: 0px; text-align: center; z-index: 1000;">
-      <a cmd-string="left" class="btn btn-primary btn-cmd btn-cmd-previous-sync" style="display: inline-block;" href="#" title="上一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-left icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-      &nbsp;
-      <select class="select-page-selector-sync span1" style="width: 60px; margin-top: 10px; display: inline-block;">
-        <!-- PAGE NUMBERS HERE -->
-      </select>
-      &nbsp;
-      <a cmd-string="right" class="btn btn-primary btn-cmd btn-cmd-next-sync" style="display: inline-block;" href="#" title="下一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-right icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-    </div>
-
-    <div class="server-param-container" style="display: none;">
-      <input type="text" key="conf-draw-server" value="${confDrawServer}" >
-    </div>
     
     <!-- JavaSript
     ================================================== -->
@@ -98,13 +104,11 @@
     <script src="/static/idocv/js/progress.js?v=${version}"></script>
     <script src="/static/jquerycookie/js/jquery.cookie.js?v=${version}"></script>
     <script src="/static/idocv/js/custom.js?v=${version}"></script>
-    <script src="/static/scrollspy/js/jquery-scrollspy.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
-    <script src="/static/formvalidator/js/jquery.formvalidator.min.js?v=${version}"></script>
-    <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
-    <script src="/static/draw/js/socket.io-1.3.5.js?v=${version}"></script>
-    <script src="/static/idocv/js/word-img.js?v=${version}"></script>
-    <script src="/static/idocv/js/word-draw.js?v=${version}"></script>
+    <script src="/static/react/js/react.min.js?v=${version}"></script>
+    <script src="/static/react/js/react-dom.min.js?v=${version}"></script>
+    <script src="/static/literallycanvas/js/literallycanvas-core.min.js?v=${version}"></script>
+    <script src="/static/idocv/js/word-draw-literallycanvas.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
 </html>
