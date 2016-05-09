@@ -12,6 +12,7 @@ var drawServer = $('.server-param-container :text[key="conf-draw-server"]')
 	.val();
 
 var canvasArray = new Array();
+var imgArray = new Array();
 
 var doc = $(document);
 var win = $(window);
@@ -105,6 +106,29 @@ function initDraw() {
 		return;
 	}
 	clearInterval(imgLoadInterval);
+
+	// set img & canvas
+	for (var i = 0; i < slideUrls.length; i++) {
+		var canvasHtml = '<canvas class="slide-canvas-' + (i + 1) + ' slide-canvas" style="width: 100%; height: 100%; border: 1px solid orange; position: absolute; left: 0px; top: 0px;">您的浏览器不支持画布！</canvas>';
+		$('.img-container-sync:eq(' + i + ')').append(canvasHtml);
+		canvasArray.push($('.slide-canvas-' + (i + 1))[0]);
+		imgArray.push($('.slide-img-' + (i + 1)));
+	}
+
+	curSlide = 1;
+	canvas = canvasArray[curSlide - 1];
+	ctx = canvasArray[curSlide - 1].getContext("2d");
+	img = imgArray[curSlide - 1];
+
+	$('.pdf-content').mouseover(function() {
+		curSlide = $(this).attr('id');
+		canvas = canvasArray[curSlide - 1];
+		ctx = canvasArray[curSlide - 1].getContext("2d");
+		img = imgArray[curSlide - 1];
+	});
+	
+	resetImgSizeSync();
+	bindCanvasEvent();
 }
 
 // bind canvas event: start -> move -> end
@@ -237,11 +261,13 @@ function resetImgSizeSync() {
 }
 
 function resetStroke() {
-	if (canvas) {
-		ctx = canvas.getContext("2d");
-		ctx.strokeStyle = 'red';
-		ctx.lineWidth = "2";
-		ctx.lineCap = "round";
+	if (canvasArray.length > 0) {
+		for (var i = 0; i < canvasArray.length; i++) {
+			var ctxLocal = canvasArray[i].getContext("2d");
+			ctxLocal.strokeStyle = 'red';
+			ctxLocal.lineWidth = "2";
+			ctxLocal.lineCap = "round";
+		}
 	} else {
 		alert('Please set canvas first!');
 	}
@@ -267,15 +293,6 @@ function gotoSlideSync(slide) {
 		slide = slideSum;
 	}
 	curSlide = slide;
-
-	// set img & canvas
-	var imgHtml = '<img class="slide-img-' + (slide - 1) + '" alt="第1页" src="' + slideUrls[slide - 1] + '">';
-	var canvasHtml = '<canvas class="slide-canvas-' + (slide - 1) + ' slide-canvas" style="width: 100%; height: 100%; border: 1px solid orange; position: absolute; left: 0px; top: 0px;">您的浏览器不支持画布！</canvas>';
-	$('.img-container-sync').html(imgHtml + canvasHtml);
-	canvas = $('.slide-canvas-' + (slide - 1))[0];
-	resetImgSizeSync();
-	img = $('.slide-img-' + (slide - 1));
-	bindCanvasEvent();
 
 	/*
 	 * $(".img-container-sync img").fadeOut(function() { $(this).attr("src",
