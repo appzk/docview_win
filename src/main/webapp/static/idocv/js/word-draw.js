@@ -114,13 +114,22 @@ function initDraw() {
 		canvasArray.push($('.slide-canvas-' + (i + 1))[0]);
 		imgArray.push($('.slide-img-' + (i + 1)));
 	}
+	// set all canvas size
+	setTimeout(function () {
+		var fstCvsW = canvasArray[0].width;
+		var fstCvsH = canvasArray[0].height;
+		for (var i = 1; i < canvasArray.length; i++) {
+			canvasArray[i].width = fstCvsW;
+			canvasArray[i].height = fstCvsH;
+		}
+	}, 5)
 
 	curSlide = 1;
 	canvas = canvasArray[curSlide - 1];
 	ctx = canvasArray[curSlide - 1].getContext("2d");
 	img = imgArray[curSlide - 1];
 
-	$('.pdf-content').mouseover(function() {
+	$('.pdf-content').on("mouseenter mousedown touchstart", function() {
 		curSlide = $(this).attr('id');
 		canvas = canvasArray[curSlide - 1];
 		ctx = canvasArray[curSlide - 1].getContext("2d");
@@ -186,6 +195,8 @@ function bindCanvasEvent() {
 			perc.x = (curr.x / canvas.width).toFixed(4);
 			perc.y = (curr.y / canvas.height).toFixed(4);
 
+			console.log('[moving] perc(' + perc.x + ', ' + perc.y + '), curr(' + curr.x + ', ' + curr.y + '), canvas_Width_Height(' + canvas.width + ', ' + canvas.height + '), e.page(' + e.pageX + ', ' + e.pageY + '), img.offset_LEF_TOP(' + img.offset().left + ', ' + img.offset().top + ')');
+
 			if (Math.sqrt(Math.pow(prev.x - curr.x, 2)
 					+ Math.pow(prev.y - curr.y, 2)) > 8) {
 				/*
@@ -215,6 +226,7 @@ function bindCanvasEvent() {
 						x2 : perc.x,
 						y2 : perc.y
 					};
+					console.log('draw line: ' + JSON.stringify(p));
 					lines.push(p);
 
 					prev.x = curr.x;
