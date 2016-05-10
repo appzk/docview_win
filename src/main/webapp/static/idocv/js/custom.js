@@ -109,17 +109,18 @@ function bindBottomPagingProgressImg() {
 				// $("body").css('background-color', element.id);
 				var pos = element.id - 1;
 				var percent = Math.round(pos / totalSize * 100);
-				console.log('[onEnter>] percent: ' + percent + '(' + pos + '/' + totalSize + '), position: ' + JSON.stringify(position));
+				// console.log('[onEnter>] percent: ' + percent + '(' + pos + '/' + totalSize + '), position: ' + JSON.stringify(position));
 				$('.bottom-paging-progress .bar').width('' + percent + '%');
 			},
 			onLeave: function(element, position) {
 				// if(console) console.log('leaving ' +  element.id);
 				//	$('body').css('background-color','#eee');
 
+				/*
 				var pos = element.id - 1;
 				var percent = Math.round(pos / totalSize * 100);
 				console.log('[onLeave<] percent: ' + percent + '(' + pos + '/' + totalSize + '), position: ' + JSON.stringify(position));
-
+				*/
 			}
 		});
 	});
