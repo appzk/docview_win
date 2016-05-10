@@ -147,13 +147,16 @@ public class ViewController {
 			}
 
 			if (uuid.endsWith(ViewType.WORD.getSymbol())) {
-				if (viewPageStyleWord.startsWith("img")) {
-					model.setViewName("word/img");
+				if (viewPageStyleWord.startsWith("imgall")) {
+					model.setViewName("pdf/imgall");	// reuse PDF view
+				} else if (viewPageStyleWord.startsWith("img")) {
+					model.setViewName("pdf/img");
 				} else if (viewPageStyleWord.startsWith("bookmark")) {
 					model.setViewName("word/bookmark");
 				} else {
 					model.setViewName("word/index");
 				}
+
 				if ("entry".equalsIgnoreCase(type)) {
 					model.setViewName("word/sync-main");
 					return model;
@@ -166,8 +169,10 @@ public class ViewController {
 				}
 
 				// if type is set, use it.
-				if ("img".equalsIgnoreCase(type)) {
-					model.setViewName("word/img");
+				if ("imgall".equalsIgnoreCase(type)) {
+					model.setViewName("pdf/imgall");	// reuse PDF view
+				} else if ("img".equalsIgnoreCase(type)) {
+					model.setViewName("pdf/img");	// reuse PDF view
 				} else if ("html".equalsIgnoreCase(type)) {
 					model.setViewName("word/index");
 				} else if ("draw".equalsIgnoreCase(type)) {
@@ -218,24 +223,21 @@ public class ViewController {
 					return model;
 				}
 			} else if (uuid.endsWith(ViewType.PDF.getSymbol())) {
-				if (viewPageStylePdf.startsWith("img")
-						|| viewPageStylePdf.startsWith("pdf")) {
+				if (viewPageStylePdf.startsWith("imgall")) {
+					model.setViewName("pdf/imgall");
+				} else if (viewPageStylePdf.startsWith("img")) {
 					model.setViewName("pdf/img");
 				} else {
 					model.setViewName("pdf/index");
 				}
 
-				if (viewPageStylePdf.startsWith("imgall")) {
-					model.setViewName("pdf/imgall");
-				}
-
 				// if type is set, use it.
-				if ("img".equalsIgnoreCase(type)) {
+				if ("imgall".equalsIgnoreCase(type)) {
+					model.setViewName("pdf/imgall");
+				} else if ("img".equalsIgnoreCase(type)) {
 					model.setViewName("pdf/img");
 				} else if ("html".equalsIgnoreCase(type)) {
 					model.setViewName("pdf/index");
-				} else if ("imgall".equalsIgnoreCase(type)) {
-					model.setViewName("pdf/imgall");
 				} else if ("mobile".equalsIgnoreCase(type)) {
 					model.setViewName("pdf/mobile");
 				}
@@ -369,7 +371,7 @@ public class ViewController {
 				if (viewPageStyleWord.startsWith("img")) {
 					viewType = "img";
 				}
-				if ("img".equalsIgnoreCase(type) || "speaker".equalsIgnoreCase(type) || "audience".equalsIgnoreCase(type)) {
+				if ((null != type && type.startsWith("img")) || "speaker".equalsIgnoreCase(type) || "audience".equalsIgnoreCase(type)) {
 					viewType = "img";
 				} else if ("draw".equalsIgnoreCase(type)) {
 					viewType = "img";
@@ -388,10 +390,11 @@ public class ViewController {
 			} else if (ViewType.EXCEL == ViewType.getViewTypeByExt(ext)) {
 				// set view type
 				String viewType = "html";
-				if (viewPageStyleExcel.startsWith("img") || viewPageStyleExcel.startsWith("pdf")) {
+				if (viewPageStyleExcel.startsWith("img")) {
 					viewType = "img";
 				}
-				if ("img".equalsIgnoreCase(type)) {
+
+				if (null != type && type.startsWith("img")) {
 					viewType = "img";
 				} else if ("html".equalsIgnoreCase(type)) {
 					viewType = "html";
@@ -408,16 +411,14 @@ public class ViewController {
 			} else if (ViewType.PDF == ViewType.getViewTypeByExt(ext)) {
 				// set view type
 				String viewType = "html";
-				if (viewPageStylePdf.startsWith("img") || viewPageStylePdf.startsWith("pdf")) {
+				if (viewPageStylePdf.startsWith("img")) {
 					viewType = "img";
 				}
 
-				if ("img".equalsIgnoreCase(type)) {
+				if (null != type && type.startsWith("img")) {
 					viewType = "img";
 				} else if ("html".equalsIgnoreCase(type)) {
 					viewType = "html";
-				} else if ("imgall".equalsIgnoreCase(type)) {
-					viewType = "img";
 				}
 
 				// result data

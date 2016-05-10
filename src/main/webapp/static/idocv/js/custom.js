@@ -98,6 +98,33 @@ function bindBottomPagingProgress() {
 	});
 }
 
+function bindBottomPagingProgressImg() {
+	$('.scroll-page').each(function(i) {
+		var position = $(this).position();
+		$(this).scrollspy({
+			min: position.top - 60,
+			max: position.top + $(this).height() - 100,
+			onEnter: function(element, position) {
+				// if(console) console.log('entering ' +  element.id);
+				// $("body").css('background-color', element.id);
+				var pos = element.id - 1;
+				var percent = Math.round(pos / totalSize * 100);
+				console.log('[onEnter>] percent: ' + percent + '(' + pos + '/' + totalSize + '), position: ' + JSON.stringify(position));
+				$('.bottom-paging-progress .bar').width('' + percent + '%');
+			},
+			onLeave: function(element, position) {
+				// if(console) console.log('leaving ' +  element.id);
+				//	$('body').css('background-color','#eee');
+
+				var pos = element.id - 1;
+				var percent = Math.round(pos / totalSize * 100);
+				console.log('[onLeave<] percent: ' + percent + '(' + pos + '/' + totalSize + '), position: ' + JSON.stringify(position));
+
+			}
+		});
+	});
+}
+
 /**
  * Bind Anchor Scroll
  */

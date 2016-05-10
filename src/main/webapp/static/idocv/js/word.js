@@ -94,6 +94,7 @@ $(document).ready(function() {
 			}
 			
 			bindBottomPagingProgress();
+			$('.bottom-paging-progress .bar').width('' + (1 / totalSize) * 100 + '%');
 			
 			// bottom paging positioning
 			var onePagePercent = 100 / totalSize;

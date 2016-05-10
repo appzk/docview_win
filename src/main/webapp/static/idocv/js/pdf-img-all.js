@@ -84,7 +84,8 @@ $(document).ready(function() {
 				var imgHeight = $(this).height();
 				$('.pdf-content img').width(imgWidth);
 				$('.pdf-content img').height(imgHeight);
-				bindBottomPagingProgress();
+				gotoPage(1);
+				bindBottomPagingProgressImg();
 				lazyLoadImg();
 			});
 			

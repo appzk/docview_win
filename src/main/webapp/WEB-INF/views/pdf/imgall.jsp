@@ -110,7 +110,6 @@
     <script src="/static/idocv/js/custom.js?v=${version}"></script>
     <script src="/static/scrollspy/js/jquery-scrollspy.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
-    <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
     <script src="/static/idocv/js/pdf-img-all.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>
