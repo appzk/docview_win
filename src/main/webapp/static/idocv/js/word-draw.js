@@ -20,8 +20,8 @@ var canvas;
 var ctx;
 var img;
 
-// all screen lines
-var lines = [];
+// all screen lines, page->lines
+var lines = [[]];
 
 // Generate an unique ID
 var id = Math.round($.now() * Math.random());
@@ -113,6 +113,7 @@ function initDraw() {
 		$('.img-container-sync:eq(' + i + ')').append(canvasHtml);
 		canvasArray.push($('.slide-canvas-' + (i + 1))[0]);
 		imgArray.push($('.slide-img-' + (i + 1)));
+		lines[i] = [];
 	}
 	// set all canvas size
 	setTimeout(function () {
@@ -221,10 +222,12 @@ function bindCanvasEvent() {
 					x1 : prePercX,
 					y1 : prePercY,
 					x2 : perc.x,
-					y2 : perc.y
+					y2 : perc.y,
+					color: ctx.strokeStyle,	// line color
+					width: ctx.lineWidth		// line width
 				};
 				console.log('draw line: ' + JSON.stringify(p));
-				lines.push(p);
+				lines[curSlide].push(p);
 
 				prev.x = curr.x;
 				prev.y = curr.y;
