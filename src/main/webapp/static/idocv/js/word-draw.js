@@ -122,6 +122,7 @@ function initDraw() {
 			canvasArray[i].width = fstCvsW;
 			canvasArray[i].height = fstCvsH;
 		}
+		resetStroke();
 	}, 5)
 
 	curSlide = 1;
@@ -143,97 +144,93 @@ function initDraw() {
 // bind canvas event: start -> move -> end
 function bindCanvasEvent() {
 	// start
-	$('canvas').bind(
-		'mousedown touchstart',
-		function(e) {
-			var type = e.type;
-			var oleft = img.offset().left;
-			var otop = img.offset().top;
-			if ("mousedown" == type) {
-				curr.x = Math.round(e.pageX - oleft);
-				curr.y = Math.round(e.pageY - otop);
-			} else if ("touchstart" == type) {
-				var touch = e.originalEvent.touches[0]
-					|| e.originalEvent.changedTouches[0];
-				curr.x = Math.round(touch.pageX - oleft);
-				curr.y = Math.round(touch.pageY - otop);
+	$('canvas').bind('mousedown touchstart', function(e) {
+		var type = e.type;
+		var oleft = img.offset().left;
+		var otop = img.offset().top;
+		if ("mousedown" == type) {
+			curr.x = Math.round(e.pageX - oleft);
+			curr.y = Math.round(e.pageY - otop);
+		} else if ("touchstart" == type) {
+			var touch = e.originalEvent.touches[0]
+				|| e.originalEvent.changedTouches[0];
+			curr.x = Math.round(touch.pageX - oleft);
+			curr.y = Math.round(touch.pageY - otop);
 
-				// Move touchstart start position
-				perc.x = (curr.x / canvas.width).toFixed(4);
-				perc.y = (curr.y / canvas.height).toFixed(4);
-				socket.emit('mousemove', {
-					'uuid' : uuid,
-					'x' : perc.x,
-					'y' : perc.y,
-					'drawing' : false,
-					'id' : id
-				});
-			}
-			drawing = true;
-			prev.x = curr.x;
-			prev.y = curr.y;
-		});
-
-	// move
-	$('canvas').bind(
-		'mousemove touchmove',
-		function(e) {
-			e.preventDefault();
-			var oleft = img.offset().left;
-			var otop = img.offset().top;
-			var type = e.type;
-			if ("mousemove" == type) {
-				curr.x = Math.round(e.pageX - oleft);
-				curr.y = Math.round(e.pageY - otop);
-			} else if ("touchmove" == type) {
-				var touch = e.originalEvent.touches[0]
-					|| e.originalEvent.changedTouches[0];
-				curr.x = Math.round(touch.pageX - oleft);
-				curr.y = Math.round(touch.pageY - otop);
-			}
-
+			// Move touchstart start position
 			perc.x = (curr.x / canvas.width).toFixed(4);
 			perc.y = (curr.y / canvas.height).toFixed(4);
+			socket.emit('mousemove', {
+				'uuid' : uuid,
+				'x' : perc.x,
+				'y' : perc.y,
+				'drawing' : false,
+				'id' : id
+			});
+		}
+		drawing = true;
+		prev.x = curr.x;
+		prev.y = curr.y;
+	});
 
-			console.log('[moving] perc(' + perc.x + ', ' + perc.y + '), curr(' + curr.x + ', ' + curr.y + '), canvas_Width_Height(' + canvas.width + ', ' + canvas.height + '), e.page(' + e.pageX + ', ' + e.pageY + '), img.offset_LEF_TOP(' + img.offset().left + ', ' + img.offset().top + ')');
+	// move
+	$('canvas').bind('mousemove touchmove', function(e) {
+		e.preventDefault();
+		var oleft = img.offset().left;
+		var otop = img.offset().top;
+		var type = e.type;
+		if ("mousemove" == type) {
+			curr.x = Math.round(e.pageX - oleft);
+			curr.y = Math.round(e.pageY - otop);
+		} else if ("touchmove" == type) {
+			var touch = e.originalEvent.touches[0]
+				|| e.originalEvent.changedTouches[0];
+			curr.x = Math.round(touch.pageX - oleft);
+			curr.y = Math.round(touch.pageY - otop);
+		}
 
-			if (Math.sqrt(Math.pow(prev.x - curr.x, 2)
-					+ Math.pow(prev.y - curr.y, 2)) > 8) {
-				/*
-				 * var p = {x1:prev.x, y1:prev.y, x2:curr.x, y2:curr.y}
-				 * lines.push(p); draw(p); send(JSON.stringify(p)); prev =
-				 * curr;
-				 */
-				socket.emit('mousemove', {
-					'uuid' : uuid,
-					'x' : perc.x,
-					'y' : perc.y,
-					'drawing' : drawing,
-					'id' : id
-				});
+		perc.x = (curr.x / canvas.width).toFixed(4);
+		perc.y = (curr.y / canvas.height).toFixed(4);
 
-				// Draw a line for the current user's movement, as it is
-				// not received in the socket.on('moving') event above
-				if (drawing) {
-					drawLine(prev.x + 1, prev.y, curr.x + 1, curr.y);
+		console.log('[moving] slide' + curSlide + ', perc(' + perc.x + ', ' + perc.y + '), curr(' + curr.x + ', ' + curr.y + '), canvas_Width_Height(' + canvas.width + ', ' + canvas.height + '), e.page(' + e.pageX + ', ' + e.pageY + '), img.offset_LEF_TOP(' + img.offset().left + ', ' + img.offset().top + ')');
 
-					// save percent points
-					var prePercX = (prev.x / canvas.width).toFixed(4);
-					var prePercY = (prev.y / canvas.height).toFixed(4);
-					p = {
-						x1 : prePercX,
-						y1 : prePercY,
-						x2 : perc.x,
-						y2 : perc.y
-					};
-					console.log('draw line: ' + JSON.stringify(p));
-					lines.push(p);
+		if (Math.sqrt(Math.pow(prev.x - curr.x, 2)
+				+ Math.pow(prev.y - curr.y, 2)) > 8) {
+			/*
+			 * var p = {x1:prev.x, y1:prev.y, x2:curr.x, y2:curr.y}
+			 * lines.push(p); draw(p); send(JSON.stringify(p)); prev =
+			 * curr;
+			 */
+			socket.emit('mousemove', {
+				'uuid' : uuid,
+				'x' : perc.x,
+				'y' : perc.y,
+				'drawing' : drawing,
+				'id' : id
+			});
 
-					prev.x = curr.x;
-					prev.y = curr.y;
-				}
+			// Draw a line for the current user's movement, as it is
+			// not received in the socket.on('moving') event above
+			if (drawing) {
+				drawLine(prev.x + 1, prev.y, curr.x + 1, curr.y);
+
+				// save percent points
+				var prePercX = (prev.x / canvas.width).toFixed(4);
+				var prePercY = (prev.y / canvas.height).toFixed(4);
+				p = {
+					x1 : prePercX,
+					y1 : prePercY,
+					x2 : perc.x,
+					y2 : perc.y
+				};
+				console.log('draw line: ' + JSON.stringify(p));
+				lines.push(p);
+
+				prev.x = curr.x;
+				prev.y = curr.y;
 			}
-		});
+		}
+	});
 
 	// end
 	doc.bind('mouseup mouseleave touchend touchcancel', function(e) {
