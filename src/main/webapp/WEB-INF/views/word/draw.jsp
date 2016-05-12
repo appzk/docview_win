@@ -80,7 +80,7 @@
 
     <div class="btn-word-sync-cmd-container text-center" style="position: fixed; bottom: 10px; left: 0px; right: 0px; text-align: center; z-index: 1000;">
       <!-- color selector -->
-      <select class="colorselector span1" style="max-width: 60px; background-color: red; color: white;">
+      <select class="colorselector span1" style="max-width: 60px; margin-top: 10px; display: inline-block; background-color: red; color: white;">
         <option value="black" style="background-color: black; color: white;"></option>
         <option value="blue" style="background-color: blue; color: white;"></option>
         <option value="red" style="background-color: red; color: white;" selected="selected"></option>
@@ -89,13 +89,15 @@
         <option value="gray" style="background-color: gray; color: white;"></option>
       </select>
       
-      <a cmd-string="left" class="btn btn-primary btn-cmd btn-cmd-previous-sync" style="display: inline-block;" href="#" title="上一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-left icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+      <a cmd-string="left" class="btn btn-primary btn-cmd btn-cmd-previous" style="display: inline-block;" href="#" title="上一页">&nbsp;&nbsp;<i class="icon-chevron-left icon-white"></i>&nbsp;&nbsp;</a>
       &nbsp;
-      <select class="select-page-selector-sync span1" style="width: 60px; margin-top: 10px; display: inline-block;">
+      <select class="select-page-selector span1" style="width: 60px; margin-top: 10px; display: inline-block;">
         <!-- PAGE NUMBERS HERE -->
       </select>
       &nbsp;
-      <a cmd-string="right" class="btn btn-primary btn-cmd btn-cmd-next-sync" style="display: inline-block;" href="#" title="下一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-right icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+      <a cmd-string="right" class="btn btn-primary btn-cmd btn-cmd-next" style="display: inline-block;" href="#" title="下一页">&nbsp;&nbsp;<i class="icon-chevron-right icon-white"></i>&nbsp;&nbsp;</a>
+      
+      <a cmd-string="clear" class="btn btn-primary btn-cmd btn-cmd-clear" style="display: inline-block;" href="#" title="清除">&nbsp;&nbsp;<i class="fa fa-eraser"></i>&nbsp;&nbsp;</a>
     </div>
 
     <div class="server-param-container" style="display: none;">
@@ -113,7 +115,7 @@
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
     <script src="/static/draw/js/socket.io-1.3.5.js?v=${version}"></script>
-    <script src="/static/idocv/js/word-img.js?v=${version}"></script>
+    <script src="/static/idocv/js/pdf-img-all.js?v=${version}"></script>	<!-- WORD reuse PDF img all -->
     <script src="/static/idocv/js/word-draw.js?v=${version}"></script>
     <script src="/static/idocv/js/stat.js?v=${version}"></script>
   </body>

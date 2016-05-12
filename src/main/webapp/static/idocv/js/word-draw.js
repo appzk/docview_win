@@ -100,7 +100,7 @@ $(document).ready(function() {
 			nextSlideSync();
 		} else if (event.keyCode == 13) {
 			var isFullscreen = $(document).fullScreen() ? true : false;
-			$('.img-container-sync').toggleFullScreen();
+			$('.pdf-content').toggleFullScreen();
 		}
 	});
 });
@@ -115,7 +115,7 @@ function initDraw() {
 	// set img & canvas
 	for (var i = 0; i < slideUrls.length; i++) {
 		var canvasHtml = '<canvas class="slide-canvas-' + (i + 1) + ' slide-canvas" style="width: 100%; height: 100%; border: 1px solid orange; position: absolute; left: 0px; top: 0px;">您的浏览器不支持画布！</canvas>';
-		$('.img-container-sync:eq(' + i + ')').append(canvasHtml);
+		$('.pdf-content:eq(' + i + ')').append(canvasHtml);
 		canvasArray.push($('.slide-canvas-' + (i + 1))[0]);
 		imgArray.push($('.slide-img-' + (i + 1)));
 		lines[i] = [];
@@ -136,12 +136,14 @@ function initDraw() {
 	ctx = canvasArray[curSlide - 1].getContext("2d");
 	img = imgArray[curSlide - 1];
 
-	$('.pdf-content').on("mouseenter mousedown touchstart", function() {
+	/*
+	$('.pdf-content').on("mousedown touchstart", function() {
 		curSlide = $(this).attr('id');
 		canvas = canvasArray[curSlide - 1];
 		ctx = canvasArray[curSlide - 1].getContext("2d");
 		img = imgArray[curSlide - 1];
 	});
+	*/
 	
 	// >>> TOOL BAR
 	
@@ -154,6 +156,12 @@ function initDraw() {
 function bindCanvasEvent() {
 	// start
 	$('canvas').bind('mousedown touchstart', function(e) {
+		// focus on current canvas
+		curSlide = $(this).parent().attr('id');
+		canvas = canvasArray[curSlide - 1];
+		ctx = canvasArray[curSlide - 1].getContext("2d");
+		img = imgArray[curSlide - 1];
+		
 		var type = e.type;
 		var oleft = img.offset().left;
 		var otop = img.offset().top;
@@ -260,22 +268,26 @@ function drawLine(fromx, fromy, tox, toy){
 	ctx.stroke();
 }
 
+function clear() {
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+}
+
 $(window).resize(function() {
 	resetImgSizeSync();
 });
 
 function resetImgSizeSync() {
-	$('.img-container-sync img').load(function() {
-		$('.slide-canvas').width($('.img-container-sync').width());
-		$('.slide-canvas').height($('.img-container-sync').height());
-		$('.slide-canvas')[0].width = $('.img-container-sync').width();
-		$('.slide-canvas')[0].height = $('.img-container-sync').height();
+	$('.pdf-content img').load(function() {
+		$('.slide-canvas').width($('.pdf-content').width());
+		$('.slide-canvas').height($('.pdf-content').height());
+		$('.slide-canvas')[0].width = $('.pdf-content').width();
+		$('.slide-canvas')[0].height = $('.pdf-content').height();
 		resetStroke();
 	});
-	$('.slide-canvas').width($('.img-container-sync').width());
-	$('.slide-canvas').height($('.img-container-sync').height());
-	$('.slide-canvas')[0].width = $('.img-container-sync').width();
-	$('.slide-canvas')[0].height = $('.img-container-sync').height();
+	$('.slide-canvas').width($('.pdf-content').width());
+	$('.slide-canvas').height($('.pdf-content').height());
+	$('.slide-canvas')[0].width = $('.pdf-content').width();
+	$('.slide-canvas')[0].height = $('.pdf-content').height();
 	resetStroke();
 }
 
@@ -314,10 +326,10 @@ function gotoSlideSync(slide) {
 	curSlide = slide;
 
 	/*
-	 * $(".img-container-sync img").fadeOut(function() { $(this).attr("src",
+	 * $(".pdf-content img").fadeOut(function() { $(this).attr("src",
 	 * slideUrls[slide - 1]).fadeIn(); });
 	 */
-	$(".img-container-sync img").attr("src", slideUrls[slide - 1]);
+	$(".pdf-content img").attr("src", slideUrls[slide - 1]);
 	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
 	$('.select-page-selector').val(slide);
 	$('.select-page-selector-sync').val(slide);

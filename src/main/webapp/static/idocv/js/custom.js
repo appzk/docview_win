@@ -107,7 +107,7 @@ function bindBottomPagingProgressImg() {
 			onEnter: function(element, position) {
 				// if(console) console.log('entering ' +  element.id);
 				// $("body").css('background-color', element.id);
-				var pos = element.id - 1;
+				var pos = element.id;
 				var percent = Math.round(pos / totalSize * 100);
 				// console.log('[onEnter>] percent: ' + percent + '(' + pos + '/' + totalSize + '), position: ' + JSON.stringify(position));
 				$('.bottom-paging-progress .bar').width('' + percent + '%');

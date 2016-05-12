@@ -10,6 +10,8 @@ var pages;
 var curPage = 1;
 var totalSize = 1;
 var lastImgWidth = 0;
+var slideUrls = new Array();
+var curSlide = 1;
 
 $(document).ready(function() {
 	
@@ -43,10 +45,11 @@ $(document).ready(function() {
 			// Image Content
 			for (i = 0; i < pages.length; i++) {
 				var page = pages[i];
+				slideUrls[i] = page.url;
 				if (i < 5) {
-					$('.span12').append('<div class="pdf-page"><div id="' + (i + 2) + '" class="pdf-content scroll-page"><img alt="第' + (i + 1) + '页" src="' + page.url + '" rel="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
+					$('.span12').append('<div class="pdf-page"><div id="' + (i + 1) + '" class="pdf-content scroll-page"><img class="slide-img-' + (i + 1) + '" alt="第' + (i + 1) + '页" src="' + page.url + '" rel="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
 				} else {
-					$('.span12').append('<div class="pdf-page"><div id="' + (i + 2) + '" class="pdf-content scroll-page"><img alt="第' + (i + 1) + '页" src="" rel="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
+					$('.span12').append('<div class="pdf-page"><div id="' + (i + 1) + '" class="pdf-content scroll-page"><img class="slide-img-' + (i + 1) + '" alt="第' + (i + 1) + '页" src="" rel="' + page.url + '"><br />' + (i + 1) + ' / ' + pages.length + '</div></div>');
 				}
 				$('.select-page-selector').append('<option>' + (i + 1) + '</option>');
 			}
