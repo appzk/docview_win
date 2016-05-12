@@ -12,10 +12,11 @@
 
     <!-- styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet" />
+    <!-- 
     <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
-    <link href="/static/pdf2htmlEX/css/base.css" rel="stylesheet" />
-    <link href="/static/pdf2htmlEX/css/fancy.css" rel="stylesheet" />
+     -->
 
     <!--[if lt IE 9]>
       <script src="/static/bootstrap/js/html5shiv.js"></script>
@@ -78,6 +79,16 @@
     </div><!--/.fluid-container-->
 
     <div class="btn-word-sync-cmd-container text-center" style="position: fixed; bottom: 10px; left: 0px; right: 0px; text-align: center; z-index: 1000;">
+      <!-- color selector -->
+      <select class="colorselector" style="max-width: 65px; background-color: red; color: white;">
+        <option value="black" style="background-color: black; color: white;">黑色</option>
+        <option value="blue" style="background-color: blue; color: white;">蓝色</option>
+        <option value="red" style="background-color: red; color: white;" selected="selected">红色</option>
+        <option value="green" style="background-color: green; color: white;">绿色</option>
+        <option value="yellow" style="background-color: yellow; color: white;">黄色</option>
+        <option value="gray" style="background-color: gray; color: white;">灰色</option>
+      </select>
+      
       <a cmd-string="left" class="btn btn-primary btn-cmd btn-cmd-previous-sync" style="display: inline-block;" href="#" title="上一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-left icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
       &nbsp;
       <select class="select-page-selector-sync span1" style="width: 60px; margin-top: 10px; display: inline-block;">
@@ -100,7 +111,6 @@
     <script src="/static/idocv/js/custom.js?v=${version}"></script>
     <script src="/static/scrollspy/js/jquery-scrollspy.js?v=${version}"></script>
     <script src="/static/urlparser/js/purl.js?v=${version}"></script>
-    <script src="/static/formvalidator/js/jquery.formvalidator.min.js?v=${version}"></script>
     <script src="/static/infinite-scroll/js/jquery.infinitescroll.js?v=${version}"></script>
     <script src="/static/draw/js/socket.io-1.3.5.js?v=${version}"></script>
     <script src="/static/idocv/js/word-img.js?v=${version}"></script>

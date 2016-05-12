@@ -138,6 +138,13 @@ function initDraw() {
 		img = imgArray[curSlide - 1];
 	});
 	
+	// >>> TOOL BAR
+	// color selector
+	$('.colorselector').change(function() {
+		$('.colorselector').css('background-color', $(this).val());
+		resetStroke();
+	});
+	
 	resetImgSizeSync();
 	bindCanvasEvent();
 }
@@ -243,13 +250,12 @@ function bindCanvasEvent() {
 }
 
 function drawLine(fromx, fromy, tox, toy){
+	ctx.beginPath();
+	ctx.strokeStyle = ctx.strokeStyle;
+	ctx.lineWidth = ctx.lineWidth;
+	ctx.lineCap = "round";
 	ctx.moveTo(fromx, fromy);
 	ctx.lineTo(tox, toy);
-	/*
-	 ctx.strokeStyle = 'red';
-	 ctx.lineWidth = "10";
-	 ctx.lineCap = "round";
-	 */
 	ctx.stroke();
 }
 
@@ -276,7 +282,7 @@ function resetStroke() {
 	if (canvasArray.length > 0) {
 		for (var i = 0; i < canvasArray.length; i++) {
 			var ctxLocal = canvasArray[i].getContext("2d");
-			ctxLocal.strokeStyle = 'red';
+			ctxLocal.strokeStyle = $('.colorselector').val();
 			ctxLocal.lineWidth = "2";
 			ctxLocal.lineCap = "round";
 		}
