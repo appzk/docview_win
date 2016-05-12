@@ -1,0 +1,3 @@
+﻿from: http://fontawesome.io/
+fontawesome edition: 4.6.2
+download date: 20160512

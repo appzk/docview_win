@@ -12,7 +12,7 @@
 
     <!-- styles -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/idocv/css/style.css?v=${version}" rel="stylesheet">
 
     <!--[if lt IE 9]>
