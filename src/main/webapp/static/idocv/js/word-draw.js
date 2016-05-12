@@ -235,7 +235,7 @@ function bindCanvasEvent() {
 					width: ctx.lineWidth		// line width
 				};
 				console.log('draw line: ' + JSON.stringify(p));
-				lines[curSlide].push(p);
+				lines[curSlide - 1].push(p);
 
 				prev.x = curr.x;
 				prev.y = curr.y;
