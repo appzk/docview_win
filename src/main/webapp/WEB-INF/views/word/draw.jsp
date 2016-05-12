@@ -80,13 +80,13 @@
 
     <div class="btn-word-sync-cmd-container text-center" style="position: fixed; bottom: 10px; left: 0px; right: 0px; text-align: center; z-index: 1000;">
       <!-- color selector -->
-      <select class="colorselector" style="max-width: 65px; background-color: red; color: white;">
-        <option value="black" style="background-color: black; color: white;">黑色</option>
-        <option value="blue" style="background-color: blue; color: white;">蓝色</option>
-        <option value="red" style="background-color: red; color: white;" selected="selected">红色</option>
-        <option value="green" style="background-color: green; color: white;">绿色</option>
-        <option value="yellow" style="background-color: yellow; color: white;">黄色</option>
-        <option value="gray" style="background-color: gray; color: white;">灰色</option>
+      <select class="colorselector span1" style="max-width: 60px; background-color: red; color: white;">
+        <option value="black" style="background-color: black; color: white;"></option>
+        <option value="blue" style="background-color: blue; color: white;"></option>
+        <option value="red" style="background-color: red; color: white;" selected="selected"></option>
+        <option value="green" style="background-color: green; color: white;"></option>
+        <option value="yellow" style="background-color: yellow; color: white;"></option>
+        <option value="gray" style="background-color: gray; color: white;"></option>
       </select>
       
       <a cmd-string="left" class="btn btn-primary btn-cmd btn-cmd-previous-sync" style="display: inline-block;" href="#" title="上一页">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-chevron-left icon-white"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
