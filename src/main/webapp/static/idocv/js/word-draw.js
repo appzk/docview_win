@@ -156,6 +156,8 @@ function initDraw() {
 function bindCanvasEvent() {
 	// start
 	$('canvas').bind('mousedown touchstart', function(e) {
+		console.log('[CANVAS EVENT] mousedown touchstart ...');
+
 		// focus on current canvas
 		curSlide = $(this).parent().attr('id');
 		canvas = canvasArray[curSlide - 1];
@@ -192,6 +194,7 @@ function bindCanvasEvent() {
 
 	// move
 	$('canvas').bind('mousemove touchmove', function(e) {
+		console.log('[CANVAS EVENT] mousemove touchmove ...');
 		e.preventDefault();
 		var oleft = img.offset().left;
 		var otop = img.offset().top;
@@ -253,8 +256,9 @@ function bindCanvasEvent() {
 
 	// end
 	doc.bind('mouseup mouseleave touchend touchcancel', function(e) {
-		e.preventDefault();
+		console.log('[CANVAS EVENT] mouseup mouseleave touchend touchcancel ...');
 		drawing = false;
+		// e.preventDefault();	// enable bottom tool bar event.
 	});
 }
 
