@@ -12,6 +12,7 @@ var drawServer = $('.server-param-container :text[key="conf-draw-server"]')
 	.val();
 
 var canvasArray = new Array();
+var ctxArray = new Array();
 var imgArray = new Array();
 
 var doc = $(document);
@@ -40,6 +41,10 @@ var curr = {};
 var perc = {};
 // points (from -> to)
 var p;
+
+var imgWidth;
+var imgHeight;
+var imgRatio;	// height/width
 
 var socket = io.connect(drawServer);
 
@@ -71,7 +76,7 @@ $(document).ready(function() {
 				socket.emit('clear', {
 					'uuid' : uuid,
 				});
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				clear();
 				// location.reload();
 			}
 			// iosocket.send($(this).attr('data-key'));
@@ -111,12 +116,16 @@ function initDraw() {
 		return;
 	}
 	clearInterval(imgLoadInterval);
+	imgWidth = $('img')[0].width;
+	imgHeight = $('img')[0].height;
+	imgRatio = imgHeight / imgWidth;
 
 	// set img & canvas
 	for (var i = 0; i < slideUrls.length; i++) {
 		var canvasHtml = '<canvas class="slide-canvas-' + (i + 1) + ' slide-canvas" style="width: 100%; height: 100%; border: 1px solid orange; position: absolute; left: 0px; top: 0px;">您的浏览器不支持画布！</canvas>';
 		$('.pdf-content:eq(' + i + ')').append(canvasHtml);
 		canvasArray.push($('.slide-canvas-' + (i + 1))[0]);
+		ctxArray.push(canvasArray[i].getContext("2d"));
 		imgArray.push($('.slide-img-' + (i + 1)));
 		lines[i] = [];
 	}
@@ -129,7 +138,8 @@ function initDraw() {
 			canvasArray[i].height = fstCvsH;
 		}
 		resetStroke();
-	}, 5)
+		$('#back-to-top').remove();
+	}, 5);
 
 	curSlide = 1;
 	canvas = canvasArray[curSlide - 1];
@@ -144,12 +154,11 @@ function initDraw() {
 		img = imgArray[curSlide - 1];
 	});
 	*/
-	
-	// >>> TOOL BAR
-	
-	
+
 	resetImgSizeSync();
 	bindCanvasEvent();
+
+	restore();
 }
 
 // bind canvas event: start -> move -> end
@@ -157,11 +166,12 @@ function bindCanvasEvent() {
 	// start
 	$('canvas').bind('mousedown touchstart', function(e) {
 		console.log('[CANVAS EVENT] mousedown touchstart ...');
+		resetStroke();
 
 		// focus on current canvas
 		curSlide = $(this).parent().attr('id');
 		canvas = canvasArray[curSlide - 1];
-		ctx = canvasArray[curSlide - 1].getContext("2d");
+		ctx = ctxArray[curSlide - 1];
 		img = imgArray[curSlide - 1];
 		
 		var type = e.type;
@@ -238,12 +248,13 @@ function bindCanvasEvent() {
 				var prePercX = (prev.x / canvas.width).toFixed(4);
 				var prePercY = (prev.y / canvas.height).toFixed(4);
 				p = {
+					p: curSlide,
 					x1 : prePercX,
 					y1 : prePercY,
 					x2 : perc.x,
 					y2 : perc.y,
-					color: ctx.strokeStyle,	// line color
-					width: ctx.lineWidth		// line width
+					c: ctx.strokeStyle,	// line color
+					w: ctx.lineWidth		// line width
 				};
 				console.log('draw line: ' + JSON.stringify(p));
 				lines[curSlide - 1].push(p);
@@ -258,6 +269,8 @@ function bindCanvasEvent() {
 	doc.bind('mouseup mouseleave touchend touchcancel', function(e) {
 		console.log('[CANVAS EVENT] mouseup mouseleave touchend touchcancel ...');
 		drawing = false;
+
+		save();
 		// e.preventDefault();	// enable bottom tool bar event.
 	});
 }
@@ -272,33 +285,95 @@ function drawLine(fromx, fromy, tox, toy){
 	ctx.stroke();
 }
 
+function drawLinePro(page, fromx, fromy, tox, toy, color, width){
+	var curCtx = canvasArray[page - 1].getContext("2d");
+	curCtx.beginPath();
+	curCtx.strokeStyle = color;
+	curCtx.lineWidth = width;
+	curCtx.lineCap = "round";
+	curCtx.moveTo(fromx, fromy);
+	curCtx.lineTo(tox, toy);
+	curCtx.stroke();
+}
+
+function redrawAll() {
+	if (lines) {
+		for (var i = 0; i < lines.length; i++) {
+			for (var j = 0; j < lines[i].length; j++) {
+				var p = lines[i][j];
+				drawLinePro(p.p, imgWidth * p.x1, imgHeight * p.y1, imgWidth * p.x2, imgHeight * p.y2, p.c, p.w);
+			}
+		}
+	}
+}
+
+function save() {
+	// store lines to localStorage
+	if(typeof(Storage) !== "undefined") {
+		localStorage.setItem('lines', JSON.stringify(lines));
+		// Code for localStorage
+	}
+}
+
+function restore() {
+	// restore lines to localStorage
+	setTimeout(function () {
+		if(typeof(Storage) !== "undefined") {
+			var linesStr = localStorage.getItem('lines');
+			if (!!linesStr && ('null' !== linesStr)) {
+				lines = JSON.parse(linesStr);
+				redrawAll();
+			}
+		}
+	}, 200);
+}
+
 function clear() {
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	lines[curSlide - 1] = [];
+	save();
 }
 
 $(window).resize(function() {
+	console.log('[WINDOW RESIZE] pdf-content(' + $('.pdf-content').width() + ', ' + $('.pdf-content').height() + ')');
 	resetImgSizeSync();
+	redrawAll();
 });
 
 function resetImgSizeSync() {
+	var curWidth = $('.pdf-content').width();
+	var curHeight = $('.pdf-content').height();
+	var curRatio = curHeight / curWidth;
+	curHeight = curWidth * imgRatio;
+
+	imgWidth = curWidth;
+	imgHeight = curHeight;
+
+	/*
 	$('.pdf-content img').load(function() {
-		$('.slide-canvas').width($('.pdf-content').width());
-		$('.slide-canvas').height($('.pdf-content').height());
-		$('.slide-canvas')[0].width = $('.pdf-content').width();
-		$('.slide-canvas')[0].height = $('.pdf-content').height();
+		$('.slide-canvas').width(curWidth);
+		$('.slide-canvas').height(curHeight);
+		$('.slide-canvas')[0].width = curWidth;
+		$('.slide-canvas')[0].height = curHeight;
 		resetStroke();
 	});
-	$('.slide-canvas').width($('.pdf-content').width());
-	$('.slide-canvas').height($('.pdf-content').height());
-	$('.slide-canvas')[0].width = $('.pdf-content').width();
-	$('.slide-canvas')[0].height = $('.pdf-content').height();
+	*/
+	$('.slide-canvas').width(curWidth);
+	$('.slide-canvas').height(curHeight);
+	for (var i = 0; i < $('.slide-canvas').length; i++) {
+		$('.slide-canvas')[i].width = curWidth;
+		$('.slide-canvas')[i].height = curHeight;
+	}
+	$('.pdf-content').height(curHeight);
+	$('.pdf-content img').width(curWidth);
+	$('.pdf-content img').height(curHeight);
 	resetStroke();
 }
 
 function resetStroke() {
 	if (canvasArray.length > 0) {
 		for (var i = 0; i < canvasArray.length; i++) {
-			var ctxLocal = canvasArray[i].getContext("2d");
+			var ctxLocal = ctxArray[i];
 			ctxLocal.strokeStyle = $('.colorselector').val();
 			ctxLocal.lineWidth = "2";
 			ctxLocal.lineCap = "round";
