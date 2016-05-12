@@ -77,6 +77,11 @@ $(document).ready(function() {
 			// iosocket.send($(this).attr('data-key'));
 		}
 	});
+	// color selector
+	$('.colorselector').change(function() {
+		$('.colorselector').css('background-color', $(this).val());
+		resetStroke();
+	});
 
 	// page selector
 	$('.select-page-selector-sync').val(curSlide);
@@ -139,11 +144,7 @@ function initDraw() {
 	});
 	
 	// >>> TOOL BAR
-	// color selector
-	$('.colorselector').change(function() {
-		$('.colorselector').css('background-color', $(this).val());
-		resetStroke();
-	});
+	
 	
 	resetImgSizeSync();
 	bindCanvasEvent();
