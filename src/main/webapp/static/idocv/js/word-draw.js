@@ -11,6 +11,9 @@
 var drawServer = $('.server-param-container :text[key="conf-draw-server"]')
 	.val();
 
+var uid = !!($.url().param('uid')) ? $.url().param('uid') : 'default';
+var localStorageKey = 'IDOCV_DRAW_LINES_' + uuid + '_' + uid;
+
 var canvasArray = new Array();
 var ctxArray = new Array();
 var imgArray = new Array();
@@ -23,6 +26,8 @@ var img;
 
 // all screen lines, page->lines
 var lines = [[]];
+// whether the canvas lines were changed or NOT, if it is changed, it should be saved again.
+var isChanged = false;
 
 // Generate an unique ID
 var id = Math.round($.now() * Math.random());
@@ -119,6 +124,8 @@ function initDraw() {
 	imgWidth = $('img')[0].width;
 	imgHeight = $('img')[0].height;
 	imgRatio = imgHeight / imgWidth;
+
+	console.log('[INIT DRAW] uid=' + uid);
 
 	// set img & canvas
 	for (var i = 0; i < slideUrls.length; i++) {
@@ -283,6 +290,7 @@ function drawLine(fromx, fromy, tox, toy){
 	ctx.moveTo(fromx, fromy);
 	ctx.lineTo(tox, toy);
 	ctx.stroke();
+	isChanged = true;
 }
 
 function drawLinePro(page, fromx, fromy, tox, toy, color, width){
@@ -294,6 +302,7 @@ function drawLinePro(page, fromx, fromy, tox, toy, color, width){
 	curCtx.moveTo(fromx, fromy);
 	curCtx.lineTo(tox, toy);
 	curCtx.stroke();
+	isChanged = true;
 }
 
 function redrawAll() {
@@ -310,14 +319,42 @@ function redrawAll() {
 function save() {
 	// store lines to localStorage
 	if(typeof(Storage) !== "undefined") {
-		localStorage.setItem('lines', JSON.stringify(lines));
+		localStorage.setItem(localStorageKey, JSON.stringify(lines));
 		// Code for localStorage
 	}
+
+	$.post('/draw/save/' + uuid, { uid: uid, data: JSON.stringify(lines) }, function(data, status){
+		console.log("[LINES SAVED] Status: " + status + ", Data: " + JSON.stringify(data));
+	});
+
+	isChanged = false;
 }
 
 function restore() {
-	// restore lines to localStorage
+	// restore lines from localStorage
 	setTimeout(function () {
+		$.get( '/draw/get/' + uuid, { uid: uid } ).done(function( data ) {
+			var code = data.code;
+			if (1 == code) {
+				var loadedData = data.data;
+				if (!!loadedData && loadedData.length > 0) {
+					lines = JSON.parse(loadedData);
+					redrawAll();
+				}
+				console.log('[DRAW DATA LOADED] ' + loadedData);
+			} else {
+				console.log('[DRAW DATA LOAD ERROR] data: ' + JSON.stringify(data));
+				if(typeof(Storage) !== "undefined") {
+					var linesStr = localStorage.getItem(localStorageKey);
+					if (!!linesStr && ('null' !== linesStr)) {
+						console.log('[LOADING DATA FROM LOCAL STORAGE] lines: ' + linesStr);
+						lines = JSON.parse(linesStr);
+						redrawAll();
+					}
+				}
+			}
+		});
+		/*
 		if(typeof(Storage) !== "undefined") {
 			var linesStr = localStorage.getItem('lines');
 			if (!!linesStr && ('null' !== linesStr)) {
@@ -325,12 +362,14 @@ function restore() {
 				redrawAll();
 			}
 		}
+		*/
 	}, 200);
 }
 
 function clear() {
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	lines[curSlide - 1] = [];
+	isChanged = true;
 	save();
 }
 
