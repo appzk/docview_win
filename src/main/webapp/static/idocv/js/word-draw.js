@@ -64,7 +64,7 @@ $(document).ready(function() {
 		return false;
 	}
 
-	gotoSlideSync(1);
+	// gotoSlideSync(1);
 
 	// receive socket event
 	// speaker does NOT need receive moving event from audience
@@ -77,9 +77,25 @@ $(document).ready(function() {
 			var cmdString = $(this).attr('cmd-string');
 			var pageNum = 0;
 			if ('left' == cmdString) {
-				preSlideSync();
+				// preSlideSync();
+				console.log('[DRAW TURN PAGE] after turn left cur page: ' + curPage);
+				// sync flip event to audience
+				/*
+				socket.emit('flip', {
+					'uuid' : uuid,
+					'page' : curPage,
+				});
+				*/
 			} else if ('right' == cmdString) {
-				nextSlideSync();
+				// nextSlideSync();
+				console.log('[DRAW TURN PAGE] after turn right cur page: ' + curPage);
+				// sync flip event to audience
+				/*
+				socket.emit('flip', {
+					'uuid' : uuid,
+					'page' : curPage,
+				});
+				*/
 			} else if ('clear' == cmdString) {
 				socket.emit('clear', {
 					'uuid' : uuid,
@@ -120,15 +136,6 @@ $(document).ready(function() {
 		resetStroke();
 		resetTool();
 	});
-
-	// page selector
-	$('.select-page-selector-sync').val(curPage);
-	$('.select-page-selector-sync').change(function() {
-		var selectNum = $(".select-page-selector-sync option:selected").text();
-		gotoSlideSync(selectNum);
-	});
-
-	// send draw event
 
 	// keyboard
 	$(document).keydown(function(event){
@@ -313,45 +320,15 @@ function bindCanvasEvent() {
 	});
 }
 
-/*
-function drawLine(fromx, fromy, tox, toy){
-	ctx.beginPath();
-	if (tool == 'p') {
-		ctx.globalCompositeOperation="source-over";
-		ctx.strokeStyle = ctx.strokeStyle;
-		ctx.lineWidth = ctx.lineWidth;
-		ctx.lineCap = "round";
-		ctx.moveTo(fromx, fromy);
-		ctx.lineTo(tox, toy);
-		ctx.stroke();
-		isChanged = true;
-	} else if (tool == 'e') {
-		ctx.globalCompositeOperation="destination-out";
-		ctx.strokeStyle = ctx.strokeStyle;
-		ctx.lineWidth = ctx.lineWidth + 10;
-		ctx.lineCap = "round";
-		ctx.moveTo(fromx, fromy);
-		ctx.lineTo(tox, toy);
-		ctx.stroke();
-		isChanged = true;
-		/*
-		ctx.globalCompositeOperation="destination-out";
-		ctx.arc(tox,toy,12,0,Math.PI*2,false);
-		ctx.fill();
-		*
-	}
-}
-*/
-
 function drawLinePro(page, tool, fromx, fromy, tox, toy, color, width){
 	var curCtx = canvasArray[page - 1].getContext("2d");
 	curCtx.beginPath();
 	if (tool == 'p') {
-		var rawGlobalCompositeOperation = ctx.globalCompositeOperation;
+		var rawGlobalCompositeOperation = curCtx.globalCompositeOperation;
 		var rawStrokeStyle = curCtx.strokeStyle;
 		var rawLineWidth = curCtx.lineWidth;
-		
-		ctx.globalCompositeOperation="source-over";
+
+		curCtx.globalCompositeOperation="source-over";
 		curCtx.strokeStyle = color;
 		curCtx.lineWidth = width;
 		curCtx.lineCap = "round";
@@ -359,25 +336,25 @@ function drawLinePro(page, tool, fromx, fromy, tox, toy, color, width){
 		curCtx.lineTo(tox, toy);
 		curCtx.stroke();
 		isChanged = true;
-		
-		ctx.globalCompositeOperation = rawGlobalCompositeOperation;
+
+		curCtx.globalCompositeOperation = rawGlobalCompositeOperation;
 		curCtx.strokeStyle = rawStrokeStyle;
 		curCtx.lineWidth = rawLineWidth;
 	} else if (tool == 'e') {
-		var rawGlobalCompositeOperation = ctx.globalCompositeOperation;
+		var rawGlobalCompositeOperation = curCtx.globalCompositeOperation;
 		var rawStrokeStyle = curCtx.strokeStyle;
 		var rawLineWidth = curCtx.lineWidth;
-		
-		ctx.globalCompositeOperation="destination-out";
+
+		curCtx.globalCompositeOperation="destination-out";
 		curCtx.strokeStyle = color;
-		curCtx.lineWidth = width + 20;
+		curCtx.lineWidth = width + 30;
 		curCtx.lineCap = "round";
 		curCtx.moveTo(fromx, fromy);
 		curCtx.lineTo(tox, toy);
 		curCtx.stroke();
 		isChanged = true;
-		
-		ctx.globalCompositeOperation = rawGlobalCompositeOperation;
+
+		curCtx.globalCompositeOperation = rawGlobalCompositeOperation;
 		curCtx.strokeStyle = rawStrokeStyle;
 		curCtx.lineWidth = rawLineWidth;
 	}
@@ -396,10 +373,12 @@ function redrawAll() {
 
 function save() {
 	// store lines to localStorage
+	/*
 	if(typeof(Storage) !== "undefined") {
 		localStorage.setItem(localStorageKey, JSON.stringify(lines));
 		// Code for localStorage
 	}
+	*/
 
 	$.post('/draw/save/' + uuid, { uid: uid, data: JSON.stringify(lines) }, function(data, status){
 		console.log("[LINES SAVED] Status: " + status + ", Data: " + JSON.stringify(data));
@@ -420,16 +399,6 @@ function restore() {
 					redrawAll();
 				}
 				console.log('[DRAW DATA LOADED] ' + loadedData);
-			} else {
-				console.log('[DRAW DATA LOAD ERROR] data: ' + JSON.stringify(data));
-				if(typeof(Storage) !== "undefined") {
-					var linesStr = localStorage.getItem(localStorageKey);
-					if (!!linesStr && ('null' !== linesStr)) {
-						console.log('[LOADING DATA FROM LOCAL STORAGE] lines: ' + linesStr);
-						lines = JSON.parse(linesStr);
-						redrawAll();
-					}
-				}
 			}
 		});
 		/*
@@ -514,42 +483,4 @@ function resetTool() {
 			size: 32
 		});
 	}
-}
-
-function preSlideSync() {
-	var preSlide = eval(Number(curPage) - 1);
-	gotoSlideSync(preSlide);
-}
-
-function nextSlideSync() {
-	var nextSlide = eval(Number(curPage) + 1);
-	gotoSlideSync(nextSlide);
-}
-
-function gotoSlideSync(slide) {
-	// slide turning
-	var preSlide = curPage;
-	var slideSum = slideUrls.length;
-	if (slide <= 0) {
-		slide = 1;
-	} else if (slideSum < slide) {
-		slide = slideSum;
-	}
-	curPage = slide;
-
-	/*
-	 * $(".pdf-content img").fadeOut(function() { $(this).attr("src",
-	 * slideUrls[slide - 1]).fadeIn(); });
-	 */
-	$(".pdf-content img").attr("src", slideUrls[slide - 1]);
-	var percent = Math.ceil((curPage / slideUrls.length) * 100);
-	$('.select-page-selector').val(slide);
-	$('.select-page-selector-sync').val(slide);
-	$('.bottom-paging-progress .bar').width('' + percent + '%');
-
-	// sync flip event to audience
-	socket.emit('flip', {
-		'uuid' : uuid,
-		'page' : curPage,
-	});
 }

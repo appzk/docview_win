@@ -49,8 +49,8 @@ public class DrawController {
 	@ResponseBody
 	@RequestMapping("save/{uuid}")
 	public Map<String, Object> save(@PathVariable(value = "uuid") String uuid,
-									@RequestParam(value = "uid", required = false) String uid,
-									@RequestParam(value = "data", required = false) String data) {
+									@RequestParam(value = "uid", required = true) String uid,
+									@RequestParam(value = "data", required = true) String data) {
 		try {
 			DocVo docVo = docService.getByUuid(uuid);
 			String docParseDir = rcUtil.getParseDir(docVo.getRid());
