@@ -5,7 +5,7 @@
  */
 
 // predefined params in word-pdf-single.js
-// slideUrls, curSlide, uuid, sessionId
+// slideUrls, curPage, uuid, sessionId
 
 // draw server
 var drawServer = $('.server-param-container :text[key="conf-draw-server"]')
@@ -47,6 +47,9 @@ var perc = {};
 // points (from -> to)
 var p;
 
+// draw mode, pen(p) OR eraser(e)
+var tool = 'p';
+
 var imgWidth;
 var imgHeight;
 var imgRatio;	// height/width
@@ -87,14 +90,39 @@ $(document).ready(function() {
 			// iosocket.send($(this).attr('data-key'));
 		}
 	});
+	$('.btn-group-tool').on('click touchstart', function(e) {
+		e.preventDefault();
+		$('.btn-group-tool').removeClass('active');
+		$(this).addClass('active');
+		var cmdString = $(this).attr('cmd-string');
+		console.log('[TOOL SWITCH] tool=' + cmdString);
+		if ('pen' == cmdString) {
+			tool = 'p';
+			/*
+			$('.pdf-page').awesomeCursor('pencil', {
+				hotspot: 'bottom left',
+				color: $('.colorselector').val(),
+				size: 32
+			});
+			*/
+		} else if ('eraser' == cmdString) {
+			tool = 'e';
+			/*
+			$('.pdf-page').awesomeCursor('eraser');
+			*/
+		}
+		resetTool();
+	});
+	
 	// color selector
 	$('.colorselector').change(function() {
 		$('.colorselector').css('background-color', $(this).val());
 		resetStroke();
+		resetTool();
 	});
 
 	// page selector
-	$('.select-page-selector-sync').val(curSlide);
+	$('.select-page-selector-sync').val(curPage);
 	$('.select-page-selector-sync').change(function() {
 		var selectNum = $(".select-page-selector-sync option:selected").text();
 		gotoSlideSync(selectNum);
@@ -148,17 +176,17 @@ function initDraw() {
 		$('#back-to-top').remove();
 	}, 5);
 
-	curSlide = 1;
-	canvas = canvasArray[curSlide - 1];
-	ctx = canvasArray[curSlide - 1].getContext("2d");
-	img = imgArray[curSlide - 1];
+	curPage = 1;
+	canvas = canvasArray[curPage - 1];
+	ctx = canvasArray[curPage - 1].getContext("2d");
+	img = imgArray[curPage - 1];
 
 	/*
 	$('.pdf-content').on("mousedown touchstart", function() {
-		curSlide = $(this).attr('id');
-		canvas = canvasArray[curSlide - 1];
-		ctx = canvasArray[curSlide - 1].getContext("2d");
-		img = imgArray[curSlide - 1];
+		curPage = $(this).attr('id');
+		canvas = canvasArray[curPage - 1];
+		ctx = canvasArray[curPage - 1].getContext("2d");
+		img = imgArray[curPage - 1];
 	});
 	*/
 
@@ -176,10 +204,10 @@ function bindCanvasEvent() {
 		resetStroke();
 
 		// focus on current canvas
-		curSlide = $(this).parent().attr('id');
-		canvas = canvasArray[curSlide - 1];
-		ctx = ctxArray[curSlide - 1];
-		img = imgArray[curSlide - 1];
+		curPage = $(this).parent().attr('id');
+		canvas = canvasArray[curPage - 1];
+		ctx = ctxArray[curPage - 1];
+		img = imgArray[curPage - 1];
 		
 		var type = e.type;
 		var oleft = img.offset().left;
@@ -229,7 +257,7 @@ function bindCanvasEvent() {
 		perc.x = (curr.x / canvas.width).toFixed(4);
 		perc.y = (curr.y / canvas.height).toFixed(4);
 
-		console.log('[moving] slide' + curSlide + ', perc(' + perc.x + ', ' + perc.y + '), curr(' + curr.x + ', ' + curr.y + '), canvas_Width_Height(' + canvas.width + ', ' + canvas.height + '), e.page(' + e.pageX + ', ' + e.pageY + '), img.offset_LEF_TOP(' + img.offset().left + ', ' + img.offset().top + ')');
+		console.log('[moving] slide' + curPage + ', perc(' + perc.x + ', ' + perc.y + '), curr(' + curr.x + ', ' + curr.y + '), canvas_Width_Height(' + canvas.width + ', ' + canvas.height + '), e.page(' + e.pageX + ', ' + e.pageY + '), img.offset_LEF_TOP(' + img.offset().left + ', ' + img.offset().top + ')');
 
 		if (Math.sqrt(Math.pow(prev.x - curr.x, 2)
 				+ Math.pow(prev.y - curr.y, 2)) > 8) {
@@ -249,22 +277,25 @@ function bindCanvasEvent() {
 			// Draw a line for the current user's movement, as it is
 			// not received in the socket.on('moving') event above
 			if (drawing) {
-				drawLine(prev.x + 1, prev.y, curr.x + 1, curr.y);
+				// drawLine(prev.x + 1, prev.y, curr.x + 1, curr.y);
+				// page, tool, fromx, fromy, tox, toy, color, width
+				drawLinePro(curPage, tool, prev.x + 1, prev.y, curr.x + 1, curr.y, ctx.strokeStyle, ctx.lineWidth);
 
 				// save percent points
 				var prePercX = (prev.x / canvas.width).toFixed(4);
 				var prePercY = (prev.y / canvas.height).toFixed(4);
 				p = {
-					p: curSlide,
+					p: curPage,
+					t: tool,
 					x1 : prePercX,
 					y1 : prePercY,
 					x2 : perc.x,
 					y2 : perc.y,
-					c: ctx.strokeStyle,	// line color
+					c: ctx.strokeStyle,			// line color
 					w: ctx.lineWidth		// line width
 				};
 				console.log('draw line: ' + JSON.stringify(p));
-				lines[curSlide - 1].push(p);
+				lines[curPage - 1].push(p);
 
 				prev.x = curr.x;
 				prev.y = curr.y;
@@ -282,27 +313,74 @@ function bindCanvasEvent() {
 	});
 }
 
+/*
 function drawLine(fromx, fromy, tox, toy){
 	ctx.beginPath();
-	ctx.strokeStyle = ctx.strokeStyle;
-	ctx.lineWidth = ctx.lineWidth;
-	ctx.lineCap = "round";
-	ctx.moveTo(fromx, fromy);
-	ctx.lineTo(tox, toy);
-	ctx.stroke();
-	isChanged = true;
+	if (tool == 'p') {
+		ctx.globalCompositeOperation="source-over";
+		ctx.strokeStyle = ctx.strokeStyle;
+		ctx.lineWidth = ctx.lineWidth;
+		ctx.lineCap = "round";
+		ctx.moveTo(fromx, fromy);
+		ctx.lineTo(tox, toy);
+		ctx.stroke();
+		isChanged = true;
+	} else if (tool == 'e') {
+		ctx.globalCompositeOperation="destination-out";
+		ctx.strokeStyle = ctx.strokeStyle;
+		ctx.lineWidth = ctx.lineWidth + 10;
+		ctx.lineCap = "round";
+		ctx.moveTo(fromx, fromy);
+		ctx.lineTo(tox, toy);
+		ctx.stroke();
+		isChanged = true;
+		/*
+		ctx.globalCompositeOperation="destination-out";
+		ctx.arc(tox,toy,12,0,Math.PI*2,false);
+		ctx.fill();
+		*
+	}
 }
+*/
 
-function drawLinePro(page, fromx, fromy, tox, toy, color, width){
+function drawLinePro(page, tool, fromx, fromy, tox, toy, color, width){
 	var curCtx = canvasArray[page - 1].getContext("2d");
 	curCtx.beginPath();
-	curCtx.strokeStyle = color;
-	curCtx.lineWidth = width;
-	curCtx.lineCap = "round";
-	curCtx.moveTo(fromx, fromy);
-	curCtx.lineTo(tox, toy);
-	curCtx.stroke();
-	isChanged = true;
+	if (tool == 'p') {
+		var rawGlobalCompositeOperation = ctx.globalCompositeOperation;
+		var rawStrokeStyle = curCtx.strokeStyle;
+		var rawLineWidth = curCtx.lineWidth;
+		
+		ctx.globalCompositeOperation="source-over";
+		curCtx.strokeStyle = color;
+		curCtx.lineWidth = width;
+		curCtx.lineCap = "round";
+		curCtx.moveTo(fromx, fromy);
+		curCtx.lineTo(tox, toy);
+		curCtx.stroke();
+		isChanged = true;
+		
+		ctx.globalCompositeOperation = rawGlobalCompositeOperation;
+		curCtx.strokeStyle = rawStrokeStyle;
+		curCtx.lineWidth = rawLineWidth;
+	} else if (tool == 'e') {
+		var rawGlobalCompositeOperation = ctx.globalCompositeOperation;
+		var rawStrokeStyle = curCtx.strokeStyle;
+		var rawLineWidth = curCtx.lineWidth;
+		
+		ctx.globalCompositeOperation="destination-out";
+		curCtx.strokeStyle = color;
+		curCtx.lineWidth = width + 20;
+		curCtx.lineCap = "round";
+		curCtx.moveTo(fromx, fromy);
+		curCtx.lineTo(tox, toy);
+		curCtx.stroke();
+		isChanged = true;
+		
+		ctx.globalCompositeOperation = rawGlobalCompositeOperation;
+		curCtx.strokeStyle = rawStrokeStyle;
+		curCtx.lineWidth = rawLineWidth;
+	}
 }
 
 function redrawAll() {
@@ -310,7 +388,7 @@ function redrawAll() {
 		for (var i = 0; i < lines.length; i++) {
 			for (var j = 0; j < lines[i].length; j++) {
 				var p = lines[i][j];
-				drawLinePro(p.p, imgWidth * p.x1, imgHeight * p.y1, imgWidth * p.x2, imgHeight * p.y2, p.c, p.w);
+				drawLinePro(p.p, p.t, imgWidth * p.x1, imgHeight * p.y1, imgWidth * p.x2, imgHeight * p.y2, p.c, p.w);
 			}
 		}
 	}
@@ -368,7 +446,7 @@ function restore() {
 
 function clear() {
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-	lines[curSlide - 1] = [];
+	lines[curPage - 1] = [];
 	isChanged = true;
 	save();
 }
@@ -422,33 +500,49 @@ function resetStroke() {
 	}
 }
 
+function resetTool() {
+	if (tool == 'p') {
+		$('.pdf-page').awesomeCursor('pencil', {
+			hotspot: 'bottom left',
+			color: $('.colorselector').val(),
+			size: 32
+		});
+	} else if (tool == 'e') {
+		$('.pdf-page').awesomeCursor('eraser', {
+			hotspot: 'bottom left',
+			color: 'grey',
+			size: 32
+		});
+	}
+}
+
 function preSlideSync() {
-	var preSlide = eval(Number(getCurSlide()) - 1);
+	var preSlide = eval(Number(curPage) - 1);
 	gotoSlideSync(preSlide);
 }
 
 function nextSlideSync() {
-	var nextSlide = eval(Number(getCurSlide()) + 1);
+	var nextSlide = eval(Number(curPage) + 1);
 	gotoSlideSync(nextSlide);
 }
 
 function gotoSlideSync(slide) {
 	// slide turning
-	var preSlide = curSlide;
+	var preSlide = curPage;
 	var slideSum = slideUrls.length;
 	if (slide <= 0) {
 		slide = 1;
 	} else if (slideSum < slide) {
 		slide = slideSum;
 	}
-	curSlide = slide;
+	curPage = slide;
 
 	/*
 	 * $(".pdf-content img").fadeOut(function() { $(this).attr("src",
 	 * slideUrls[slide - 1]).fadeIn(); });
 	 */
 	$(".pdf-content img").attr("src", slideUrls[slide - 1]);
-	var percent = Math.ceil((curSlide / slideUrls.length) * 100);
+	var percent = Math.ceil((curPage / slideUrls.length) * 100);
 	$('.select-page-selector').val(slide);
 	$('.select-page-selector-sync').val(slide);
 	$('.bottom-paging-progress .bar').width('' + percent + '%');
@@ -456,6 +550,6 @@ function gotoSlideSync(slide) {
 	// sync flip event to audience
 	socket.emit('flip', {
 		'uuid' : uuid,
-		'page' : curSlide,
+		'page' : curPage,
 	});
 }
