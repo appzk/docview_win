@@ -199,6 +199,7 @@ function initDraw() {
 
 	resetImgSizeSync();
 	bindCanvasEvent();
+	resetTool();
 
 	restore();
 }
