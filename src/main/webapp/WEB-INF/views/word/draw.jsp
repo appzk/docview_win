@@ -80,8 +80,18 @@
 
     <div class="btn-word-sync-cmd-container text-center" style="position: fixed; bottom: 10px; left: 0px; right: 0px; text-align: center; z-index: 1000; opacity: 0.8;">
       <a cmd-string="pen" class="btn btn-primary btn-cmd btn-group-tool btn-cmd-pen active" style="display: inline-block;" href="#" title="铅笔"><i class="fa fa-pencil"></i></a>
+
+      <div class="btn-group dropup">
+        <button cmd-string="eraser" class="btn btn-primary btn-cmd btn-group-tool btn-cmd-eraser" title="橡皮"><i class="fa fa-eraser"></i></button>
+        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li><a class="btn-cmd-clearall" href="#">清除全部</a></li>
+          <li><a class="btn-cmd-clear" href="#">清除当前页</a></li>
+        </ul>
+      </div>
+
+      <!--
       <a cmd-string="eraser" class="btn btn-primary btn-cmd btn-group-tool btn-cmd-eraser" style="display: inline-block;" href="#" title="橡皮"><i class="fa fa-eraser"></i></a>
-      <!-- 
       <a cmd-string="clear" class="btn btn-primary btn-cmd btn-group-tool btn-cmd-clear" style="display: inline-block;" href="#" title="清除">&nbsp;&nbsp;<i class="fa fa-eraser"></i>&nbsp;&nbsp;</a>
        -->
       <!-- color selector -->

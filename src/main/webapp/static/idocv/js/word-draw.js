@@ -102,10 +102,25 @@ $(document).ready(function() {
 				});
 				clear();
 				// location.reload();
+			} else if ('clearall' == cmdString) {
+				socket.emit('clearall', {
+					'uuid' : uuid,
+				});
+				clearAll();
+				// location.reload();
 			}
 			// iosocket.send($(this).attr('data-key'));
 		}
 	});
+	$('.btn-cmd-clear').on('click touchstart', function (e) {
+		clear();
+		gotoPage(curPage);
+	});
+	$('.btn-cmd-clearall').on('click touchstart', function (e) {
+		clearAll();
+		gotoPage(curPage);
+	});
+
 	$('.btn-group-tool').on('click touchstart', function(e) {
 		e.preventDefault();
 		$('.btn-group-tool').removeClass('active');
@@ -419,6 +434,14 @@ function clear() {
 	lines[curPage - 1] = [];
 	isChanged = true;
 	save();
+}
+function clearAll() {
+	for (var i = 0; i < ctxArray.length; i++) {
+		ctxArray[i].clearRect(0, 0, ctxArray[i].canvas.width, ctxArray[i].canvas.height);
+		lines[i] = [];
+		isChanged = true;
+		save();
+	}
 }
 
 $(window).resize(function() {
