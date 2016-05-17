@@ -265,10 +265,10 @@ function bindCanvasEvent() {
 		perc.x = (curr.x / canvas.width).toFixed(4);
 		perc.y = (curr.y / canvas.height).toFixed(4);
 
-		console.log('[moving] slide' + curPage + ', perc(' + perc.x + ', ' + perc.y + '), curr(' + curr.x + ', ' + curr.y + '), canvas_Width_Height(' + canvas.width + ', ' + canvas.height + '), e.page(' + e.pageX + ', ' + e.pageY + '), img.offset_LEF_TOP(' + img.offset().left + ', ' + img.offset().top + ')');
+		var lastPointDistance = Math.sqrt(Math.pow(prev.x - curr.x, 2) + Math.pow(prev.y - curr.y, 2));
+		if ((tool == 'p' && lastPointDistance > 8) || (tool == 'e' && lastPointDistance > 30)) {
+			console.log('[moving] slide' + curPage + ', perc(' + perc.x + ', ' + perc.y + '), curr(' + curr.x + ', ' + curr.y + '), canvas_Width_Height(' + canvas.width + ', ' + canvas.height + '), e.page(' + e.pageX + ', ' + e.pageY + '), img.offset_LEF_TOP(' + img.offset().left + ', ' + img.offset().top + ')');
 
-		if (Math.sqrt(Math.pow(prev.x - curr.x, 2)
-				+ Math.pow(prev.y - curr.y, 2)) > 8) {
 			/*
 			 * var p = {x1:prev.x, y1:prev.y, x2:curr.x, y2:curr.y}
 			 * lines.push(p); draw(p); send(JSON.stringify(p)); prev =
