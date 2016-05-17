@@ -103,13 +103,13 @@
         <option value="yellow" style="background-color: yellow; color: white;">黄</option>
         <option value="gray" style="background-color: gray; color: white;">灰</option>
       </select>
-      
+
+      &nbsp;&nbsp;
+
       <a cmd-string="left" class="btn btn-primary btn-cmd btn-cmd-previous" style="display: inline-block;" href="#" title="上一页"><i class="fa fa-arrow-left"></i></a>
-      &nbsp;
       <select class="select-page-selector span1" style="width: 60px; margin-top: 10px; display: inline-block;">
         <!-- PAGE NUMBERS HERE -->
       </select>
-      &nbsp;
       <a cmd-string="right" class="btn btn-primary btn-cmd btn-cmd-next" style="display: inline-block;" href="#" title="下一页"><i class="fa fa-arrow-right"></i></a>
     </div>
 
