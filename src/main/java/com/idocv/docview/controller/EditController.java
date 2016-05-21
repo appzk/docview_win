@@ -1,14 +1,17 @@
 package com.idocv.docview.controller;
 
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.idocv.docview.common.DocResponse;
+import com.idocv.docview.common.ViewType;
+import com.idocv.docview.exception.DocServiceException;
+import com.idocv.docview.service.DocService;
+import com.idocv.docview.service.EditService;
+import com.idocv.docview.service.ViewService;
+import com.idocv.docview.util.MimeUtil;
+import com.idocv.docview.util.RcUtil;
+import com.idocv.docview.vo.DocVo;
+import com.idocv.docview.vo.PageVo;
+import com.idocv.docview.vo.WordVo;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -21,17 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.idocv.docview.common.DocResponse;
-import com.idocv.docview.common.ViewType;
-import com.idocv.docview.exception.DocServiceException;
-import com.idocv.docview.service.DocService;
-import com.idocv.docview.service.EditService;
-import com.idocv.docview.service.ViewService;
-import com.idocv.docview.util.MimeUtil;
-import com.idocv.docview.util.RcUtil;
-import com.idocv.docview.vo.DocVo;
-import com.idocv.docview.vo.PageVo;
-import com.idocv.docview.vo.WordVo;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Controller
@@ -96,7 +94,8 @@ public class EditController {
 	 * @return
 	 */
 	@RequestMapping("{uuid}")
-	public String load(@PathVariable(value = "uuid") String uuid) {
+	public String load(@PathVariable(value = "uuid") String uuid,
+					   @RequestParam(value = "type", required = false) String type) {
 		try {
 			// Check doc type
 			if (!uuid.endsWith(ViewType.WORD.getSymbol())) {
@@ -105,6 +104,10 @@ public class EditController {
 
 			// Check user
 			// TODO
+
+			if ("cell".equalsIgnoreCase(type)) {
+				return "word/edit-sub";
+			}
 
 			return "word/edit";
 		} catch (Exception e) {
