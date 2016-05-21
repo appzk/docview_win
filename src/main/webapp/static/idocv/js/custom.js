@@ -207,7 +207,10 @@ function gotoAnchor(anchorNameOrId) {
 				isLoadAll = true;
 
 				// goto anchor OR id
-				gotoAnchor(anchorNameOrId);
+				setTimeout(function () {
+					gotoAnchor(anchorNameOrId);
+				}, 300);
+				// gotoAnchor(anchorNameOrId);
 				hideLoader();
 
 				// bind anchor scroll event
